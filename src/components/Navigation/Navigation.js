@@ -19,10 +19,17 @@ import { sessionService } from 'redux-react-session';
 
 class Navigation extends React.Component {
   componentDidMount(){
-    this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
-    this.props.storeToken(JSON.parse(localStorage.getItem('token')));
-    sessionService.saveSession(JSON.parse(localStorage.getItem('token')));
-    sessionService.saveUser(JSON.parse(localStorage.getItem('user')))
+    if(!_.isEmpty(localStorage.getItem('user')) && !_.isEmpty(localStorage.getItem('token'))){
+      this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
+      this.props.storeToken(JSON.parse(localStorage.getItem('token')));
+      sessionService.saveSession(JSON.parse(localStorage.getItem('token')));
+      sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+      var pathName=pathname.pathName;
+      if(pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0 ){
+
+      }
+    }
+
   };
   render() {
     return (
