@@ -105,6 +105,30 @@ const config = {
         ],
       },
       {
+        test: /\.scss$/,
+        use: [
+          {
+            loader: 'isomorphic-style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: isDebug,
+              minimize: !isDebug,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: './tools/postcss.sass.js',
+            },
+          },
+          {
+            loader: 'sass-loader',
+          },
+        ],
+      },
+      {
         test: /\.md$/,
         loader: path.resolve(__dirname, './lib/markdown-loader.js'),
       },
