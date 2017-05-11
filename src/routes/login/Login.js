@@ -12,7 +12,8 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Login.css';
 import _ from 'lodash';
-import {onFormSubmit, doLogin} from './action/index';
+import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
+
 import {connect} from 'react-redux';
 import { Alert} from 'react-bootstrap';
 import  history from './../../history';
@@ -22,14 +23,15 @@ class Login extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
   };
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state={
       isValidData:false,
       email:null,
       password:null,
       error:null
-    }
+    };
+
   }
 
   onFormClick=(e)=>{
@@ -47,8 +49,7 @@ class Login extends React.Component {
       });
     }
     if(this.state.isValidData){
-      this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
-        console.log(resp);
+      this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{;
         if(!resp.error){
           history.push('/');
           this.setState({error:""});
@@ -93,7 +94,13 @@ class Login extends React.Component {
 
   };
 
-  componentWillMount(){
+  componentDidMount(){
+   /* if(localStorage.getItem('user') && localStorage.getItem('token')){
+      this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
+      this.props.storeToken(JSON.parse(localStorage.getItem('token')));
+    }
+*/
+    console.log('this.props.USER_DATA', this.props.USER_DATA)
     if(!_.isEmpty(this.props.USER_DATA)){
       history.push('/');
     }
@@ -146,7 +153,9 @@ class Login extends React.Component {
 }
 const mapDispatchToProps = {
   onFormSubmit : () => onFormSubmit(),
-  doLogin : (email, password) => doLogin(email, password)
+  doLogin : (email, password) => doLogin(email, password),
+  storeLoginData : (data) => storeLoginData(data),
+  storeToken : (data) => storeToken(data)
 };
 
 const mapStateToProps = (state) => ({

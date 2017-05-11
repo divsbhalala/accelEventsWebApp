@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 import createHelpers from './createHelpers';
 import createLogger from './logger';
-
+import { sessionService } from 'redux-react-session';
 export default function configureStore(initialState, helpersConfig) {
   const helpers = createHelpers(helpersConfig);
   const middleware = [thunk.withExtraArgument(helpers)];
@@ -29,7 +29,7 @@ export default function configureStore(initialState, helpersConfig) {
 
   // See https://github.com/rackt/redux/releases/tag/v3.1.0
   const store = createStore(rootReducer, initialState, enhancer);
-
+  sessionService.initSessionService(store);
   // Hot reload reducers (requires Webpack or Browserify HMR to be enabled)
   if (__DEV__ && module.hot) {
     module.hot.accept('../reducers', () =>

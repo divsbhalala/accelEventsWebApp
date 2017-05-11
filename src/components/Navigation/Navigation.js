@@ -15,12 +15,14 @@ import Link from '../Link';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import  {storeLoginData, storeToken} from './../../routes/login/action/index';
+import { sessionService } from 'redux-react-session';
 
 class Navigation extends React.Component {
   componentDidMount(){
-    console.log(localStorage);
     this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
     this.props.storeToken(JSON.parse(localStorage.getItem('token')));
+    sessionService.saveSession(JSON.parse(localStorage.getItem('token')));
+    sessionService.saveUser(JSON.parse(localStorage.getItem('user')))
   };
   render() {
     return (
@@ -31,7 +33,7 @@ class Navigation extends React.Component {
         { _.isEmpty(this.props.USER_DATA) && <Link className={s.link} to="/login">Log in</Link>}
         { _.isEmpty(this.props.USER_DATA) && <span className={s.spacer}>or</span>}
         { _.isEmpty(this.props.USER_DATA) && <Link className={cx(s.link, s.highlight)} to="/register">Sign up</Link>}
-        { !_.isEmpty(this.props.USER_DATA) && <Link className={cx(s.link, s.highlight)} to="/profile">Profile</Link>}
+        { !_.isEmpty(this.props.USER_DATA) && !_.isEmpty(this.props.USER_DATA.token) && <Link className={cx(s.link, s.highlight)} to="/profile">Profile</Link>}
       </div>
     );
   }
