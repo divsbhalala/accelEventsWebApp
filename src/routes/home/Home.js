@@ -25,8 +25,9 @@ class Home extends React.Component {
     return (
       <div className={s.root}>
         <div className={s.container}>
-          <h1>React.js News</h1>
-          {this.props.news.map(item => (
+          <h1>Home</h1>
+          {this.props.news}
+          {/*{this.props.news.map(item => (
             <article key={item.link} className={s.newsItem}>
               <h1 className={s.newsTitle}><a href={item.link}>{item.title}</a></h1>
               <div
@@ -35,7 +36,7 @@ class Home extends React.Component {
                 dangerouslySetInnerHTML={{ __html: item.content }}
               />
             </article>
-          ))}
+          ))}*/}
         </div>
       </div>
     );

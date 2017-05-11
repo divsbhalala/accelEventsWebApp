@@ -10,7 +10,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Layout.css';
+import './Layout.css';
 import Header from '../Header';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
@@ -32,4 +32,4 @@ class Layout extends React.Component {
   }
 }
 
-export default withStyles(s)(Layout);
+export default Layout;
