@@ -46,6 +46,7 @@ class Html extends React.Component {
           <link rel="apple-touch-icon" href="apple-touch-icon.png" />
           <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" />
           <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css" />
+          <link rel="stylesheet" href="https://www.accelevents.com/css/vt-icons.css" />
           <link rel="stylesheet" href="/css/App.css" />
           <link rel="stylesheet" href="/css/loader.css" />
           {styles.map(style =>

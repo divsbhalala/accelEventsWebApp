@@ -10,9 +10,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Admin.css';
+import s from './Design.css';
 
-class Admin extends React.Component {
+class Design extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
@@ -29,4 +29,4 @@ class Admin extends React.Component {
   }
 }
 
-export default withStyles(s)(Admin);
+export default withStyles(s)(Design);

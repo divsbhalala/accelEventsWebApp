@@ -9,6 +9,8 @@
 
 import React from 'react';
 import Layout from '../../components/Layout';
+import Design from './design/Design';
+
 
 const title = 'Admin Page';
 const isAdmin = false;
@@ -16,19 +18,29 @@ const isAdmin = false;
 export default {
 
   path: '/admin',
+children:[
+  {
+    path:'/',
+    async action() {
+/*  if (!isAdmin) {
+    return { redirect: '/login' };
+  }*/
 
-  async action() {
-    if (!isAdmin) {
-      return { redirect: '/login' };
+  const Admin = await require.ensure([], require => require('./Admin').default, 'admin');
+
+  return {
+    title,
+    chunk: 'admin',
+    component: <Layout><Admin title={title} /></Layout>,
+  };
+}},{
+  path:'/ticket',
+    action() {
+      return {
+        title,
+        component: <Layout><Design title="sub route"/></Layout>,
+      };
     }
-
-    const Admin = await require.ensure([], require => require('./Admin').default, 'admin');
-
-    return {
-      title,
-      chunk: 'admin',
-      component: <Layout><Admin title={title} /></Layout>,
-    };
-  },
+}]
 
 };

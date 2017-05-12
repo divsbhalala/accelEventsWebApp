@@ -1,0 +1,13 @@
+.container-max{
+  display: inline-block;
+  width: 100%;
+}
+.w-20{
+  width: 20%;
+  display: inline-block;
+  float: left;
+}
+.w-80{
+  width: 80%;
+  display: inline-block;
+}
