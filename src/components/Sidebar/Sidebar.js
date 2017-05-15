@@ -69,10 +69,10 @@ const NavMain = {
 
 const BasicSideNav = (props) => (
 
-  <SideNav highlightBgColor='#00bcd4' defaultSelected={props.selected}>
+  <SideNav highlightBgColor='#00bcd4' defaultSelected={props.selected} onItemSelection={ (id, parent) => {console.log(id,parent, props, this.props); }}>
     <Title> Basic SideNav {console.log(props.selected)}</Title>
 
-    <Nav id='Dashboard'>
+    <Nav id='dashboard'>
       <NavIcon><Icon20 icon={ic_people}/></NavIcon>
       <NavText>
         <Link to="/admin" style={{color: "#333"}}>
@@ -81,10 +81,10 @@ const BasicSideNav = (props) => (
       <Nav id='silent_auction_performance'>
         <NavIcon><Icon20 size={16} icon={ic_aspect_ratio}/></NavIcon>
         <NavText>
-          <Link to="/admin/action-performance" style={{color: "#333"}}>Silent Auction Performance</Link>
+          <Link to="/admin/auction-performance" style={{color: "#333"}}>Silent Auction Performance</Link>
         </NavText>
       </Nav>
-      <Nav id='raffle_performance'>
+      <Nav id='raffle_performance' >
         <NavIcon><Icon20 size={16} icon={ic_business}/></NavIcon>
         <NavText> <Link to="/admin/raffle-performance" style={{color: "#333"}}>Raffle Performance</Link> </NavText>
       </Nav>
@@ -147,7 +147,7 @@ class Sidebar extends React.Component {
     console.log('{this.props.style}', this.props.className);
     return (
       <div className={cx(s.root, this.props.className) } style={this.props.style}>
-        <BasicSideNav selected="customers"/>
+        <BasicSideNav selected="dashboard"/>
       </div>
     );
   }
