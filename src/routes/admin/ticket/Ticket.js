@@ -10,9 +10,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Admin.css';
+import s from './Ticket.css';
 
-class Admin extends React.Component {
+class Ticket extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
@@ -21,11 +21,12 @@ class Admin extends React.Component {
     return (
       <div className={s.root}>
         <div className={s.container}>
-
+          <h1>{this.props.title}</h1>
+          <p>...</p>
         </div>
       </div>
     );
   }
 }
 
-export default withStyles(s)(Admin);
+export default withStyles(s)(Ticket);

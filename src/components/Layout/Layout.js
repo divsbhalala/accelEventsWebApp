@@ -54,10 +54,10 @@ class Layout extends React.Component {
       <div>
         <Header user={this.state.user} />
         <div className="container-max" >
-          {this.state.user && <Sidebar className="w-20" />}
+          {this.state.user && <Sidebar className="w-20" user={this.state.user} />}
           <div className="w-80">
             {this.props.children}
-            <Feedback />
+            {/*<Feedback />*/}
           </div>
         </div>
 

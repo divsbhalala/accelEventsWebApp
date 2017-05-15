@@ -61,57 +61,75 @@ const SeparatorTitle = (props) => {
   );
 };
 
+const NavMain = {
+  dashboard: {title: 'Dashboard', icon: ic_aspect_ratio},
+  products: {title: 'Products', icon: ic_business_center},
+  orders: {title: 'Orders', icon: ic_format_list_bulleted}
+};
+
 const BasicSideNav = (props) => (
 
   <SideNav highlightBgColor='#00bcd4' defaultSelected={props.selected}>
     <Title> Basic SideNav {console.log(props.selected)}</Title>
 
-    <Nav id='dashboard'>
-      <NavIcon><Icon20 icon={ic_aspect_ratio}/></NavIcon>
+    <Nav id='Dashboard'>
+      <NavIcon><Icon20 icon={ic_people}/></NavIcon>
       <NavText>
-        <Link to="/admin" style={{color:"#333"}}>
+        <Link to="/admin" style={{color: "#333"}}>
           Dashboard </Link>
       </NavText>
-    </Nav>
-    <Nav id='Dashboard'>
-      <NavIcon><Icon20 icon={ic_people}/></NavIcon><NavText> Dashboard </NavText>
-      <Nav id='dashboard2'>
-        <NavIcon><Icon20 size={16} icon={ic_aspect_ratio}/></NavIcon><NavText> Search </NavText>
+      <Nav id='silent_auction_performance'>
+        <NavIcon><Icon20 size={16} icon={ic_aspect_ratio}/></NavIcon>
+        <NavText>
+          <Link to="/admin/action-performance" style={{color: "#333"}}>Silent Auction Performance</Link>
+        </NavText>
       </Nav>
-      <Nav id='sales2'>
-        <NavIcon><Icon20 size={16} icon={ic_business}/></NavIcon><NavText> Promote </NavText>
+      <Nav id='raffle_performance'>
+        <NavIcon><Icon20 size={16} icon={ic_business}/></NavIcon>
+        <NavText> <Link to="/admin/raffle-performance" style={{color: "#333"}}>Raffle Performance</Link> </NavText>
       </Nav>
-      <Nav id='products2'>
-        <NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon><NavText> Social Media </NavText>
+      <Nav id='fund_a_need_performance'>
+        <NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
+        <NavText> <Link to="/admin/fund-performance" style={{color: "#333"}}>Fund A Need Performance</Link> </NavText>
+      </Nav>
+      <Nav id='donation_performance'>
+        <NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
+        <NavText> <Link to="/admin/donation-performance" style={{color: "#333"}}>Donation Performance</Link> </NavText>
+      </Nav>
+      <Nav id='ticket_sales_performance'>
+        <NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
+        <NavText> <Link to="/admin/ticket-performance" style={{color: "#333"}}>Ticket Sales Performance</Link> </NavText>
       </Nav>
     </Nav>
 
     <Nav id='design'>
-      <NavIcon><Icon20 icon={paintBrush}/></NavIcon><NavText> Design </NavText>
+      <NavIcon><Icon20 icon={paintBrush}/></NavIcon><NavText> <Link to="/admin/design" style={{color: "#333"}}>
+      Design </Link> </NavText>
     </Nav>
 
     <Nav id='ticketing'>
-      <NavIcon><Icon20 icon={ticket}/></NavIcon><NavText> Ticketing </NavText>
+      <NavIcon><Icon20 icon={ticket}/></NavIcon><NavText> <Link to="/admin/ticket" style={{color: "#333"}}>
+      Ticketing </Link> </NavText>
     </Nav>
 
     <Nav id='silent_auction'>
-      <NavIcon><Icon20 icon={gavel}/></NavIcon><NavText> Silent Auction </NavText>
+      <NavIcon><Icon20 icon={gavel}/></NavIcon><NavText> <Link to="/admin/auction" style={{color: "#333"}}>Silent Auction</Link> </NavText>
     </Nav>
 
     <Nav id='raffle'>
-      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> Raffle </NavText>
+      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/raffle" style={{color: "#333"}}>Raffle</Link> </NavText>
     </Nav>
 
     <Nav id='fund_a_need'>
-      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> Fund A Need </NavText>
+      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/fund" style={{color: "#333"}}>Fund A Need</Link> </NavText>
     </Nav>
 
     <Nav id='user_management'>
-      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText>  User Management </NavText>
+      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/users" style={{color: "#333"}}>User Management</Link> </NavText>
     </Nav>
 
     <Nav id='settings'>
-      <NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> Settings </NavText>
+      <NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> <Link to="/admin/setting" style={{color: "#333"}}>Settings</Link> </NavText>
     </Nav>
 
     <Nav id='logout'>
@@ -121,12 +139,6 @@ const BasicSideNav = (props) => (
     </Nav>
   </SideNav>
 );
-
-const NavMain = {
-  dashboard: {title: 'Dashboard', icon: ic_aspect_ratio},
-  products: {title: 'Products', icon: ic_business_center},
-  orders: {title: 'Orders', icon: ic_format_list_bulleted}
-};
 
 
 class Sidebar extends React.Component {
