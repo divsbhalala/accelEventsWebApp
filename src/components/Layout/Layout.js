@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Layout.css';
 import Header from '../Header';
+import HeaderNew from '../HeaderNew/HeaderNew';
 import Sidebar from '../Sidebar';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
@@ -52,14 +53,16 @@ class Layout extends React.Component {
   render() {
     return (
       <div>
-        <Header user={this.state.user} />
-        <div className="container-max" >
-          {this.state.user && <Sidebar className="w-20" user={this.state.user} />}
-          <div className="w-80">
+        <HeaderNew user={this.state.user} />
+        <div className="page-wrapper" id="page-wrapper" >
+          {/*{this.state.user && <Sidebar className="w-20" user={this.state.user} />}*/}
+          {/*<div className="w-80">
             {this.props.children}
-            {/*<Feedback />*/}
-          </div>
+            {<Feedback />}
+          </div>*/}
+            {this.props.children}
         </div>
+
 
         <Footer />
       </div>

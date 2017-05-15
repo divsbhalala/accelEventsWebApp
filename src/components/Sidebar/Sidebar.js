@@ -103,12 +103,15 @@ const BasicSideNav = (props) => (
     </Nav>
 
     <Nav id='design'>
-      <NavIcon><Icon20 icon={paintBrush}/></NavIcon><NavText> <Link to="/admin/design" style={{color: "#333"}}>
-      Design </Link> </NavText>
+      <NavIcon><Icon20 icon={paintBrush}/></NavIcon>
+      <NavText> <Link to="/admin/design" style={{color: "#333"}}>
+      Design </Link>
+      </NavText>
     </Nav>
 
     <Nav id='ticketing'>
-      <NavIcon><Icon20 icon={ticket}/></NavIcon><NavText> <Link to="/admin/ticket" style={{color: "#333"}}>
+      <NavIcon><Icon20 icon={ticket}/></NavIcon>
+      <NavText> <Link to="/admin/ticket" style={{color: "#333"}}>
       Ticketing </Link> </NavText>
     </Nav>
 
@@ -117,11 +120,13 @@ const BasicSideNav = (props) => (
     </Nav>
 
     <Nav id='raffle'>
-      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/raffle" style={{color: "#333"}}>Raffle</Link> </NavText>
+      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon>
+      <NavText> <Link to="/admin/raffle" style={{color: "#333"}}>Raffle</Link> </NavText>
     </Nav>
 
     <Nav id='fund_a_need'>
-      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/fund" style={{color: "#333"}}>Fund A Need</Link> </NavText>
+      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText>
+      <Link to="/admin/fund" style={{color: "#333"}}>Fund A Need</Link> </NavText>
     </Nav>
 
     <Nav id='user_management'>
