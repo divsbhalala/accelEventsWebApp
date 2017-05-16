@@ -6,20 +6,26 @@ import cx from 'classnames';
 class PenalBoxWidget extends Component{ // eslint-disable-line
   static propTypes = {
     className: React.PropTypes.string,
-    headerText: React.PropTypes.string,
-    descText: React.PropTypes.string,
-    linkTitle: React.PropTypes.string,
-    linkText: React.PropTypes.string,
-    linkTarget: React.PropTypes.string,
-  }
+    boxTitle: React.PropTypes.string,
+    badgeTitle: React.PropTypes.string,
+    badgeLink: React.PropTypes.string,
+    badgeClass: React.PropTypes.string,
+    badgeText: React.PropTypes.string,
+    endsInDays: React.PropTypes.string,
+    endsInHours: React.PropTypes.string,
+    endsInMinute: React.PropTypes.string,
+    endsInSecond: React.PropTypes.string,
+    data: React.PropTypes.array,
+  };
+
   render() {
     return (
       <div className="auction-stat-box main-box clearfix project-box gray-box">
         <div className="main-box-body clearfix">
           <div className="project-box-header gray-bg">
             <div className="name">
-              <div>Auction
-                <a data-toggle="tooltip" title="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here." href="/host/settings/account" className="white text-uppercase pull-right badge badge-danger"> Test Mode </a>
+              <div>{this.props.boxTitle}
+                <a data-toggle="tooltip" title={this.props.boxTitle} href={this.props.badgeLink} className={this.props.badgeClass}> {this.props.badgeText} </a>
               </div>
             </div>
           </div>
@@ -30,16 +36,16 @@ class PenalBoxWidget extends Component{ // eslint-disable-line
                 <div className="ticker" data-end-date="2017-06-07T18:55:54">
                   <div className="flex-row timer">
                     <div className="flex-col">
-                      <span className="days">22</span>
+                      <span className="days">{this.props.endsInDays}</span>
                     </div>
                     <div className="flex-col">
-                      <span className="hours">10</span>
+                      <span className="hours">{this.props.endsInHours}</span>
                     </div>
                     <div className="flex-col">
-                      <span className="minutes">11</span>
+                      <span className="minutes">{this.props.endsInMinute}</span>
                     </div>
                     <div className="flex-col" style={{display: "none"}}>
-                      <span className="seconds">29</span>
+                      <span className="seconds">{this.props.endsInSecond}</span>
                     </div>
                   </div>
                   <div className="flex-row tiny text-center">

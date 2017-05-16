@@ -134,12 +134,25 @@ class Admin extends React.Component {
             </div>
 
             <div className="flex-col flex-col-mobile">
-              <div className="auction-stat-box main-box clearfix project-box gray-box">
+              <PenalBoxWidget
+                boxTitle="Auction"
+                badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
+                badgeLink="/host/settings/account"
+                badgeClass="white text-uppercase pull-right badge badge-danger"
+                badgeText="Test Mode"
+                endDate="2017-06-07T18:55:54"
+                endsInDays="22"
+                endsInHours="10"
+                endsInMinute="11"
+                endsInSecond="20"
+                data={[{"Proceeds":"$0.00"}, {"Bidders":"0"}]}
+              />
+             {/* <div className="auction-stat-box main-box clearfix project-box gray-box">
                 <div className="main-box-body clearfix">
                   <div className="project-box-header gray-bg">
                     <div className="name">
                       <div>Auction
-                        <a data-toggle="tooltip" title="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here." href="/host/settings/account" className="white text-uppercase pull-right badge badge-danger"> Test Mode </a>
+                        <a data-toggle="tooltip" title="" href="/host/settings/account" className="white text-uppercase pull-right badge badge-danger"> </a>
                       </div>
                     </div>
                   </div>
@@ -191,7 +204,7 @@ class Admin extends React.Component {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>*/}
             </div>
 
             <div className="flex-col flex-col-mobile">
