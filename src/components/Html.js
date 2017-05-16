@@ -50,6 +50,8 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/App.css" />
           <link rel="stylesheet" href="/css/loader.css" />
           <link rel="stylesheet" href="/css/sb-admin.css" />
+          <link rel="stylesheet" href="/css/admin-style.css" />
+          <link rel="stylesheet" href="/css/host-dashboard.css" />
           {styles.map(style =>
             <style
               key={style.id}

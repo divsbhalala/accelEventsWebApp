@@ -1,0 +1,268 @@
+.dashboard .infographic-box .headline {
+  text-align: left;
+  font-size: 1.2em;
+}
+
+.dashboard .infographic-box .desc {
+  font-size: 0.8em;
+  line-height: 1.1em;
+  display: block;
+}
+
+.dashboard .infographic-box .value {
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: center;
+  margin-top: 12px;
+  font-size: 1.5em;
+}
+
+.icon-backgroundGreen{
+	color: #008000;
+}
+.icon-backgroundRed{
+	color: #FF0000;
+}
+
+.dashboard .infographic-box a {
+  color: inherit;
+}
+
+.ticker span {
+  font-size: 4em;
+}
+
+span.fund-raised {
+  font-size: 4em;
+}
+
+.widget-todo .name .desc {
+  font-size: 0.8em;
+  padding-left: 30px;
+  color: #989898;
+}
+
+.widget-todo>li {
+  cursor: pointer;
+}
+
+.widget-todo .name label {
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.main-box {
+  max-width: 100%;
+}
+
+.hiddenRow>td {
+  padding: 0 !important;
+}
+
+tr.hiddenRow {
+  background: transparent !important;
+}
+
+.itembidtable {
+  margin: 0px 50px;
+}
+
+.itembidtable table {
+  margin: 0;
+  xmargin-bottom: 5px;
+}
+
+.itembidtable table.table tr {
+  background: #F1F1F1;
+}
+
+.item-performance-page .datatable thead {
+  background: #5dcfe5;
+}
+.item-performance-page .shown .fa-plus:before {
+  content: '\f068';
+} 
+.project-box .project-box-header .name div {
+  color: #fff;
+  display: block;
+  font-size: 1.4em;
+  font-weight: 300;
+  padding: 16px 15px;
+  border-radius: 3px 3px 0 0;
+  background-clip: padding-box;
+  transition: background-color 0.1s ease-in-out 0s;
+}
+.project-box .project-box-header .name .badge {
+  display: inline;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 10px;
+  background-clip: padding-box;
+  transition: background-color 0.1s ease-in-out 0s;
+  margin: 6px auto;
+}
+
+.text-alert {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.text-alert-success {
+  color: #6a9d2f;
+}
+.text-alert-success {
+  color: #e84e40;
+}
+
+
+
+#select-modules .modal-dialog {
+  top: 50px;
+}
+form#selectModules {
+  width: 550px;
+  margin: auto;
+  background-color: #1E1E4E;
+  border-radius: 40px;
+  overflow: hidden;
+  padding: 30px 40px;
+  box-shadow: 0 0 10px #494c5d;
+}
+
+form#selectModules {}
+form#selectModules > label {text-align: center;margin-bottom: 30px;}
+
+form#selectModules label.btn {
+  background: rgb(171, 171, 171);
+  width: 210px;
+  margin-bottom: 40px;
+  border-width: 3px;
+  border-color: #FFF;
+  border-style: solid;
+  border-radius: 10px;
+  line-height: 3.0;
+}
+form#selectModules label.btn:hover,
+form#selectModules label.btn.active {
+    background: rgb(156, 156, 156);
+    color: inherit;
+}
+form#selectModules label.btn .glyphicon {
+  visibility: hidden;
+  display: none;
+} 
+form#selectModules label.btn input[type="checkbox"]:checked + .glyphicon {
+  visibility: visible;
+  display: initial;
+} 
+form#selectModules label.btn input {
+  display: none;
+}
+form#selectModules label.btn:nth-child(2n+1) {
+  margin-right: 40px
+}
+form#selectModules .js-error.module-check {
+  border: 1px solid;
+  color: #d26464;
+  margin-bottom: 20px;
+}
+form#selectModules button {
+  background: #585858;
+  border: 5px solid #FFF;
+  color: #FFF;
+  transition: 0.2s all ease-in;
+}
+#select-modules .modal-content {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  color: #FFF;
+}
+
+form#selectModules button:hover, form#selectModules button:focus {
+  color: #FFF;
+  background: #8e8e8e;
+}
+@media (max-width: 620px) {
+  form#selectModules {
+    width: 300px;
+  }
+}
+.flex-2-col > .flex-col {
+  flex-basis: 50%;
+  padding: 0;
+  margin-top: 10px
+}
+.flex-2-col > .flex-col:nth-child(2n+1) {
+  padding-right: 10px
+}
+
+
+.page-title {
+    position: absolute;
+    width: calc(100% - 58px);
+    background-color: #1D1E4C;
+}
+.page-title .page-header {
+	position:relative;
+	margin: 10px;
+	border-bottom: none;
+    color: white;
+    font-weight: 600;
+}
+
+.auction-item-performance-page.item-performance-page .dataTables_wrapper .dataTables_filter,
+.item-performance-page.item-performance-page .dataTables_wrapper .dataTables_filter {
+	margin-right: 15px;
+}
+
+.ticketing-item-performance-page .page-title {
+    background-color: #1D1E4C;
+    line-height: 42px;
+    padding: 10px;
+}
+
+.ticketing-item-performance-page.item-performance-page .page-title .page-header {
+	margin: 0;
+    border-bottom: none;
+    color: white;
+    font-weight: 600;
+    line-height: 42px;
+    height: 42px;
+}
+
+.ticketing-item-performance-page.item-performance-page .post-page-header {
+	height: 77px;
+}
+
+.donation-item-performance-page.item-performance-page .table.table-responsive {
+	margin-bottom: 5px;
+}
+
+table.datatable thead th,
+table.datatable thead td,
+table.dataTable thead th,
+table.dataTable thead td {
+	border-bottom: none;
+}
+
+table.datatable,
+table.dataTable {
+	border: 1px solid #d3d3d3;
+}
+
+table.datatable tbody>tr[role="row"]>td,
+table.dataTable tbody>tr[role="row"]>td {
+	background-color: #FAFAFA;
+}
+
+table.datatable > tbody > tr:not([role]) > td,
+table.dataTable > tbody > tr:not([role]) > td {
+	background-color: #F7F7F7;
+}
+
+table.datatable > tbody > tr:not([role]) > td .data-row,
+table.dataTable > tbody > tr:not([role]) > td .data-row {
+	background-color: #FAFAFA;
+	border: 1px solid #E0E0E0;
+}

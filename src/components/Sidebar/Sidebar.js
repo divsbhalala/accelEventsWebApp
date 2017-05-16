@@ -136,12 +136,6 @@ const BasicSideNav = (props) => (
     <Nav id='settings'>
       <NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> <Link to="/admin/setting" style={{color: "#333"}}>Settings</Link> </NavText>
     </Nav>
-
-    <Nav id='logout'>
-
-      <NavIcon><Icon20 icon={ic_format_list_bulleted}/></NavIcon><NavText> Logout </NavText>
-
-    </Nav>
   </SideNav>
 );
 

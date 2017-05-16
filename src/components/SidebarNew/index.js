@@ -35,6 +35,7 @@ class SidebarNew extends Component {
             <li>
               <Link to="/admin" style={{color: "#333"}}>
                 <i className="fa fa-dashboard fa-fw" /> &nbsp;Dashboard </Link>
+
             </li>
 
             <li>
@@ -64,9 +65,6 @@ class SidebarNew extends Component {
             </li>
             <li>
               <Link to="/admin/setting" style={{color: "#333"}}><i className="fa fa-cogs fa-fw" /> &nbsp;Settings</Link>
-            </li>
-            <li>
-              <Link to="/admin/setting" style={{color: "#333"}}><i className="fa" /> &nbsp;Logout</Link>
             </li>
 
 
