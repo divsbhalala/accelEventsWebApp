@@ -26,7 +26,8 @@ class Layout extends React.Component {
   constructor(){
     super();
     this.state={
-      user:null
+      user:null,
+      isAdmin:false
     }
   }
 
@@ -52,9 +53,9 @@ class Layout extends React.Component {
 
   render() {
     return (
-      <div>
-        <HeaderNew user={this.state.user} />
-        <div className="page-wrapper" id="page-wrapper" >
+      <div>{console.log(this.state.isAdmin, 'a')}
+        <HeaderNew user={this.state.user} admin={this.state.isAdmin} />
+        <div className="page-wrapper" id={this.state.isAdmin && "page-wrapper" }  >
           {/*{this.state.user && <Sidebar className="w-20" user={this.state.user} />}*/}
           {/*<div className="w-80">
             {this.props.children}

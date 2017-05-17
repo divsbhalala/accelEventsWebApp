@@ -23,10 +23,14 @@ import SidebarNew from '../SidebarNew';
 
 const logo = require('./logo.png');
 
-function HeaderNew() {
-  return (
-    <div id="wrapper" className="content">
-      <Navbar fluid={true} style={ {margin: 0} } className="navbar-fixed-top">
+
+
+class HeaderNew extends React.Component  {
+
+  render() {
+    return  (
+    <div id="wrapper" className="content">{console.log(this.props)}
+      <Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
         <Brand>
             <span>
               <img src={logo} alt="Start React" title="Start React"/>
@@ -57,10 +61,10 @@ function HeaderNew() {
           </NavDropdown>
 
         </ul>
-        <SidebarNew />
+        { this.props.admin && <SidebarNew />}
       </Navbar>
     </div>
-  );
+  )};
 }
 function toggleMenu() {
   if ($(".navbar-collapse").hasClass('collapse')) {
