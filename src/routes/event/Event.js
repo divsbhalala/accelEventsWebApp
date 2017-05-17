@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './Event.css';
+import cx from 'classnames';
 
 import  EventAside from './../../components/EventAside/EventAside';
 
@@ -24,9 +25,12 @@ class Event extends React.Component {
     return (
       <div className="row">
         <div className="col-lg-12">
+          <div class="row">
+            <div className={cx("header-img","text-center")}>
+              <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png" className={cx("img-responsive","img-banner")} style={{width: "100%"}} />
+            </div>
+          </div>
           <div className="row">
-
-            <h1>{this.props.title}</h1>
             <div className="col-lg-3 col-md-4 col-sm-4">
               <EventAside />
             </div>
