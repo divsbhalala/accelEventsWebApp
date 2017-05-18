@@ -4636,7 +4636,7 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
 
 .tabs-wrapper .tab-content {
   margin-bottom: 20px;
-  padding: 0 10px;
+  padding: 0 10px 20px 10px;
 }
 
 .dropdown-example ul.dropdown-menu {

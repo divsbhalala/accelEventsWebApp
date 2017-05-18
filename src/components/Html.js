@@ -45,13 +45,15 @@ class Html extends React.Component {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="apple-touch-icon" href="apple-touch-icon.png" />
           <link rel="stylesheet" href="/css/bootstrap.min.css" />
-          <link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+          
           <link rel="stylesheet" href="/css/font-awesome.min.css" />
           <link rel="stylesheet" href="/css/App.css" />
           <link rel="stylesheet" href="/css/loader.css" />
           <link rel="stylesheet" href="/css/sb-admin.css" />
           <link rel="stylesheet" href="/css/admin-style.css" />
           <link rel="stylesheet" href="/css/host-dashboard.css" />
+          <link rel="stylesheet" href="/css/display.css" />
+          <link rel="stylesheet" href="/css/style.css" />
           {styles.map(style =>
             <style
               key={style.id}

@@ -15,6 +15,9 @@ import s from './Event.css';
 import cx from 'classnames';
 
 import  EventAside from './../../components/EventAside/EventAside';
+import  EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox';
+import  EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox'
+import  EventDonation from './../../components/EventDonation/EventDonation'
 
 class Event extends React.Component {
   static propTypes = {
@@ -25,23 +28,83 @@ class Event extends React.Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <div class="row">
+          <div className="row">
             <div className={cx("header-img","text-center")}>
               <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png" className={cx("img-responsive","img-banner")} style={{width: "100%"}} />
             </div>
           </div>
-          <div className="row">
-            <div className="col-lg-3 col-md-4 col-sm-4">
-              <EventAside />
-            </div>
-            <div className="col-lg-9 col-md-8 col-sm-8">
-              <Tabs onSelect={(index, label) => console.log(label + ' selected')}>
-                <Tab label="The Event">The event content</Tab>
-                <Tab label="Auction">Auction content</Tab>
-                <Tab label="Raffle">Raffle content</Tab>
-                <Tab label="Fund a Need">Fund a need content</Tab>
-                <Tab label="Donation">Donation content</Tab>
-              </Tabs>
+          <div id="content-wrapper">
+            <div className="row">
+              <div className="col-lg-3 col-md-4 col-sm-4">
+                <EventAside />
+              </div>
+              <div className="col-lg-9 col-md-8 col-sm-8 ">
+                <div className="main-box">
+                  <Tabs onSelect={(index, label) => console.log(label + ' selected')} className="tabs-wrapper">
+                    <Tab label="The Event">
+                      <div className={cx("row item-canvas")}>
+                        <div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
+                      </div>
+                      <div className={cx("row text-center")}>
+                        <div className={cx("col-md-offset-3 col-md-6")}>
+                          <a href="#buy-event-tickets" role="button" data-toggle="modal" className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
+                        </div>
+                      </div>
+                    </Tab>
+                    <Tab label="Auction">
+                      <div className="row">
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                        <EventAuctionBox />
+                      </div>
+                    </Tab>
+                    <Tab label="Raffle">
+                      <div className="row">
+                        <EventTabCommonBox
+                          headerText="My First Raffle Item"
+                          itemCode="RAF"
+                          data={
+                          [{title:"TICKETS SUBMITTED", value:0}]
+                          }
+                          descText="testDesc"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg"
+                          actionTitle="Raffle Closed"
+                          actionClassName="btn btn-primary btn-block disabled"
+                        />
+
+                      </div>
+                    </Tab>
+                    <Tab label="Fund a Need">
+                      <div className="row">
+                        <EventTabCommonBox
+                          headerText="My Fund a Need Item"
+                          itemCode="FAN"
+                          data={
+                          [{title:"TMINIMUM PLEDGE", value:"300"}]
+                          }
+                          descText="testDesc"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg"
+                          actionTitle="Pledging Closed"
+                          actionClassName="btn btn-primary btn-block disabled"
+                        />
+
+                      </div>
+                    </Tab>
+                    <Tab label="Donation">
+                      <div className="row"><EventDonation /></div>
+                    </Tab>
+                  </Tabs>
+                </div>
+
+              </div>
+
             </div>
 
           </div>
