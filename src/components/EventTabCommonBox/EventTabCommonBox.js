@@ -22,6 +22,7 @@ class EventTabCommonBox extends React.Component {
     linkTitle: React.PropTypes.string,
     linkText: React.PropTypes.string,
     linkTarget: React.PropTypes.string,
+    isSharable: React.PropTypes.string,
     actionTitle: React.PropTypes.string,
     actionClassName: React.PropTypes.string,
     imageUrl: React.PropTypes.string,
@@ -51,7 +52,7 @@ class EventTabCommonBox extends React.Component {
             </div>
 
 
-            <ul className={cx("social-network social-circle")}>
+            { this.props.isSharable && this.props.isSharable=='true' && <ul className={cx("social-network social-circle")}>
               <li>
                 <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.stagingaccel.com%3A8080%2FAccelEventsWebApp%2Fevents%2Fjkazarian8%2FR%2FRAF" title="Facebook" target="_blank">
                   <i className={cx("fa fa-facebook")}></i>
@@ -62,7 +63,7 @@ class EventTabCommonBox extends React.Component {
                   <i className={cx("fa fa-twitter")}></i>
                 </a>
               </li>
-            </ul>
+            </ul>}
 
           </div>
           <div className={cx("card-content item-description")}>{this.props.descText}</div>
@@ -86,7 +87,7 @@ class EventTabCommonBox extends React.Component {
               }
 
             </div>
-            <div className={cx("text-center")}>
+            <div className={cx("text-center", "action-btns")}>
               <a role="button" className={cx(this.props.actionClassName)} data-toggle="modal" href="#info-modal" data-title="Raffle Drawn" data-message="This raffle has already been drawn. No further tickets are being accepted">{this.props.actionTitle}</a>
             </div>
           </div>

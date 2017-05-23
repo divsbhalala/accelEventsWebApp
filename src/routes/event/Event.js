@@ -61,16 +61,103 @@ class Event extends React.Component {
                     </Tab>
                     <Tab label="Auction">
                       <div className="row">
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
-                        <EventAuctionBox />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+                        <EventTabCommonBox
+                          headerText="Louis Vuitton Sunglasses"
+                          itemCode="SLV"
+                          isSharable="false"
+                          data={
+                          [{title:"CURRENT BID", value:'$425'}]
+                          }
+                          descText="Trendy Louis Vuitton Sunglasses - Like New"
+                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+                          actionTitle="Bidding Closed"
+                          actionClassName="btn btn-primary disabled"
+                        />
+
                       </div>
                     </Tab>
                     <Tab label="Raffle">
@@ -81,6 +168,7 @@ class Event extends React.Component {
                           data={
                           [{title:"TICKETS SUBMITTED", value:0}]
                           }
+                          isSharable="false"
                           descText="testDesc"
                           imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg"
                           actionTitle="Raffle Closed"
@@ -97,6 +185,7 @@ class Event extends React.Component {
                           data={
                           [{title:"TMINIMUM PLEDGE", value:"300"}]
                           }
+                          isSharable="false"
                           descText="testDesc"
                           imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg"
                           actionTitle="Pledging Closed"
