@@ -51,7 +51,7 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/loader.css" />
           <link rel="stylesheet" href="/css/sb-admin.css" />
           <link rel="stylesheet" href="/css/admin-style.css" />
-          <link rel="stylesheet" href="/css/host-dashboard.css" />
+          {/*<link rel="stylesheet" href="/css/host-dashboard.css" />*/}
           <link rel="stylesheet" href="/css/display.css" />
           <link rel="stylesheet" href="/css/style.css" />
           {styles.map(style =>

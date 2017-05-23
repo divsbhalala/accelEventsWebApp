@@ -38,25 +38,25 @@ class EventDonation extends React.Component {
 
 
             <label className={cx("btn")}>
-              <input type="radio" autocomplete="off" className={cx("default-amount")} value="5" />
+              <input type="radio" autoComplete="off" className={cx("default-amount")} value="5" />
                 <span className={cx("fa fa-usd")}></span>
                 5
             </label>
 
             <label className={cx("btn active")}>
-              <input type="radio" autocomplete="off" className={cx("default-amount")} value="15" />
+              <input type="radio" autoComplete="off" className={cx("default-amount")} value="15" />
                 <span className={cx("fa fa-usd")}></span>
                 15
             </label>
 
             <label className={cx("btn")}>
-              <input type="radio" autocomplete="off" className={cx("default-amount")} value="30" />
+              <input type="radio" autoComplete="off" className={cx("default-amount")} value="30" />
                 <span className={cx("fa fa-usd")}></span>
                 30
             </label>
 
             <label className={cx("btn")}>
-              <input type="radio" autocomplete="off" className={cx("default-amount")} value="50" />
+              <input type="radio" autoComplete="off" className={cx("default-amount")} value="50" />
                 <span className={cx("fa fa-usd")}></span>
                 50
             </label>

@@ -20,6 +20,8 @@ import Navbar, {Brand} from 'react-bootstrap/lib/Navbar';
 import history from '../../history';
 import $ from "jquery";
 import SidebarNew from '../SidebarNew';
+import cx from 'classnames';
+
 
 const logo = require('./logo.png');
 
@@ -29,13 +31,12 @@ class HeaderNew extends React.Component  {
 
   render() {
     return  (
-    <div id="wrapper" className="content">{console.log(this.props)}
+    <div id="header-navbar" className={cx("content turquoise-bg white")}>    {console.log(this.props.user)}
+
       <Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
         <Brand>
             <span>
-              <img src={logo} alt="Start React" title="Start React"/>
-              <span>&nbsp;SB Admin React - </span>
-                <a href="http://startreact.com/" title="Start React" rel="home">StartReact.com</a>
+                <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8" title="Start React" rel="home">jkazarian8</a>
                 <button type="button" className="navbar-toggle" onClick={() => {
                   toggleMenu();
                 }} style={{position: 'absolute', right: 0, top: 0}}>
@@ -48,9 +49,23 @@ class HeaderNew extends React.Component  {
         </Brand>
         <ul className="nav navbar-top-links navbar-right">
 
-          <NavDropdown title={<i className="fa fa-user fa-fw"></i> } id='navDropdown4'>
-            <MenuItem eventKey="1">
-              <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
+          <MenuItem eventKey="1">
+            <i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
+          </MenuItem>
+
+          <MenuItem eventKey="3">
+            Volunteer
+          </MenuItem>
+
+          <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
+            <MenuItem eventKey="5">
+              <span> Scrolling </span>
+            </MenuItem>
+            <MenuItem eventKey="6">
+              <span> Goal </span>
+            </MenuItem>
+            <MenuItem eventKey="7">
+              <span> Table </span>
             </MenuItem>
             <MenuItem divider/>
             <MenuItem eventKey="4" onClick={(event) => {
@@ -59,6 +74,32 @@ class HeaderNew extends React.Component  {
               <span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
             </MenuItem>
           </NavDropdown>
+
+          { !this.props.user && <MenuItem eventKey="8">
+            <i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
+          </MenuItem>}
+
+          { !this.props.user && <MenuItem eventKey="9">
+            <i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
+          </MenuItem>}
+
+          <MenuItem eventKey="10">
+            <i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
+          </MenuItem>
+
+          {
+            this.props.user && <NavDropdown title={<i className="fa fa-user fa-fw"></i> } id='navDropdown4'>
+              <MenuItem eventKey="2">
+                <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
+              </MenuItem>
+              <MenuItem divider/>
+              <MenuItem eventKey="4" onClick={(event) => {
+              history.push('/login');
+            }}>
+                <span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
+              </MenuItem>
+            </NavDropdown>
+          }
 
         </ul>
         { this.props.admin && <SidebarNew />}

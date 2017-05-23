@@ -13,6 +13,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './Event.css';
 import cx from 'classnames';
+import {connect} from 'react-redux';
 
 import  EventAside from './../../components/EventAside/EventAside';
 import  EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox';
@@ -21,10 +22,17 @@ import  EventDonation from './../../components/EventDonation/EventDonation'
 
 class Event extends React.Component {
   static propTypes = {
-    title: PropTypes.string,
+    title: PropTypes.string
   };
+  constructor(props){
+    super(props);
+    this.state={
+      tab:'The Event'
+    }
+  }
 
-  render() {
+
+    render() {
     return (
       <div className="row">
         <div className="col-lg-12">
@@ -36,11 +44,11 @@ class Event extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <EventAside />
+                <EventAside activeTab={this.state.tab}/>
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">
                 <div className="main-box">
-                  <Tabs onSelect={(index, label) => console.log(label + ' selected')} className="tabs-wrapper">
+                  <Tabs onSelect={ (index, label)=>{ this.setState({ tab:label})} } selected={this.state.tab} className="tabs-wrapper">
                     <Tab label="The Event">
                       <div className={cx("row item-canvas")}>
                         <div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
@@ -114,4 +122,6 @@ class Event extends React.Component {
   }
 }
 
-export default withStyles(s)(Event);
+
+//export default withStyles(s)(Event);
+export default (withStyles(s)(Event));

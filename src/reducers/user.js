@@ -1,4 +1,4 @@
-import {STORE_TOKEN,STORE_LOGIN_DATA} from '../constants';
+import {STORE_TOKEN,STORE_LOGIN_DATA,STORE_DASD} from '../constants';
 export default function user(state = {}, action) {
   switch (action.type) {
     case STORE_TOKEN: return {...state,token:action.token};

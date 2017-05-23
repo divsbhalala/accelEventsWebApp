@@ -42,7 +42,7 @@ class EventTabCommonBox extends React.Component {
                   <div className={cx("item active")}>
                     <a className={cx("item-link center-block")} href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8/R/RAF">
                       <div className={cx("item-image")}>
-                        <div className={cx("item-image-inner")} style={{"background-image": "url("+this.props.imageUrl+")"}}></div>
+                        <div className={cx("item-image-inner")} style={{"backgroundImage": "url("+this.props.imageUrl+")"}}></div>
                       </div>
                     </a>
                   </div>
