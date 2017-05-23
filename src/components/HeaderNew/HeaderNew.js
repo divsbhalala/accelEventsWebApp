@@ -31,7 +31,7 @@ class HeaderNew extends React.Component  {
 
   render() {
     return  (
-    <div id="header-navbar" className={cx("content turquoise-bg white")}>    {console.log(this.props.user)}
+    <div id="header-navbar" className={cx("content turquoise-bg white")}>
 
       <Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
         <Brand>

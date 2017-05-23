@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import  PropTypes   from 'prop-types';
 import { Panel } from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
 
 class StatWidget extends Component{ // eslint-disable-line
   static propTypes = {
-    style: React.PropTypes.string,
-    count: React.PropTypes.string,
-    headerText: React.PropTypes.string,
-    icon: React.PropTypes.string,
-    footerText: React.PropTypes.string,
+    style: PropTypes.string,
+    count: PropTypes.string,
+    headerText: PropTypes.string,
+    icon: PropTypes.string,
+    footerText: PropTypes.string,
   }
   render() {
     return (

@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import  PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventTabCommonBox.css';
 import Link from '../Link';
@@ -15,18 +16,18 @@ import cx from 'classnames';
 
 class EventTabCommonBox extends React.Component {
   static propTypes = {
-    className: React.PropTypes.string,
-    headerText: React.PropTypes.string,
-    itemCode: React.PropTypes.string,
-    descText: React.PropTypes.string,
-    linkTitle: React.PropTypes.string,
-    linkText: React.PropTypes.string,
-    linkTarget: React.PropTypes.string,
-    isSharable: React.PropTypes.string,
-    actionTitle: React.PropTypes.string,
-    actionClassName: React.PropTypes.string,
-    imageUrl: React.PropTypes.string,
-    data: React.PropTypes.array,
+    className: PropTypes.string,
+    headerText: PropTypes.string,
+    itemCode: PropTypes.string,
+    descText: PropTypes.string,
+    linkTitle: PropTypes.string,
+    linkText: PropTypes.string,
+    linkTarget: PropTypes.string,
+    isSharable: PropTypes.string,
+    actionTitle: PropTypes.string,
+    actionClassName: PropTypes.string,
+    imageUrl: PropTypes.string,
+    data: PropTypes.array,
   };
 
   render() {

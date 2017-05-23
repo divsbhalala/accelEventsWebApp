@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
+import   PropTypes   from 'prop-types';
 import { Panel } from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
 
 class PenalBoxWidget extends Component{ // eslint-disable-line
   static propTypes = {
-    className: React.PropTypes.string,
-    boxTitle: React.PropTypes.string,
-    badgeTitle: React.PropTypes.string,
-    badgeLink: React.PropTypes.string,
-    badgeClass: React.PropTypes.string,
-    badgeText: React.PropTypes.string,
-    endsInDays: React.PropTypes.string,
-    endsInHours: React.PropTypes.string,
-    endsInMinute: React.PropTypes.string,
-    endsInSecond: React.PropTypes.string,
-    data: React.PropTypes.array,
+    className: PropTypes.string,
+    boxTitle: PropTypes.string,
+    badgeTitle: PropTypes.string,
+    badgeLink: PropTypes.string,
+    badgeClass: PropTypes.string,
+    badgeText: PropTypes.string,
+    endsInDays: PropTypes.string,
+    endsInHours: PropTypes.string,
+    endsInMinute: PropTypes.string,
+    endsInSecond: PropTypes.string,
+    data: PropTypes.array,
   };
 
   render() {

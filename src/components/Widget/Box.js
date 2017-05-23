@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import   PropTypes   from 'prop-types';
 import { Panel } from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
 
 class BoxWidget extends Component{ // eslint-disable-line
   static propTypes = {
-    className: React.PropTypes.string,
-    headerText: React.PropTypes.string,
-    descText: React.PropTypes.string,
-    linkTitle: React.PropTypes.string,
-    linkText: React.PropTypes.string,
-    linkTarget: React.PropTypes.string,
+    className: PropTypes.string,
+    headerText: PropTypes.string,
+    descText: PropTypes.string,
+    linkTitle: PropTypes.string,
+    linkText: PropTypes.string,
+    linkTarget: PropTypes.string,
   }
   render() {
     return (

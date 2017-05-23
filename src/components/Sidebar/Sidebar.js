@@ -143,7 +143,6 @@ const BasicSideNav = (props) => (
 class Sidebar extends React.Component {
 
   render() {
-    console.log('{this.props.style}', this.props.className);
     return (
       <div className={cx(s.root, this.props.className) } style={this.props.style}>
         <BasicSideNav selected="dashboard"/>

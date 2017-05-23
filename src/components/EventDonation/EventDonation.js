@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import   PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventDonation.css';
 import Link from '../Link';
@@ -16,17 +17,17 @@ var svgTag='<svg fill-rule="evenodd" style={{width: "auto !important"}} xmlns:xl
 
 class EventDonation extends React.Component {
   static propTypes = {
-    className: React.PropTypes.string,
-    headerText: React.PropTypes.string,
-    itemCode: React.PropTypes.string,
-    descText: React.PropTypes.string,
-    linkTitle: React.PropTypes.string,
-    linkText: React.PropTypes.string,
-    linkTarget: React.PropTypes.string,
-    actionTitle: React.PropTypes.string,
-    actionClassName: React.PropTypes.string,
-    imageUrl: React.PropTypes.string,
-    data: React.PropTypes.array,
+    className: PropTypes.string,
+    headerText: PropTypes.string,
+    itemCode: PropTypes.string,
+    descText: PropTypes.string,
+    linkTitle: PropTypes.string,
+    linkText: PropTypes.string,
+    linkTarget: PropTypes.string,
+    actionTitle: PropTypes.string,
+    actionClassName: PropTypes.string,
+    imageUrl: PropTypes.string,
+    data: PropTypes.array,
   };
   constructor(props){
     super(props);
@@ -47,25 +48,25 @@ class EventDonation extends React.Component {
           <div className={cx("btn-group")} data-toggle="buttons">
 
             <label className={cx("btn", this.state.donationRate==5 ? 'active':'')}>
-              <input type="radio" autoComplete="off" className={cx("default-amount")} defaultValue="5" onChange={this.handleRadioChange} />
+              <input type="radio" autoComplete="off" name="donate5" className={cx("default-amount")} defaultValue="5" onChange={this.handleRadioChange} />
                 <span className={cx("fa fa-usd")}></span>
                 5
             </label>
 
             <label className={cx("btn", this.state.donationRate==15 ? 'active':'')}>
-              <input type="radio" autoComplete="off" className={cx("default-amount")} defaultValue="15" onChange={this.handleRadioChange} />
+              <input type="radio" autoComplete="off" name="donate15" className={cx("default-amount")} defaultValue="15" onChange={this.handleRadioChange} />
                 <span className={cx("fa fa-usd")}></span>
                 15
             </label>
 
             <label className={cx("btn", this.state.donationRate==30 ? 'active':'')}>
-              <input type="radio" autoComplete="off" className={cx("default-amount")} defaultValue="30" onChange={this.handleRadioChange} />
+              <input type="radio" autoComplete="off" name="donate30" className={cx("default-amount")} defaultValue="30" onChange={this.handleRadioChange} />
                 <span className={cx("fa fa-usd")}></span>
                 30
             </label>
 
             <label className={cx("btn", this.state.donationRate==50 ? 'active':'')}>
-              <input type="radio" autoComplete="off" className={cx("default-amount")} defaultValue="50" onChange={this.handleRadioChange} />
+              <input type="radio" autoComplete="off" name="donate50" className={cx("default-amount")} defaultValue="50" onChange={this.handleRadioChange} />
                 <span className={cx("fa fa-usd")}></span>
                 50
             </label>
