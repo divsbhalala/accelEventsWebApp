@@ -43,6 +43,7 @@
     "react-bootstrap-tabs": "^1.0.0",
     "react-dom": "^15.5.4",
     "react-icons-kit": "^1.0.7",
+    "react-infinite-scroll-component": "^2.3.0",
     "react-loaders": "^2.5.0",
     "react-redux": "^5.0.4",
     "react-sidenav": "^2.1.1",

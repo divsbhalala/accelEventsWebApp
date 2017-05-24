@@ -8,12 +8,18 @@
  */
 
 import React from 'react';
+import   PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventAside.css';
 import Link from '../Link';
 import cx from 'classnames';
 
 class EventAside extends React.Component {
+  static propTypes = {
+    activeTab: PropTypes.string,
+    showBookingPopup: PropTypes.func,
+    showMapPopup: PropTypes.func,
+  }
   render() {
     return (
       <div >
@@ -25,7 +31,7 @@ class EventAside extends React.Component {
           <div className={cx("main-box-body","clearfix")}>
             <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" className="img-responsive center-block" />
             { this.props.activeTab && (this.props.activeTab=='The Event' ) &&  <div className={cx("the-event","mrg-t-lg")}>
-                <a href="#buy-event-tickets" role="button" data-toggle="modal" className={cx("btn","btn-block","btn-lg","btn-orange")}>Buy Tickets</a>
+              { this.props.showBookingPopup && <a onClick={this.props.showBookingPopup} className={cx("btn","btn-block","btn-lg","btn-orange")}>Buy Tickets</a>}
                 <div className={cx("box")}>
                   <div className={cx("box-title","text-uppercase")}>date and time</div>
                   <div className={cx("box-content")}>
@@ -44,8 +50,8 @@ class EventAside extends React.Component {
                   <div className="box-content">
                     <address>
 
-                    </address>
-                    <a data-toggle="modal" data-target="#location-dialog">View on Map</a>
+                    </address>{console.log(this.props)}
+                    {this.props.showMapPopup && <a onClick={this.props.showMapPopup}>View on Map</a>}
                   </div>
                 </div>
               </div> }

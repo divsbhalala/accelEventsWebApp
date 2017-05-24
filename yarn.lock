@@ -5925,6 +5925,10 @@ react-icons-kit@^1.0.7:
     camel-case "^3.0.0"
     prop-types "^15.5.8"
 
+react-infinite-scroll-component@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-2.3.0.tgz#f31a58b599f25e91a05297fdda1671e6e7d8cbae"
+
 react-loaders@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-loaders/-/react-loaders-2.5.0.tgz#fb23e9545995a403f8214e893037549aae5088c8"
