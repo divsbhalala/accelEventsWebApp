@@ -16,7 +16,7 @@ body:not (.displayhome ) {
   color: #F05F40;
   font-weight: 700;
   text-transform: uppercase;
-  line-height: 30px;
+  /*line-height: 30px;*/
   letter-spacing: 1px;
 }
 
@@ -37,7 +37,7 @@ body:not (.displayhome ) {
   font-weight: 700;
   font-size: 13px;
   color: #222;
-  line-height: 35px;
+  /*line-height: 35px;*/
 }
 
 .navbar-default .nav>li>a:focus:hover, .navbar-default .nav>li>a:hover {

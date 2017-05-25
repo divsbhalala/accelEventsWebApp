@@ -129,6 +129,9 @@ class Event extends React.Component {
                                                  imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
                                                  actionTitle="Bidding Closed"
                                                  actionClassName="btn btn-primary disabled"
+                                                 auctionPurchaseFor="Purchased for $400"
+                                                 auctionBuyNowTitle="BUY NOW $478"
+                                                 auctionBuyNowClassName="item-link btn btn-success actionlinks"
                               />
                             )
                           }

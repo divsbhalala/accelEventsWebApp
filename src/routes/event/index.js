@@ -15,12 +15,12 @@ const title = 'Event Page';
 
 export default {
 
-  path: '/event',
+  path: '/event/:params',
 
-  action() {
+  action(props) {
     return {
       title,
-      component: <Layout><Event title={title} /></Layout>,
+      component: <Layout params={props.params} ><Event title={title} /></Layout>,
     };
   },
 

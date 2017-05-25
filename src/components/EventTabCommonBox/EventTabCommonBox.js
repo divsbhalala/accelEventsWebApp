@@ -28,6 +28,9 @@ class EventTabCommonBox extends React.Component {
     actionClassName: PropTypes.string,
     imageUrl: PropTypes.string,
     data: PropTypes.array,
+    auctionPurchaseFor: PropTypes.string,
+    auctionBuyNowTitle: PropTypes.string,
+    auctionBuyNowClassName: PropTypes.string,
   };
 
   render() {
@@ -89,7 +92,11 @@ class EventTabCommonBox extends React.Component {
 
             </div>
             <div className={cx("text-center", "action-btns")}>
-              <a role="button" className={cx(this.props.actionClassName)} data-toggle="modal" href="#info-modal" data-title="Raffle Drawn" data-message="This raffle has already been drawn. No further tickets are being accepted">{this.props.actionTitle}</a>
+              { this.props.actionTitle && <a role="button" className={cx(this.props.actionClassName)}>{this.props.actionTitle}</a>}&nbsp;&nbsp;
+              { this.props.auctionBuyNowTitle && <a role="button" className={cx(this.props.auctionBuyNowClassName)} >{this.props.auctionBuyNowTitle}</a>} &nbsp;&nbsp;
+              { !this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
+                <div className={cx("alert alert-success mrg-b-0")}> Purchased for $<span className={cx("current-bid")}>400</span></div>
+              </div> }
             </div>
           </div>
         </div>

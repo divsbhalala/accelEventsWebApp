@@ -36,7 +36,7 @@ class HeaderNew extends React.Component  {
       <Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
         <Brand>
             <span>
-                <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8" title="Start React" rel="home">jkazarian8</a>
+              { this.props.params && this.props.params.params &&<a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8" title="Start React" rel="home">{this.props.params.params}</a>}
                 <button type="button" className="navbar-toggle" onClick={() => {
                   toggleMenu();
                 }} style={{position: 'absolute', right: 0, top: 0}}>

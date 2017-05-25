@@ -54,7 +54,7 @@ class Layout extends React.Component {
   render() {
     return (
       <div>
-        <HeaderNew user={this.state.user} admin={this.state.isAdmin} />
+        <HeaderNew user={this.state.user} admin={this.state.isAdmin} params={this.props.params} />
         <div className="page-wrapper" id={this.state.isAdmin && "page-wrapper" }  >
           {/*{this.state.user && <Sidebar className="w-20" user={this.state.user} />}*/}
           {/*<div className="w-80">
