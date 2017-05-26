@@ -18,7 +18,7 @@ class Navigation extends React.Component {
 
   render() {
     return (
-      <div className={s.root} role="navigation">
+      /*<div className={s.root} role="navigation">
         <Link className={s.link} to="/about">About</Link>
         <Link className={s.link} to="/contact">Contact</Link>
         <span className={s.spacer}> | </span>
@@ -27,7 +27,14 @@ class Navigation extends React.Component {
         { _.isEmpty(this.props.user) && <Link className={cx(s.link, s.highlight)} to="/register">Sign up</Link>}
         { !_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token) && <Link className={cx(s.link, s.highlight)} to="/profile">Profile</Link>}
         { !_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token) && <Link className={cx(s.link, s.highlight)} to="/admin">Admin</Link>}
-      </div>
+      </div>*/
+      <nav className={cx("navbar navbar-default", s.navbarDefault)}>
+        <div className="container-fluid">
+          <div className="navbar-header">
+            <img src="/images/accelevents-logo-black.png" alt="" className="normal-logo logo-black navbar-brand" style={{height: "60px"}} />
+          </div>
+        </div>
+      </nav>
     );
   }
 }

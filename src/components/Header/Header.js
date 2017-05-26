@@ -21,22 +21,9 @@ class Header extends React.Component {
     if( !_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token)){
     }
     return (
-      <div className={s.root}>
-        <div className={s.container}>
+      <div>
+        <div>
           <Navigation user={this.props.user} />
-          {
-            !(!_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token)) &&   <Link className={s.brand} to="/">
-            <img src={logoUrl} srcSet={`${logoUrl2x} 2x`} width="38" height="38" alt="React" />
-            <span className={s.brandTxt}>Your Company</span>
-            </Link>
-          }
-          {
-            !(!_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token)) &&   <div className={s.banner}>
-              <h1 className={s.bannerTitle}>React</h1>
-              <p className={s.bannerDesc}>Complex web apps made easy</p>
-            </div>
-          }
-
         </div>
       </div>
     );

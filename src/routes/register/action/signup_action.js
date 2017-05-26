@@ -12,15 +12,12 @@ export function onFormSubmit(e){
   return false;
 }
 
-export  function  doRegister(name, email, password) {
+export  function  doRegister( email, password) {
   return (dispatch)=>{
     return axios({
       method: 'post',
       url: API_URL+'users',
       data: {
-        displayName: name,
-        full_name: name,
-        username: email,
         email: email,
         password: password
       }

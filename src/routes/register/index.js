@@ -8,19 +8,19 @@
  */
 
 import React from 'react';
-import Layout from '../../components/Layout';
 import Register from './Register';
+const showFeedBack=false;
 
 const title = 'New User Registration';
 
 export default {
 
-  path: '/register',
+  path: '/signup',
 
   action() {
     return {
       title,
-      component: <Layout><Register title={title} /></Layout>,
+      component: <Register title={title} />,
     };
   },
 

@@ -8,10 +8,11 @@
  */
 
 import React from 'react';
-import Layout from '../../components/Layout';
+import AdminLayout from '../../components/AdminLayout';
 import Login from './Login';
 
 const title = 'Log In';
+const showFeedBack=false;
 
 export default {
 
@@ -20,7 +21,7 @@ export default {
   action() {
     return {
       title,
-      component: <Layout><Login title={title} /></Layout>,
+      component: <AdminLayout><Login title={title} showFeedBack={showFeedBack} /></AdminLayout>,
     };
   },
 

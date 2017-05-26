@@ -43,3 +43,8 @@
 .spacer {
   color: rgba(255, 255, 255, 0.3);
 }
+.navbarDefault{
+  border: 1px solid transparent;
+  background-color: #f8f8f8;
+  border-color: #e7e7e7;
+}

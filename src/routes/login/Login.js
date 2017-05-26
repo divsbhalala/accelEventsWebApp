@@ -13,6 +13,8 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Login.css';
 import _ from 'lodash';
 import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
+import Link from './../../components/Link/Link';
+import cx from 'classnames';
 
 import {connect} from 'react-redux';
 import { Alert} from 'react-bootstrap';
@@ -108,14 +110,15 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className={s.root}>
+      <div className={s.loginSignupWrap}>
         <div className={s.container}>
-          <h1>{this.props.title}</h1>
+          <h1 className={s.loginSignupWrapTitle}>{this.props.title}</h1>
+          <p className="text-center">Or &nbsp;&nbsp;<Link className={s.link} to="/signup">Signup</Link></p>
           <form  onSubmit={this.onFormClick}>
             {this.state.error && <Alert bsStyle="danger" >{this.state.error}</Alert>}
             <div className={s.formGroup}>
               <label className={s.label} htmlFor="usernameOrEmail">
-                Username or email address:
+                Email:
               </label>
               <input
                 className={s.input}
@@ -141,7 +144,7 @@ class Login extends React.Component {
               />
             </div>
             <div className={s.formGroup}>
-              <button className={s.button} type="submit">
+              <button className={cx("btn btn-square btn-green btn-block btn-lg")} type="submit">
                 Log in
               </button>
             </div>

@@ -32,22 +32,29 @@ class Layout extends React.Component {
   }
 
   componentDidMount(){
+    let pathName=location.pathName;
     if(!_.isEmpty(localStorage.getItem('user')) && !_.isEmpty(localStorage.getItem('token'))){
       this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
       this.props.storeToken(JSON.parse(localStorage.getItem('token')));
       sessionService.saveSession(JSON.parse(localStorage.getItem('token')));
       sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
-      var pathName=location.pathName;
       this.setState({user:
       {
         data:JSON.parse(localStorage.getItem('user')),
         token:JSON.parse(localStorage.getItem('token'))
       }
       });
-      //console.log('pathname', this.props.USER_DATA, JSON.parse(localStorage.getItem('user')));
+      console.log('pathname', this.props.USER_DATA, JSON.parse(localStorage.getItem('user')));
       if(pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0 ){
 
       }
+    } else{
+      console.log('pathname', this.props.USER_DATA, JSON.parse(localStorage.getItem('user')));
+
+      if(pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0 ){
+
+      }
+      console.log()
     }
   }
 
