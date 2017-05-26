@@ -31,7 +31,9 @@ class Login extends React.Component {
       isValidData:false,
       email:null,
       password:null,
-      error:null
+      error:null,
+      emailFeedBack:false,
+      passwordFeedBack:false,
     };
 
   }
@@ -41,13 +43,13 @@ class Login extends React.Component {
 
     if(this.email.value == ''){
       this.setState({
-        email:'error'
+        email:false
       });
     }
 
     if(this.password.value == ''){
       this.setState({
-        password:'error'
+        password:false
       });
     }
     if(this.state.isValidData){
@@ -67,14 +69,18 @@ class Login extends React.Component {
 
   emailValidateHandler= (e)=>{
 
+    this.setState({
+      emailFeedBack:true
+    });
+
     if(this.email.value == ''){
       this.setState({
-        email:'error'
+        email:false
       });
     }
     else{
       this.setState({
-        email:null
+        email:true
       });
     }
     this.setState({isValidData: !!(this.email.value && this.password.value)});
@@ -82,14 +88,18 @@ class Login extends React.Component {
   };
   passwordValidateHandler= (e)=>{
 
+    this.setState({
+      passwordFeedBack:true
+    });
+
     if(this.password.value == ''){
 
       this.setState({
-        password:'error'
+        password:false
       });
     }else{
       this.setState({
-        password:null
+        password:true
       });
     }
     this.setState({isValidData: !!(this.email.value && this.password.value)});
@@ -110,48 +120,115 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className={s.loginSignupWrap}>
-        <div className={s.container}>
-          <h1 className={s.loginSignupWrapTitle}>{this.props.title}</h1>
-          <p className="text-center">Or &nbsp;&nbsp;<Link className={s.link} to="/signup">Signup</Link></p>
-          <form  onSubmit={this.onFormClick}>
-            {this.state.error && <Alert bsStyle="danger" >{this.state.error}</Alert>}
-            <div className={s.formGroup}>
-              <label className={s.label} htmlFor="usernameOrEmail">
-                Email:
-              </label>
-              <input
-                className={s.input}
-                id="usernameOrEmail"
-                type="text"
-                name="usernameOrEmail"
-                autoFocus
-                ref={ref => { this.email = ref; }}
-                onKeyUp={this.emailValidateHandler}
-              />
+
+    <div className="login-signup-wrap">
+      {/*<div className={s.loginSignupWrap}>
+       <div className={s.container}>
+       <h1 className={s.loginSignupWrapTitle}>{this.props.title}</h1>
+       <p className="text-center">Or &nbsp;&nbsp;<Link className={s.link} to="/signup">Signup</Link></p>
+       <form  onSubmit={this.onFormClick}>
+       {this.state.error && <Alert bsStyle="danger" >{this.state.error}</Alert>}
+       <div className={s.formGroup}>
+       <label className={s.label} htmlFor="usernameOrEmail">
+       Email:
+       </label>
+       <input
+       className={s.input}
+       id="usernameOrEmail"
+       type="text"
+       name="usernameOrEmail"
+       autoFocus
+       ref={ref => { this.email = ref; }}
+       onKeyUp={this.emailValidateHandler}
+       />
+       </div>
+       <div className={s.formGroup}>
+       <label className={s.label} htmlFor="password">
+       Password:
+       </label>
+       <input
+       className={s.input}
+       id="password"
+       type="password"
+       name="password"
+       ref={ref => { this.password = ref; }}
+       onKeyUp={this.passwordValidateHandler}
+       />
+       </div>
+       <div className={s.formGroup}>
+       <button className={cx("btn btn-square btn-green btn-block btn-lg")} type="submit">
+       Log in
+       </button>
+       </div>
+       </form>
+       </div>
+       </div>*/}
+      <div className="login-signup-container login  has-cell-number ">
+        <div className="login-form" id="LoginAttempt">
+          <h1 className="text-center">Log in</h1>
+          <h4 className="text-center">
+            Or &nbsp;&nbsp;<Link className={s.link} to="/signup">Signup</Link>
+          </h4>
+          <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick}>
+            <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
+            <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
+              <span className="fa fa-spinner fa-pulse fa-fw" />
+              <span className="resp-message" />
             </div>
-            <div className={s.formGroup}>
-              <label className={s.label} htmlFor="password">
-                Password:
-              </label>
-              <input
-                className={s.input}
-                id="password"
-                type="password"
-                name="password"
-                ref={ref => { this.password = ref; }}
-                onKeyUp={this.passwordValidateHandler}
-              />
+            <div className="js-notification notification-register mrg-t-md" style={{display: 'none'}}>
+              Looks like you don't have an account yet. Let's change that!
+              <a href="/AccelEventsWebApp/u/signup">Sign up for free.</a>
             </div>
-            <div className={s.formGroup}>
-              <button className={cx("btn btn-square btn-green btn-block btn-lg")} type="submit">
-                Log in
-              </button>
+            <div className={cx("mrg-t-sm form-group" , this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
+              <label className="sr-only" htmlFor="login-email">Email</label>
+              <input name="username"
+                     id="login-email"
+                     autoComplete="off"
+                     placeholder="Email"
+                     type="text"
+                     required="required"
+                     className="form-control input-lg"
+                     autoFocus
+                     ref={ref => { this.email = ref; }}
+                     onKeyUp={this.emailValidateHandler}
+              />
+              { this.state.emailFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+              { this.state.emailFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+              { this.state.emailFeedBack && !this.state.email && <small className="help-block" >This value is not valid</small> }
+            </div>
+            <div className={cx("mrg-t-sm form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
+              <label className="sr-only" htmlFor="login-password">Password</label>
+              <input name="password"
+                     placeholder="Password"
+                     id="login-password"
+                     type="password"
+                     autoComplete="off"
+                     required="required"
+                     className="form-control input-lg"
+                     ref={ref => { this.password = ref; }}
+                     onKeyUp={this.passwordValidateHandler}
+              />
+              { this.state.passwordFeedBack && this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+              { this.state.passwordFeedBack && !this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+              { this.state.passwordFeedBack && !this.state.password && <small className="help-block" >This value is not valid</small> }
+            </div>
+            <input type="hidden" name defaultValue />
+            <div className="mrg-t-sm">
+              <button type="submit" className="btn btn-square btn-green btn-block btn-lg">Log in</button>
+            </div>
+            <div className="mrg-t-sm ">
+              <div className="form-group">
+                <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox" />
+                <label htmlFor="remember-me" className="text-small">Remember me</label>
+                <Link className="pull-right small" to="/password-reset">Forgot password?</Link>
+              </div>
             </div>
           </form>
         </div>
       </div>
-    );
+    </div>
+
+  );
   }
 }
 const mapDispatchToProps = {

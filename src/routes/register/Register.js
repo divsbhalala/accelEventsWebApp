@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Register.css';
 import {connect} from 'react-redux';
+import cx from 'classnames';
 import Link from '../../components/Link';
 import Footer from '../../components/Footer';
 import  history from './../../history';
@@ -35,36 +36,27 @@ class Register extends React.Component {
     super();
     this.state={
       isValidData:false,
-      name:null,
       email:null,
       password:null,
-      error:null
+      error:null,
+      emailFeedBack:false,
+      passwordFeedBack:false,
     }
+
+    this.emailValidateHandler = this.emailValidateHandler.bind(this);
+    this.passwordValidateHandler = this.passwordValidateHandler.bind(this);
   }
 
   onFormClick=(e)=>{
     e.preventDefault();
-    console.log(this.name.value);
-    if(this.name.value == ''){
-      this.setState({
-        name:'error'
-      });
-    }
-    if(this.email.value == ''){
-      this.setState({
-        email:'error'
-      });
-    }
 
     if(this.password.value == ''){
       this.setState({
-        password:'error'
+        password:false
       });
     }
     if(this.state.isValidData){
-      console.log(this.name.value, this.email.value, this.password.value )
       this.props.doRegister(this.email.value, this.password.value ).then((resp)=>{
-        console.log(resp);
         if(resp.error){
           browserHistory.push('/');
           this.setState({error:""});
@@ -79,48 +71,39 @@ class Register extends React.Component {
 
   };
 
-  nameValidateHandler= (e)=>{
-    if(this.name.value == ''){
-      this.setState({
-        name:'error'
-      });
-    }
-    else{
-      this.setState({
-        name:null
-      });
-    }
-    this.setState({isValidData: !!(this.name.value && this.email.value && this.password.value)});
-
-  };
   emailValidateHandler= (e)=>{
-
+    this.setState({
+      emailFeedBack:true
+    })
     if(this.email.value == ''){
       this.setState({
-        email:'error'
+        email:false
       });
     }
     else{
       this.setState({
-        email:null
+        email:true
       });
     }
-    this.setState({isValidData: !!(this.name.value && this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value && this.password.value)});
 
   };
   passwordValidateHandler= (e)=>{
+    this.setState({
+      passwordFeedBack:true
+    })
 
     if(this.password.value == ''){
 
       this.setState({
-        password:'error'
+        password:false
       });
     }else{
       this.setState({
-        password:null
+        password:true
       });
     }
-    this.setState({isValidData: !!(this.name.value && this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value && this.password.value)});
 
   };
 
@@ -180,29 +163,41 @@ class Register extends React.Component {
             </div>*/}
            <div className="onboardpage center-block">
              <div id="alertmessage" className="hide" />
-             <form id="signupform" className="createpwdform fv-form fv-form-bootstrap" noValidate="novalidate"><button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
-               <div className="form-group has-feedback has-success">
+             <form id="signupform" onSubmit={this.onFormClick} className="createpwdform fv-form fv-form-bootstrap" noValidate="novalidate"><button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
+               <div className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                  <label className="control-label text-uppercase">Email Address</label>
                  <div className="input-group">
                    <div className="input-group-addon">
                      <i className="fa fa-user" aria-hidden="true" />
                    </div>
-                   <input type="text" className="form-control" name="email" id="login-email" required="required"/>
-                 </div><i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />
-                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />
-                 <small className="help-block" data-fv-validator="notEmpty" data-fv-for="email" data-fv-result="VALID">This value is not valid</small></div>
-               <div className="form-group has-feedback has-success">
+                   <input type="text"
+                          className="form-control"
+                          name="email"
+                          id="login-email"
+                          required="required"
+                          ref={(input) => { this.email = input; }}
+                          onKeyUp={this.emailValidateHandler}/>
+                 </div>
+                 { this.state.emailFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                 { this.state.emailFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                 { this.state.emailFeedBack && !this.state.email && <small className="help-block" >This value is not valid</small> }
+               </div>
+               <div className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
                  <label className="control-label text-uppercase">Password</label>
                  <div className="input-group">
                    <div className="input-group-addon">
                      <i className="fa fa-key" aria-hidden="true" />
                    </div>
-                   <input type="password" className="form-control" name="password" data-message-invalid="Invalid Password" data-message-empty="Password is required" required="required" data-fv-field="password" />
-                 </div><i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" data-fv-icon-for="password" style={{}} />
-                 <small className="help-block" data-fv-validator="notEmpty" data-fv-for="password" data-fv-result="VALID" style={{display: 'none'}}>This value is not valid</small></div>
+                   <input type="password" className={cx("form-control")} name="password" required="required"  ref={(input) => { this.password = input; }}
+                          onKeyUp={this.passwordValidateHandler}/>
+                 </div>
+                 { this.state.passwordFeedBack && this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                 { this.state.passwordFeedBack && !this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                 { this.state.passwordFeedBack && !this.state.password && <small className="help-block" >This value is not valid</small> }
+               </div>
                <input type="hidden" name="mostRecentEventId" defaultValue={0} />
                <input type="hidden" name defaultValue />
-               <button className="btn btn-lg btn-block mrg-t-lg text-uppercase" role="button" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+               <button className={cx("btn btn-lg btn-block mrg-t-lg text-uppercase", ( (this.state.emailFeedBack && !this.state.email) || (this.state.passwordFeedBack && !this.state.password)) && 'disabled')} role="button" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
                  Get Started
                </button>
                <div>
