@@ -32,6 +32,7 @@ class ResetPassword extends React.Component {
       email:null,
       error:null,
       emailFeedBack:false,
+      emailSend:false,
     };
 
   }
@@ -58,7 +59,10 @@ class ResetPassword extends React.Component {
     }
 
   };
-
+  validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
   emailValidateHandler= (e)=>{
 
     this.setState({
@@ -72,12 +76,13 @@ class ResetPassword extends React.Component {
     }
     else{
       this.setState({
-        email:true
+        email:this.validateEmail(this.email.value)
       });
     }
     this.setState({isValidData: !!(this.email.value)});
 
   };
+
 
   componentDidMount(){
    /* if(localStorage.getItem('user') && localStorage.getItem('token')){
@@ -164,16 +169,17 @@ class ResetPassword extends React.Component {
           <p className="help-text text-center mrg-b-lg">Enter your email to reset you password</p>
           <div className="form">
             <form noValidate className="login-form" onSubmit={this.onFormClick}>
-              <div className="form-group">
+              <div className={cx("mrg-t-sm form-group" , this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                 <input className="form-control input-lg" type="text" placeholder="Email" name="username" required="required"
                        autoFocus
                        ref={ref => { this.email = ref; }}
                        onKeyUp={this.emailValidateHandler}
                 />
               </div>
-              <Alert bsStyle="danger">Password reset link sent successfully, Please check your mail</Alert>
+              { this.state.emailFeedBack && !this.state.email && <Alert bsStyle="danger">Invalid Email address</Alert>}
+              { this.state.emailSend  && <Alert bsStyle="success">Password reset link sent successfully, Please check your mail</Alert>}
               <input type="hidden" name defaultValue />
-              <button className="btn btn-square btn-green btn-lg" >Reset my password</button>
+              <button className="btn btn-square btn-green btn-lg" type="submit" >Reset my password</button>
             </form> {/* /.login-form */}
           </div> {/* /.form */}
           {/* created just in case we decide to add these later.
