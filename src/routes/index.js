@@ -20,6 +20,7 @@ export default {
     require('./contact').default,
     require('./login').default,
     require('./register').default,
+    require('./resetPassword').default,
     require('./about').default,
     require('./privacy').default,
     require('./admin').default,

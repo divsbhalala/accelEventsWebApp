@@ -75,11 +75,15 @@ class HeaderNew extends React.Component  {
             </MenuItem>
           </NavDropdown>
 
-          { !this.props.user && <MenuItem eventKey="8">
+          { !this.props.user && <MenuItem eventKey="8" onClick={(event) => {
+              history.push('/login');
+            }}>
             <i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
           </MenuItem>}
 
-          { !this.props.user && <MenuItem eventKey="9">
+          { !this.props.user && <MenuItem eventKey="9" onClick={(event) => {
+              history.push('/signup');
+            }}>
             <i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
           </MenuItem>}
 
