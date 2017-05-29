@@ -15,6 +15,9 @@ import s from './Aucation.css';
 import cx from 'classNames';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
+import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
+
+import  history from './../../history';
 
 import  EventAside from './../../components/EventAside/EventAside';
 
@@ -29,6 +32,12 @@ class Aucation extends React.Component {
             tab: 'The Event',
             showBookingTicketPopup: false,
             showMapPopup: true,
+            isValidData:false,
+            email:null,
+            password:null,
+            error:null,
+            emailFeedBack:false,
+            passwordFeedBack:false,
         }
         this.showBookingPopup = this.showBookingPopup.bind(this);
         this.hideBookingPopup = this.hideBookingPopup.bind(this);
@@ -46,18 +55,80 @@ class Aucation extends React.Component {
             showBookingTicketPopup: true
         })
     }
+    onFormClick=(e)=>{
+        e.preventDefault();
+
+        if(this.email.value == ''){
+            this.setState({
+                email:false
+            });
+        }
+
+        if(this.password.value == ''){
+            this.setState({
+                password:false
+            });
+        }
+        if(this.state.isValidData){
+            // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
+            //     if(!resp.error){
+            //         history.push('/');
+            //         this.setState({error:""});
+            //     }
+            //     else{
+            //         this.setState({error:"Invalid Email or password"});
+            //     }
+            //
+            // });
+        }
+
+    };
+
+    emailValidateHandler= (e)=>{
+
+        this.setState({
+            emailFeedBack:true
+        });
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if(this.email.value == ''){
+            this.setState({
+                email:false
+            });
+        }
+        else{
+            this.setState({
+                email:re.test(this.email.value)
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.password.value)});
+
+    };
+    passwordValidateHandler= (e)=>{
+
+        this.setState({
+            passwordFeedBack:true
+        });
+
+        if(this.password.value == ''){
+
+            this.setState({
+                password:false
+            });
+        }else{
+            this.setState({
+                password:true
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.password.value)});
+
+    };
 
     render() {
         return (
             <div className="row">
                 <div className="col-lg-12">
-                    <div className="row">
-                        <div className={cx("header-img", "text-center")}>
-                            <img
-                                src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"
-                                className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
-                        </div>
-                    </div>
+
                     <div id="content-wrapper">
                         <div className="row">
                             <div className="col-lg-3 col-md-4 col-sm-4">
@@ -94,79 +165,51 @@ class Aucation extends React.Component {
                                                   data-onsuccess="handleLoginSignupSubmit"
                                                   data-validation-fields="getAuctionLoginValidationFields"
                                                   action="/AccelEventsWebApp/events/jkazarian8/loginsignup"
-                                                  noValidate="novalidate">
-                                                <button type="submit" className="fv-hidden-submit"
-                                                        style={{display: 'none', width: 0, height: 0}}/>
+                                                  noValidate="novalidate"
+                                                  onSubmit={this.onFormClick} >
+
+
                                                 <div className="ajax-msg-box text-center mrg-b-lg"
                                                      style={{display: 'none'}}><span
                                                     className="fa fa-spinner fa-pulse fa-fw"/> <span
                                                     className="resp-message"/></div>
-                                                <div className="form-group has-feedback">
+                                                <div className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                                                     <label className="control-label">Email Address</label>
                                                     <div className="input-group">
                                                         <div className="input-group-addon">
                                                             <i className="fa fa-envelope" aria-hidden="true"/>
                                                         </div>
                                                         <input type="email" className="form-control login-email"
-                                                               name="email" data-fv-field="email"/>
+                                                               name="email" data-fv-field="email"
+                                                               ref={ref => { this.email = ref; }}
+                                                               onKeyUp={this.emailValidateHandler}
+                                                        />
+                                                        { this.state.emailFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                                                        { this.state.emailFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                                                     </div>
-                                                    <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                                       data-fv-icon-for="email" style={{display: 'none'}}/>
-                                                    <small className="help-block" data-fv-validator="notEmpty"
-                                                           data-fv-for="email" data-fv-result="NOT_VALIDATED"
-                                                           style={{display: 'none'}}>Email is required.
-                                                    </small>
-                                                    <small className="help-block" data-fv-validator="emailAddress"
-                                                           data-fv-for="email" data-fv-result="NOT_VALIDATED"
-                                                           style={{display: 'none'}}>Invalid Email.
-                                                    </small>
+                                                    { this.state.emailFeedBack && !this.state.email &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid Email.</small>}
                                                 </div>
-                                                <div className="form-group has-feedback">
-                                                    <label className="control-label">Cell Number</label>
-                                                    <div className="input-group">
-                                                        <div className="input-group-addon">
-                                                            <i className="fa fa-phone" aria-hidden="true"/>
-                                                        </div>
-                                                        <div className="intl-tel-input allow-dropdown separate-dial-code iti-sdc-2">
-                                                            <div className="flag-container">
-                                                                <div className="selected-flag" tabIndex={0}
-                                                                     title="Canada: +1">
-                                                                    <div className="iti-flag ca"/>
-                                                                    <div className="selected-dial-code">+1</div>
-                                                                    <div className="iti-arrow"/>
-                                                                </div>
-                                                                <ul className="country-list hide">
-                                                                    <li className="country preferred" data-dial-code={1}
-                                                                        data-country-code="us">
-                                                                        <div className="flag-box">
-                                                                            <div className="iti-flag us"/>
-                                                                        </div>
-                                                                        <span  className="country-name">United States</span>
-                                                                        <span className="dial-code">+1</span>
-                                                                    </li>
-                                                                </ul>
+                                                <div className="row">
+                                                    <div className="col-md-8">
+                                                        <div className="form-group expiration-date has-feedback">
+                                                            <label className="control-label">Cell Number</label>
+                                                            <div className="input-group">
+                                                                <div className="input-group-addon">
+                                                                    <i className="fa fa-phone"  aria-hidden="true"/></div>
+                                                                <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
+                                                                    <option selected value="10">+1 USA</option>
+                                                                    <option value="02">+91 IND</option>
+                                                                    </select>
+                                                                <input type="tel" className="int-tel-field "
+                                                                       data-country="CA" autoComplete="off"
+                                                                       data-fv-field="intTelField"
+                                                                       placeholder="204-234-5678"/>
                                                             </div>
-                                                            <input type="tel" className="int-tel-field form-control"
-                                                                   data-country="CA" autoComplete="off"
-                                                                   data-fv-field="intTelField"
-                                                                   placeholder="204-234-5678"/>
                                                         </div>
-                                                        <input type="hidden" name="countryCode"
-                                                               defaultValue="CA"/>
-                                                        <input type="hidden"  name="phoneNumber"  defaultValue/>
                                                     </div>
-                                                    <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                                       data-fv-icon-for="intTelField" style={{display: 'none'}}/>
-                                                    <small className="help-block" data-fv-validator="notEmpty"
-                                                           data-fv-for="intTelField" data-fv-result="NOT_VALIDATED"
-                                                           style={{display: 'none'}}>Phone number is required
-                                                    </small>
-                                                    <small className="help-block" data-fv-validator="intlPhoneField"
-                                                           data-fv-for="intTelField" data-fv-result="NOT_VALIDATED"
-                                                           style={{display: 'none'}}>Invalid phone number
-                                                    </small>
                                                 </div>
-                                                <div className="form-group has-feedback">
+
+                                                <div  className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
                                                     <label className="control-label login-password">Enter or Create
                                                         Password</label>
                                                     <div className="input-group">
@@ -176,18 +219,20 @@ class Aucation extends React.Component {
                                                         <input type="password" className="form-control" name="password"
                                                                autoComplete="new-password"
                                                                placeholder="Enter or create a password"
-                                                               data-fv-field="paswd"/>
+                                                               data-fv-field="paswd"
+                                                               ref={ref => { this.password = ref; }}
+                                                               onKeyUp={this.passwordValidateHandler}
+                                                        />
+                                                        { this.state.passwordFeedBack && this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                                                        { this.state.passwordFeedBack && !this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+
+                                                    </div>
+                                                    { this.state.passwordFeedBack && !this.state.password &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Password can't be empty.</small>}
+
                                                 </div>
-                                                    <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                                       data-fv-icon-for="paswd" style={{display: 'none'}}/>
-                                                    <a className="pull-right small forgot-password hide"
-                                                       href="/AccelEventsWebApp/u/password-reset">Forgot password?</a>
-                                                    <small className="help-block" data-fv-validator="notEmpty"
-                                                           data-fv-for="paswd" data-fv-result="NOT_VALIDATED"
-                                                           style={{display: 'none'}}>Password can't be empty
-                                                    </small>
-                                                </div>
-                                                <button type="submit" className="btn btn-primary "> Submit</button>
+                                                <button className={cx("btn btn-primary text-uppercase",  !this.state.isValidData && 'disabled')} role="button" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+                                                    SUBMIT
+                                                </button>
                                             </form>
                                         </div>
                                     </div>
@@ -202,5 +247,4 @@ class Aucation extends React.Component {
 }
 
 
-//export default withStyles(s)(Event);
 export default (withStyles(s)(Aucation));

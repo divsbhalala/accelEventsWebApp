@@ -16,7 +16,12 @@ import cx from 'classNames';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 
+import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
+
+import  history from './../../history';
+
 import  EventAside from './../../components/EventAside/EventAside';
+
 
 class Fund extends React.Component {
   static propTypes = {
@@ -29,6 +34,22 @@ class Fund extends React.Component {
       tab: 'The Event',
       showBookingTicketPopup: false,
       showMapPopup: true,
+        isValidData:false,
+        error:null,
+
+        email:null,
+        firstName:null,
+        lasttName:null,
+        cardNumber:null,
+        cardHolder:null,
+        amount:null,
+
+        emailFeedBack:false,
+        firstNameFeedBack:false,
+        lastNameFeedBack:false,
+        cardNumberFeedBack:false,
+        cardHolderFeedBack:false,
+        amountFeedBack:false,
     }
     this.showBookingPopup = this.showBookingPopup.bind(this);
     this.hideBookingPopup = this.hideBookingPopup.bind(this);
@@ -46,18 +67,155 @@ class Fund extends React.Component {
       showBookingTicketPopup: true
     })
   }
+    onFormClick=(e)=>{
+        e.preventDefault();
+
+        if(this.email.value == ''){
+            this.setState({
+                email:false
+            });
+        }
+
+        if(this.password.value == ''){
+            this.setState({
+                password:false
+            });
+        }
+        if(this.state.isValidData){
+            // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
+            //     if(!resp.error){
+            //         history.push('/');
+            //         this.setState({error:""});
+            //     }
+            //     else{
+            //         this.setState({error:"Invalid Email or password"});
+            //     }
+            //
+            // });
+        }
+
+    };
+
+    emailValidateHandler= (e)=>{
+
+        this.setState({
+            emailFeedBack:true
+        });
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if(this.email.value == ''){
+            this.setState({
+                email:false
+            });
+        }
+        else{
+            this.setState({
+                email:re.test(this.email.value)
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+
+    };
+    firstNameValidateHandler= (e)=>{
+
+        this.setState({
+            firstNameFeedBack:true
+        });
+
+        if(this.firstName.value == ''){
+
+            this.setState({
+                firstName:false
+            });
+        }else{
+            this.setState({
+                firstName:true
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+
+    };
+ lastNameValidateHandler= (e)=>{
+
+        this.setState({
+            lastNameFeedBack:true
+        });
+
+        if(this.lastName.value == ''){
+
+            this.setState({
+                lastName:false
+            });
+        }else{
+            this.setState({
+                lastName:true
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+
+    };
+    cardHolderValidateHandler= (e)=>{
+
+        this.setState({
+            cardHolderFeedBack:true
+        });
+
+        if(this.cardHolder.value == ''){
+
+            this.setState({
+                cardHolder:false
+            });
+        }else{
+            this.setState({
+                cardHolder:true
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+
+    };
+    cardNumberValidateHandler= (e)=>{
+
+        this.setState({
+            cardNumberFeedBack:true
+        });
+
+        if(this.cardNumber.value == ''){
+
+            this.setState({
+                cardNumber:false
+            });
+        }else{
+            this.setState({
+                cardNumber:true
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+
+    };
+    amountValidateHandler= (e)=>{
+
+        this.setState({
+            amountFeedBack:true
+        });
+
+        if(this.amount.value == ''){
+
+            this.setState({
+                amount:false
+            });
+        }else{
+            this.setState({
+                amount:true
+            });
+        }
+        this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+
+    };
 
   render() {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <div className="row">
-            <div className={cx("header-img", "text-center")}>
-              <img
-                src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"
-                className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
-            </div>
-          </div>
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
@@ -97,114 +255,92 @@ class Fund extends React.Component {
                             action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
                             data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
                             data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate">
+                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
+                            onSubmit={this.onFormClick} >
                         <button type="submit" className="fv-hidden-submit"
                                 style={{display: 'none', width: 0, height: 0}}/>
                         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                           className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-                        <div className="form-group has-feedback">
+                        <div className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                           <label className="control-label">First Name</label>
                           <div className="input-group">
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="firstname" data-fv-field="firstName"/>
+                            <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                                   ref={ref => { this.firstName = ref; }}
+                                   onKeyUp={this.firstNameValidateHandler} />
+                              { this.state.firstNameFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                              { this.state.firstNameFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                           </div>
-                          <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                             data-fv-icon-for="firstName" style={{display: 'none'}}/>
-                          <small className="help-block" data-fv-validator="notEmpty" data-fv-for="firstName"
-                                 data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Firstname is required.
-                          </small>
+                            { this.state.firstNameFeedBack && !this.state.firstName &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Enter First Name.</small>}
                         </div>
-                        <div className="form-group has-feedback">
+                        <div className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
                           <label className="control-label">Last Name</label>
                           <div className="input-group">
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="lastname" data-fv-field="lastName"/>
+                            <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                                   ref={ref => { this.lastName = ref; }}
+                                   onKeyUp={this.lastNameValidateHandler} />
+                              { this.state.lastNameFeedBack && this.state.lastName && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                              { this.state.lastNameFeedBack && !this.state.lastName && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                           </div>
-                          <i className="form-control-feedback fv-bootstrap-icon-input-group" data-fv-icon-for="lastName"
-                             style={{display: 'none'}}/>
-                          <small className="help-block" data-fv-validator="notEmpty" data-fv-for="lastName"
-                                 data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Lastname is required.
-                          </small>
+                            { this.state.lastNameFeedBack && !this.state.lastName &&  <small className="help-block" data-fv-validator="lastName"  data-fv-for="lastName" data-fv-result="NOT_VALIDATED" >Enter Valid Name.</small>}
                         </div>
                         <h4><a role="button" href="#login-user" data-toggle="modal" data-form="login">Log in</a> or Sign
                           up below</h4>
-                        <div className="form-group has-feedback">
+                          <div className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                           <label className="control-label">Email Address</label>
                           <div className="input-group">
                             <div className="input-group-addon">
                               <i className="fa fa-envelope" aria-hidden="true"/>
                             </div>
                             <input type="email" className="form-control login-email" name="email"
-                                   data-fv-field="email"/>
+                                   data-fv-field="email"
+                                   ref={ref => { this.email = ref; }}
+                                   onKeyUp={this.emailValidateHandler} />
+                              { this.state.emailFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                              { this.state.emailFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                           </div>
-                          <i className="form-control-feedback fv-bootstrap-icon-input-group" data-fv-icon-for="email"
-                             style={{display: 'none'}}/>
-                          <small className="help-block" data-fv-validator="notEmpty" data-fv-for="email"
-                                 data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Email is required.
-                          </small>
-                          <small className="help-block" data-fv-validator="emailAddress" data-fv-for="email"
-                                 data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Invalid Email.
-                          </small>
+                            { this.state.emailFeedBack && !this.state.email &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid Email.</small>}
                         </div>
                         <style
                           dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                         <div className="stripe-form">
                           <div className="stripe-card-info">
-                            <div className="form-group has-feedback">
+                              <div className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.email && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
                               <label className="control-label">Card Holder Name</label>
                               <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
                                 <input type="text" className="form-control" id="cardname" data-stripe="name"
-                                       placeholder="Name on the card" data-fv-field="cardholdername"/>
+                                       placeholder="Name on the card" data-fv-field="cardholdername"
+                                       ref={ref => { this.cardHolder = ref; }}
+                                       onKeyUp={this.cardHolderValidateHandler} />
+                                  { this.state.cardHolderFeedBack && this.state.cardHolder && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                                  { this.state.cardHolderFeedBack && !this.state.cardHolder && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                               </div>
-                              <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                 data-fv-icon-for="cardholdername" style={{display: 'none'}}/>
-                              <div className="small text-danger js-error card_error name"/>
-                              <small className="help-block" data-fv-validator="notEmpty" data-fv-for="cardholdername"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The card holder name is
-                                required and can't be empty
-                              </small>
-                              <small className="help-block" data-fv-validator="stringLength"
-                                     data-fv-for="cardholdername" data-fv-result="NOT_VALIDATED"
-                                     style={{display: 'none'}}>The card holder name must be more than 6 and less than 70
-                                characters long
-                              </small>
-                              <small className="help-block" data-fv-validator="callback" data-fv-for="cardholdername"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The card holder name can
-                                not start or end with white space
-                              </small>
-                            </div>
-                            <div className="form-group has-feedback">
+                                  { this.state.cardHolderFeedBack && !this.state.cardHolder &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid cardHolder.</small>}
+
+                              </div>
+                              <div className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
                               <label className="control-label">Credit Card Number</label>
                               <div className="input-group">
                                 <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
                                 </div>
                                 <input type="number" className="form-control" id="cardnumber"
                                        placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
-                                       required="required" data-fv-field="cardnumber"/>
+                                       required="required" data-fv-field="cardnumber"
+                                       ref={ref => { this.cardNumber = ref; }}
+                                       onKeyUp={this.cardNumberValidateHandler} />
+                                  { this.state.cardNumberFeedBack && this.state.cardNumber && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                                  { this.state.cardNumberFeedBack && !this.state.cardNumber && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                               </div>
-                              <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                 data-fv-icon-for="cardnumber" style={{display: 'none'}}/>
-                              <div className="small text-danger js-error card_error number"/>
-                              <small className="help-block" data-fv-validator="notEmpty" data-fv-for="cardnumber"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The credit card number is
-                                required and can't be empty
-                              </small>
-                              <small className="help-block" data-fv-validator="creditCard" data-fv-for="cardnumber"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The credit card number is
-                                invalid
-                              </small>
-                              <small className="help-block" data-fv-validator="integer" data-fv-for="cardnumber"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
-                              </small>
-                              <small className="help-block" data-fv-validator="stringLength" data-fv-for="cardnumber"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
-                              </small>
-                            </div>
+                                  { this.state.cardNumberFeedBack && !this.state.cardNumber &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid cardNumber.</small>}
+
+
+                              </div>
                             <div className="row">
                               <div className="col-md-8">
                                 <div className="form-group expiration-date has-feedback">
@@ -315,35 +451,19 @@ class Fund extends React.Component {
                         <div className="form-group has-feedback">
                           <div className="row">
                             <div className="col-md-6">
-                              <div className="input-group">
+                                <div className={cx("input-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
                                 <div className="input-group-addon">$</div>
                                 <input type="number" className="form-control" name="itembid" id="itembid"
                                        placeholder="Pledge Amount" min={300} step required="required"
-                                       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"/>
-                              </div>
-                              <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                 data-fv-icon-for="itembid" style={{display: 'none'}}/>
-                              <div className="itembid-help-text help-text" style={{display: 'none'}}>
-                                You will be charged the pledge amount plus $<span className="stripe-price">0</span> in
-                                credit card transaction fees.
-                              </div>
-                              <small className="help-block" data-fv-validator="callback" data-fv-for="itembid"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Pledge Amount can't be
-                                empty
-                              </small>
-                              <small className="help-block" data-fv-validator="digits" data-fv-for="itembid"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Digits Only Accepted.
-                              </small>
-                              <small className="help-block" data-fv-validator="greaterThan" data-fv-for="itembid"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Submitted pledge amount
-                                should be greater than or equal to the stated pledge amount.
-                              </small>
-                              <small className="help-block" data-fv-validator="integer" data-fv-for="itembid"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
-                              </small>
-                              <small className="help-block" data-fv-validator="notEmpty" data-fv-for="itembid"
-                                     data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
-                              </small>
+                                       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
+                                       ref={ref => { this.amount = ref; }}
+                                       onKeyUp={this.amountValidateHandler} />
+                                    { this.state.amountFeedBack && this.state.amount && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                                    { this.state.amountFeedBack && !this.state.amount && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                                </div>
+                                { this.state.amountFeedBack && !this.state.amount &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid Aamount.</small>}
+
+
                             </div>
                           </div>
                         </div>
@@ -353,10 +473,14 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div>
-                        <a role="button" className="btn btn-primary " data-toggle="modal" href="#"
-                           onclick="Utils.alert('Need Completed', 'Pledges are no longer being accepted for this Need.');">
-                          Submit Pledge</a>
-                        <a role="button" className="btn btn-success"
+                        {/*<a role="button" className="btn btn-primary " data-toggle="modal" href="#"*/}
+                           {/*onclick="Utils.alert('Need Completed', 'Pledges are no longer being accepted for this Need.');">*/}
+                          {/*Submit Pledge</a>*/}
+                          <button className={cx("btn btn-primary text-uppercase",  !this.state.isValidData && 'disabled')} role="button" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+                              Submit Pledge
+                          </button>
+
+                          <a role="button" className="btn btn-success"
                            href="/AccelEventsWebApp/events/jkazarian8#causeauction">Go back to All Items</a>
                       </form>
                     </div>
