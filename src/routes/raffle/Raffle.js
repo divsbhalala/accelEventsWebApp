@@ -30,18 +30,18 @@ class Raffle extends React.Component {
             showBookingTicketPopup: false,
             showMapPopup: true,
         }
-        this.showBookingPopup = this.showBookingPopup.bind(this);
-        this.hideBookingPopup = this.hideBookingPopup.bind(this);
+        this.showSlider = this.showSlider.bind(this);
+        this.hideSlider = this.hideSlider.bind(this);
     }
 
-    showBookingPopup = (e) => {
+    showSlider = (e) => {
         e.preventDefault();
         this.setState({
             showBookingTicketPopup: true
         })
     }
 
-    hideBookingPopup = () => {
+    hideSlider = () => {
         this.setState({
             showBookingTicketPopup: true
         })
@@ -55,7 +55,7 @@ class Raffle extends React.Component {
                     <div id="content-wrapper">
                         <div className="row">
                             <div className="col-lg-3 col-md-4 col-sm-4">
-                                <EventAside activeTab={'Raffle'} showBookingPopup={this.showBookingPopup}
+                                <EventAside activeTab={'Raffle'} showSlider={this.showSlider}
                                             showMapPopup={this.showMapPopup}/>
                             </div>
                             <div className="col-lg-9 col-md-8 col-sm-8">
