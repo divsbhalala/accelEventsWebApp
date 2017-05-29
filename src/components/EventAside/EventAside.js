@@ -8,17 +8,21 @@
  */
 
 import React from 'react';
-import   PropTypes   from 'prop-types';
+import PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventAside.css';
 import Link from '../Link';
 import cx from 'classnames';
+import Moment from 'react-moment';
+import moment from 'moment';
 
 class EventAside extends React.Component {
   static propTypes = {
     activeTab: PropTypes.string,
     showBookingPopup: PropTypes.func,
     showMapPopup: PropTypes.func,
+    eventData: PropTypes.object,
+    eventTicketData: PropTypes.object,
   }
   render() {
     return (
@@ -29,18 +33,19 @@ class EventAside extends React.Component {
             <h2>jkazarian8</h2>
           </header>
           <div className={cx("main-box-body","clearfix")}>
-            <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" className="img-responsive center-block" />
+            { this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_logo_enabled  && <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" className="img-responsive center-block" />}
             { this.props.activeTab && (this.props.activeTab=='The Event' ) &&  <div className={cx("the-event","mrg-t-lg")}>
               { this.props.showBookingPopup && <a onClick={this.props.showBookingPopup} className={cx("btn","btn-block","btn-lg","btn-orange")}>Buy Tickets</a>}
                 <div className={cx("box")}>
                   <div className={cx("box-title","text-uppercase")}>date and time</div>
                   <div className={cx("box-content")}>
+                    { console.log('isSame',moment(this.props.eventTicketData && this.props.eventTicketData.startdate,"DD-MM-YYYY").isSame(moment(this.props.eventTicketData && this.props.eventTicketData.enddate,"DD-MM-YYYY")))
+                    }
+                    {this.props.eventTicketData && this.props.eventTicketData.startdate && <Moment  format="ddd MMMM D YYYY, h:mm A"  tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.eventTicketData.startdate}</Moment>} -
+                    {this.props.eventTicketData && this.props.eventTicketData.enddate && <Moment  format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.eventTicketData.enddate}</Moment>}
+                    <br />
                     <time>
-                      Thu, April 13, 2017
-                      01:29 PM
-                      —
-                      Fri, April 14, 2017
-                      05:29 PM<span className="hide"> (America/New_York)</span>
+                      <span className="hide"> (America/New_York)</span>
                     </time><br />
                     <a className="hide" href="#">Add to calendar</a>
                   </div>
@@ -50,7 +55,7 @@ class EventAside extends React.Component {
                   <div className="box-content">
                     <address>
 
-                    </address>{console.log(this.props)}
+                    </address>
                     {this.props.showMapPopup && <a onClick={this.props.showMapPopup}>View on Map</a>}
                   </div>
                 </div>

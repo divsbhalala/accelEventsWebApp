@@ -22,6 +22,8 @@ import  EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox
 import  EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
 import  EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
+
+import {doGetEventData, doGetEventTicketSetting} from './action/index';
 let  ar=[1,2,3,4,5,6,7,8];
 class Event extends React.Component {
   static propTypes = {
@@ -40,6 +42,8 @@ class Event extends React.Component {
     this.hideBookingPopup = this.hideBookingPopup.bind(this);
     this.showMapPopup = this.showMapPopup.bind(this);
     this.hideMapPopup = this.hideMapPopup.bind(this);
+    this.setActiveTabState = this.setActiveTabState.bind(this);
+
   }
   generateDivs=()=>{
     ar.push(ar.length+1);
@@ -84,24 +88,37 @@ class Event extends React.Component {
     })
   }
 
+  componentWillMount(){
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
+
+  }
+  setActiveTabState=(label)=>{
+    this.setState({ tab:label});
+    if(label && (label=='Auction' || label=='Raffle' || label=='Fund a Need')){
+
+    }
+    this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
+
+  }
 
     render() {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <div className="row">
+          {this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_banner_image_enabled  && <div className="row">{console.log(this.props.eventData)}
             <div className={cx("header-img","text-center")}>
-              <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png" className={cx("img-responsive","img-banner")} style={{width: "100%"}} />
+              <img src={ this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/"+this.props.eventData.design_detail.banner_image:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"} className={cx("img-responsive","img-banner")} style={{width: "100%"}} />
             </div>
-          </div>
+          </div>}
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <EventAside activeTab={this.state.tab} showBookingPopup={this.showBookingPopup} showMapPopup={this.showMapPopup} />
+                <EventAside activeTab={this.state.tab} eventData={this.props.eventData} eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup} showMapPopup={this.showMapPopup} />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">
                 <div className="main-box">
-                  <Tabs onSelect={ (index, label)=>{ this.setState({ tab:label})} } selected={this.state.tab} className="tabs-wrapper">
+                  <Tabs onSelect={ (index, label)=>{ this.setActiveTabState(label)} } selected={this.state.tab} className="tabs-wrapper">
                     <Tab label="The Event">
                       <div className={cx("row item-canvas")}>
                         <div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
@@ -136,10 +153,6 @@ class Event extends React.Component {
                             )
                           }
                         </InfiniteScroll>
-
-
-
-
                       </div>
                     </Tab>
                     <Tab label="Raffle">
@@ -208,6 +221,14 @@ class Event extends React.Component {
   }
 }
 
+const mapDispatchToProps = {
+  doGetEventData : (eventUrl) => doGetEventData(eventUrl),
+  doGetEventTicketSetting : (eventUrl) => doGetEventTicketSetting(eventUrl)
+};
+const mapStateToProps = (state) => ({
+  eventData:state.event && state.event.data,
+  eventTicketData:state.event && state.event.ticket_data
+});
 
-//export default withStyles(s)(Event);
-export default (withStyles(s)(Event));
+export default  connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(Event));
+//export default (withStyles(s)(Event));

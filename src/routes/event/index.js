@@ -20,7 +20,7 @@ export default {
   action(props) {
     return {
       title,
-      component: <Layout params={props.params} ><Event title={title} /></Layout>,
+      component: <Layout params={props.params} ><Event title={title}  params={props.params}/></Layout>,
     };
   },
 
