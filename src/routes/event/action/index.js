@@ -236,6 +236,60 @@ export  function  doGetRaffleItemByLimit( eventUrl, page, size) {
 }
 
 
+export  function  doGetSettings( eventUrl, type) {
+  return (dispatch)=>{
+    return axios({
+      method: 'get',
+      url: API_URL+'events/'+eventUrl+'/'+type+'/settings',
+      data: {}
+    }).then(response => {
+      return response;
+
+    })
+      .catch( error => {
+        return error;
+      });
+  }
+
+}
+
+export  function  doGeItemByCode( eventUrl, itemCode, type) {
+  return (dispatch)=>{
+    return axios({
+      method: 'get',
+      url: API_URL+'events/'+eventUrl+'/'+type+'/item/'+itemCode,
+      data: {}
+    }).then(response => {
+      dispatch(storeEventTicketData(response.data));
+      return response;
+
+    })
+      .catch( error => {
+        return error;
+      });
+  }
+
+}
+
+export  function  doGetItemByLimit( eventUrl, page, size, type) {
+  return (dispatch)=>{
+    return axios({
+      method: 'get',
+      url: API_URL+'events/'+eventUrl+'/'+type+'/item/'+page+'/'+size,
+      data: {}
+    }).then(response => {
+      return response;
+
+    })
+      .catch( error => {
+        return error;
+      });
+  }
+
+}
+
+
+
 
 export function storeEventData(data){
   return {

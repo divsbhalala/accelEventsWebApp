@@ -23,7 +23,7 @@ import  EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCom
 import  EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
 
-import {doGetEventData, doGetEventTicketSetting} from './action/index';
+import {doGetEventData, doGetEventTicketSetting, doGetSettings, doGeItemByCode, doGetItemByLimit} from './action/index';
 let  ar=[1,2,3,4,5,6,7,8];
 class Event extends React.Component {
   static propTypes = {
@@ -96,9 +96,20 @@ class Event extends React.Component {
   setActiveTabState=(label)=>{
     this.setState({ tab:label});
     if(label && (label=='Auction' || label=='Raffle' || label=='Fund a Need')){
+      if(label=='Auction'){
+        label='auction';
+      } else if(label=='Raffle'){
+        label='raffle';
+      } else if(label=='Fund a Need'){
+        label='fundaneed';
+      } else if(label=='Fund a Need'){
+        label='fundaneed';
+      } else if(label=='Fund a Need'){
+        label='fundaneed';
+      }
+      this.props.doGetSettings(this.props.params && this.props.params.params, label);
 
     }
-    this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 
   }
 
@@ -223,11 +234,14 @@ class Event extends React.Component {
 
 const mapDispatchToProps = {
   doGetEventData : (eventUrl) => doGetEventData(eventUrl),
-  doGetEventTicketSetting : (eventUrl) => doGetEventTicketSetting(eventUrl)
+  doGetEventTicketSetting : (eventUrl) => doGetEventTicketSetting(eventUrl),
+  doGeItemByCode : ( eventUrl, itemCode, type) => doGeItemByCode( eventUrl, itemCode, type),
+  doGetItemByLimit : (eventUrl, page, size, type) => doGetItemByLimit(eventUrl, page, size, type),
+  doGetSettings : (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
   eventData:state.event && state.event.data,
-  eventTicketData:state.event && state.event.ticket_data
+  eventTicketData:state.event && state.event.ticket_data,
 });
 
 export default  connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(Event));
