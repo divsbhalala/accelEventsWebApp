@@ -99,6 +99,7 @@ export  function  doGetAuctionItemByLimit( eventUrl, page, size) {
       url: API_URL+'events/'+eventUrl+'/auction/item/'+page+'/'+size,
       data: {}
     }).then(response => {
+      dispatch(storeAuctionData(response.data));
       return response;
 
     })
@@ -172,6 +173,7 @@ export  function  doGetFundANeedItemByLimit( eventUrl, page, size) {
       url: API_URL+'events/'+eventUrl+'/fundaneed/item/'+page+'/'+size,
       data: {}
     }).then(response => {
+      dispatch(storeEventFundANeedData(response.data));
       return response;
 
     })
@@ -207,7 +209,7 @@ export  function  doGetRaffleItemByCode( eventUrl, itemCode) {
       url: API_URL+'events/'+eventUrl+'/raffle/item/'+itemCode,
       data: {}
     }).then(response => {
-      dispatch(storeEventTicketData(response.data));
+      dispatch(storeEventRaffleData(response.data));
       return response;
 
     })
@@ -242,13 +244,7 @@ export  function  doGetSettings( eventUrl, type) {
       method: 'get',
       url: API_URL+'events/'+eventUrl+'/'+type+'/settings',
       data: {}
-    }).then(response => {
-      return response;
-
-    })
-      .catch( error => {
-        return error;
-      });
+    });
   }
 
 }
@@ -259,14 +255,7 @@ export  function  doGeItemByCode( eventUrl, itemCode, type) {
       method: 'get',
       url: API_URL+'events/'+eventUrl+'/'+type+'/item/'+itemCode,
       data: {}
-    }).then(response => {
-      dispatch(storeEventTicketData(response.data));
-      return response;
-
-    })
-      .catch( error => {
-        return error;
-      });
+    });
   }
 
 }
@@ -277,13 +266,7 @@ export  function  doGetItemByLimit( eventUrl, page, size, type) {
       method: 'get',
       url: API_URL+'events/'+eventUrl+'/'+type+'/item/'+page+'/'+size,
       data: {}
-    }).then(response => {
-      return response;
-
-    })
-      .catch( error => {
-        return error;
-      });
+    });
   }
 
 }
@@ -297,9 +280,34 @@ export function storeEventData(data){
     data,
   }
 }
+
+export function storeEventRaffleData(data){
+  return {
+    type:'STORE_EVENT_RAFFLE',
+    data,
+  }
+}
+export function storeEventFundANeedData(data){
+  return {
+    type:'STORE_EVENT_FUND_A_NEED',
+    data,
+  }
+}
+export function storeEventDonationData(data){
+  return {
+    type:'STORE_EVENT_TICKET_DONATION',
+    data,
+  }
+}
 export function storeEventTicketData(data){
   return {
     type:'STORE_EVENT_TICKET',
+    data,
+  }
+}
+export function storeAuctionData(data){
+  return {
+    type:'STORE_EVENT_AUCTION',
     data,
   }
 }

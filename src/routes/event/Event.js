@@ -15,6 +15,7 @@ import s from './Event.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import history from './../../history';
 import { Button } from 'react-bootstrap';
 
 import  EventAside from './../../components/EventAside/EventAside';
@@ -23,7 +24,13 @@ import  EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCom
 import  EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
 
-import {doGetEventData, doGetEventTicketSetting, doGetSettings, doGeItemByCode, doGetItemByLimit} from './action/index';
+import {doGetEventData,
+  doGetEventTicketSetting,
+  doGetSettings,
+  doGeItemByCode,
+  doGetItemByLimit,
+  doGetAuctionItemByLimit
+} from './action/index';
 let  ar=[1,2,3,4,5,6,7,8];
 class Event extends React.Component {
   static propTypes = {
@@ -35,8 +42,15 @@ class Event extends React.Component {
       tab:'The Event',
       totalAuction:ar,
       showBookingTicketPopup:false,
-      showMapPopup:false
-    }
+      showMapPopup:false,
+      settings:{},
+      auctionPageCount:0,
+      auctionPageLimit:10,
+      rafflePageCount:10,
+      rafflePageLimit:10,
+      fundANeedPageCount:10,
+      FundANeedPageLimit:10,
+    };
     this.generateDivs = this.generateDivs.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
     this.hideBookingPopup = this.hideBookingPopup.bind(this);
@@ -62,56 +76,70 @@ class Event extends React.Component {
       })
     }, 500);
 
-  }
+  };
   showBookingPopup= (e)=>{
     e.preventDefault();
     this.setState({
       showBookingTicketPopup:true
     })
-  }
+  };
 
   hideBookingPopup=()=>{
     this.setState({
       showBookingTicketPopup:false
     })
-  }
+  };
   showMapPopup= (e)=>{
     e.preventDefault();
     this.setState({
       showMapPopup:true
     })
-  }
+  };
 
   hideMapPopup=()=>{
     this.setState({
       showMapPopup:false
     })
-  }
+  };
 
   componentWillMount(){
     this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
-
+    //this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp=> {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error=>{
+       history.push('/404');
+    });
   }
   setActiveTabState=(label)=>{
     this.setState({ tab:label});
-    if(label && (label=='Auction' || label=='Raffle' || label=='Fund a Need')){
+    if(label && (label=='Auction' || label=='Raffle' || label=='Fund a Need' || label=='The Event' || label=='Donation' )){
       if(label=='Auction'){
         label='auction';
+
       } else if(label=='Raffle'){
         label='raffle';
       } else if(label=='Fund a Need'){
         label='fundaneed';
-      } else if(label=='Fund a Need'){
-        label='fundaneed';
-      } else if(label=='Fund a Need'){
-        label='fundaneed';
+      } else if(label=='The Event'){
+        label='ticketing';
+      } else if(label=='Donation'){
+        label='donation';
       }
-      this.props.doGetSettings(this.props.params && this.props.params.params, label);
+      this.props.doGetSettings(this.props.params && this.props.params.params, label).then(resp=>{
+         this.setState({
+           settings:resp && resp.data
+         });
+      })
+        .catch(error=>{
+         history.push('/404');
+      });
 
     }
 
-  }
+  };
 
     render() {
     return (
@@ -125,7 +153,7 @@ class Event extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <EventAside activeTab={this.state.tab} eventData={this.props.eventData} eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup} showMapPopup={this.showMapPopup} />
+                <EventAside activeTab={this.state.tab} eventData={this.props.eventData} settings={this.state.settings} eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup} showMapPopup={this.showMapPopup} />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">
                 <div className="main-box">
@@ -242,6 +270,9 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
   eventData:state.event && state.event.data,
   eventTicketData:state.event && state.event.ticket_data,
+  eventRaffleData:state.event && state.event.raffle_data,
+  eventFundData:state.event && state.event.fund_data,
+  eventDonationData:state.event && state.event.donation_data,
 });
 
 export default  connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(Event));
