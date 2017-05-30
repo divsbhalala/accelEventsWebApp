@@ -25,9 +25,7 @@ export default {
     require('./privacy').default,
     require('./admin').default,
     require('./event').default,
-    require('./aucation').default,
-    require('./raffle').default,
-    require('./fund').default,
+
 
     // Wildcard routes, e.g. { path: '*', ... } (must go last)
     require('./notFound').default,

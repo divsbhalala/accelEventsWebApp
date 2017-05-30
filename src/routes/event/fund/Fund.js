@@ -11,16 +11,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
-import s from './Raffle.css';
+import s from './fund.css';
 import cx from 'classNames';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 
 import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
 
-import  history from './../../history';
-
-import  EventAside from './../../components/EventAside/EventAside';
+import  history from './../../../history';
+import PopupModel from './../../../components/PopupModal/index';
+import  EventAside from './../../../components/EventAside/EventAside';
 
 
 class Fund extends React.Component {
@@ -33,13 +33,13 @@ class Fund extends React.Component {
     this.state = {
       tab: 'The Event',
       showBookingTicketPopup: false,
-      showMapPopup: true,
+      showMapPopup: false,
         isValidData:false,
         error:null,
 
         email:null,
         firstName:null,
-        lasttName:null,
+        lastName:null,
         cardNumber:null,
         cardHolder:null,
         amount:null,
@@ -53,8 +53,21 @@ class Fund extends React.Component {
     }
     this.showSlider = this.showSlider.bind(this);
     this.hideSlider = this.hideSlider.bind(this);
+      this.showMapPopup = this.showMapPopup.bind(this);
+      this.hideMapPopup = this.hideMapPopup.bind(this);
   }
+    showMapPopup= (e)=>{
+        e.preventDefault();
+        this.setState({
+            showMapPopup:true
+        })
+    }
 
+    hideMapPopup=()=>{
+        this.setState({
+            showMapPopup:false
+        })
+    }
   showSlider = (e) => {
     e.preventDefault();
     this.setState({
@@ -490,6 +503,13 @@ class Fund extends React.Component {
             </div>
           </div>
         </div>
+          <PopupModel
+              id="mapPopup"
+              showModal={this.state.showMapPopup}
+              headerText="Event Location"
+              modelBody='<div><h1>Location</h1></div>'
+              onCloseFunc={this.hideMapPopup}
+          />
       </div>
     );
   }

@@ -11,17 +11,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
-import s from './Aucation.css';
+import s from './Auction.css';
 import cx from 'classNames';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
 
-import  history from './../../history';
+import  history from './../../../history';
 
-import  EventAside from './../../components/EventAside/EventAside';
+import  EventAside from './../../../components/EventAside/EventAside';
 
-class Aucation extends React.Component {
+import  {doGetAuctionItemByCode} from './../action/index';
+
+class Auction extends React.Component {
     static propTypes = {
         title: PropTypes.string
     };
@@ -38,7 +40,8 @@ class Aucation extends React.Component {
             error:null,
             emailFeedBack:false,
             passwordFeedBack:false,
-        }
+            auctionData:null,
+        };
         this.showSlider = this.showSlider.bind(this);
         this.hideSlider = this.hideSlider.bind(this);
     }
@@ -48,13 +51,13 @@ class Aucation extends React.Component {
         this.setState({
             showBookingTicketPopup: true
         })
-    }
+    };
 
     hideSlider = () => {
         this.setState({
             showBookingTicketPopup: true
         })
-    }
+    };
     onFormClick=(e)=>{
         e.preventDefault();
 
@@ -123,12 +126,23 @@ class Aucation extends React.Component {
         this.setState({isValidData: !!(this.email.value && this.password.value)});
 
     };
+    componentWillMount(){
+        this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params,this.props.itemCode)
+            .then(resp=>{
+                if(resp && resp.data){
+                    this.setState({
+                        auctionData: resp.data
+                    })
+                }
+            }).catch(error=>{
+            console.log(error)
+        });
+    }
 
     render() {
         return (
             <div className="row">
                 <div className="col-lg-12">
-
                     <div id="content-wrapper">
                         <div className="row">
                             <div className="col-lg-3 col-md-4 col-sm-4">
@@ -137,7 +151,7 @@ class Aucation extends React.Component {
                             </div>
                             <div className="col-lg-9 col-md-8 col-sm-8">
                                 <div className="main-box clearfix">
-                                    <h1 className="text-center mrg-t-lg" id="item-name">Louis Vuitton Sunglasses</h1>
+                                    <h1 className="text-center mrg-t-lg" id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
                                     <div className="row mrg-t-lg">
                                         <div className="col-md-6">
                                             <div className="pad-l-md pad-r-md">
@@ -146,15 +160,15 @@ class Aucation extends React.Component {
                                                          style={{backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")'}}/>
                                                 </div>
                                             </div>
-                                            <div className="mrg-t-lg pad-l-md pad-r-md">Trendy Louis Vuitton Sunglasses
-                                                - Like New
+                                            <div className="mrg-t-lg pad-l-md pad-r-md">
+                                                {this.state.auctionData && this.state.auctionData.description}
                                             </div>
                                         </div>
                                         <div className="col-md-6" style={{paddingRight: 16}}>
                                             <div className="row">
                                                 <div className="col-sm-6">
                                                     <div className="curr-bid-number">$<span
-                                                        className="current-bid">425</span></div>
+                                                        className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
                                                     <div className="curr-bid-text">Current Bid</div>
                                                 </div>
                                             </div>
@@ -167,7 +181,6 @@ class Aucation extends React.Component {
                                                   action="/AccelEventsWebApp/events/jkazarian8/loginsignup"
                                                   noValidate="novalidate"
                                                   onSubmit={this.onFormClick} >
-
 
                                                 <div className="ajax-msg-box text-center mrg-b-lg"
                                                      style={{display: 'none'}}><span
@@ -246,5 +259,12 @@ class Aucation extends React.Component {
     }
 }
 
+const mapDispatchToProps = {
+    doGetAuctionItemByCode : (eventUrl, itemCode) => doGetAuctionItemByCode(eventUrl, itemCode),
+};
+const mapStateToProps = (state) => ({
+    auction_data:state.event && state.event.auction_data,
 
-export default (withStyles(s)(Aucation));
+});
+
+export default  connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(Auction));

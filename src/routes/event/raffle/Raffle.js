@@ -16,7 +16,7 @@ import cx from 'classNames';
 import {connect} from 'react-redux';
 import {Button} from 'react-bootstrap';
 
-import  EventAside from './../../components/EventAside/EventAside';
+import  EventAside from './../../../components/EventAside/EventAside';
 
 class Raffle extends React.Component {
     static propTypes = {

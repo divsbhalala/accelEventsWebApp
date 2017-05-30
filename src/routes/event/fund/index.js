@@ -8,20 +8,19 @@
  */
 
 import React from 'react';
-import Layout from '../../components/Layout';
-import Aucation from './Aucation';
+import Layout from '../../../components/Layout/Layout';
+import Fund from './Fund';
 
-const title = 'Aucation Page';
+const title = 'Fund Page';
 
 export default {
 
-  path: '/aucation',
+  path: '/fund',
 
   action() {
     return {
       title,
-      component: <Layout><Aucation title={title} /></Layout>,
+      component: <Layout><Fund title={title} /></Layout>,
     };
   },
-
 };

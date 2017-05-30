@@ -6,7 +6,7 @@ export default function event(state = {}, action) {
     case STORE_EVENT_RAFFLE: return {...state, raffle_data:action.data};
     case STORE_EVENT_FUND_A_NEED: return {...state, fund_data:action.data};
     case STORE_EVENT_TICKET_DONATION: return {...state, donation_data:action.data};
-    case STORE_EVENT_AUCTION: return {...state, donation_data:action.data};
+    case STORE_EVENT_AUCTION: return {...state, auction_data:action.data};
     default:
       return state;
   }

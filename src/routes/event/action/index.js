@@ -80,14 +80,7 @@ export  function  doGetAuctionItemByCode( eventUrl, itemCode) {
       method: 'get',
       url: API_URL+'events/'+eventUrl+'/auction/item/'+itemCode,
       data: {}
-    }).then(response => {
-      dispatch(storeEventTicketData(response.data));
-      return response;
-
-    })
-      .catch( error => {
-        return error;
-      });
+    });
   }
 
 }
@@ -109,8 +102,6 @@ export  function  doGetAuctionItemByLimit( eventUrl, page, size) {
   }
 
 }
-
-
 
 /*----------------Donation-------------*/
 export  function  doGetDonationSetting( eventUrl) {
@@ -270,9 +261,6 @@ export  function  doGetItemByLimit( eventUrl, page, size, type) {
   }
 
 }
-
-
-
 
 export function storeEventData(data){
   return {

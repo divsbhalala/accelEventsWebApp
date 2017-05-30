@@ -341,9 +341,6 @@ class Admin extends React.Component {
 
           </div>
 
-
-
-
           <div className="row form-group">
             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <div className="main-box clearfix">
