@@ -78,7 +78,7 @@ export  function  doGetAuctionItemByCode( eventUrl, itemCode) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/auction/items/'+itemCode,
+      url: API_URL+'events/'+eventUrl+'/auction/item/'+itemCode,
       data: {}
     });
   }
@@ -143,7 +143,7 @@ export  function  doGetFundANeedItemByCode( eventUrl, itemCode) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/fundaneed/items/'+itemCode,
+      url: API_URL+'events/'+eventUrl+'/fundaneed/item/'+itemCode,
       data: {}
     })
     //     .then(response => {
@@ -198,7 +198,7 @@ export  function  doGetRaffleItemByCode( eventUrl, itemCode) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/raffle/items/'+itemCode,
+      url: API_URL+'events/'+eventUrl+'/raffle/item/'+itemCode,
       data: {}
     }).then(response => {
       dispatch(storeEventRaffleData(response.data));
@@ -245,7 +245,7 @@ export  function  doGeItemByCode( eventUrl, itemCode, type) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/'+type+'/items/'+itemCode,
+      url: API_URL+'events/'+eventUrl+'/'+type+'/item/'+itemCode,
       data: {}
     });
   }

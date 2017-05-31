@@ -17,6 +17,7 @@ import cx from 'classnames';
 class EventTabCommonBox extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    type: PropTypes.string,
     headerText: PropTypes.string,
     itemCode: PropTypes.string,
     descText: PropTypes.string,
@@ -79,7 +80,7 @@ class EventTabCommonBox extends React.Component {
                 <div className={cx("flex-col")}><strong> ITEM CODE: </strong></div>
                 <div className={cx("flex-col")}>
                   <span className={cx("item-code")}>{this.props.itemCode}</span>
-                  <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8/R/RAF" className={cx("item-link btn btn-sm btn-info pull-right")}>More Info</a>
+                  <Link to={location.pathname+'/'+this.props.type+'/'+this.props.itemCode} className={cx("item-link btn btn-sm btn-info pull-right")}>More Info</Link>
                 </div>
               </div>
               {
@@ -100,8 +101,8 @@ class EventTabCommonBox extends React.Component {
 
             </div>
             <div className={cx("text-center", "action-btns")}>{console.log(this.props.headerText,this.props.auctionPurchaseFor)}
-              { this.props.actionTitle && <a role="button" className={cx(this.props.actionClassName)} style={{width:'50%'}}>{this.props.actionTitle}</a>}&nbsp;&nbsp;
-              { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor && <a role="button" className={cx(this.props.auctionBuyNowClassName)} >{this.props.auctionBuyNowTitle}</a>} &nbsp;&nbsp;
+              { this.props.actionTitle && <Link role="button" to={location.pathname+'/'+this.props.type+'/'+this.props.itemCode} className={cx(this.props.actionClassName)} style={{width:'50%'}}>{this.props.actionTitle}</Link>}&nbsp;&nbsp;
+              { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor && <Link role="button" to={location.pathname+'/'+this.props.type+'/'+this.props.itemCode} className={cx(this.props.auctionBuyNowClassName)} >{this.props.auctionBuyNowTitle}</Link>} &nbsp;&nbsp;
               { this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
                 <div className={cx("alert alert-success mrg-b-0")}> {this.props.auctionBuyNowTitle}</div>
               </div> }
