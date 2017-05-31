@@ -28,9 +28,11 @@ class EventTabCommonBox extends React.Component {
     actionClassName: PropTypes.string,
     imageUrl: PropTypes.string,
     data: PropTypes.array,
-    auctionPurchaseFor: PropTypes.string,
+    auctionPurchaseFor: PropTypes.bool,
     auctionBuyNowTitle: PropTypes.string,
     auctionBuyNowClassName: PropTypes.string,
+    marketValue: PropTypes.string,
+    marketValueLabel: PropTypes.string,
   };
 
   render() {
@@ -70,7 +72,7 @@ class EventTabCommonBox extends React.Component {
             </ul>}
 
           </div>
-          <div className={cx("card-content item-description")}>{this.props.descText}</div>
+          <div className={cx("card-content item-description")} dangerouslySetInnerHTML={{__html:this.props.descText}}></div>
           <div className={cx("action-wrap")}>
             <div className={cx("card-action")}>
               <div className={cx("flex-row")}>
@@ -89,13 +91,19 @@ class EventTabCommonBox extends React.Component {
                     </div>
                   </div>)
               }
+              { this.props.marketValue && this.props.marketValueLabel && <div className={cx("flex-row")} >
+                <div className={cx("flex-col")}><strong> {this.props.marketValueLabel}: </strong></div>
+                <div className={cx("flex-col")}>
+                  <span className={cx("item-tickets-submitted")}>{this.props.marketValue}</span>
+                </div>
+              </div>}
 
             </div>
-            <div className={cx("text-center", "action-btns")}>
-              { this.props.actionTitle && <a role="button" className={cx(this.props.actionClassName)}>{this.props.actionTitle}</a>}&nbsp;&nbsp;
-              { this.props.auctionBuyNowTitle && <a role="button" className={cx(this.props.auctionBuyNowClassName)} >{this.props.auctionBuyNowTitle}</a>} &nbsp;&nbsp;
-              { !this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
-                <div className={cx("alert alert-success mrg-b-0")}> Purchased for $<span className={cx("current-bid")}>400</span></div>
+            <div className={cx("text-center", "action-btns")}>{console.log(this.props.headerText,this.props.auctionPurchaseFor)}
+              { this.props.actionTitle && <a role="button" className={cx(this.props.actionClassName)} style={{width:'50%'}}>{this.props.actionTitle}</a>}&nbsp;&nbsp;
+              { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor && <a role="button" className={cx(this.props.auctionBuyNowClassName)} >{this.props.auctionBuyNowTitle}</a>} &nbsp;&nbsp;
+              { this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
+                <div className={cx("alert alert-success mrg-b-0")}> {this.props.auctionBuyNowTitle}</div>
               </div> }
             </div>
           </div>

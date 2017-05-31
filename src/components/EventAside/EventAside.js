@@ -36,7 +36,7 @@ class EventAside extends React.Component {
           <div className={cx("main-box-body","clearfix")}>
             { this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_logo_enabled  && <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" className="img-responsive center-block" />}
             { this.props.activeTab && (this.props.activeTab=='The Event' ) &&  <div className={cx("the-event","mrg-t-lg")}>
-              { this.props.showBookingPopup && <a onClick={this.props.showBookingPopup} className={cx("btn","btn-block","btn-lg","btn-orange", this.props.settings && this.props.settings['ticket-type'] ? "": "disabled")}>Buy Tickets</a>}
+              { this.props.showBookingPopup && <a onClick={this.props.showBookingPopup} className={cx("btn","btn-block","btn-lg","btn-orange", this.props.settings ? "": "disabled")}>Buy Tickets</a>}
                 <div className={cx("box")}>
                   <div className={cx("box-title","text-uppercase")}>date and time</div>
                   <div className={cx("box-content")}>
@@ -156,11 +156,11 @@ class EventAside extends React.Component {
                 </li>
                 {
                   this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item=>
-                    <li className={cx("")} key={item+Math.random()}>
+                    <li className={cx("")} key={item.name+Math.random()}>
                     <a className={cx("category-switcher pointer")}>
                       <i className={cx("fa fa-ticket")}></i>
-                      <span className={cx("cat-name")}>{item}</span>
-                      {/*<span className={cx("badge badge-primary pull-right cat-count")}>1</span>*/}
+                      <span className={cx("cat-name")}>{item.name}</span>
+                      {item.count && <span className={cx("badge badge-primary pull-right cat-count")}>{item.count}</span>}
                     </a>
                   </li>)
                 }

@@ -29,7 +29,7 @@ import {doGetEventData,
   doGetSettings,
   doGeItemByCode,
   doGetItemByLimit,
-  doGetAuctionItemByLimit
+  doGetAuctionItemByLimit,
 } from './action/index';
 let  ar=[1,2,3,4,5,6,7,8];
 class Event extends React.Component {
@@ -43,13 +43,15 @@ class Event extends React.Component {
       totalAuction:ar,
       showBookingTicketPopup:false,
       showMapPopup:false,
-      settings:{},
+      settings:null,
       auctionPageCount:0,
-      auctionPageLimit:10,
-      rafflePageCount:10,
-      rafflePageLimit:10,
-      fundANeedPageCount:10,
-      FundANeedPageLimit:10,
+      auctionPageLimit:8,
+      auctionPageItems:[],
+      auctionPageLoading:true,
+      rafflePageCount:8,
+      rafflePageLimit:8,
+      fundANeedPageCount:8,
+      FundANeedPageLimit:8,
     };
     this.generateDivs = this.generateDivs.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -57,19 +59,11 @@ class Event extends React.Component {
     this.showMapPopup = this.showMapPopup.bind(this);
     this.hideMapPopup = this.hideMapPopup.bind(this);
     this.setActiveTabState = this.setActiveTabState.bind(this);
+    this.doGetAuctionItemByLimit = this.doGetAuctionItemByLimit.bind(this);
 
   }
   generateDivs=()=>{
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
-    ar.push(ar.length+1);
+    this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
     setTimeout(() => {
       this.setState({
         totalAuction:ar
@@ -118,6 +112,7 @@ class Event extends React.Component {
     if(label && (label=='Auction' || label=='Raffle' || label=='Fund a Need' || label=='The Event' || label=='Donation' )){
       if(label=='Auction'){
         label='auction';
+        this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 
       } else if(label=='Raffle'){
         label='raffle';
@@ -134,18 +129,47 @@ class Event extends React.Component {
          });
       })
         .catch(error=>{
-         history.push('/404');
+          console.log(error)
+        // history.push('/404');
       });
 
     }
 
   };
 
+  doGetAuctionItemByLimit(eventUrl){
+    this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit).then(resp=>{
+      console.log(resp)
+      if(resp && resp.data){
+        if(resp.data.length < 10){
+          this.setState({
+            auctionPageLoading:false
+          })
+        }
+        this.setState({
+          auctionPageItems:this.state.auctionPageItems.concat(resp.data),
+          auctionPageCount:this.state.auctionPageCount+1
+
+        })
+      }
+      else{
+        this.setState({
+          auctionPageLoading:false
+        })
+      }
+    }).catch(error=>{
+      console.log('er',error);
+      this.setState({
+        auctionPageLoading:false
+      })
+    })
+  }
+
     render() {
     return (
       <div className="row">
         <div className="col-lg-12">
-          {this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_banner_image_enabled  && <div className="row">{console.log(this.props.eventData)}
+          {this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_banner_image_enabled  && <div className="row">
             <div className={cx("header-img","text-center")}>
               <img src={ this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/"+this.props.eventData.design_detail.banner_image:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"} className={cx("img-responsive","img-banner")} style={{width: "100%"}} />
             </div>
@@ -175,19 +199,27 @@ class Event extends React.Component {
                           hasMore={true}
                           loader={<h4>Loading...</h4>}>
                           {
-                            this.state.totalAuction.map((item)=>
-                              <EventTabCommonBox key={item.toString()}
-                                                 headerText="Louis Vuitton Sunglasses"
-                                                 itemCode="SLV"
+                            this.state.auctionPageItems.map((item)=>
+                              <EventTabCommonBox key={item.id+Math.random().toString()}
+                                                 headerText={item.name}
+                                                 itemCode={item.code}
                                                  isSharable="false"
-                                                 data={[{title:"CURRENT BID", value:'$425'}]}
-                                                 descText="Trendy Louis Vuitton Sunglasses - Like New"
+                                                 data={
+                                                   [
+                                                     {title: item.currentBid != 0 ? "CURRENT BID" : "Starting Bid",
+                                                       value: item.currentBid != 0 ? '$'+item.currentBid : '$'+item.startingBid
+                                                     }
+                                                   ]
+                                                 }
+                                                 descText={item.excerpt}
                                                  imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
-                                                 actionTitle="Bidding Closed"
-                                                 actionClassName="btn btn-primary disabled"
-                                                 auctionPurchaseFor="Purchased for $400"
-                                                 auctionBuyNowTitle="BUY NOW $478"
+                                                 actionTitle={item.purchased ? null:"Bid"}
+                                                 actionClassName={ item.purchased ? "btn btn-primary disabled":"btn btn-success w-50"}
+                                                 auctionPurchaseFor={ item.purchased}
+                                                 auctionBuyNowTitle={ (item.purchased ? "Purchased for $":"But now $")+ item.currentBid}
                                                  auctionBuyNowClassName="item-link btn btn-success actionlinks"
+                                                 marketValue={item.marketValue > 0 ? '$'+item.marketValue:null}
+                                                 marketValueLabel={item.marketValue > 0 ? 'Market Value':null}
                               />
                             )
                           }
@@ -265,6 +297,7 @@ const mapDispatchToProps = {
   doGetEventTicketSetting : (eventUrl) => doGetEventTicketSetting(eventUrl),
   doGeItemByCode : ( eventUrl, itemCode, type) => doGeItemByCode( eventUrl, itemCode, type),
   doGetItemByLimit : (eventUrl, page, size, type) => doGetItemByLimit(eventUrl, page, size, type),
+  doGetAuctionItemByLimit : (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
   doGetSettings : (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
