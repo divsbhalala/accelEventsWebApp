@@ -145,14 +145,15 @@ export  function  doGetFundANeedItemByCode( eventUrl, itemCode) {
       method: 'get',
       url: API_URL+'events/'+eventUrl+'/fundaneed/item/'+itemCode,
       data: {}
-    }).then(response => {
-      dispatch(storeEventTicketData(response.data));
-      return response;
-
     })
-      .catch( error => {
-        return error;
-      });
+    //     .then(response => {
+    //   dispatch(storeEventTicketData(response.data));
+    //   return response;
+    //
+    // })
+    //   .catch( error => {
+    //     return error;
+    //   });
   }
 
 }

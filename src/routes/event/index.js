@@ -37,7 +37,7 @@ export default {
             }
         },
         {
-            path:'/fund',
+            path:'/fund/:ItemCode',
             action(props) {
                 return {
                     title:"Fund Page",
@@ -46,7 +46,7 @@ export default {
             }
         },
         {
-            path:'/raffle',
+            path:'/raffle/:ItemCode',
             action() {
                 return {
                     title:"Raffle Page",

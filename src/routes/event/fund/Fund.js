@@ -22,6 +22,7 @@ import  history from './../../../history';
 import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
+import  {doGetFundANeedItemByCode} from './../action/index';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -224,8 +225,21 @@ class Fund extends React.Component {
         this.setState({isValidData: !!(this.email.value && this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
 
     };
+    componentWillMount(){
+        this.props.doGetFundANeedItemByCode(this.props.params && this.props.params.params,this.props.itemCode)
+            .then(resp=>{
+                if(resp && resp.data){
+                    this.setState({
+                        auctionData: resp.data
+                    })
+                }
+            }).catch(error=>{
+            console.log(error)
+        });
 
+    }
   render() {
+      console.log('<--',this.state.auctionData);
     return (
       <div className="row">
         <div className="col-lg-12">
@@ -237,7 +251,7 @@ class Fund extends React.Component {
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8">
                 <div className="main-box clearfix">
-                  <h1 className="text-center mrg-t-lg" id="item-name">My Fund a Need Item</h1>
+                  <h1 className="text-center mrg-t-lg" id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
                   <div className="row mrg-t-lg">
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
@@ -260,7 +274,7 @@ class Fund extends React.Component {
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
-                            $ <span className="item-bid-price"> 300 </span>
+                            $ <span className="item-bid-price"> {this.state.auctionData && this.state.auctionData.pledge_price} </span>
                           </h4>
                         </div>
                       </div>
@@ -516,5 +530,12 @@ class Fund extends React.Component {
 }
 
 
-//export default withStyles(s)(Event);
-export default (withStyles(s)(Fund));
+const mapDispatchToProps = {
+    doGetFundANeedItemByCode : (eventUrl, itemCode) => doGetFundANeedItemByCode(eventUrl, itemCode),
+};
+const mapStateToProps = (state) => ({
+    auction_data:state.event && state.event.auction_data,
+
+});
+
+export default  connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(Fund));
