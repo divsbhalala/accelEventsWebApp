@@ -30,6 +30,8 @@ import {doGetEventData,
   doGeItemByCode,
   doGetItemByLimit,
   doGetAuctionItemByLimit,
+  doGetRaffleItemByLimit,
+  doGetFundANeedItemByLimit,
 } from './action/index';
 let  ar=[1,2,3,4,5,6,7,8];
 class Event extends React.Component {
@@ -48,22 +50,46 @@ class Event extends React.Component {
       auctionPageLimit:8,
       auctionPageItems:[],
       auctionPageLoading:true,
-      rafflePageCount:8,
+      rafflePageCount:0,
       rafflePageLimit:8,
-      fundANeedPageCount:8,
-      FundANeedPageLimit:8,
+      rafflePageItems:[],
+      rafflePageLoading:true,
+      fundANeedPageCount:0,
+      fundANeedPageLimit:8,
+      fundANeedPageItems:[],
+      fundANeedPageLoading:true,
     };
-    this.generateDivs = this.generateDivs.bind(this);
+    this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
     this.hideBookingPopup = this.hideBookingPopup.bind(this);
     this.showMapPopup = this.showMapPopup.bind(this);
     this.hideMapPopup = this.hideMapPopup.bind(this);
     this.setActiveTabState = this.setActiveTabState.bind(this);
     this.doGetAuctionItemByLimit = this.doGetAuctionItemByLimit.bind(this);
+    this.doGetRaffleItemByLimit = this.doGetRaffleItemByLimit.bind(this);
+    this.doGetFundANeedItemByLimit = this.doGetFundANeedItemByLimit.bind(this);
 
   }
-  generateDivs=()=>{
+  doGetLoadMoreAuctionItem=()=>{
     this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
+    setTimeout(() => {
+      this.setState({
+        totalAuction:ar
+      })
+    }, 500);
+
+  };
+  doGetLoadMoreRaffleItem=()=>{
+    this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
+    setTimeout(() => {
+      this.setState({
+        totalAuction:ar
+      })
+    }, 500);
+
+  };
+  doGetLoadMoreFundANeedItem=()=>{
+    this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
     setTimeout(() => {
       this.setState({
         totalAuction:ar
@@ -116,6 +142,8 @@ class Event extends React.Component {
 
       } else if(label=='Raffle'){
         label='raffle';
+        this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
+
       } else if(label=='Fund a Need'){
         label='fundaneed';
       } else if(label=='The Event'){
@@ -137,9 +165,8 @@ class Event extends React.Component {
 
   doGetAuctionItemByLimit(eventUrl){
     this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit).then(resp=>{
-      console.log(resp)
       if(resp && resp.data){
-        if(resp.data.length < 10){
+        if(resp.data.length < this.state.auctionPageLimit){
           this.setState({
             auctionPageLoading:false
           })
@@ -156,9 +183,63 @@ class Event extends React.Component {
         })
       }
     }).catch(error=>{
-      console.log('er',error);
       this.setState({
         auctionPageLoading:false
+      })
+    })
+  }
+
+
+  doGetRaffleItemByLimit(eventUrl){
+    this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit).then(resp=>{
+      if(resp && resp.data){
+        if(resp.data.length < this.state.auctionPageLimit){
+          this.setState({
+            rafflePageLoading:false
+          })
+        }
+        this.setState({
+          rafflePageItems:this.state.rafflePageItems.concat(resp.data),
+          rafflePageCount:this.state.rafflePageCount+1
+
+        })
+      }
+      else{
+        this.setState({
+          rafflePageLoading:false
+        })
+      }
+    }).catch(error=>{
+      this.setState({
+        rafflePageLoading:false
+      })
+    })
+  }
+
+
+
+  doGetFundANeedItemByLimit(eventUrl){
+    this.props.doGetFundANeedItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit).then(resp=>{
+      if(resp && resp.data){
+        if(resp.data.length < this.state.auctionPageLimit){
+          this.setState({
+            rafflePageLoading:false
+          })
+        }
+        this.setState({
+          rafflePageItems:this.state.rafflePageItems.concat(resp.data),
+          rafflePageCount:this.state.rafflePageCount+1
+
+        })
+      }
+      else{
+        this.setState({
+          rafflePageLoading:false
+        })
+      }
+    }).catch(error=>{
+      this.setState({
+        rafflePageLoading:false
       })
     })
   }
@@ -193,8 +274,8 @@ class Event extends React.Component {
                     <Tab label="Auction">
                       <div className="row">
                         <InfiniteScroll
-                          next={this.generateDivs}
-                          hasMore={true}
+                          next={this.doGetLoadMoreAuctionItem}
+                          hasMore={this.state.actionPageLoading}
                           loader={<h4 className="text-center mrg-t-md"><span className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
                           {
                             this.state.auctionPageItems.map((item)=>
@@ -228,19 +309,32 @@ class Event extends React.Component {
                     </Tab>
                     <Tab label="Raffle">
                       <div className="row">
-                        <EventTabCommonBox
-                          headerText="My First Raffle Item"
-                          itemCode="RAF"
-                          data={
-                          [{title:"TICKETS SUBMITTED", value:0}]
+                        <InfiniteScroll
+                          next={this.doGetLoadMoreRaffleItem}
+                          hasMore={this.state.rafflePageLoading}
+                          loader={<h4 className="text-center mrg-t-md"><span className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
+                          {
+                            this.state.rafflePageItems.map((item)=>
+                              <EventTabCommonBox key={item.id+Math.random().toString()}
+                                                 type="raffle"
+                                                 headerText={item.name}
+                                                 itemCode={item.code}
+                                                 isSharable="true"
+                                                 data={
+                                                   [
+                                                     {title: "TICKETS SUBMITTED",
+                                                       value: item.tickes_submitted ? item.tickes_submitted : 0
+                                                     }
+                                                   ]
+                                                 }
+                                                 descText={item.excerpt}
+                                                 imageUrl={ item.images && item.images.length> 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+item.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
+                                                 actionTitle={item.purchased ? null:"Bid"}
+                                                 actionClassName={ item.purchased ? "btn btn-primary disabled":"btn btn-success w-50"}
+                              />
+                            )
                           }
-                          isSharable="false"
-                          descText="testDesc"
-                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg"
-                          actionTitle="Raffle Closed"
-                          actionClassName="btn btn-primary btn-block disabled"
-                        />
-
+                        </InfiniteScroll>
                       </div>
                     </Tab>
                     <Tab label="Fund a Need">
@@ -298,6 +392,8 @@ const mapDispatchToProps = {
   doGeItemByCode : ( eventUrl, itemCode, type) => doGeItemByCode( eventUrl, itemCode, type),
   doGetItemByLimit : (eventUrl, page, size, type) => doGetItemByLimit(eventUrl, page, size, type),
   doGetAuctionItemByLimit : (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
+  doGetRaffleItemByLimit : (eventUrl, page, size, type) => doGetRaffleItemByLimit(eventUrl, page, size, type),
+  doGetFundANeedItemByLimit : (eventUrl, page, size, type) => doGetFundANeedItemByLimit(eventUrl, page, size, type),
   doGetSettings : (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
