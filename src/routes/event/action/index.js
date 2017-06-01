@@ -200,14 +200,15 @@ export  function  doGetRaffleItemByCode( eventUrl, itemCode) {
       method: 'get',
       url: API_URL+'events/'+eventUrl+'/raffle/item/'+itemCode,
       data: {}
-    }).then(response => {
-      dispatch(storeEventRaffleData(response.data));
-      return response;
-
     })
-      .catch( error => {
-        return error;
-      });
+    //     .then(response => {
+    //   dispatch(storeEventRaffleData(response.data));
+    //   return response;
+    //
+    // })
+    //   .catch( error => {
+    //     return error;
+    //   });
   }
 
 }

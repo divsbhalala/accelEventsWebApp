@@ -25,6 +25,7 @@ export default {
     require('./privacy').default,
     require('./admin').default,
     require('./event').default,
+    require('./scroll').default,
 
 
     // Wildcard routes, e.g. { path: '*', ... } (must go last)

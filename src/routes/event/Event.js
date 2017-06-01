@@ -132,9 +132,7 @@ class Event extends React.Component {
           console.log(error)
         // history.push('/404');
       });
-
     }
-
   };
 
   doGetAuctionItemByLimit(eventUrl){
@@ -177,7 +175,7 @@ class Event extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <EventAside activeTab={this.state.tab} eventData={this.props.eventData} settings={this.state.settings} eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup} showMapPopup={this.showMapPopup} />
+                <EventAside activeTab={this.state.tab} eventData={this.props.eventData} settings={this.state.settings} eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup} showMapPopup={this.showMapPopup} activeCategory={true} />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">
                 <div className="main-box">

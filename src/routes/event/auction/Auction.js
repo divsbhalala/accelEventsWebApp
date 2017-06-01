@@ -10,13 +10,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './Auction.css';
-import cx from 'classNames';
+import cx from 'classnames';
 import {connect} from 'react-redux';
-import {Button} from 'react-bootstrap';
-import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
-
+import {doGetEventData,doGetSettings } from './../action/index';
 import  history from './../../../history';
 
 import  EventAside from './../../../components/EventAside/EventAside';
@@ -31,10 +28,11 @@ import  {doGetAuctionItemByCode} from './../action/index';
     constructor(props) {
         super(props);
         this.state = {
-            tab: 'The Event',
+            settings:null,
+            tab: 'Auction',
             showBookingTicketPopup: false,
             showMapPopup: true,
-            isLogin:true,
+            isLogin:false,
 
             isValidData:false,
             email:null,
@@ -51,6 +49,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
             cardNumber:null,
             cardHolder:null,
             amount:null,
+            cvv:null,
             errorReg:null,
 
             firstNameFeedBack:false,
@@ -58,24 +57,20 @@ import  {doGetAuctionItemByCode} from './../action/index';
             cardNumberFeedBack:false,
             cardHolderFeedBack:false,
             amountFeedBack:false,
-            errorMsgNumber:"",
+            cvvFeedBack:false,
+
+            errorMsgfirstName:null,
+            errorMsglastName:null,
+            errorMsgcardNumber:null,
+            errorMsgcardHolder:null,
+            errorMsgamount:null,
+            errorMsgNumber:null,
+            errorMsgcvv:null,
+            errorMsgEmail:null,
         };
-        this.showSidePanel = this.showSidePanel.bind(this);
-        this.hideSidePanel = this.hideSidePanel.bind(this);
+
     }
 
-    showSidePanel = (e) => {
-        e.preventDefault();
-        this.setState({
-            showBookingTicketPopup: true
-        })
-    };
-
-    hideSidePanel = () => {
-        this.setState({
-            showBookingTicketPopup: true
-        })
-    };
     onFormClick=(e)=>{
         e.preventDefault();
 
@@ -114,12 +109,14 @@ import  {doGetAuctionItemByCode} from './../action/index';
 
         if(this.email.value == ''){
             this.setState({
-                email:false
+                email:false,
+                errorMsgEmail:"Email is required.",
             });
         }
         else{
             this.setState({
-                email:re.test(this.email.value)
+                email:re.test(this.email.value),
+                errorMsgEmail:"Invalid Email.",
             });
         }
         this.setState({isValidData: !!(this.email.value && this.password.value)});
@@ -180,7 +177,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                 firstName:true
             });
         }
-        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
     };
     lastNameValidateHandler= (e)=>{
@@ -199,7 +196,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                 lastName:true
             });
         }
-        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
     };
     cardHolderValidateHandler= (e)=>{
@@ -211,14 +208,20 @@ import  {doGetAuctionItemByCode} from './../action/index';
         if(this.cardHolder.value == ''){
 
             this.setState({
-                cardHolder:false
+                cardHolder:false,
+                errorMsgcardHolder:"The card holder name is required and can't be empty",
+            });
+        }else if (!( this.cardHolder.value.length >= 6  && this.cardHolder.value.length <= 70 )){
+            this.setState({
+                cardHolder:false,
+                errorMsgcardHolder:"The card holder name must be more than 6 and less than 70 characters long " ,
             });
         }else{
             this.setState({
                 cardHolder:true
             });
         }
-        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
     };
     cardNumberValidateHandler= (e)=>{
@@ -230,14 +233,20 @@ import  {doGetAuctionItemByCode} from './../action/index';
         if(this.cardNumber.value == ''){
 
             this.setState({
-                cardNumber:false
+                cardNumber:false,
+                errorMsgcardNumber:"Enter Card Number ",
+            });
+        }else if(this.cardNumber.value.length !== 16  ){
+            this.setState({
+                cardNumber:false,
+                errorMsgcardNumber:" Please enter a Valid Card Number " ,
             });
         }else{
             this.setState({
                 cardNumber:true
             });
         }
-        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
     };
     amountValidateHandler= (e)=>{
@@ -249,7 +258,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
         if(this.amount.value == '' ){
             this.setState({
                 amount:false,
-                errorMsgNumber:"Invalid Aamount",
+                errorMsgNumber:"Bid Amount can't be empty",
             });
         }else if( this.state.auctionData.currentBid + 25 >  this.amount.value ){
             this.setState({
@@ -261,11 +270,43 @@ import  {doGetAuctionItemByCode} from './../action/index';
                 amount:true
             });
         }
-        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value)});
+        this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
     };
+        cvvValidateHandler= (e)=>{
+
+            this.setState({
+                cvvFeedBack:true
+            });
+
+            if(this.cvv.value == ''){
+
+                this.setState({
+                    cvv:false,
+                    errorMsgcvv:"The CVV is required and can't be empty",
+                });
+            }else if ( !( 3 <=  this.cvv.value.length && 4 >=  this.cvv.value.length )){
+                this.setState({
+                    cvv:false,
+                    errorMsgcvv:"The CVV must be more than 4 and less than 3 characters long",
+                });
+            }else {
+                this.setState({
+                    cvv:true
+                });
+            }
+            this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+        };
 
     componentWillMount(){
+        this.props.doGetEventData(this.props.params && this.props.params.params);
+        this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp=> {
+            this.setState({
+                settings: resp && resp.data
+            });
+        }).catch(error=>{
+            history.push('/404');
+        });
         this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params,this.props.itemCode)
             .then(resp=>{
                 if(resp && resp.data){
@@ -276,6 +317,9 @@ import  {doGetAuctionItemByCode} from './../action/index';
             }).catch(error=>{
             console.log(error)
         });
+
+        console.log(this.state,this.props) ;
+        console.log('->>>',this.state.settings);
     }
 
     render() {
@@ -308,7 +352,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                     { this.state.emailFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                     { this.state.emailFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
-                { this.state.emailFeedBack && !this.state.email &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid Email.</small>}
+                { this.state.emailFeedBack && !this.state.email &&  <small className="help-block"  data-fv-result="NOT_VALIDATED" >{this.state.errorMsgEmail}</small>}
             </div>
             <div className="row">
                 <div className="col-md-8">
@@ -348,7 +392,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                     { this.state.passwordFeedBack && !this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
 
                 </div>
-                { this.state.passwordFeedBack && !this.state.password &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Password can't be empty.</small>}
+                { this.state.passwordFeedBack && !this.state.password &&  <small className="help-block" data-fv-result="NOT_VALIDATED" >Password can't be empty.</small>}
 
             </div>
             <button className={cx("btn btn-primary text-uppercase",  !this.state.isValidData && 'disabled')} role="button" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
@@ -378,7 +422,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                     { this.state.firstNameFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                     { this.state.firstNameFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
-                { this.state.firstNameFeedBack && !this.state.firstName &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Enter First Name.</small>}
+                { this.state.firstNameFeedBack && !this.state.firstName &&  <small className="help-block" data-fv-result="NOT_VALIDATED" >Firstname is required.</small>}
             </div>
             <div className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
                 <label className="control-label">Last Name</label>
@@ -392,7 +436,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                     { this.state.lastNameFeedBack && this.state.lastName && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                     { this.state.lastNameFeedBack && !this.state.lastName && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
-                { this.state.lastNameFeedBack && !this.state.lastName &&  <small className="help-block" data-fv-validator="lastName"  data-fv-for="lastName" data-fv-result="NOT_VALIDATED" >Enter Valid Name.</small>}
+                { this.state.lastNameFeedBack && !this.state.lastName &&  <small className="help-block"  data-fv-result="NOT_VALIDATED" >Lastname is required.</small>}
             </div>
             <div  className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
                 <div className="row">
@@ -401,14 +445,14 @@ import  {doGetAuctionItemByCode} from './../action/index';
                         <div className="input-group">
                             <div className="input-group-addon">$</div>
                             <input type="number" className="form-control" name="itembid" id="itembid"
-                                   placeholder="Pledge Amount"  step required="required"
+                                   placeholder="Amount"  step required="required"
                                    data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
                                    ref={ref => { this.amount = ref; }}
                                    onKeyUp={this.amountValidateHandler} />
                             { this.state.amountFeedBack && this.state.amount && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                             { this.state.amountFeedBack && !this.state.amount && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                         </div>
-                        { this.state.amountFeedBack && !this.state.amount &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >{this.state.errorMsgNumber}</small>}
+                        { this.state.amountFeedBack && !this.state.amount &&  <small className="help-block" data-fv-result="NOT_VALIDATED" >{this.state.errorMsgNumber}</small>}
 
 
                     </div>
@@ -419,7 +463,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                 dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
             <div className="stripe-form">
                 <div className="stripe-card-info">
-                    <div className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.email && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
+                    <div className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
                         <label className="control-label">Card Holder Name</label>
                         <div className="input-group">
                             <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
@@ -430,7 +474,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                             { this.state.cardHolderFeedBack && this.state.cardHolder && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                             { this.state.cardHolderFeedBack && !this.state.cardHolder && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                         </div>
-                        { this.state.cardHolderFeedBack && !this.state.cardHolder &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid cardHolder.</small>}
+                        { this.state.cardHolderFeedBack && !this.state.cardHolder &&  <small className="help-block" data-fv-result="NOT_VALIDATED" >{this.state.errorMsgcardHolder}</small>}
 
                     </div>
                     <div className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
@@ -446,7 +490,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                             { this.state.cardNumberFeedBack && this.state.cardNumber && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                             { this.state.cardNumberFeedBack && !this.state.cardNumber && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                         </div>
-                        { this.state.cardNumberFeedBack && !this.state.cardNumber &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >Invalid cardNumber.</small>}
+                        { this.state.cardNumberFeedBack && !this.state.cardNumber &&  <small className="help-block" data-fv-result="NOT_VALIDATED" >{this.state.errorMsgcardNumber}.</small>}
 
 
                     </div>
@@ -509,49 +553,23 @@ import  {doGetAuctionItemByCode} from './../action/index';
                                         <option value="2050">2050</option>
                                     </select>
                                 </div>
-                                <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                   data-fv-icon-for="expYear" style={{display: 'none'}}/><i
-                                className="form-control-feedback fv-bootstrap-icon-input-group"
-                                data-fv-icon-for="expMonth" style={{display: 'none'}}/>
-                                <div className="small text-danger js-error card_error exp_year exp_month"/>
-                                <small className="help-block" data-fv-validator="notEmpty" data-fv-for="expMonth"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The expiration month is required
-                                </small>
-                                <small className="help-block" data-fv-validator="digits" data-fv-for="expMonth"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The expiration month can contain digits only
-                                </small>
-                                <small className="help-block" data-fv-validator="callback" data-fv-for="expMonth"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Your card is Expired
-                                </small>
-                                <small className="help-block" data-fv-validator="notEmpty" data-fv-for="expYear"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The expiration year is required
-                                </small>
-                                <small className="help-block" data-fv-validator="digits" data-fv-for="expYear"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The expiration year can contain digits only
-                                </small>
-                                <small className="help-block" data-fv-validator="callback" data-fv-for="expYear"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}></small>
+
+
                             </div>
                         </div>
                         <div className="col-md-4">
-                            <div className="form-group has-feedback">
+                            <div className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
                                 <label className="control-label">CVV Number</label>
                                 <div className="input-group">
                                     <input type="number" className="form-control" maxLength={4} size={4}
-                                           data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"/>
+                                           data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                                           ref={ref => { this.cvv = ref; }}
+                                           onKeyUp={this.cvvValidateHandler} />
+                                    { this.state.cvvFeedBack && this.state.cvv && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                                    { this.state.cvvFeedBack && !this.state.cvv && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                                 </div>
-                                <i className="form-control-feedback fv-bootstrap-icon-input-group"
-                                   data-fv-icon-for="cvv" style={{display: 'none'}}/>
-                                <div className="small text-danger js-error card_error cvc"/>
-                                <small className="help-block" data-fv-validator="notEmpty" data-fv-for="cvv"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The CVV is required and can't be empty
-                                </small>
-                                <small className="help-block" data-fv-validator="stringLength" data-fv-for="cvv"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>The CVV must be more than 4 and less than 3 characters long
-                                </small>
-                                <small className="help-block" data-fv-validator="integer" data-fv-for="cvv"
-                                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not  valid
-                                </small>
+                                { this.state.cvvFeedBack && !this.state.cvv &&  <small className="help-block" data-fv-result="NOT_VALIDATED" >{ this.state.errorMsgcvv  }</small>}
+
                             </div>
                         </div>
                     </div>
@@ -572,15 +590,24 @@ import  {doGetAuctionItemByCode} from './../action/index';
             <a role="button" className="btn btn-success"
                href="/event/jkazarian8">Go back to All Items</a>
         </form>;
+        var form_bid_close =<div className="col-sm-6">
+                        <div className="curr-bid-number">$<span className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
+                        <div className="curr-bid-text">Current Bid</div>
+                    </div>;
+        var div_bid_close =<div className="alert alert-success text-center">Item Has Been Purchased for $<span className="current-bid">400</span></div>
+        var bid_active=this.state.auctionData && this.state.auctionData.purchased;
+        var imageUrl= this.state.raffleData && this.state.raffleData.images[0].imageUrl > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.state.raffleData.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+
         return (
             <div className="row">
                 <div className="col-lg-12">
                     <div id="content-wrapper">
                         <div className="row">
                             <div className="col-lg-3 col-md-4 col-sm-4">
-                                <EventAside activeTab={'Raffle'} showSidePanel={this.showSidePanel}
-                                            showMapPopup={this.showMapPopup}/>
-                            </div>
+
+                                <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings} eventTicketData={this.props.eventTicketData}
+                                            showMapPopup={this.showMapPopup} activeCategory={false} />
+                               </div>
                             <div className="col-lg-9 col-md-8 col-sm-8">
                                 <div className="main-box clearfix">
                                     <h1 className="text-center mrg-t-lg" id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
@@ -589,7 +616,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                                             <div className="pad-l-md pad-r-md">
                                                 <div className="item-image">
                                                     <div className="item-image-inner"
-                                                         style={{backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")'}}/>
+                                                         style={{backgroundImage: 'url('+imageUrl+')'}}/>
                                                 </div>
                                             </div>
                                             <div className="mrg-t-lg pad-l-md pad-r-md">
@@ -603,10 +630,10 @@ import  {doGetAuctionItemByCode} from './../action/index';
                                                         className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
                                                     <div className="curr-bid-text">Current Bid</div>
                                                 </div>
+                                                { bid_active ? form_bid_close :'' }
                                             </div>
-
-                                            { this.state.isLogin ? form_bid : form_login }
-
+                                            { bid_active ? div_bid_close :'' }
+                                            { !bid_active ?  this.state.isLogin ? form_bid : form_login :'' }
                                         </div>
                                     </div>
                                 </div>
@@ -620,9 +647,13 @@ import  {doGetAuctionItemByCode} from './../action/index';
 }
 
 const mapDispatchToProps = {
+    doGetEventData : (eventUrl) => doGetEventData(eventUrl),
     doGetAuctionItemByCode : (eventUrl, itemCode) => doGetAuctionItemByCode(eventUrl, itemCode),
+    doGetSettings : (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
+    eventData:state.event && state.event.data,
+    eventTicketData:state.event && state.event.ticket_data,
     auction_data:state.event && state.event.auction_data,
 
 });

@@ -24,6 +24,7 @@ class EventAside extends React.Component {
     eventData: PropTypes.object,
     eventTicketData: PropTypes.object,
     settings: PropTypes.object,
+    activeCategory: PropTypes.bool,
   };
   render() {
     return (
@@ -74,7 +75,7 @@ class EventAside extends React.Component {
                       <a href="#">Time Until Event Ends</a>
                     </div>
                   </div>
-                  <div className={cx("project-box-content")}>
+                    { this.props.settings && this.props.settings.eventEnd && <div className={cx("project-box-content")}>
                     <div className={cx("ticker")}>
                       <div className={cx("row timer")}>
                         <div className={cx("col-xs-4")}><span className={cx("days")}>{
@@ -99,7 +100,7 @@ class EventAside extends React.Component {
                         <div className={cx("col-xs-4")} style={{display: "none"}}><span className={cx("seconds")}>SECONDS</span></div>
                       </div>
                     </div>
-                  </div>
+                  </div>}
                 </div>
               </div> }
             { this.props.activeTab && !(this.props.activeTab=='The Event') && (this.props.eventData && (this.props.eventData.is_silent_auction_enabled ||this.props.eventData.is_cause_auction_enabled ||this.props.eventData.is_raffle_enabled) && this.props.eventData.design_detail && !this.props.eventData.design_detail.is_total_fund_raised_hiddend ) && <div className={cx("main-box clearfix project-box gray-box card funds-raised-container")} >
@@ -125,7 +126,8 @@ class EventAside extends React.Component {
             <input type="hidden" value="true" id="causeAuctionCategoryEnabled" />
             <input type="hidden" value="true" id="raffleCategoryEnabled" />
             <input type="hidden" value="false" id="auctionCategoryEnabled" />
-            { this.props.activeTab && (this.props.activeTab=='Raffle' || this.props.activeTab=='Fund a Need' ) && <div id="divItemCategories" className={cx("item-categories hidden-xs hide")}>
+
+            {this.props.activeCategory && this.props.activeTab && (this.props.activeTab=='Raffle' || this.props.activeTab=='Fund a Need' ) && <div id="divItemCategories" className={cx("item-categories hidden-xs hide")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
                 <li className={cx("all-items")}>
@@ -144,7 +146,7 @@ class EventAside extends React.Component {
                 </li>
               </ul>
             </div> }
-            { this.props.activeTab && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' )&& this.props.settings && this.props.settings.categories  && <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
+            { this.props.activeCategory &&  this.props.activeTab && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' )&& this.props.settings && this.props.settings.categories  && <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
                 <li className={cx("all-items")}>
