@@ -1,0 +1,101 @@
+body {
+  background: transparent;
+  background-image:
+    url(https://d1tcrpfk632upo.cloudfront.net/wp-content/uploads/2016/04/11223333/OnlineAuctions_Raffles.jpg);
+  color: #FFFFFF;
+  padding: 70px 0;
+}
+
+.onboardpage {
+  width: 600px
+}
+
+@media ( max-width : 540px) {
+  .onboardpage {
+    width: 95%
+  }
+}
+@media ( max-width : 320px) {
+  .onboardpage {
+    width: 300px;
+  }
+}
+
+.logo-img {
+  max-width: 300px
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+}
+
+label {
+  color: inherit;
+  font-weight: 200;
+  font-size: 1.5em;
+}
+
+.select-package-label {
+  
+}
+
+.btn {
+  border-color: #FFF;
+  border: 2px solid;
+  color: inherit;
+  background: transparent;
+}
+
+.btn:hover, .btn:focus {
+  color: inherit;
+  background-color: #03a9f4;
+}
+.btn.active {
+  background-color: #00628e;
+}
+
+.btn+.btn {
+  border-color: #FFF;
+  border-left: 0;
+}
+
+.input-group input {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #000000;
+}
+
+.form-control {
+  height: 50px;
+  border-color: #FFFFFF;
+}
+
+.has-feedback label ~.form-control-feedback {
+  top: 43px;
+  right: 6px;
+}
+
+#footer-bar {
+  background: transparent;
+  margin: 0;
+}
+
+input[type="checkbox"]+.glyphicon-ok {
+  visibility: hidden;
+}
+
+input:checked+.glyphicon-ok {
+  visibility: visible;
+}
+.input-group-addon {
+  background-color: #FFF !important;
+  border-color: #FFF;
+  color: #000;
+}
+.js-error {
+  border: 1px solid #F00;
+  margin-bottom: 7px;
+  background: #1a1d52;
+  color: #F00;
+  text-align: center;
+}

@@ -195,7 +195,7 @@ class Event extends React.Component {
                         <InfiniteScroll
                           next={this.generateDivs}
                           hasMore={true}
-                          loader={<h4>Loading...</h4>}>
+                          loader={<h4 className="text-center mrg-t-md"><span className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
                           {
                             this.state.auctionPageItems.map((item)=>
                               <EventTabCommonBox key={item.id+Math.random().toString()}
@@ -215,7 +215,8 @@ class Event extends React.Component {
                                                  actionTitle={item.purchased ? null:"Bid"}
                                                  actionClassName={ item.purchased ? "btn btn-primary disabled":"btn btn-success w-50"}
                                                  auctionPurchaseFor={ item.purchased}
-                                                 auctionBuyNowTitle={ (item.purchased ? "Purchased for $":"But now $")+ item.currentBid}
+                                                 buyItNowPrice={ item.buyItNowPrice > 0 ? "Buy now $"+item.buyItNowPrice :null}
+                                                 auctionBuyNowTitle={ (item.purchased ? "Purchased for $"+item.currentBid:null)}
                                                  auctionBuyNowClassName="item-link btn btn-success actionlinks"
                                                  marketValue={item.marketValue > 0 ? '$'+item.marketValue:null}
                                                  marketValueLabel={item.marketValue > 0 ? 'Market Value':null}

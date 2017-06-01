@@ -19,6 +19,7 @@ import moment from 'moment';
 class EventAside extends React.Component {
   static propTypes = {
     activeTab: PropTypes.string,
+    buyItNowPrice: PropTypes.string,
     showBookingPopup: PropTypes.func,
     showMapPopup: PropTypes.func,
     eventData: PropTypes.object,
