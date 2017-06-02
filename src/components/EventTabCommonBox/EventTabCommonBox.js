@@ -24,7 +24,7 @@ class EventTabCommonBox extends React.Component {
     linkTitle: PropTypes.string,
     linkText: PropTypes.string,
     linkTarget: PropTypes.string,
-    isSharable: PropTypes.string,
+    isSharable: PropTypes.bool,
     actionTitle: PropTypes.string,
     actionClassName: PropTypes.string,
     imageUrl: PropTypes.string,

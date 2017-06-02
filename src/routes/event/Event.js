@@ -16,7 +16,8 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import history from './../../history';
-import { Button } from 'react-bootstrap';
+import Moment from 'react-moment';
+import moment from 'moment';
 
 import  EventAside from './../../components/EventAside/EventAside';
 import  EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox';
@@ -246,7 +247,15 @@ class Event extends React.Component {
     })
   }
 
+
     render() {
+      let makeItem = function(i) {
+        let item=[];
+        for( let j=1; j<= i; j++ ){
+          item.push(<option value={j} key={i+Math.random()}>{j}</option>)
+        }
+        return item;
+      };
     return (
       <div className="row">
         <div className="col-lg-12">
@@ -277,7 +286,7 @@ class Event extends React.Component {
                       <div className="row">
                         <InfiniteScroll
                           next={this.doGetLoadMoreAuctionItem}
-                          hasMore={this.state.actionPageLoading}
+                          hasMore={this.state.auctionPageLoading}
                           loader={<h4 className="text-center mrg-t-md"><span className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
                           {
                             this.state.auctionPageItems.map((item)=>
@@ -285,7 +294,7 @@ class Event extends React.Component {
                                                  type="auction"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable="false"
+                                                 isSharable={this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_social_sharing_enabled}
                                                  data={
                                                    [
                                                      {title: item.currentBid != 0 ? "CURRENT BID" : "Starting Bid",
@@ -321,7 +330,7 @@ class Event extends React.Component {
                                                  type="raffle"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable="true"
+                                                 isSharable={this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_social_sharing_enabled}
                                                  data={
                                                    [
                                                      {title: "TICKETS SUBMITTED",
@@ -351,7 +360,7 @@ class Event extends React.Component {
                                                  type="fund"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable="false"
+                                                 isSharable={this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_social_sharing_enabled}
                                                  data={
                                                    [
                                                      {title: "MINIMUM PLEDGE",
@@ -390,29 +399,62 @@ class Event extends React.Component {
         >
           <form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST">
             <div className="ticket-type-container"> <input type="hidden" value="44" name="tickettypeid" />
-              <div className="sale-card">
-                <div className="flex-row">
-                <div className="flex-col">
-                  <div className="type-name">
-                    <strong>First ticket type</strong>
-                    (<span className="type-cost txt-sm gray"> $100.00 </span>)
-                    <div className="pull-right"> <div className="col-md-7">No Of Tickets</div>
-                      <div className="col-md-5"> SOLD OUT </div>
+              {
+                this.state.settings && this.state.settings['ticket-type']  && (this.state.settings['ticket-type']).map(item=>
+                  <div className="sale-card" key={item.typeId.toString()}>
+                    <div className="flex-row">
+                      <div className="flex-col">
+                        <div className="type-name"><strong>{item.name}</strong>
+                          (<span className="type-cost txt-sm gray"> ${item.price}</span>)
+                          <div className="pull-right">
+                            <div className="col-md-7">No Of Tickets</div>
+                            { item.remaniningTickets && item.remaniningTickets > 0 ?  <div className="col-md-5">
+                              <select className="form-control" name="numberofticket" >
+                                {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item=>item)}
+                              </select>
+                            </div> : ''}
+                            {
+                              !item.remaniningTickets && <div className="col-md-5"> SOLD OUT </div>
+                            }
+                          </div>
+                        </div>
+                        <div className="sale-text txt-sm text-uppercase"> {moment(item.enddate).diff(moment()) > 0 ? "Available until" : "Sale Ended on"} <Moment  format="MMMM D YYYY"  >{item.enddate}</Moment> </div>
+                        {item.ticketsPerTable && item.ticketsPerTable > 0 ? <div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable} tickets</div> : ''}
+                        {/*<div className="txt-sm gray type-desc">
+                          sadfw
+                        </div>*/}
+                      </div>
                     </div>
                   </div>
-                  <div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
+                )
+              }
+
+
+              {/*<div className="sale-card">
+                <div className="flex-row">
+                  <div className="flex-col">
+                    <div className="type-name">
+                      <strong>First ticket type</strong>
+                      (<span className="type-cost txt-sm gray"> $100.00 </span>)
+                      <div className="pull-right">
+                        <div className="col-md-7">No Of Tickets</div>
+                        <div className="col-md-5"> SOLD OUT </div>
+                      </div>
+                    </div>
+                    <div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
+                  </div>
+                </div>
+              </div>*/}
+              <div className="status-bar clearfix mrg-t-lg">
+                <div className="pull-left">
+                  <span> QTY:<span className="qty">0</span> </span>
+                  <span className="total-price">FREE</span>
+                </div>
+                <div className="pull-right">
+                  <button type="button" className="btn btn-success" id="checkout-tickets">checkout</button>
                 </div>
               </div>
             </div>
-            <div className="status-bar clearfix mrg-t-lg">
-              <div className="pull-left">
-                <span> QTY:<span className="qty">0</span> </span>
-                <span className="total-price">FREE</span>
-              </div>
-              <div className="pull-right">
-                <button type="button" className="btn btn-success" id="checkout-tickets">checkout</button>
-              </div>
-            </div></div>
           </form>
         </PopupModel>
 
