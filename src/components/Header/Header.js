@@ -18,12 +18,12 @@ import _ from 'lodash';
 class Header extends React.Component {
 
   render() {
-    if( !_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token)){
+    if (!_.isEmpty(this.props.user) && !_.isEmpty(this.props.user.token)) {
     }
     return (
       <div>
         <div>
-          <Navigation user={this.props.user} />
+          <Navigation user={this.props.user}/>
         </div>
       </div>
     );

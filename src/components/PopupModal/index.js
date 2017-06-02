@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import   PropTypes   from 'prop-types';
-import { Modal, Popover, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
+import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import cx from 'classnames';
 
-class PopupModal extends Component{ // eslint-disable-line
+class PopupModal extends Component { // eslint-disable-line
   static propTypes = {
     id: PropTypes.string,
     headerText: PropTypes.string,
@@ -12,17 +12,18 @@ class PopupModal extends Component{ // eslint-disable-line
     showModal: PropTypes.bool,
     onCloseFunc: PropTypes.func,
   }
+
   close() {
-    this.setState({ showModal: false });
+    this.setState({showModal: false});
   }
 
   open() {
-    this.setState({ showModal: true });
+    this.setState({showModal: true});
   }
 
   render() {
     return (
-      <div className="static-modal" id={this.props.id+'-containter'}>
+      <div className="static-modal" id={this.props.id + '-containter'}>
         <div>
           <Modal show={this.props.showModal ? true : false} onHide={this.props.onCloseFunc}>
             <Modal.Header closeButton>
@@ -32,7 +33,7 @@ class PopupModal extends Component{ // eslint-disable-line
               {this.props.children}
             </Modal.Body>
             {this.props.modelFooter && <Modal.Footer>
-              {<div dangerouslySetInnerHTML={{__html: this.props.modelFooter}} />}
+              {<div dangerouslySetInnerHTML={{__html: this.props.modelFooter}}/>}
             </Modal.Footer>}
           </Modal>
         </div>

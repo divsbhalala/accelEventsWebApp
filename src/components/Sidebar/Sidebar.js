@@ -69,7 +69,9 @@ const NavMain = {
 
 const BasicSideNav = (props) => (
 
-  <SideNav highlightBgColor='#00bcd4' defaultSelected={props.selected} onItemSelection={ (id, parent) => {console.log(id,parent, props, this.props); }}>
+  <SideNav highlightBgColor='#00bcd4' defaultSelected={props.selected} onItemSelection={ (id, parent) => {
+    console.log(id, parent, props, this.props);
+  }}>
     <Title> Basic SideNav {console.log(props.selected)}</Title>
 
     <Nav id='dashboard'>
@@ -84,7 +86,7 @@ const BasicSideNav = (props) => (
           <Link to="/admin/auction-performance" style={{color: "#333"}}>Silent Auction Performance</Link>
         </NavText>
       </Nav>
-      <Nav id='raffle_performance' >
+      <Nav id='raffle_performance'>
         <NavIcon><Icon20 size={16} icon={ic_business}/></NavIcon>
         <NavText> <Link to="/admin/raffle-performance" style={{color: "#333"}}>Raffle Performance</Link> </NavText>
       </Nav>
@@ -98,25 +100,27 @@ const BasicSideNav = (props) => (
       </Nav>
       <Nav id='ticket_sales_performance'>
         <NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
-        <NavText> <Link to="/admin/ticket-performance" style={{color: "#333"}}>Ticket Sales Performance</Link> </NavText>
+        <NavText> <Link to="/admin/ticket-performance" style={{color: "#333"}}>Ticket Sales Performance</Link>
+        </NavText>
       </Nav>
     </Nav>
 
     <Nav id='design'>
       <NavIcon><Icon20 icon={paintBrush}/></NavIcon>
       <NavText> <Link to="/admin/design" style={{color: "#333"}}>
-      Design </Link>
+        Design </Link>
       </NavText>
     </Nav>
 
     <Nav id='ticketing'>
       <NavIcon><Icon20 icon={ticket}/></NavIcon>
       <NavText> <Link to="/admin/ticket" style={{color: "#333"}}>
-      Ticketing </Link> </NavText>
+        Ticketing </Link> </NavText>
     </Nav>
 
     <Nav id='silent_auction'>
-      <NavIcon><Icon20 icon={gavel}/></NavIcon><NavText> <Link to="/admin/auction" style={{color: "#333"}}>Silent Auction</Link> </NavText>
+      <NavIcon><Icon20 icon={gavel}/></NavIcon><NavText> <Link to="/admin/auction" style={{color: "#333"}}>Silent
+      Auction</Link> </NavText>
     </Nav>
 
     <Nav id='raffle'>
@@ -130,11 +134,13 @@ const BasicSideNav = (props) => (
     </Nav>
 
     <Nav id='user_management'>
-      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/users" style={{color: "#333"}}>User Management</Link> </NavText>
+      <NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/users" style={{color: "#333"}}>User
+      Management</Link> </NavText>
     </Nav>
 
     <Nav id='settings'>
-      <NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> <Link to="/admin/setting" style={{color: "#333"}}>Settings</Link> </NavText>
+      <NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> <Link to="/admin/setting"
+                                                              style={{color: "#333"}}>Settings</Link> </NavText>
     </Nav>
   </SideNav>
 );

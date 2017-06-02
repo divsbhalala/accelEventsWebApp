@@ -27,28 +27,29 @@ import cx from 'classnames';
 const logo = require('./logo.png');
 
 
-
-class HeaderNew extends React.Component  {
+class HeaderNew extends React.Component {
 
   render() {
-    return  (
-    <div id="header-navbar" className={cx("content turquoise-bg white")}>
+    return (
+      <div id="header-navbar" className={cx("content turquoise-bg white")}>
 
-      <Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
-        <Brand>
+        <Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
+          <Brand>
             <span>
-              { this.props.params && this.props.params.params &&<a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8" title="Start React" rel="home">{this.props.params.params}</a>}
-                <button type="button" className="navbar-toggle" onClick={() => {
-                  toggleMenu();
-                }} style={{position: 'absolute', right: 0, top: 0}}>
+              { this.props.params && this.props.params.params &&
+              <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8" title="Start React"
+                 rel="home">{this.props.params.params}</a>}
+              <button type="button" className="navbar-toggle" onClick={() => {
+                toggleMenu();
+              }} style={{position: 'absolute', right: 0, top: 0}}>
                   <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                 </button>
             </span>
-        </Brand>
-        <ul className="nav navbar-top-links navbar-right">
+          </Brand>
+          <ul className="nav navbar-top-links navbar-right">
 
           <MenuItem eventKey="1">
             <i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
@@ -96,41 +97,42 @@ class HeaderNew extends React.Component  {
             </MenuItem>
           </NavDropdown>
 
-          { !this.props.user && <MenuItem eventKey="8" onClick={(event) => {
+            { !this.props.user && <MenuItem eventKey="8" onClick={(event) => {
               history.push('/login');
             }}>
-            <i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
-          </MenuItem>}
+              <i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
+            </MenuItem>}
 
-          { !this.props.user && <MenuItem eventKey="9" onClick={(event) => {
+            { !this.props.user && <MenuItem eventKey="9" onClick={(event) => {
               history.push('/signup');
             }}>
-            <i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
-          </MenuItem>}
+              <i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
+            </MenuItem>}
 
-          <MenuItem eventKey="10">
-            <i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
-          </MenuItem>
+            <MenuItem eventKey="10">
+              <i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
+            </MenuItem>
 
-          {
-            this.props.user && <NavDropdown title={<i className="fa fa-user fa-fw"></i> } id='navDropdown4'>
-              <MenuItem eventKey="2">
-                <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
-              </MenuItem>
-              <MenuItem divider/>
-              <MenuItem eventKey="4" onClick={(event) => {
-              history.push('/login');
-            }}>
-                <span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
-              </MenuItem>
-            </NavDropdown>
-          }
+            {
+              this.props.user && <NavDropdown title={<i className="fa fa-user fa-fw"></i> } id='navDropdown4'>
+                <MenuItem eventKey="2">
+                  <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
+                </MenuItem>
+                <MenuItem divider/>
+                <MenuItem eventKey="4" onClick={(event) => {
+                  history.push('/login');
+                }}>
+                  <span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
+                </MenuItem>
+              </NavDropdown>
+            }
 
-        </ul>
-        { this.props.admin && <SidebarNew />}
-      </Navbar>
-    </div>
-  )};
+          </ul>
+          { this.props.admin && <SidebarNew />}
+        </Navbar>
+      </div>
+    )
+  };
 }
 function toggleMenu() {
   if ($(".navbar-collapse").hasClass('collapse')) {

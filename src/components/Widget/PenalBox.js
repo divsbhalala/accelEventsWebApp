@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import   PropTypes   from 'prop-types';
-import { Panel } from 'react-bootstrap';
+import {Panel} from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
 
-class PenalBoxWidget extends Component{ // eslint-disable-line
+class PenalBoxWidget extends Component { // eslint-disable-line
   static propTypes = {
     className: PropTypes.string,
     boxTitle: PropTypes.string,
@@ -26,13 +26,14 @@ class PenalBoxWidget extends Component{ // eslint-disable-line
           <div className="project-box-header gray-bg">
             <div className="name">
               <div>{this.props.boxTitle}
-                <a data-toggle="tooltip" title={this.props.boxTitle} href={this.props.badgeLink} className={this.props.badgeClass}> {this.props.badgeText} </a>
+                <a data-toggle="tooltip" title={this.props.boxTitle} href={this.props.badgeLink}
+                   className={this.props.badgeClass}> {this.props.badgeText} </a>
               </div>
             </div>
           </div>
           <div className="project-box-content">
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">Ends In: </div>
+              <div className="flex-col text-left lh-30">Ends In:</div>
               <div className="flex-col">
                 <div className="ticker" data-end-date="2017-06-07T18:55:54">
                   <div className="flex-row timer">
@@ -67,13 +68,13 @@ class PenalBoxWidget extends Component{ // eslint-disable-line
               </div>
             </div>
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">Proceeds: </div>
+              <div className="flex-col text-left lh-30">Proceeds:</div>
               <div className="flex-col lh-30">
                 $0.00
               </div>
             </div>
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">Bidders: </div>
+              <div className="flex-col text-left lh-30">Bidders:</div>
               <div className="flex-col lh-30">0</div>
             </div>
           </div>

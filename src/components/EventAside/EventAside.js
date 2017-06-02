@@ -27,12 +27,13 @@ class EventAside extends React.Component {
     settings: PropTypes.object,
     activeCategory: PropTypes.bool,
   };
+
   render() {
     return (
       <div >
-        <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
+        <script type="text/javascript"
+                src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
         <div className={cx("main-box", "clearfix")}>
-            {console.log('side',this.props)}
           <header className={cx("main-box-header", "clearfix")}>
             <h2>jkazarian8</h2>
           </header>
@@ -116,20 +117,30 @@ class EventAside extends React.Component {
                     <div className={cx("funds-raised")}>$<span className={cx("total-funds-raised")}>{ this.props.settings && this.props.settings.totalFundRaised ? this.props.settings.totalFundRaised:"0"}</span></div>
                   </div>
                 </div>
-              </div> }
-            { this.props.activeTab && ( this.props.activeTab=='Raffle' ) && <a role="button" className={cx("btn btn-primary btn-block disabled buy-raffle-tickets")} data-toggle="modal" href="#info-modal" data-title="Raffle Drawn" data-message="This raffle has already been drawn. No further tickets are being accepted" >Raffle Closed</a> }
-            { this.props.activeTab && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' ) && <div className={cx("search-bar card")} data-module="" >
-                <input type="text" className={cx("form-control")} placeholder="Search Items..." />
-              </div> }
-            <div className={cx("text-center powered-by-sidebar")}><span>Powered by </span><a href="https://www.accelevents.com" target="_blank">
-                <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x50/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png" className={cx("img-responsive")} />
-              </a>
               </div>
-            <input type="hidden" value="true" id="causeAuctionCategoryEnabled" />
-            <input type="hidden" value="true" id="raffleCategoryEnabled" />
-            <input type="hidden" value="false" id="auctionCategoryEnabled" />
+            </div> }
+            { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) &&
+            <a role="button" className={cx("btn btn-primary btn-block disabled buy-raffle-tickets")} data-toggle="modal"
+               href="#info-modal" data-title="Raffle Drawn"
+               data-message="This raffle has already been drawn. No further tickets are being accepted">Raffle
+              Closed</a> }
+            { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) &&
+            <div className={cx("search-bar card")} data-module="">
+              <input type="text" className={cx("form-control")} placeholder="Search Items..."/>
+            </div> }
+            <div className={cx("text-center powered-by-sidebar")}><span>Powered by </span><a
+              href="https://www.accelevents.com" target="_blank">
+              <img
+                src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x50/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"
+                className={cx("img-responsive")}/>
+            </a>
+            </div>
+            <input type="hidden" value="true" id="causeAuctionCategoryEnabled"/>
+            <input type="hidden" value="true" id="raffleCategoryEnabled"/>
+            <input type="hidden" value="false" id="auctionCategoryEnabled"/>
 
-            {this.props.activeCategory && this.props.activeTab && (this.props.activeTab=='Raffle' || this.props.activeTab=='Fund a Need' ) && <div id="divItemCategories" className={cx("item-categories hidden-xs hide")}>
+            {this.props.activeCategory && this.props.activeTab && (this.props.activeTab == 'Raffle' || this.props.activeTab == 'Fund a Need' ) &&
+            <div id="divItemCategories" className={cx("item-categories hidden-xs hide")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
                 <li className={cx("all-items")}>
@@ -148,7 +159,8 @@ class EventAside extends React.Component {
                 </li>
               </ul>
             </div> }
-            { this.props.activeCategory &&  this.props.activeTab && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' )&& this.props.settings && this.props.settings.categories  && <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
+            { this.props.activeCategory && this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.settings && this.props.settings.categories &&
+            <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
                 <li className={cx("all-items")}>
@@ -159,22 +171,23 @@ class EventAside extends React.Component {
                   </a>
                 </li>
                 {
-                  this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item=>
-                    <li className={cx("")} key={item.name+Math.random()}>
-                    <a className={cx("category-switcher pointer")}>
-                      <i className={cx("fa fa-ticket")}></i>
-                      <span className={cx("cat-name")}>{item.name}</span>
-                      {item.count && <span className={cx("badge badge-primary pull-right cat-count")}>{item.count}</span>}
-                    </a>
-                  </li>)
+                  this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
+                    <li className={cx("")} key={item.name + Math.random()}>
+                      <a className={cx("category-switcher pointer")}>
+                        <i className={cx("fa fa-ticket")}></i>
+                        <span className={cx("cat-name")}>{item.name}</span>
+                        {item.count &&
+                        <span className={cx("badge badge-primary pull-right cat-count")}>{item.count}</span>}
+                      </a>
+                    </li>)
                 }
                 <li className={cx("")}>
-                <a href="#" className={cx("category-switcher")} data-category="Uncategorized" data-module="#raffle">
-                  <i className={cx("fa fa-ticket")}></i>
-                  <span className={cx("cat-name")}>Uncategorized</span>
-                  <span className={cx("badge badge-primary pull-right cat-count")}>1</span>
-                </a>
-              </li>
+                  <a href="#" className={cx("category-switcher")} data-category="Uncategorized" data-module="#raffle">
+                    <i className={cx("fa fa-ticket")}></i>
+                    <span className={cx("cat-name")}>Uncategorized</span>
+                    <span className={cx("badge badge-primary pull-right cat-count")}>1</span>
+                  </a>
+                </li>
               </ul>
             </div> }
           </div>

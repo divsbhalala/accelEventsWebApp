@@ -16,10 +16,10 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 class Home extends React.Component {
   static propTypes = {
     /*news: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      link: PropTypes.string.isRequired,
-      content: PropTypes.string,
-    })).isRequired,*/
+     title: PropTypes.string.isRequired,
+     link: PropTypes.string.isRequired,
+     content: PropTypes.string,
+     })).isRequired,*/
   };
 
   render() {
@@ -29,15 +29,15 @@ class Home extends React.Component {
           <h1>Home</h1>
           {this.props.news}
           {/*{this.props.news.map(item => (
-            <article key={item.link} className={s.newsItem}>
-              <h1 className={s.newsTitle}><a href={item.link}>{item.title}</a></h1>
-              <div
-                className={s.newsDesc}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </article>
-          ))}*/}
+           <article key={item.link} className={s.newsItem}>
+           <h1 className={s.newsTitle}><a href={item.link}>{item.title}</a></h1>
+           <div
+           className={s.newsDesc}
+           // eslint-disable-next-line react/no-danger
+           dangerouslySetInnerHTML={{ __html: item.content }}
+           />
+           </article>
+           ))}*/}
         </div>
       </div>
     );

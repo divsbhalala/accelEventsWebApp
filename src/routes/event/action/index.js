@@ -158,7 +158,7 @@ export  function  doGetFundANeedItemByCode( eventUrl, itemCode) {
 
 }
 
-export  function  doGetFundANeedItemByLimit( eventUrl, page, size) {
+export  function doGetFundANeedItemByLimit( eventUrl, page, size) {
   return (dispatch)=>{
     return axios({
       method: 'get',

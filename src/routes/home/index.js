@@ -15,10 +15,10 @@ export default {
 
   path: '/',
 
-  async action({ fetch }) {
+  async action({fetch}) {
     return {
       title: 'React Starter Kit',
-      component: <Layout><Home news={<h1>Home Page</h1>} /></Layout>,
+      component: <Layout><Home news={<h1>Home Page</h1>}/></Layout>,
     };
 
   },

@@ -1,21 +1,21 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-var API_URL='http://35.161.147.220:3333/api/';
-export function onFormSubmit(e){
+var API_URL = 'http://35.161.147.220:3333/api/';
+export function onFormSubmit(e) {
   alert('hello');
-  let test=ReactDOM.findDOMNode(ref);
+  let test = ReactDOM.findDOMNode(ref);
   alert(test);
   e.preventDefault();
   console.log('hii');
   return false;
 }
 
-export  function  doLogin( email, password) {
-  return (dispatch)=>{
+export function doLogin(email, password) {
+  return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL+'users/login',
+      url: API_URL + 'users/login',
       data: {
         email: email,
         password: password
@@ -28,7 +28,7 @@ export  function  doLogin( email, password) {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         console.log(error);
         return error;
       });
@@ -36,15 +36,15 @@ export  function  doLogin( email, password) {
 
 }
 
-export function storeLoginData(data){
+export function storeLoginData(data) {
   return {
-    type:'STORE_LOGIN_DATA',
+    type: 'STORE_LOGIN_DATA',
     data
   }
 }
-export function storeToken(data){
+export function storeToken(data) {
   return {
-    type:'STORE_TOKEN',
-    token:data
+    type: 'STORE_TOKEN',
+    token: data
   }
 }

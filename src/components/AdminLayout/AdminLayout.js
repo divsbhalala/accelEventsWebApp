@@ -25,7 +25,7 @@ class AdminLayout extends React.Component {
       <div>
         <Header />
         {this.props.children}
-        {this.props.showFeedBack &&  <Feedback />}
+        {this.props.showFeedBack && <Feedback />}
         <Footer />
       </div>
     );

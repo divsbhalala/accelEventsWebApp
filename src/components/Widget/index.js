@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import  PropTypes   from 'prop-types';
-import { Panel } from 'react-bootstrap';
+import {Panel} from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
 
-class StatWidget extends Component{ // eslint-disable-line
+class StatWidget extends Component { // eslint-disable-line
   static propTypes = {
     style: PropTypes.string,
     count: PropTypes.string,
@@ -12,6 +12,7 @@ class StatWidget extends Component{ // eslint-disable-line
     icon: PropTypes.string,
     footerText: PropTypes.string,
   }
+
   render() {
     return (
       <Panel
@@ -48,8 +49,8 @@ class StatWidget extends Component{ // eslint-disable-line
                 this.props.footerText
               }
             </span>
-            <span className="pull-right"><i className="fa fa-arrow-circle-right" /></span>
-            <div className="clearfix" />
+            <span className="pull-right"><i className="fa fa-arrow-circle-right"/></span>
+            <div className="clearfix"/>
           </Link>}
       />
 

@@ -12,7 +12,7 @@ import AdminLayout from '../../components/AdminLayout';
 import Login from './Login';
 
 const title = 'Log In';
-const showFeedBack=false;
+const showFeedBack = false;
 
 export default {
 
@@ -21,7 +21,7 @@ export default {
   action() {
     return {
       title,
-      component: <AdminLayout><Login title={title} showFeedBack={showFeedBack} /></AdminLayout>,
+      component: <AdminLayout><Login title={title} showFeedBack={showFeedBack}/></AdminLayout>,
     };
   },
 
