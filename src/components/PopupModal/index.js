@@ -29,7 +29,7 @@ class PopupModal extends Component{ // eslint-disable-line
               <Modal.Title>{this.props.headerText}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {<div dangerouslySetInnerHTML={{__html: this.props.modelBody}} />}
+              {this.props.children}
             </Modal.Body>
             {this.props.modelFooter && <Modal.Footer>
               {<div dangerouslySetInnerHTML={{__html: this.props.modelFooter}} />}

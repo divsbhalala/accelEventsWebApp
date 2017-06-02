@@ -146,6 +146,8 @@ class Event extends React.Component {
 
       } else if(label=='Fund a Need'){
         label='fundaneed';
+        this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
+
       } else if(label=='The Event'){
         label='ticketing';
       } else if(label=='Donation'){
@@ -219,27 +221,27 @@ class Event extends React.Component {
 
 
   doGetFundANeedItemByLimit(eventUrl){
-    this.props.doGetFundANeedItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit).then(resp=>{
+    this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit).then(resp=>{
       if(resp && resp.data){
-        if(resp.data.length < this.state.auctionPageLimit){
+        if(resp.data.length < this.state.fundANeedPageLimit){
           this.setState({
-            rafflePageLoading:false
+            fundANeedPageLoading:false
           })
         }
         this.setState({
-          rafflePageItems:this.state.rafflePageItems.concat(resp.data),
-          rafflePageCount:this.state.rafflePageCount+1
+          fundANeedPageItems:this.state.fundANeedPageItems.concat(resp.data),
+          fundANeedPageCount:this.state.fundANeedPageCount+1
 
         })
       }
       else{
         this.setState({
-          rafflePageLoading:false
+          fundANeedPageLoading:false
         })
       }
     }).catch(error=>{
       this.setState({
-        rafflePageLoading:false
+        fundANeedPageLoading:false
       })
     })
   }
@@ -339,19 +341,32 @@ class Event extends React.Component {
                     </Tab>
                     <Tab label="Fund a Need">
                       <div className="row">
-                        <EventTabCommonBox
-                          headerText="My Fund a Need Item"
-                          itemCode="FAN"
-                          data={
-                          [{title:"TMINIMUM PLEDGE", value:"300"}]
+                        <InfiniteScroll
+                          next={this.doGetLoadMoreFundANeedItem}
+                          hasMore={this.state.fundANeedPageLoading}
+                          loader={<h4 className="text-center mrg-t-md"><span className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
+                          {
+                            this.state.fundANeedPageItems.map((item)=>
+                              <EventTabCommonBox key={item.id+Math.random().toString()}
+                                                 type="fund"
+                                                 headerText={item.name}
+                                                 itemCode={item.code}
+                                                 isSharable="false"
+                                                 data={
+                                                   [
+                                                     {title: "MINIMUM PLEDGE",
+                                                       value: item.pledge_price ? item.pledge_price : 0
+                                                     }
+                                                   ]
+                                                 }
+                                                 descText={item.excerpt}
+                                                 imageUrl={ item.images && item.images.length> 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+item.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
+                                                 actionTitle={"PLEDGE"}
+                                                 actionClassName={ item.purchased ? "btn btn-primary disabled":"btn btn-success w-50"}
+                              />
+                            )
                           }
-                          isSharable="false"
-                          descText="testDesc"
-                          imageUrl="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg"
-                          actionTitle="Pledging Closed"
-                          actionClassName="btn btn-primary btn-block disabled"
-                        />
-
+                        </InfiniteScroll>
                       </div>
                     </Tab>
                     <Tab label="Donation">
@@ -370,17 +385,45 @@ class Event extends React.Component {
           id="bookingPopup"
           showModal={this.state.showBookingTicketPopup}
           headerText="Register"
-          modelBody='<form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST"> <div class="ticket-type-container"> <input type="hidden" value="44" name="tickettypeid"> <div class="sale-card"> <div class="flex-row"> <div class="flex-col"> <div class="type-name"><strong>First ticket type</strong> (<span class="type-cost txt-sm gray"> $100.00 </span>) <div class="pull-right"> <div class="col-md-7">No Of Tickets</div><div class="col-md-5"> SOLD OUT </div></div></div><div class="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div></div></div></div></div><div class="status-bar clearfix mrg-t-lg"> <div class="pull-left"> <span> QTY:<span class="qty">0</span> </span> <span class="total-price">FREE</span> </div><div class="pull-right"> <button type="button" class="btn btn-success" id="checkout-tickets">checkout</button> </div></div></form>'
+          modelBody=''
           onCloseFunc={this.hideBookingPopup}
-        />
+        >
+          <form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST">
+            <div className="ticket-type-container"> <input type="hidden" value="44" name="tickettypeid" />
+              <div className="sale-card">
+                <div className="flex-row">
+                <div className="flex-col">
+                  <div className="type-name">
+                    <strong>First ticket type</strong>
+                    (<span className="type-cost txt-sm gray"> $100.00 </span>)
+                    <div className="pull-right"> <div className="col-md-7">No Of Tickets</div>
+                      <div className="col-md-5"> SOLD OUT </div>
+                    </div>
+                  </div>
+                  <div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
+                </div>
+              </div>
+            </div>
+            <div className="status-bar clearfix mrg-t-lg">
+              <div className="pull-left">
+                <span> QTY:<span className="qty">0</span> </span>
+                <span className="total-price">FREE</span>
+              </div>
+              <div className="pull-right">
+                <button type="button" className="btn btn-success" id="checkout-tickets">checkout</button>
+              </div>
+            </div></div>
+          </form>
+        </PopupModel>
 
         <PopupModel
           id="mapPopup"
           showModal={this.state.showMapPopup}
           headerText="Event Location"
-          modelBody='<div><h1>Location</h1></div>'
           onCloseFunc={this.hideMapPopup}
-        />
+        >
+          <div><h1>Location</h1></div>
+        </PopupModel>
       </div>
     );
   }
