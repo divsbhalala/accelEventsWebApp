@@ -31,18 +31,19 @@ class EventAside extends React.Component {
       <div >
         <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
         <div className={cx("main-box", "clearfix")}>
+            {console.log('side',this.props)}
           <header className={cx("main-box-header", "clearfix")}>
             <h2>jkazarian8</h2>
           </header>
           <div className={cx("main-box-body","clearfix")}>
-            { this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_logo_enabled  && <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" className="img-responsive center-block" />}
+            { this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.logoEnabled  && <img src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/"+this.props.eventData.eventDesignDetailDto.logoImage} className="img-responsive center-block" />}
             { this.props.activeTab && (this.props.activeTab=='The Event' ) &&  <div className={cx("the-event","mrg-t-lg")}>
               { this.props.showBookingPopup && <a onClick={this.props.showBookingPopup} className={cx("btn","btn-block","btn-lg","btn-orange", this.props.settings ? "": "disabled")}>Buy Tickets</a>}
                 <div className={cx("box")}>
                   <div className={cx("box-title","text-uppercase")}>date and time</div>
                   <div className={cx("box-content")}>
                     {this.props.settings && this.props.settings.startdate && <Moment  format="ddd MMMM D YYYY, h:mm A"  tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.startdate}</Moment>} -
-                    {this.props.settings && this.props.settings.enddate && <Moment  format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.enddate}</Moment>}
+                    {this.props.settings && this.props.settings.eventEnd && <Moment  format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.eventEnd}</Moment>}
                     <br />
                     <time>
                       <span className="hide"> (America/New_York)</span>
@@ -60,14 +61,14 @@ class EventAside extends React.Component {
                   </div>
                 </div>
               </div> }
-            { this.props.activeTab && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' ) && this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_txt_msg_bid_inst_shown && <div className={cx("card bidinfo")} >
+            { this.props.activeTab && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.txtMsgBidInstShown && <div className={cx("card bidinfo")} >
               {this.props.activeTab=='Raffle' && <p className={cx("raffle-text")} >Submit your tickets here or text your ticket submission to: (410) 927-5356 with the item's three letter code, and your desired number of tickets ex. ABC10</p>}
               { (this.props.activeTab=='Donation' || this.props.activeTab=='Auction'|| this.props.activeTab=='The Event' )
               && <p className={cx("causeauction-text donation-text auction-text")} >Bid here or text Your Bid To: (410) 927-5356 with the item's three letter code and bid amount ex. ABC$300</p>}
             </div>}
             { this.props.activeTab
             && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' )
-            && (this.props.eventData && (this.props.eventData.is_silent_auction_enabled ||this.props.eventData.is_cause_auction_enabled ||this.props.eventData.is_raffle_enabled) && this.props.eventData.design_detail && !this.props.eventData.design_detail.is_countdown_timer_hiddedn )
+            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled ||this.props.eventData.causeAuctionEnabled ||this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.countDownTimeHidden )
             && <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")} >
                 <div className={cx("main-box-body clearfix")}>
                   <div className={cx("project-box-header gray-bg")}>
@@ -103,7 +104,7 @@ class EventAside extends React.Component {
                   </div>}
                 </div>
               </div> }
-            { this.props.activeTab && !(this.props.activeTab=='The Event') && (this.props.eventData && (this.props.eventData.is_silent_auction_enabled ||this.props.eventData.is_cause_auction_enabled ||this.props.eventData.is_raffle_enabled) && this.props.eventData.design_detail && !this.props.eventData.design_detail.is_total_fund_raised_hiddend ) && <div className={cx("main-box clearfix project-box gray-box card funds-raised-container")} >
+            { this.props.activeTab && !(this.props.activeTab=='The Event') && (this.props.eventData && (this.props.eventData.silentAuctionEnabled ||this.props.eventData.causeAuctionEnabled ||this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.totalFundRaisedHidden ) && <div className={cx("main-box clearfix project-box gray-box card funds-raised-container")} >
                 <div className={cx("main-box-body clearfix")}>
                   <div className={cx("project-box-header gray-bg")}>
                     <div className={cx("name text-center")}>

@@ -31,7 +31,7 @@ export default {
             action(props) {
                 return {
                     title:"Auction Page",
-                    component: <Layout><Auction params={props.params} itemCode={props.params && props.params.ItemCode} title={title} /></Layout>,
+                    component: <Layout params={props.params} ><Auction params={props.params} itemCode={props.params && props.params.ItemCode} title={title} /></Layout>,
                 };
             }
         },
@@ -40,7 +40,7 @@ export default {
             action(props) {
                 return {
                     title:"Fund Page",
-                    component: <Layout><Fund  params={props.params} itemCode={props.params && props.params.ItemCode}  title={title}  /></Layout>,
+                    component: <Layout params={props.params} ><Fund  params={props.params} itemCode={props.params && props.params.ItemCode}  title={title}  /></Layout>,
                 };
             }
         },
@@ -49,10 +49,9 @@ export default {
             action(props) {
                 return {
                     title:"Raffle Page",
-                    component: <Layout><Raffle params={props.params} itemCode={props.params && props.params.ItemCode} title={title}  /></Layout>,
+                    component: <Layout params={props.params} ><Raffle params={props.params} itemCode={props.params && props.params.ItemCode} title={title}  /></Layout>,
                 };
             }
         }
         ]
-
 };

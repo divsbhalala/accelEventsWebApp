@@ -197,7 +197,7 @@ class Raffle extends React.Component {
             <a role="button" className="btn btn-success btn-block" href="/AccelEventsWebApp/events/jkazarian8#raffle">Go back to All Items</a>
         </div>;
 
-        var imageUrl= this.state.raffleData && this.state.raffleData.images[0].imageUrl > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.state.raffleData.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+        var imageUrl= this.state.raffleData && this.state.raffleData.images[0].imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.state.raffleData.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
         return (
             <div className="row">
                 <div className="col-lg-12">

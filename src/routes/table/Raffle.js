@@ -12,40 +12,38 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetAuctionItemByLimit,doGetSettings } from './../event/action/index';
-import s from './scroll.css';
+import s from './table.css';
+import {doGetRaffleItemByLimit,doGetSettings } from './../event/action/index';
 import moment from 'moment';
-// import  history from './../../../history';
 
-class Auction extends React.Component {
-  static propTypes = {
-    title: PropTypes.string
-  };
+class Raffle extends React.Component {
+    static propTypes = {
+        title: PropTypes.string
+    };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-        isLogin:false,
-        settings:null,
-        itemList:null,
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLogin:false,
+            settings:null,
+            itemList:null,
+        }
+
     }
 
-  }
     componentWillMount(){
-        this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp=> {
+        this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp=> {
             this.setState({
                 settings: resp && resp.data
             });
         })
-        console.log("props",this.props.params)
-
-    this.props.doGetAuctionItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp=>{
-        if(resp && resp.data){
-            this.setState({
-                itemList: resp && resp.data
-            });
-        }
-       })
+        this.props.doGetRaffleItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp=>{
+            if(resp && resp.data){
+                this.setState({
+                    itemList: resp && resp.data
+                });
+            }
+        })
     }
     render() {
         return (
@@ -111,7 +109,7 @@ class Auction extends React.Component {
                             <div className="row">
                                 <div className="col-md-10 col-md-offset-1">
                                     <div className="table white-bg scrollingpage">
-                                        <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center",s.helptext)}>
+                                        <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center",s.helptextt)}>
                                             Text Your Pledge To: (410) 927-5356 with the item's three letter code and your desired pledge amount. Example: ABC$300
                                         </p>
                                         <table className="turquoise-bg white table table-striped datatables mrg-b-xs">
@@ -119,23 +117,23 @@ class Auction extends React.Component {
                                             <tr>
                                                 <th>Item</th>
                                                 <th>Item Code</th>
-                                                <th>WINNING BID	</th>
-                                                <th>WINNING BIDDER</th>
+                                                <th>TICKETS SUBMITTED</th>
+                                                <th>WINNING</th>
                                             </tr>
                                             </thead>
                                         </table>
                                         <div id="scroller" className="scrollingpage">
-                                            <marquee direction="up" height="500px" loop="infinite">
-                                            <table className={("table datatables scrollingtable" , s.inner)}>
-                                                <tbody>
-                                                {this.state.itemList &&
-                                                this.state.itemList.map((item,index)=>
-                                                    <ItemList key={index}  item={item} />
-                                                )
-                                               }
-                                                </tbody>
-                                            </table>
-                                        </marquee>
+                                            {/*<marquee direction="up" height="500px" loop="infinite">*/}
+                                                <table className="table datatables scrollingtable">
+                                                    <tbody>
+                                                    {this.state.itemList &&
+                                                    this.state.itemList.map((item,index)=>
+                                                        <ItemList key={index}  item={item} />
+                                                    )
+                                                    }
+                                                    </tbody>
+                                                </table>
+                                            {/*</marquee>*/}
                                         </div>
                                     </div>
                                 </div>
@@ -154,17 +152,19 @@ class ItemList extends React.Component {
             <tr >
                 <td className="item-name">{this.props.item.name}</td>
                 <td className="item-code">{this.props.item.code}</td>
-                <td className="item-startingBid">-</td>
+                <td className="item-startingBid">{this.props.item.tickes_submitted}</td>
                 <td className="total-pledge">-</td>
             </tr>
-        );}}
+        );}
+}
+
 
 const mapDispatchToProps = {
     doGetSettings : (eventUrl, type) => doGetSettings(eventUrl, type),
-    doGetAuctionItemByLimit : (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
+    doGetRaffleItemByLimit : (eventUrl, page, size, type) => doGetRaffleItemByLimit(eventUrl, page, size, type),
 };
 const mapStateToProps = (state) => ({
 
-
 });
-export default  connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(Auction));
+export default  connect(mapStateToProps,mapDispatchToProps)(Raffle);
+

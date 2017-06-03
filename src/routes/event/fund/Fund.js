@@ -254,7 +254,7 @@ class Fund extends React.Component {
     };
     componentWillMount(){
         this.props.doGetEventData(this.props.params && this.props.params.params);
-        this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp=> {
+        this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp=> {
             this.setState({
                 settings: resp && resp.data
             });
@@ -293,7 +293,7 @@ class Fund extends React.Component {
               { this.state.emailFeedBack && !this.state.email &&  <small className="help-block" data-fv-validator="emailAddress"  data-fv-for="email" data-fv-result="NOT_VALIDATED" >{this.state.errorMsgEmail}</small>}
           </div>
       </div>
-      var imageUrl= this.state.raffleData && this.state.raffleData.images[0].imageUrl > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.state.raffleData.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
+      var imageUrl= this.state.raffleData && this.state.raffleData.images[0].imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.state.raffleData.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
 
       return (
       <div className="row">

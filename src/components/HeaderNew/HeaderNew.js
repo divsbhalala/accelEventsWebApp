@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
   Nav,
@@ -52,21 +53,41 @@ class HeaderNew extends React.Component  {
           <MenuItem eventKey="1">
             <i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
           </MenuItem>
-
           <MenuItem eventKey="3">
             Volunteer
           </MenuItem>
-
           <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
-            <MenuItem eventKey="5">
-              <span> Scrolling </span>
+
+            <MenuItem eventKey="5" href={"/scroll/"+this.props.params.params+"/auction"} >
+              <span> Auction Scrolling </span>
             </MenuItem>
-            <MenuItem eventKey="6">
-              <span> Goal </span>
+            <MenuItem eventKey="5" href={"/scroll/"+this.props.params.params+"/raffle"} >
+              <span> Raffle Scrolling </span>
             </MenuItem>
-            <MenuItem eventKey="7">
-              <span> Table </span>
+            <MenuItem eventKey="5" href={"/scroll/"+this.props.params.params+"/fund"} >
+              <span> Fund a Need Scrolling </span>
             </MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="5" href={"/goal/"+this.props.params.params+"/auction"} >
+              <span> Auction Goal </span>
+            </MenuItem>
+            <MenuItem eventKey="5" href={"/goal/"+this.props.params.params+"/raffle"} >
+              <span> Raffle Goal </span>
+            </MenuItem>
+            <MenuItem eventKey="5" href={"/goal/"+this.props.params.params+"/fund"} >
+              <span> Fund a Need Goal </span>
+            </MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="5" href={"/table/"+this.props.params.params+"/auction"} >
+              <span> Auction Table </span>
+            </MenuItem>
+            <MenuItem eventKey="5" href={"/table/"+this.props.params.params+"/raffle"} >
+              <span> Raffle Table </span>
+            </MenuItem>
+            <MenuItem eventKey="5" href={"/table/"+this.props.params.params+"/fund"} >
+              <span> Fund a Need Table </span>
+            </MenuItem>
+
             <MenuItem divider/>
             <MenuItem eventKey="4" onClick={(event) => {
               history.push('/login');

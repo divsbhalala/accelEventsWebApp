@@ -26,6 +26,8 @@ export default {
     require('./admin').default,
     require('./event').default,
     require('./scroll').default,
+    require('./table').default,
+    require('./goal').default,
 
 
     // Wildcard routes, e.g. { path: '*', ... } (must go last)

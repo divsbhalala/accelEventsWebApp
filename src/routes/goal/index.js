@@ -9,48 +9,47 @@
 
 import React from 'react';
 import Layout from '../../components/Layout';
-import Event from './Event';
-import Fund from './fund/Fund';
-import Raffle from './raffle/Raffle';
-import Auction from './auction/Auction';
+import Fund from './Fund';
+import Raffle from './Raffle';
+import Auction from './Auction';
 
 const title = 'Event Page';
 export default {
-    path: '/event/:params',
+    path: '/goal/:params',
     children:[
         {
             path: '/',
             async action(props) {
                 return {
                     title,
-                    component: <Layout params={props.params}><Event title={title} params={props.params}/></Layout>,
+                    component: <Layout params={props.params}><Auction title={title} params={props.params} /></Layout>,
                 };
             }
         },
         {
-            path:'/auction/:ItemCode',
+            path:'/auction',
             action(props) {
                 return {
                     title:"Auction Page",
-                    component: <Layout params={props.params}><Auction params={props.params} itemCode={props.params && props.params.ItemCode} title="Auction"/></Layout>,
+                    component: <Layout params={props.params}><Auction params={props.params} itemCode={props.params && props.params.ItemCode} title={title} /></Layout>,
                 };
             }
         },
         {
-            path:'/fund/:ItemCode',
+            path:'/fund',
             action(props) {
                 return {
                     title:"Fund Page",
-                    component: <Layout params={props.params}><Fund params={props.params} itemCode={props.params && props.params.ItemCode} title="Fund"/></Layout>,
+                    component: <Layout params={props.params}><Fund  params={props.params} itemCode={props.params && props.params.ItemCode}  title={title}  /></Layout>,
                 };
             }
         },
         {
-                path:'/raffle/:ItemCode',
+                path:'/raffle',
             action(props) {
                 return {
                     title:"Raffle Page",
-                    component: <Layout params={props.params} ><Raffle params={props.params} itemCode={props.params && props.params.ItemCode}  title="raffle"/></Layout>,
+                    component: <Layout params={props.params}><Raffle params={props.params} itemCode={props.params && props.params.ItemCode} title={title}  /></Layout>,
                 };
             }
         }

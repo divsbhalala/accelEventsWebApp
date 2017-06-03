@@ -15,11 +15,15 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import {doGetEventData,doGetSettings } from './../action/index';
 import  history from './../../../history';
+// general styles
+//import 'react-responsive-carousel/lib/styles/main.css';
 
+// carousel styles
+//import 'react-responsive-carousel/lib/styles/carousel.css';
 import  EventAside from './../../../components/EventAside/EventAside';
 
 import  {doGetAuctionItemByCode} from './../action/index';
-
+import  { Carousel } from 'react-responsive-carousel';
     class Auction extends React.Component {
     static propTypes = {
         title: PropTypes.string
@@ -29,7 +33,6 @@ import  {doGetAuctionItemByCode} from './../action/index';
         super(props);
         this.state = {
             settings:null,
-            tab: 'Auction',
             showBookingTicketPopup: false,
             showMapPopup: true,
             isLogin:false,
@@ -68,8 +71,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
             errorMsgcvv:null,
             errorMsgEmail:null,
         };
-
-    }
+   }
 
     onFormClick=(e)=>{
         e.preventDefault();
@@ -305,7 +307,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
                 settings: resp && resp.data
             });
         }).catch(error=>{
-            history.push('/404');
+           // history.push('/404');
         });
         this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params,this.props.itemCode)
             .then(resp=>{
@@ -318,10 +320,7 @@ import  {doGetAuctionItemByCode} from './../action/index';
             console.log(error)
         });
 
-        console.log(this.state,this.props) ;
-        console.log('->>>',this.state.settings);
     }
-
     render() {
         var form_login=<div>
             <h4>Login or signup below</h4>
@@ -596,7 +595,6 @@ import  {doGetAuctionItemByCode} from './../action/index';
                     </div>;
         var div_bid_close =<div className="alert alert-success text-center">Item Has Been Purchased for $<span className="current-bid">400</span></div>
         var bid_active=this.state.auctionData && this.state.auctionData.purchased;
-        var imageUrl= this.state.raffleData && this.state.raffleData.images[0].imageUrl > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.state.raffleData.images[0].imageUrl:"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
 
         return (
             <div className="row">
@@ -604,9 +602,8 @@ import  {doGetAuctionItemByCode} from './../action/index';
                     <div id="content-wrapper">
                         <div className="row">
                             <div className="col-lg-3 col-md-4 col-sm-4">
-
                                 <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings} eventTicketData={this.props.eventTicketData}
-                                            showMapPopup={this.showMapPopup} activeCategory={false} />
+                                             showMapPopup={this.showMapPopup} activeCategory={false} />
                                </div>
                             <div className="col-lg-9 col-md-8 col-sm-8">
                                 <div className="main-box clearfix">
@@ -615,8 +612,15 @@ import  {doGetAuctionItemByCode} from './../action/index';
                                         <div className="col-md-6">
                                             <div className="pad-l-md pad-r-md">
                                                 <div className="item-image">
-                                                    <div className="item-image-inner"
-                                                         style={{backgroundImage: 'url('+imageUrl+')'}}/>
+                                                    {console.log('--image',this.state.auctionData && this.state.auctionData.images)}
+                                                    <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
+                                                        {this.state.auctionData &&
+                                                        this.state.auctionData.images.map((item,index)=>
+                                                            <ImageList key={index}  item={item} />
+                                                        )
+                                                        }
+                                                    </Carousel>
+
                                                 </div>
                                             </div>
                                             <div className="mrg-t-lg pad-l-md pad-r-md">
@@ -625,12 +629,22 @@ import  {doGetAuctionItemByCode} from './../action/index';
                                         </div>
                                         <div className="col-md-6" style={{paddingRight: 16}}>
                                             <div className="row">
-                                                <div className="col-sm-6">
+                                                <div className="col-sm-4">
                                                     <div className="curr-bid-number">$<span
                                                         className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
                                                     <div className="curr-bid-text">Current Bid</div>
                                                 </div>
-                                                { bid_active ? form_bid_close :'' }
+                                                {this.state.auctionData &&  this.state.auctionData.buyItNowPrice > 0 &&  <div className="col-sm-4">
+                                                    <div className="curr-bid-number">$<span
+                                                        className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
+                                                    <div className="curr-bid-text">BUY NOW PRICE</div>
+                                                </div>}
+                                                {this.state.auctionData &&  this.state.auctionData.marketValue > 0 &&  <div className="col-sm-4">
+                                                    <div className="curr-bid-number">$<span
+                                                        className="current-bid">{this.state.auctionData.marketValue}</span></div>
+                                                    <div className="curr-bid-text">MARKET VALUE </div>
+                                                </div>}
+                                                {/*{ bid_active ? form_bid_close :'' }*/}
                                             </div>
                                             { bid_active ? div_bid_close :'' }
                                             { !bid_active ?  this.state.isLogin ? form_bid : form_login :'' }
@@ -644,6 +658,15 @@ import  {doGetAuctionItemByCode} from './../action/index';
             </div>
         );
     }
+}
+class ImageList extends React.Component {
+    render() {
+        return (
+        <div>
+            <img src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" } />
+        </div>
+
+        );}
 }
 
 const mapDispatchToProps = {
