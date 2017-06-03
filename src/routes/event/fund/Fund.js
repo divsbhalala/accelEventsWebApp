@@ -214,7 +214,7 @@ class Fund extends React.Component {
         amount: false,
         errorMsgNumber: "Pledge Amount can't be empty This value is not valid",
       });
-    } else if (this.state.auctionData.pledge_price > this.amount.value) {
+    } else if (this.state.auctionData.pledgePrice > this.amount.value) {
       this.setState({
         amount: false,
         errorMsgNumber: "Submitted pledge amount should be greater than or equal to the stated pledge amount.",
@@ -342,7 +342,7 @@ class Fund extends React.Component {
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
                             $ <span
-                            className="item-bid-price"> {this.state.auctionData && this.state.auctionData.pledge_price} </span>
+                            className="item-bid-price"> {this.state.auctionData && this.state.auctionData.pledgePrice} </span>
                           </h4>
                         </div>
                       </div>

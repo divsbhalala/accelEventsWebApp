@@ -262,11 +262,11 @@ class Event extends React.Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          {this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_banner_image_enabled &&
+          {this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.is_banner_image_enabled &&
           <div className="row">
             <div className={cx("header-img", "text-center")}>
               <img
-                src={ this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.design_detail.banner_image : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
+                src={ this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetailDto.banner_image : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
                 className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
             </div>
           </div>}
@@ -308,7 +308,7 @@ class Event extends React.Component {
                                                  type="auction"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable={this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_social_sharing_enabled}
+                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.socialSharingEnabled}
                                                  data={
                                                    [
                                                      {
@@ -346,12 +346,12 @@ class Event extends React.Component {
                                                  type="raffle"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable={this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_social_sharing_enabled}
+                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.socialSharingEnabled}
                                                  data={
                                                    [
                                                      {
                                                        title: "TICKETS SUBMITTED",
-                                                       value: item.tickes_submitted ? item.tickes_submitted : 0
+                                                       value: item.ticketsSubmitted ? item.ticketsSubmitted : 0
                                                      }
                                                    ]
                                                  }
@@ -378,12 +378,12 @@ class Event extends React.Component {
                                                  type="fund"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable={this.props.eventData && this.props.eventData.design_detail && this.props.eventData.design_detail.is_social_sharing_enabled}
+                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.socialSharingEnabled}
                                                  data={
                                                    [
                                                      {
                                                        title: "MINIMUM PLEDGE",
-                                                       value: item.pledge_price ? item.pledge_price : 0
+                                                       value: item.pledgePrice ? item.pledgePrice : 0
                                                      }
                                                    ]
                                                  }
@@ -419,7 +419,7 @@ class Event extends React.Component {
           <form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST">
             <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
               {
-                this.state.settings && this.state.settings['ticket-type'] && (this.state.settings['ticket-type']).map(item =>
+                this.state.settings && this.state.settings.tickeTypes && (this.state.settings.tickeTypes).map(item =>
                   <div className="sale-card" key={item.typeId.toString()}>
                     <div className="flex-row">
                       <div className="flex-col">
@@ -438,8 +438,8 @@ class Event extends React.Component {
                           </div>
                         </div>
                         <div
-                          className="sale-text txt-sm text-uppercase"> {moment(item.enddate).diff(moment()) > 0 ? "Available until " : "Sale Ended on "}
-                          <Moment format="MMMM D YYYY">{item.enddate}</Moment></div>
+                          className="sale-text txt-sm text-uppercase"> {moment(item.endDate).diff(moment()) > 0 ? "Available until " : "Sale Ended on "}
+                          <Moment format="MMMM D YYYY">{item.endDate}</Moment></div>
                         {item.ticketsPerTable && item.ticketsPerTable > 0 ?
                           <div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable}
                             tickets</div> : ''}
