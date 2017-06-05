@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-var API_URL='http://api.stagingaccel.com:8080/AccelEventsWebApp/rest/';
+import {apiUrl as API_URL} from './../../../clientConfig';
 export  function  doGetEventData( eventUrl) {
   return (dispatch)=>{
     return axios({

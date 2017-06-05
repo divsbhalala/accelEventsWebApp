@@ -29,6 +29,15 @@ const logo = require('./logo.png');
 
 class HeaderNew extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.logout = this.logout.bind(this);
+  }
+
+  logout=()=>{
+    localStorage.clear();
+    history.push('/login');
+  }
   render() {
     return (
       <div id="header-navbar" className={cx("content turquoise-bg white")}>
@@ -119,9 +128,7 @@ class HeaderNew extends React.Component {
                   <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
                 </MenuItem>
                 <MenuItem divider/>
-                <MenuItem eventKey="4" onClick={(event) => {
-                  history.push('/login');
-                }}>
+                <MenuItem eventKey="4" onClick={this.logout}>
                   <span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
                 </MenuItem>
               </NavDropdown>

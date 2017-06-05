@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-
-var API_URL = 'http://35.161.147.220:3333/api/';
+import {apiUrl as API_URL} from './../../../clientConfig';
 export function onFormSubmit(e) {
   alert('hello');
   let test = ReactDOM.findDOMNode(ref);
@@ -11,30 +10,41 @@ export function onFormSubmit(e) {
   return false;
 }
 
+const getUserDetails=(token)=>{
+  return axios({
+    method: 'get',
+    url: API_URL + 'u/userdetail',
+    headers:{Authorization: token}
+  })
+}
+
 export function doLogin(email, password) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'users/login',
+      url: API_URL + 'u/login',
       data: {
-        email: email,
+        username: email,
         password: password
       }
     }).then(response => {
-      dispatch(storeLoginData(response.data.userData));
-      dispatch(storeToken(response.data.id));
-      localStorage.setItem('user', JSON.stringify(response.data.userData));
-      localStorage.setItem('token', JSON.stringify(response.data.id));
+      dispatch(storeToken(response.data.access_token));
+      getUserDetails(response.data.access_token).then(resp=>{
+        dispatch(storeLoginData(resp.data));
+        localStorage.setItem('user', JSON.stringify(resp.data));
+      }).catch(err=>{
+      })
+      localStorage.setItem('token', JSON.stringify(response.data.access_token));
       return response;
 
     })
       .catch(error => {
-        console.log(error);
         return error;
       });
   }
 
 }
+
 
 export function storeLoginData(data) {
   return {
