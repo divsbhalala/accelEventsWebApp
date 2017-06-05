@@ -63,6 +63,7 @@ class Event extends React.Component {
       fundANeedPageLoading: true,
       totalTicketQty:0,
       totalTickets:[],
+      totalTicketPrice:0,
     };
     this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -255,13 +256,22 @@ class Event extends React.Component {
   }
 
   selectHandle(e) {
-    console.log(e.target.name);
+    console.log(e.target.dataset.price);
     console.log(e.target.value);
     let totalTickets=this.state.totalTickets;
-    totalTickets[e.target.name]=e.target.value;
+    totalTickets[e.target.name]={
+      price:e.target.dataset && e.target.dataset.price,
+      qty:e.target.value
+    };
+    let totalPrice=0;
+    totalTickets.map(item=>{
+      //console.log(item)
+      totalPrice+=item.price*item.qty;
+    })
     this.setState({
       totalTickets:totalTickets,
-      totalTicketQty: 0+parseInt(e.target.value)+this.state.totalTicketQty
+      totalTicketQty: 0+parseInt(e.target.value)+this.state.totalTicketQty,
+      totalTicketPrice:totalPrice,
     })
   }
 
@@ -443,7 +453,7 @@ class Event extends React.Component {
                           <div className="pull-right">
                             <div className="col-md-7">No Of Tickets</div>
                             { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
-                              <select className="form-control" name={item.typeId} onChange={this.selectHandle}  value={this.state.totalTickets && this.state.totalTickets[item.typeId] ? this.state.totalTickets[item.typeId] :0}>
+                              <select className="form-control" name={item.typeId} data-price={item.price} onChange={this.selectHandle}  value={this.state.totalTickets && this.state.totalTickets[item.typeId]&& this.state.totalTickets[item.typeId].qty ? this.state.totalTickets[item.typeId].qty :0}>
                                 {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
                               </select>
                             </div> : ''}
@@ -486,7 +496,7 @@ class Event extends React.Component {
               <div className="status-bar clearfix mrg-t-lg">
                 <div className="pull-left">
                   <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
-                  <span className="total-price">FREE</span>
+                  <span className="total-price">{this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
                 </div>
                 <div className="pull-right">
                   <button type="button" className="btn btn-success" id="checkout-tickets">checkout</button>
