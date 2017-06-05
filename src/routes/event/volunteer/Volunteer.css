@@ -1,0 +1,158 @@
+/**
+ * React Starter Kit (https://www.reactstarterkit.com/)
+ *
+ * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+@import '../../../components/variables.css';
+
+.navbar.navbar-default {
+    background-color: transparent;
+    border: 0;
+}
+
+views {
+    max-width: 540px;
+    overflow: hidden;
+    display: block;
+    margin: 0 auto 40px auto;
+    width: 95%;
+}
+
+views view {
+    position: relative;
+    left: -100%;
+    transition: 0.4s ease-in all;
+    display: none;
+}
+
+views view.active {
+    left: 0;
+    display: block;
+}
+
+views view.active+view {
+    left: 100%;
+}
+
+#login-user .modal-dialog {
+    max-width: 320px;
+}
+
+view[name="event-ticketing"] .scan-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.attendees-list .status {
+    border: 1px solid #eee;
+    padding: 1px 13px;
+    margin-top: -2px;
+    cursor: pointer;
+    width: 110px;
+    text-align: center;
+}
+.intl-tel-input {
+    width: 100%;
+}
+
+/* ticketing styles */
+.txt-sm {
+    font-size: 0.8em;
+}
+
+.ticket-type-container .sale-card {
+    position: relative;
+    box-shadow: 0 0 1px 0px #90a4ae;
+    padding-left: 20px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 21px;
+}
+.ticket-type-container .sale-card:before {
+    content: " ";
+    display: inline-block;
+    width: 10px;
+    background-color: #009ae0;
+    z-index: 88;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.ticket-type-container .sale-text {
+    color: #e84e40;
+    margin-bottom: 4px;
+}
+
+.ticket-type-container .sale-card select.form-control {
+    border-width: 1px;
+    border-radius: 0;
+}
+
+.ticket-type-container .sale-card .type-cost {
+}
+.ticket-type-container .sale-card .type-desc {
+    margin-right: 88px;
+    margin-top: 5px;
+}
+#buy-event-tickets .status-bar .pull-left {
+    font-size: 0.8em;
+    color: #4a4a4a;
+}
+#buy-event-tickets .status-bar .pull-left > span {
+    display: inline-block;
+    vertical-align: middle;
+}
+#buy-event-tickets .status-bar .pull-left > span + span {
+    margin-left: 100px;
+}
+
+
+.checkout-ticketing .attendee-data {
+    display: block;
+    xbox-shadow: 0 0 1px 0 #c1c1c1;
+    xpadding: 14px 4px;
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 18px;
+}
+
+.checkout-ticketing .custom-attribute {
+    margin-bottom: 10px;
+}
+.checkout-ticketing .custom-attribute label, .checkout-ticketing .stripe-form label {
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 1px;
+}
+.checkout-ticketing .custom-attribute .form-control {
+    margin: 0;
+    border-width: 1px !important;
+    background-clip: padding-box;
+    box-shadow: none;
+    font-size: 13px;
+    height: 34px;
+    padding: 7px 12px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 0px;
+    border-color: #eee;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    border-radius: 0;
+}
+.checkout-ticketing hr {
+    border-top-width: 2px;
+}
+.checkout-ticketing .attendee-data h4 {
+    margin-top: 0px;
+    xborder-bottom: 1px solid #eaeaea;
+    margin-left: -4px;
+    margin-right: -4px;
+    padding-bottom: 8px;
+}

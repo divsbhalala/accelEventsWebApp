@@ -13,6 +13,7 @@ import Event from './Event';
 import Fund from './fund/Fund';
 import Raffle from './raffle/Raffle';
 import Auction from './auction/Auction';
+import Volunteer from './volunteer/Volunteer';
 
 const title = 'Event Page';
 export default {
@@ -51,6 +52,15 @@ export default {
                 return {
                     title:"Raffle Page",
                     component: <Layout params={props.params} ><Raffle params={props.params} itemCode={props.params && props.params.ItemCode}  title="raffle"/></Layout>,
+                };
+            }
+        },
+        {
+                path:'/volunteer',
+            action(props) {
+                return {
+                    title:"Raffle Page",
+                    component: <Layout params={props.params} ><Volunteer params={props.params} title="Volunteer"/></Layout>,
                 };
             }
         }

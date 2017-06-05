@@ -65,7 +65,7 @@ class HeaderNew extends React.Component {
           <MenuItem eventKey="1">
             <i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
           </MenuItem>
-          <MenuItem eventKey="3">
+          <MenuItem eventKey="3" href={'/event/'+event+'/volunteer'}>
             Volunteer
           </MenuItem>
           <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
