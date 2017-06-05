@@ -17,10 +17,10 @@ export default {
 
   path: '*',
 
-  action() {
+  action(props) {
     return {
       title,
-      component: <Layout><NotFound title={title}/></Layout>,
+      component: <Layout params={props.params}><NotFound title={title}/></Layout>,
       status: 404,
     };
   },

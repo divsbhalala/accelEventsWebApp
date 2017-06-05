@@ -38,7 +38,9 @@ class HeaderNew extends React.Component {
     localStorage.clear();
     history.push('/login');
   }
+
   render() {
+      let event= this.props.params && this.props.params.params;
     return (
       <div id="header-navbar" className={cx("content turquoise-bg white")}>
 
@@ -68,33 +70,33 @@ class HeaderNew extends React.Component {
           </MenuItem>
           <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
 
-            <MenuItem eventKey="5" href={"/scroll/"+this.props.params.params+"/auction"} >
+            <MenuItem eventKey="5" href={"/scroll/"+event+"/auction"} >
               <span> Auction Scrolling </span>
             </MenuItem>
-            <MenuItem eventKey="5" href={"/scroll/"+this.props.params.params+"/raffle"} >
+            <MenuItem eventKey="5" href={"/scroll/"+event+"/raffle"} >
               <span> Raffle Scrolling </span>
             </MenuItem>
-            <MenuItem eventKey="5" href={"/scroll/"+this.props.params.params+"/fund"} >
+            <MenuItem eventKey="5" href={"/scroll/"+event+"/fund"} >
               <span> Fund a Need Scrolling </span>
             </MenuItem>
             <MenuItem divider />
-            <MenuItem eventKey="5" href={"/goal/"+this.props.params.params+"/auction"} >
+            <MenuItem eventKey="5" href={"/goal/"+event+"/auction"} >
               <span> Auction Goal </span>
             </MenuItem>
-            <MenuItem eventKey="5" href={"/goal/"+this.props.params.params+"/raffle"} >
+            <MenuItem eventKey="5" href={"/goal/"+event+"/raffle"} >
               <span> Raffle Goal </span>
             </MenuItem>
-            <MenuItem eventKey="5" href={"/goal/"+this.props.params.params+"/fund"} >
+            <MenuItem eventKey="5" href={"/goal/"+event+"/fund"} >
               <span> Fund a Need Goal </span>
             </MenuItem>
             <MenuItem divider />
-            <MenuItem eventKey="5" href={"/table/"+this.props.params.params+"/auction"} >
+            <MenuItem eventKey="5" href={"/table/"+event+"/auction"} >
               <span> Auction Table </span>
             </MenuItem>
-            <MenuItem eventKey="5" href={"/table/"+this.props.params.params+"/raffle"} >
+            <MenuItem eventKey="5" href={"/table/"+event+"/raffle"} >
               <span> Raffle Table </span>
             </MenuItem>
-            <MenuItem eventKey="5" href={"/table/"+this.props.params.params+"/fund"} >
+            <MenuItem eventKey="5" href={"/table/"+event+"/fund"} >
               <span> Fund a Need Table </span>
             </MenuItem>
 

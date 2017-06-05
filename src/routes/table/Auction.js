@@ -41,7 +41,7 @@ class Auction extends React.Component {
     this.props.doGetAuctionItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp=>{
         if(resp && resp.data){
             this.setState({
-                itemList: resp && resp.data
+                itemList: resp && resp.data && resp.data.items
             });
         }
        })

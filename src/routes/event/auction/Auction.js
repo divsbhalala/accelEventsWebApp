@@ -315,7 +315,7 @@ import  { Carousel } from 'react-responsive-carousel';
       .then(resp => {
         if (resp && resp.data) {
           this.setState({
-            auctionData: resp.data
+            auctionData: resp.data.item[0]
           })
         }
       }).catch(error => {
@@ -535,8 +535,6 @@ import  { Carousel } from 'react-responsive-carousel';
             </div>
             { this.state.cardNumberFeedBack && !this.state.cardNumber &&
             <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
-
-
           </div>
           <div className="row">
             <div className="col-md-8">
@@ -664,7 +662,6 @@ import  { Carousel } from 'react-responsive-carousel';
                                         <div className="col-md-6">
                                             <div className="pad-l-md pad-r-md">
                                                 <div className="item-image">
-                                                    {console.log('--image',this.state.auctionData && this.state.auctionData.images)}
                                                     <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
                                                         {this.state.auctionData &&
                                                         this.state.auctionData.images.map((item,index)=>
@@ -715,7 +712,7 @@ class ImageList extends React.Component {
     render() {
         return (
         <div>
-            <img src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" } />
+            <img height={250} src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" } />
         </div>
 
         );}

@@ -178,7 +178,6 @@ class Event extends React.Component {
     this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit).then(resp => {
       if (resp && resp.data && resp.data.items) {
         if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
-          console.log('dsdsdsdsdsd')
           this.setState({
             auctionPageLoading: false
           })
