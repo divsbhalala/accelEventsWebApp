@@ -315,7 +315,7 @@ import  { Carousel } from 'react-responsive-carousel';
       .then(resp => {
         if (resp && resp.data) {
           this.setState({
-            auctionData: resp.data.item[0]
+            auctionData: resp.data
           })
         }
       }).catch(error => {

@@ -226,7 +226,9 @@ class Raffle extends React.Component {
       </div>
     </form>;
     var form_normal = <div >
-      <div className="text-danger text-center bold"> Please activate this module to start accepting tickets.</div>
+        {this.state.raffleData && this.state.raffleData.active && <div className="text-danger text-center bold"> Please activate this module to start accepting
+          pledges.
+        </div>}
       <a role="button" className="btn btn-success btn-block" href="#login-user" data-toggle="modal" data-form="login">Login</a>
       <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
          data-title="Raffle Drawn"

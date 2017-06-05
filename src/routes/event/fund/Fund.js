@@ -335,9 +335,9 @@ class Fund extends React.Component {
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
                       <div className="row">
-                        <div className="text-danger text-center bold"> Please activate this module to start accepting
+                          {this.state.auctionData && this.state.auctionData.active && <div className="text-danger text-center bold"> Please activate this module to start accepting
                           pledges.
-                        </div>
+                        </div>}
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
