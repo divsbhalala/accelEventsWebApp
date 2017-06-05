@@ -321,6 +321,8 @@ class Event extends React.Component {
                     </Tab>
                     <Tab label="Auction">
                       <div className="row">
+                        {console.log('this.props.settings',this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0)}
+                        {console.log('this.props.settings',this.props.eventData)}
                         <InfiniteScroll
                           next={this.doGetLoadMoreAuctionItem}
                           hasMore={this.state.auctionPageLoading}
@@ -343,8 +345,8 @@ class Event extends React.Component {
                                                  }
                                                  descText={item.excerpt}
                                                  imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
-                                                 actionTitle={item.purchased ? null : "Bid"}
-                                                 actionClassName={ item.purchased ? "btn btn-primary disabled" : "btn btn-success w-50"}
+                                                 actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
+                                                 actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success w-50"}
                                                  auctionPurchaseFor={ item.purchased}
                                                  buyItNowPrice={ item.buyItNowPrice > 0 ? "Buy now $" + item.buyItNowPrice : null}
                                                  auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
@@ -381,8 +383,8 @@ class Event extends React.Component {
                                                  }
                                                  descText={item.excerpt}
                                                  imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
-                                                 actionTitle={item.purchased ? null : "Bid"}
-                                                 actionClassName={ item.purchased ? "btn btn-primary disabled" : "btn btn-success w-50"}
+                                                 actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0) ? "Raffle Closed" : "Raffle"}
+                                                 actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success w-50"}
                               />
                             )
                           }
@@ -413,8 +415,9 @@ class Event extends React.Component {
                                                  }
                                                  descText={item.excerpt}
                                                  imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
-                                                 actionTitle={"PLEDGE"}
-                                                 actionClassName={ item.purchased ? "btn btn-primary disabled" : "btn btn-success w-50"}
+                                                 actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0) ? "PLEDGing Closed" : "PLEDGE"}
+                                                 actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success w-50"}
+
                               />
                             )
                           }
