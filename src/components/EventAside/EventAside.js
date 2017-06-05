@@ -69,30 +69,30 @@ class EventAside extends React.Component {
               && <p className={cx("causeauction-text donation-text auction-text")} >Bid here or text Your Bid To: (410) 927-5356 with the item's three letter code and bid amount ex. ABC$300</p>}
             </div>}
             { this.props.activeTab
-            && !(this.props.activeTab=='The Event' || this.props.activeTab=='Donation' )
-            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled ||this.props.eventData.causeAuctionEnabled ||this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.countDownTimeHidden )
-            && <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")} >
-                <div className={cx("main-box-body clearfix")}>
-                  <div className={cx("project-box-header gray-bg")}>
-                    <div className={cx("name text-center")}>
-                      <a href="#">Time Until Event Ends</a>
-                    </div>
+            && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' )
+            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.is_raffle_enabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.is_countdown_timer_hiddedn )
+            && <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
+              <div className={cx("main-box-body clearfix")}>
+                <div className={cx("project-box-header gray-bg")}>
+                  <div className={cx("name text-center")}>
+                    <a href="#">Time Until Event Ends</a>
                   </div>
-                    { this.props.settings && this.props.settings.eventEnd && <div className={cx("project-box-content")}>
-                    <div className={cx("ticker")}>
-                      <div className={cx("row timer")}>
-                        <div className={cx("col-xs-4")}><span className={cx("days")}>{
-                          moment(this.props.settings.eventEnd).diff(moment(), 'days') > 0
-                          && moment(this.props.settings.eventEnd).diff(moment(), 'days') || '00'
-                        }</span></div>
-                        <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                          moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').diff(moment(), 'hours')> 0
-                          && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').diff(moment(), 'hours') > 0
-                          && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').diff(moment(), 'hours') || '00'
-                        }</span></div>
-                        <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                          moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').add(-moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').diff(moment(), 'hours'),'hours').diff(moment(), 'minutes') > 0
-                          && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').add(-moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'),'days').diff(moment(), 'hours'),'hours').diff(moment(), 'minutes')
+                </div>
+                { this.props.settings && this.props.settings.eventEnd && <div className={cx("project-box-content")}>
+                  <div className={cx("ticker")}>
+                    <div className={cx("row timer")}>
+                      <div className={cx("col-xs-4")}><span className={cx("days")}>{
+                        moment(this.props.settings.eventEnd).diff(moment(), 'days') > 0
+                        && moment(this.props.settings.eventEnd).diff(moment(), 'days') || '00'
+                      }</span></div>
+                      <div className={cx("col-xs-4")}><span className={cx("hours")}>{
+                        moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                        && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                        && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
+                      }</span></div>
+                      <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
+                        moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
+                        && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
                         || '00'}</span></div>
                         <div className={cx("col-xs-4")} style={{display: "none"}}><span className={cx("seconds")}>00</span></div>
                       </div>

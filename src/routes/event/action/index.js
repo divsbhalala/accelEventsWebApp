@@ -89,7 +89,7 @@ export  function  doGetAuctionItemByLimit( eventUrl, page, size) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/auction/items/'+page+'/'+size,
+      url: API_URL+'events/'+eventUrl+'/auction/items/?page='+page+'&size='+size,
       data: {}
     }).then(response => {
       dispatch(storeAuctionData(response.data));
@@ -162,7 +162,7 @@ export  function doGetFundANeedItemByLimit( eventUrl, page, size) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/fundaneed/items/'+page+'/'+size,
+      url: API_URL+'events/'+eventUrl+'/fundaneed/items/?page='+page+'&size='+size,
       data: {}
     }).then(response => {
       dispatch(storeEventFundANeedData(response.data));
@@ -217,7 +217,7 @@ export  function  doGetRaffleItemByLimit( eventUrl, page, size) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/raffle/items/'+page+'/'+size,
+      url: API_URL+'events/'+eventUrl+'/raffle/items/?page='+page+'&size='+size,
       data: {}
     }).then(response => {
       return response;
@@ -257,7 +257,7 @@ export  function  doGetItemByLimit( eventUrl, page, size, type) {
   return (dispatch)=>{
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/'+type+'/items/'+page+'/'+size,
+      url: API_URL+'events/'+eventUrl+'/'+type+'/items/?page='+page+'&size='+size,
       data: {}
     });
   }

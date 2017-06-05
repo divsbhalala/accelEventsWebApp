@@ -61,6 +61,8 @@ class Event extends React.Component {
       fundANeedPageLimit: 8,
       fundANeedPageItems: [],
       fundANeedPageLoading: true,
+      totalTicketQty:0,
+      totalTickets:[],
     };
     this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -173,14 +175,15 @@ class Event extends React.Component {
 
   doGetAuctionItemByLimit(eventUrl) {
     this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit).then(resp => {
-      if (resp && resp.data) {
-        if (resp.data.length < this.state.auctionPageLimit) {
+      if (resp && resp.data && resp.data.items) {
+        if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
+          console.log('dsdsdsdsdsd')
           this.setState({
             auctionPageLoading: false
           })
         }
         this.setState({
-          auctionPageItems: this.state.auctionPageItems.concat(resp.data),
+          auctionPageItems: this.state.auctionPageItems.concat(resp.data && resp.data.items),
           auctionPageCount: this.state.auctionPageCount + 1
 
         })
@@ -200,14 +203,14 @@ class Event extends React.Component {
 
   doGetRaffleItemByLimit(eventUrl) {
     this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit).then(resp => {
-      if (resp && resp.data) {
-        if (resp.data.length < this.state.auctionPageLimit) {
+      if (resp && resp.data && resp.data.items) {
+        if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
           this.setState({
             rafflePageLoading: false
           })
         }
         this.setState({
-          rafflePageItems: this.state.rafflePageItems.concat(resp.data),
+          rafflePageItems: this.state.rafflePageItems.concat(resp.data.items),
           rafflePageCount: this.state.rafflePageCount + 1
 
         })
@@ -227,14 +230,14 @@ class Event extends React.Component {
 
   doGetFundANeedItemByLimit(eventUrl) {
     this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit).then(resp => {
-      if (resp && resp.data) {
-        if (resp.data.length < this.state.fundANeedPageLimit) {
+      if (resp && resp.data && resp.data.items) {
+        if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
           this.setState({
             fundANeedPageLoading: false
           })
         }
         this.setState({
-          fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data),
+          fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data.items),
           fundANeedPageCount: this.state.fundANeedPageCount + 1
 
         })
@@ -251,15 +254,22 @@ class Event extends React.Component {
     })
   }
 
-  selectHandle (e){
-  console.log(e.target.value);
+  selectHandle(e) {
+    console.log(e.target.name);
+    console.log(e.target.value);
+    let totalTickets=this.state.totalTickets;
+    totalTickets[e.target.name]=e.target.value;
+    this.setState({
+      totalTickets:totalTickets,
+      totalTicketQty: 0+parseInt(e.target.value)+this.state.totalTicketQty
+    })
   }
 
 
   render() {
     let makeItem = function (i) {
       let item = [];
-      for (let j = 1; j <= i; j++) {
+      for (let j = 0; j <= i; j++) {
         item.push(<option value={j} key={i + Math.random()}>{j}</option>)
       }
       return item;
@@ -433,7 +443,7 @@ class Event extends React.Component {
                           <div className="pull-right">
                             <div className="col-md-7">No Of Tickets</div>
                             { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
-                              <select className="form-control" name="numberofticket">
+                              <select className="form-control" name={item.typeId} onChange={this.selectHandle}  value={this.state.totalTickets && this.state.totalTickets[item.typeId] ? this.state.totalTickets[item.typeId] :0}>
                                 {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
                               </select>
                             </div> : ''}
@@ -475,7 +485,7 @@ class Event extends React.Component {
                </div>*/}
               <div className="status-bar clearfix mrg-t-lg">
                 <div className="pull-left">
-                  <span> QTY:<span className="qty">0</span> </span>
+                  <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                   <span className="total-price">FREE</span>
                 </div>
                 <div className="pull-right">
