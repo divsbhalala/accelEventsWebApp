@@ -44,8 +44,8 @@ class EventAside extends React.Component {
                 <div className={cx("box")}>
                   <div className={cx("box-title","text-uppercase")}>date and time</div>
                   <div className={cx("box-content")}>
-                    {this.props.settings && this.props.settings.startdate && <Moment  format="ddd MMMM D YYYY, h:mm A"  tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.startdate}</Moment>} -
-                    {this.props.settings && this.props.settings.eventEnd && <Moment  format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.eventEnd}</Moment>}
+                    {this.props.settings && this.props.settings.startDate && <Moment  format="ddd MMMM D YYYY, h:mm A"  tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.startDate}</Moment>} -
+                    {this.props.settings && this.props.settings.endDate && <Moment  format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{this.props.settings.endDate}</Moment>}
                     <br />
                     <time>
                       <span className="hide"> (America/New_York)</span>
@@ -117,7 +117,6 @@ class EventAside extends React.Component {
                     <div className={cx("funds-raised")}>$<span className={cx("total-funds-raised")}>{ this.props.settings && this.props.settings.totalFundRaised ? this.props.settings.totalFundRaised:"0"}</span></div>
                   </div>
                 </div>
-              </div>
             </div> }
             { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) &&
             <a role="button" className={cx("btn btn-primary btn-block disabled buy-raffle-tickets")} data-toggle="modal"
