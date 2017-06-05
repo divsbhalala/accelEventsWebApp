@@ -71,6 +71,7 @@ class Event extends React.Component {
     this.doGetAuctionItemByLimit = this.doGetAuctionItemByLimit.bind(this);
     this.doGetRaffleItemByLimit = this.doGetRaffleItemByLimit.bind(this);
     this.doGetFundANeedItemByLimit = this.doGetFundANeedItemByLimit.bind(this);
+    this.selectHandle = this.selectHandle.bind(this);
 
   }
 
@@ -248,6 +249,10 @@ class Event extends React.Component {
         fundANeedPageLoading: false
       })
     })
+  }
+
+  selectHandle (e){
+  console.log(e.target.value);
   }
 
 
