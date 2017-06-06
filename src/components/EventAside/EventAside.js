@@ -90,7 +90,7 @@ class EventAside extends React.Component {
             </div>}
             { this.props.activeTab
             && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' )
-            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.is_raffle_enabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.is_countdown_timer_hiddedn )
+            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.countDownTimeHidden )
             && <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
               <div className={cx("main-box-body clearfix")}>
                 <div className={cx("project-box-header gray-bg")}>
