@@ -36,7 +36,7 @@ class Auction extends React.Component {
       tab: 'Auction',
       showBookingTicketPopup: false,
       showMapPopup: true,
-      isLogin: true,
+
 
       isValidData: false,
       email: null,
@@ -78,17 +78,7 @@ class Auction extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.email.value == '') {
-      this.setState({
-        email: false
-      });
-    }
 
-    if (this.password.value == '') {
-      this.setState({
-        password: false
-      });
-    }
     if (this.state.isValidData) {
       // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
       //     if(!resp.error){
@@ -688,10 +678,14 @@ class Auction extends React.Component {
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
-                            {this.state.auctionData &&
+                            {this.state.auctionData && this.state.auctionData.images.length > 0 ?
                             this.state.auctionData.images.map((item, index)=>
-                              <ImageList key={index} item={item}/>
-                            )
+                             <ImageList key={index} item={item}/>
+                            ) : <div className="item-image-inner" style={{
+                                    backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                    width: '',
+                                    transform: 'rotate(0deg)'
+                                }}/>
                             }
                           </Carousel>
 
@@ -720,11 +714,10 @@ class Auction extends React.Component {
                             className="current-bid">{this.state.auctionData.marketValue}</span></div>
                           <div className="curr-bid-text">MARKET VALUE</div>
                         </div>}
-                        {/*{ bid_active ? form_bid_close :'' }*/}
-                      </div>{console.log('ys',this.props.user)}
+                      </div>{console.log('ys',this.state.auctionData)}
                       { bid_active ? div_bid_close : '' }
-                      { !bid_active ? this.props.authenticated ? this.props.user &&  this.props.user.cardLinked? form_bid_only :form_bid : form_login : '' }
-                    </div>
+                      { !bid_active ? this.props.authenticated ? this.props.user &&  this.props.user.cardLinked ? form_bid_only :form_bid : form_login : '' }
+                      </div>
                   </div>
                 </div>
               </div>

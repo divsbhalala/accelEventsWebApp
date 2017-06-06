@@ -100,12 +100,6 @@ class HeaderNew extends React.Component {
               <span> Fund a Need Table </span>
             </MenuItem>
 
-            <MenuItem divider/>
-            <MenuItem eventKey="4" onClick={(event) => {
-              history.push('/login');
-            }}>
-              <span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
-            </MenuItem>
           </NavDropdown>
 
             { !this.props.user && <MenuItem eventKey="8" onClick={(event) => {

@@ -21,6 +21,7 @@ import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
 import  {doGetFundANeedItemByCode} from './../action/index';
+import  {Carousel} from 'react-responsive-carousel';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -35,7 +36,6 @@ class Fund extends React.Component {
       showMapPopup: false,
       isValidData: false,
       error: null,
-      isLogin: false,
 
       email: null,
       firstName: null,
@@ -67,17 +67,6 @@ class Fund extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.email.value == '') {
-      this.setState({
-        email: false
-      });
-    }
-
-    if (this.password.value == '') {
-      this.setState({
-        password: false
-      });
-    }
     if (this.state.isValidData) {
       // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
       //     if(!resp.error){
@@ -90,7 +79,6 @@ class Fund extends React.Component {
       //
       // });
     }
-
   };
 
   emailValidateHandler = (e) => {
@@ -214,7 +202,7 @@ class Fund extends React.Component {
         amount: false,
         errorMsgNumber: "Pledge Amount can't be empty This value is not valid",
       });
-    } else if (this.state.auctionData.pledgePrice > this.amount.value) {
+    } else if (this.state.fundData.pledgePrice > this.amount.value) {
       this.setState({
         amount: false,
         errorMsgNumber: "Submitted pledge amount should be greater than or equal to the stated pledge amount.",
@@ -266,7 +254,7 @@ class Fund extends React.Component {
       .then(resp => {
         if (resp && resp.data) {
           this.setState({
-            auctionData: resp.data
+            fundData: resp.data
           })
         }
       }).catch(error => {
@@ -276,7 +264,7 @@ class Fund extends React.Component {
   }
 
   render() {
-    var div_login = <div>
+   let div_login = <div>
       <h4><a role="button" href="#login-user" data-toggle="modal" data-form="login">Log in</a> or Sign
         up below</h4>
       <div
@@ -302,9 +290,7 @@ class Fund extends React.Component {
                data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
       </div>
     </div>
-    var imageUrl = this.state.raffleData && this.state.raffleData.images[0].imageUrl > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.state.raffleData.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
-
-    return (
+     return (
       <div className="row">
         <div className="col-lg-12">
           <div id="content-wrapper">
@@ -318,16 +304,22 @@ class Fund extends React.Component {
               <div className="col-lg-9 col-md-8 col-sm-8">
                 <div className="main-box clearfix">
                   <h1 className="text-center mrg-t-lg"
-                      id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
+                      id="item-name">{this.state.fundData && this.state.fundData.name}</h1>
                   <div className="row mrg-t-lg">
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
-                          <div className="item-image-inner" style={{
-                            backgroundImage: 'url(' + imageUrl + ')',
-                            width: '',
-                            transform: 'rotate(0deg)'
-                          }}/>
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
+                              {this.state.fundData && this.state.fundData.images.length > 0 ?
+                                  this.state.fundData.images.map((item, index)=>
+                                      <ImageList key={index} item={item}/>
+                                  ) : <div className="item-image-inner" style={{
+                                      backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                      width: '',
+                                      transform: 'rotate(0deg)'
+                                  }}/>
+                              }
+                          </Carousel>
                         </div>
                       </div>
                       <div className="mrg-t-lg pad-l-md pad-r-md">
@@ -335,14 +327,14 @@ class Fund extends React.Component {
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
                       <div className="row">
-                          {this.state.auctionData && this.state.auctionData.active && <div className="text-danger text-center bold"> Please activate this module to start accepting
+                           <div className="text-danger text-center bold"> Please activate this module to start accepting
                           pledges.
-                        </div>}
+                        </div>
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
                             $ <span
-                            className="item-bid-price"> {this.state.auctionData && this.state.auctionData.pledgePrice} </span>
+                            className="item-bid-price"> {this.state.fundData && this.state.fundData.pledgePrice} </span>
                           </h4>
                         </div>
                       </div>
@@ -396,7 +388,7 @@ class Fund extends React.Component {
                           { this.state.lastNameFeedBack && !this.state.lastName &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
                         </div>
-                        { !this.state.isLogin ? div_login : '' }
+                          { this.props.authenticated ?  div_login: '' }
                         <style
                           dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                         <div className="stripe-form">
@@ -588,7 +580,17 @@ class Fund extends React.Component {
     );
   }
 }
+class ImageList extends React.Component {
+    render() {
+        return (
+            <div>
+              <img height={250}
+                   src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+            </div>
 
+        );
+    }
+}
 
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
@@ -599,7 +601,8 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
   eventTicketData: state.event && state.event.ticket_data,
-  auction_data: state.event && state.event.auction_data,
+  fundData: state.event && state.event.auction_data,
+  user :state.user,
 
 });
 

@@ -18,6 +18,7 @@ import  history from './../../../history';
 
 import  EventAside from './../../../components/EventAside/EventAside';
 import  {doGetRaffleItemByCode} from './../action/index';
+import  {Carousel} from 'react-responsive-carousel';
 
 class Raffle extends React.Component {
   static propTypes = {
@@ -30,7 +31,6 @@ class Raffle extends React.Component {
       tab: 'The Event',
       showBookingTicketPopup: false,
       showMapPopup: true,
-      isLogin: false,
 
       isValidData: false,
       error: null,
@@ -123,7 +123,7 @@ class Raffle extends React.Component {
   }
 
   render() {
-    var form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
+    let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
                            action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
@@ -225,7 +225,7 @@ class Raffle extends React.Component {
         </div>
       </div>
     </form>;
-    var form_normal = <div >
+    let form_normal = <div >
         {this.state.raffleData && this.state.raffleData.active && <div className="text-danger text-center bold"> Please activate this module to start accepting
           pledges.
         </div>}
@@ -237,7 +237,6 @@ class Raffle extends React.Component {
         to All Items</a>
     </div>;
 
-    var imageUrl = this.state.raffleData && this.state.raffleData.images[0].imageUrl > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.state.raffleData.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"
     return (
       <div className="row">
         <div className="col-lg-12">
@@ -245,7 +244,6 @@ class Raffle extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-
                 <EventAside activeTab={'Raffle'} eventData={this.props.eventData} settings={this.state.settings}
                             eventTicketData={this.props.eventTicketData}
                             activeCategory={false}/>
@@ -258,11 +256,17 @@ class Raffle extends React.Component {
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
-                          <div className="item-image-inner" style={{
-                            backgroundImage: 'url(' + imageUrl + ')',
-                            width: '',
-                            transform: 'rotate(0deg)'
-                          }}/>
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
+                              {this.state.raffleData && this.state.raffleData.images.length > 0 ?
+                                  this.state.raffleData.images.map((item, index)=>
+                                      <ImageList key={index} item={item}/>
+                                  ) : <div className="item-image-inner" style={{
+                                      backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                      width: '',
+                                      transform: 'rotate(0deg)'
+                                  }}/>
+                              }
+                          </Carousel>
                         </div>
                       </div>
                       <div className="mrg-t-lg pad-l-md pad-r-md">
@@ -281,6 +285,17 @@ class Raffle extends React.Component {
     );
   }
 }
+class ImageList extends React.Component {
+    render() {
+        return (
+            <div>
+              <img height={250}
+                   src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+            </div>
+
+        );
+    }
+}
 
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
@@ -296,4 +311,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Raffle));
-
