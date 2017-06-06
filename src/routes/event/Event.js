@@ -78,6 +78,7 @@ class Event extends React.Component {
     this.doGetRaffleItemByLimit = this.doGetRaffleItemByLimit.bind(this);
     this.doGetFundANeedItemByLimit = this.doGetFundANeedItemByLimit.bind(this);
     this.selectHandle = this.selectHandle.bind(this);
+    this.setFilterCategory = this.setFilterCategory.bind(this);
 
   }
 
@@ -178,7 +179,7 @@ class Event extends React.Component {
   };
 
   doGetAuctionItemByLimit(eventUrl) {
-    this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit).then(resp => {
+    this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory).then(resp => {
       if (resp && resp.data && resp.data.items) {
         if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
           this.setState({
@@ -205,7 +206,7 @@ class Event extends React.Component {
 
 
   doGetRaffleItemByLimit(eventUrl) {
-    this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit).then(resp => {
+    this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
       if (resp && resp.data && resp.data.items) {
         if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
           this.setState({
@@ -232,7 +233,7 @@ class Event extends React.Component {
 
 
   doGetFundANeedItemByLimit(eventUrl) {
-    this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit).then(resp => {
+    this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
       if (resp && resp.data && resp.data.items) {
         if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
           this.setState({
@@ -272,7 +273,39 @@ class Event extends React.Component {
       totalTickets: totalTickets,
       totalTicketQty: 0 + parseInt(e.target.value) + this.state.totalTicketQty,
       totalTicketPrice: totalPrice,
-    })
+    });
+  }
+  setFilterCategory=( category)=>{
+    if(this.state.tab){
+      let label=this.state.tab;
+      if (label == 'Auction') {
+        this.setState({
+          auctionPageCategory:category,
+          auctionPageCount:0,
+          auctionPageItems: [],
+        });
+        setTimeout(() => {
+          this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
+        }, 500);
+
+      } else if (label == 'Raffle') {
+        this.setState({
+          rafflePageCategory:category,
+          rafflePageCount:0,
+          rafflePageItems: [],
+        })
+        this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
+
+      } else if (label == 'Fund a Need') {
+        this.setState({
+          fundANeedPageCategory:category,
+          fundANeedPageCount:0,
+          fundANeedPageItems: [],
+        })
+        this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
+
+      }
+    }
   }
 
 
@@ -302,6 +335,7 @@ class Event extends React.Component {
                             eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup}
                             showMapPopup={this.showMapPopup} activeCategory={true}
                             authenticated={this.props.authenticated}
+                            setFilterCategory={this.setFilterCategory}
                 />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">

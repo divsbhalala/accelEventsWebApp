@@ -24,6 +24,7 @@ class EventAside extends React.Component {
     buyItNowPrice: PropTypes.string,
     showBookingPopup: PropTypes.func,
     showMapPopup: PropTypes.func,
+    setFilterCategory: PropTypes.func,
     eventData: PropTypes.object,
     eventTicketData: PropTypes.object,
     settings: PropTypes.object,
@@ -194,7 +195,7 @@ class EventAside extends React.Component {
                 </li>
                 {
                   this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
-                    <li className={cx("")} key={item.name + Math.random()}>
+                    <li className={cx("")} key={item.name + Math.random()} onClick={()=>{this.props.setFilterCategory(item.name)}}>
                       <a className={cx("category-switcher pointer")}>
                         <i className={cx("fa fa-ticket")}></i>
                         <span className={cx("cat-name")}>{item.name}</span>
