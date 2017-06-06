@@ -89,8 +89,11 @@ export function doGetAuctionItemByLimit(eventUrl, page, size) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/auction/items/?page=' + page + '&size=' + size,
-      data: {}
+      url: API_URL + 'events/' + eventUrl + '/auction/items/',
+      data: {
+        page:page,
+        size:size
+      }
     }).then(response => {
       dispatch(storeAuctionData(response.data));
       return response;
@@ -182,7 +185,8 @@ export function doGetRaffleSetting(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/raffle/settings',
-      data: {}
+      data: {},
+      headers: {Authorization: 'xcqp34BgOS1H3h955xRZqw=='}
     }).then(response => {
       return response;
 
@@ -236,7 +240,8 @@ export function doGetSettings(eventUrl, type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/' + type + '/settings',
-      data: {}
+      data: {},
+      headers: {Authorization: 'xcqp34BgOS1H3h955xRZqw=='}
     });
   }
 

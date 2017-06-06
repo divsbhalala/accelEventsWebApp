@@ -53,14 +53,17 @@ class Event extends React.Component {
       auctionPageLimit: 8,
       auctionPageItems: [],
       auctionPageLoading: true,
+      auctionPageCategory: '',
       rafflePageCount: 0,
       rafflePageLimit: 8,
       rafflePageItems: [],
       rafflePageLoading: true,
+      rafflePageCategory: '',
       fundANeedPageCount: 0,
       fundANeedPageLimit: 8,
       fundANeedPageItems: [],
       fundANeedPageLoading: true,
+      fundANeedPageCategory: '',
       totalTicketQty: 0,
       totalTickets: [],
       totalTicketPrice: 0,
@@ -284,11 +287,11 @@ class Event extends React.Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          {this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.is_banner_image_enabled &&
+          {this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.is_banner_image_enabled &&
           <div className="row">
             <div className={cx("header-img", "text-center")}>
               <img
-                src={ this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetailDto.banner_image : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
+                src={ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetail.banner_image : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
                 className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
             </div>
           </div>}
@@ -330,7 +333,7 @@ class Event extends React.Component {
                                                  type="auction"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.socialSharingEnabled}
+                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
                                                  data={
                                                    [
                                                      {
@@ -369,7 +372,7 @@ class Event extends React.Component {
                                                  type="raffle"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.socialSharingEnabled}
+                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
                                                  data={
                                                    [
                                                      {
@@ -402,7 +405,7 @@ class Event extends React.Component {
                                                  type="fund"
                                                  headerText={item.name}
                                                  itemCode={item.code}
-                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.socialSharingEnabled}
+                                                 isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
                                                  data={
                                                    [
                                                      {

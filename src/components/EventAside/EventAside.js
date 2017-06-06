@@ -60,9 +60,9 @@ class EventAside extends React.Component {
             <h2>jkazarian8</h2>
           </header>
           <div className={cx("main-box-body", "clearfix")}>
-            { this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.logoEnabled &&
+            { this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.logoEnabled &&
             <img
-              src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/" + this.props.eventData.eventDesignDetailDto.logoImage}
+              src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/" + this.props.eventData.eventDesignDetail.logoImage}
               className="img-responsive center-block"/>}
             { this.props.activeTab && (this.props.activeTab == 'The Event' ) &&
             <div className={cx("the-event", "mrg-t-lg")}>
@@ -95,7 +95,7 @@ class EventAside extends React.Component {
                 </div>
               </div>
             </div> }
-            { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetailDto && this.props.eventData.eventDesignDetailDto.txtMsgBidInstShown &&
+            { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
             <div className={cx("card bidinfo")}>
               {this.props.activeTab == 'Raffle' &&
               <p className={cx("raffle-text")}>Submit your tickets here or text your ticket submission to: (410)
@@ -106,7 +106,7 @@ class EventAside extends React.Component {
             </div>}
             { this.props.activeTab
             && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' )
-            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.countDownTimeHidden )
+            && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.countDownTimeHidden )
             && <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
               <div className={cx("main-box-body clearfix")}>
                 <div className={cx("project-box-header gray-bg")}>
@@ -114,21 +114,21 @@ class EventAside extends React.Component {
                     <a href="#">Time Until Event Ends</a>
                   </div>
                 </div>
-                { this.props.settings && this.props.settings.eventEnd && <div className={cx("project-box-content")}>
+                { this.props.settings && this.props.settings.endDate && <div className={cx("project-box-content")}>
                   <div className={cx("ticker")}>
                     <div className={cx("row timer")}>
                       <div className={cx("col-xs-4")}><span className={cx("days")}>{
-                        moment(this.props.settings.eventEnd).diff(moment(), 'days') > 0
-                        && moment(this.props.settings.eventEnd).diff(moment(), 'days') || '00'
+                        moment(this.props.settings.endDate).diff(moment(), 'days') > 0
+                        && moment(this.props.settings.endDate).diff(moment(), 'days') || '00'
                       }</span></div>
                       <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                        moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                        && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                        && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
+                        moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                        && moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                        && moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
                       }</span></div>
                       <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                        moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-                        && moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.eventEnd).add(-moment(this.props.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
+                        moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
+                        && moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
                         || '00'}</span></div>
                       <div className={cx("col-xs-4")} style={{display: "none"}}><span
                         className={cx("seconds")}>00</span></div>
@@ -144,7 +144,7 @@ class EventAside extends React.Component {
                 </div>}
               </div>
             </div> }
-            { this.props.activeTab && !(this.props.activeTab == 'The Event') && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetailDto && !this.props.eventData.eventDesignDetailDto.totalFundRaisedHidden ) &&
+            { this.props.activeTab && !(this.props.activeTab == 'The Event') && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.totalFundRaisedHidden ) &&
             <div className={cx("main-box clearfix project-box gray-box card funds-raised-container")}>
               <div className={cx("main-box-body clearfix")}>
                 <div className={cx("project-box-header gray-bg")}>
@@ -159,12 +159,12 @@ class EventAside extends React.Component {
                 </div>
               </div>
             </div> }
-            { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) && this.props.settings && this.props.settings.eventEnd &&
+            { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) && this.props.settings && this.props.settings.endDate &&
             <a role="button"
-               className={cx("btn btn-primary btn-block buy-raffle-tickets", moment(this.props.settings.eventEnd).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled && 'disabled')}
+               className={cx("btn btn-primary btn-block buy-raffle-tickets", moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled && 'disabled')}
                data-toggle="modal"
                href="#info-modal" data-title="Raffle Drawn"
-               onClick={this.showBuyRaffelTicketPopup}>{moment(this.props.settings.eventEnd).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
+               onClick={this.showBuyRaffelTicketPopup}>{moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
             { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) &&
             <div className={cx("search-bar card")} data-module="">
               <input type="text" className={cx("form-control")} placeholder="Search Items..."/>
@@ -180,27 +180,7 @@ class EventAside extends React.Component {
             <input type="hidden" value="true" id="raffleCategoryEnabled"/>
             <input type="hidden" value="false" id="auctionCategoryEnabled"/>
 
-            {this.props.activeCategory && this.props.activeTab && (this.props.activeTab == 'Raffle' || this.props.activeTab == 'Fund a Need' ) &&
-            <div id="divItemCategories" className={cx("item-categories hidden-xs hide")}>
-              <h4 className={cx("")}>Categories</h4>
-              <ul className={cx("nav nav-pills nav-stacked category-list ")}>
-                <li className={cx("all-items")}>
-                  <a href="#" className={cx("category-switcher all-items")} data-category="" data-module="">
-                    <i className={cx("fa fa-ticket")}></i>
-                    <span className={cx("cat-name")}>All Items</span>
-                    <span className={cx("badge badge-primary pull-right cat-count")}></span>
-                  </a>
-                </li>
-                <li className={cx("dummy")}>
-                  <a href="#" className={cx("category-switcher")} data-category="" data-module="">
-                    <i className={cx("fa fa-ticket")}></i>
-                    <span className={cx("cat-name")}></span>
-                    <span className={cx("badge badge-primary pull-right cat-count")}></span>
-                  </a>
-                </li>
-              </ul>
-            </div> }
-            { this.props.activeCategory && this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.settings && this.props.settings.categories &&
+            { this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories &&
             <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
@@ -251,29 +231,16 @@ class EventAside extends React.Component {
                   <label className="control-label">Number of Tickets</label>
                   <div className="input-group">
                     <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
-                    <select className="form-control" name="pkg" id="ticketpkgs">
-                      <option value={0} data-ticket data-price disabled selected>Select Tickets</option>
-                      <option value={67} data-ticket={1} data-price={5}>
-                        1 Ticket For $5
-                      </option>
-                      <option value={68} data-ticket={2} data-price={10}>
-                        2 Ticket For $10
-                      </option>
-                      <option value={69} data-ticket={6} data-price={20}>
-                        6 Ticket For $20
-                      </option>
-                      <option value={70} data-ticket={15} data-price={40}>
-                        15 Ticket For $40
-                      </option>
-                      <option value={71} data-ticket={20} data-price={50}>
-                        20 Ticket For $50
-                      </option>
-                      <option value={72} data-ticket={50} data-price={100}>
-                        50 Ticket For $100
-                      </option>
-                      <option value={1234} data-ticket={10000} data-price={1000}>
-                        10000 Ticket For $1000
-                      </option>
+                    <select className="form-control" name="pkg" id="ticketpkgs" defaultValue={0}>
+                      <option value={0} data-ticket data-price disabled >Select Tickets</option>
+                      {this.props.settings && this.props.settings.ticketPackages ?
+                        this.props.settings.ticketPackages.map(item=>
+                          <option value={item.id} key={Math.random()} data-ticket={item.numOfTicket} data-price={item.price}>
+                            {item.numOfTicket} Ticket For ${item.price}
+                          </option>
+                        ) : ''
+                      }
+
                     </select>
                   </div>
                 </div>
