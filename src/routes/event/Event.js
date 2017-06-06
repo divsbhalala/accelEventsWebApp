@@ -255,8 +255,6 @@ class Event extends React.Component {
   }
 
   selectHandle(e) {
-    console.log(e.target.dataset.price);
-    console.log(e.target.value);
     let totalTickets = this.state.totalTickets;
     totalTickets[e.target.name] = {
       price: e.target.dataset && e.target.dataset.price,
@@ -321,8 +319,6 @@ class Event extends React.Component {
                     </Tab>
                     <Tab label="Auction">
                       <div className="row">
-                        {console.log('this.props.settings', this.state.settings && moment(this.state.settings.eventEnd).diff(moment()) <= 0)}
-                        {console.log('this.props.settings', this.props.eventData)}
                         <InfiniteScroll
                           next={this.doGetLoadMoreAuctionItem}
                           hasMore={this.state.auctionPageLoading}

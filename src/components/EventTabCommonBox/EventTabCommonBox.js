@@ -140,7 +140,7 @@ class EventTabCommonBox extends React.Component {
 
             </div>
             <div
-              className={cx("text-center", "action-btns")}>{console.log(this.props.headerText, this.props.auctionPurchaseFor)}
+              className={cx("text-center", "action-btns")}>
               { this.props.actionTitle &&
               <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.actionClassName)}

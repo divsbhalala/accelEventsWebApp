@@ -6,7 +6,6 @@ export function onFormSubmit(e) {
   let test = ReactDOM.findDOMNode(ref);
   alert(test);
   e.preventDefault();
-  console.log('hii');
   return false;
 }
 

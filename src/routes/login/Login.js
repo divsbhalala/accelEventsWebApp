@@ -114,7 +114,6 @@ class Login extends React.Component {
      this.props.storeToken(JSON.parse(localStorage.getItem('token')));
      }
      */
-    console.log('this.props.USER_DATA', this.props.USER_DATA)
     if (!_.isEmpty(this.props.USER_DATA)) {
       history.push('/');
     }

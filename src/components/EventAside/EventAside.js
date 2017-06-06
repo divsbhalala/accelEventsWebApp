@@ -159,7 +159,7 @@ class EventAside extends React.Component {
                 </div>
               </div>
             </div> }
-            { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) &&
+            { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) && this.props.settings && this.props.settings.eventEnd &&
             <a role="button"
                className={cx("btn btn-primary btn-block buy-raffle-tickets", moment(this.props.settings.eventEnd).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled && 'disabled')}
                data-toggle="modal"

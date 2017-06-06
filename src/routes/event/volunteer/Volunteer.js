@@ -39,7 +39,6 @@ class Volunteer extends React.Component {
   }
 
   setActiveView = (view) => {
-    console.log('v', view);
     this.setState({
       activeViews: view
     })

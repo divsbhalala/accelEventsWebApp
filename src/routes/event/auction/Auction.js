@@ -715,7 +715,6 @@ class Auction extends React.Component {
                           <div className="curr-bid-text">MARKET VALUE</div>
                         </div>}
                       </div>
-                      {console.log('ys', this.state.auctionData)}
                       { bid_active ? div_bid_close : '' }
                       { !bid_active ? this.props.authenticated ? this.props.user && this.props.user.cardLinked ? form_bid_only : form_bid : form_login : '' }
                     </div>

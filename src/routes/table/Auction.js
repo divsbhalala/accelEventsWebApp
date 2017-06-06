@@ -37,7 +37,6 @@ class Auction extends React.Component {
         settings: resp && resp.data
       });
     })
-    console.log("props", this.props.params)
 
     this.props.doGetAuctionItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp => {
       if (resp && resp.data) {
