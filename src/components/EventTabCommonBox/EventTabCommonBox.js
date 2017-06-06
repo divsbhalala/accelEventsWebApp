@@ -13,6 +13,21 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventTabCommonBox.css';
 import Link from '../Link';
 import cx from 'classnames';
+import  {Carousel} from 'react-responsive-carousel';
+
+class ImageList extends React.Component {
+  render() {
+    let img = '';
+    return (
+      <div>
+        <div className={cx("item-image-inner")}
+             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+
+      </div>
+
+    );
+  }
+}
 
 class EventTabCommonBox extends React.Component {
   static propTypes = {
@@ -50,10 +65,23 @@ class EventTabCommonBox extends React.Component {
                 <div className={cx("carousel-inner")} role="listbox">
                   <div className={cx("item active")}>
                     <a className={cx("item-link center-block")}
-                       href="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian8/R/RAF">
+                       onClick={()=>{}}>
                       <div className={cx("item-image")}>
-                        <div className={cx("item-image-inner")}
-                             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+                        {/*<div className={cx("item-image-inner")}
+                         style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>*/}
+                        <Carousel axis="horizontal" showThumbs={false} showStatus={false} showIndicators={false}
+                                  showArrows={true} dynamicHeight emulateTouch>
+                          {this.props.images && this.props.images.length > 0 ?
+                            this.props.images.map((item, index)=>
+                              <ImageList key={index} item={item}
+                                         imageUrl={item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}/>
+                            ) : <div className="item-image-inner" style={{
+                                      backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                      width: '',
+                                      transform: 'rotate(0deg)'
+                                  }}/>
+                          }
+                        </Carousel>
                       </div>
                     </a>
                   </div>

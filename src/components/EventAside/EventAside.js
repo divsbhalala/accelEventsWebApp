@@ -15,6 +15,8 @@ import Link from '../Link';
 import cx from 'classnames';
 import Moment from 'react-moment';
 import moment from 'moment';
+import PopupModel from './../PopupModal';
+
 
 class EventAside extends React.Component {
   static propTypes = {
@@ -27,7 +29,25 @@ class EventAside extends React.Component {
     settings: PropTypes.object,
     activeCategory: PropTypes.bool,
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      showBuyRaffelTicketPopup:false,
+    };
+    this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
+    this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
+  }
 
+  showBuyRaffelTicketPopup = () => {
+    this.setState({
+      showBuyRaffelTicketPopup: true
+    })
+  };
+  hideBuyRaffelTicketPopup = () => {
+    this.setState({
+      showBuyRaffelTicketPopup: false
+    })
+  };
   render() {
     return (
       <div >
@@ -119,10 +139,8 @@ class EventAside extends React.Component {
                 </div>
             </div> }
             { this.props.activeTab && ( this.props.activeTab == 'Raffle' ) &&
-            <a role="button" className={cx("btn btn-primary btn-block disabled buy-raffle-tickets")} data-toggle="modal"
-               href="#info-modal" data-title="Raffle Drawn"
-               data-message="This raffle has already been drawn. No further tickets are being accepted">Raffle
-              Closed</a> }
+            <a role="button" className={cx("btn btn-primary btn-block buy-raffle-tickets", moment(this.props.settings.eventEnd).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled && 'disabled')} data-toggle="modal"
+               href="#info-modal" data-title="Raffle Drawn" onClick={this.showBuyRaffelTicketPopup}>{moment(this.props.settings.eventEnd).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
             { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) &&
             <div className={cx("search-bar card")} data-module="">
               <input type="text" className={cx("form-control")} placeholder="Search Items..."/>
@@ -180,17 +198,66 @@ class EventAside extends React.Component {
                       </a>
                     </li>)
                 }
-                <li className={cx("")}>
+                {/* <li className={cx("")}>
                   <a href="#" className={cx("category-switcher")} data-category="Uncategorized" data-module="#raffle">
                     <i className={cx("fa fa-ticket")}></i>
                     <span className={cx("cat-name")}>Uncategorized</span>
                     <span className={cx("badge badge-primary pull-right cat-count")}>1</span>
                   </a>
-                </li>
+                </li>*/}
               </ul>
             </div> }
           </div>
         </div>
+        <PopupModel
+          id="buyRaffelTicketPopup"
+          showModal={this.state.showBuyRaffelTicketPopup}
+          headerText="Buy Raffle Ticket"
+          onCloseFunc={this.hideBuyRaffelTicketPopup}
+        >
+          <div className="main-box-body clearfix">
+            <div className="payment-area collapse in">
+              <form className="ajax-form validated fv-form fv-form-bootstrap" data-validate-function="validateRafflePurchaseForm" data-onsuccess="handleRafflePurchaseSubmit" method="post" action="/AccelEventsWebApp/events/12/R/purchaseticket" noValidate="novalidate"><button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} /><div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span className="fa fa-spinner fa-pulse fa-fw" /> <span className="resp-message" /></div>
+                <div className="form-group">
+                  <label className="control-label">Number of Tickets</label>
+                  <div className="input-group">
+                    <div className="input-group-addon"> <i className="fa fa-ticket" aria-hidden="true" /></div>
+                    <select className="form-control" name="pkg" id="ticketpkgs">
+                      <option value={0} data-ticket data-price disabled selected>Select Tickets</option>
+                      <option value={67} data-ticket={1} data-price={5}>
+                        1 Ticket For $5
+                      </option>
+                      <option value={68} data-ticket={2} data-price={10}>
+                        2 Ticket For $10
+                      </option>
+                      <option value={69} data-ticket={6} data-price={20}>
+                        6 Ticket For $20
+                      </option>
+                      <option value={70} data-ticket={15} data-price={40}>
+                        15 Ticket For $40
+                      </option>
+                      <option value={71} data-ticket={20} data-price={50}>
+                        20 Ticket For $50
+                      </option>
+                      <option value={72} data-ticket={50} data-price={100}>
+                        50 Ticket For $100
+                      </option>
+                      <option value={1234} data-ticket={10000} data-price={1000}>
+                        10000 Ticket For $1000
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <style dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }} />
+                <div className="stripe-form">
+                </div>
+                <button type="submit" className="btn btn-green" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Processing Payment">Pay Now</button>
+                <button type="button" className="btn btn-default btn-close" data-dismiss="modal" aria-label="Close" style={{display: 'none'}}>Close</button>
+              </form>
+            </div>
+          </div>
+
+        </PopupModel>
       </div>
     );
   }
