@@ -21,13 +21,13 @@ import  history from './../../../history';
 // carousel styles
 //import 'react-responsive-carousel/lib/styles/carousel.css';
 import  EventAside from './../../../components/EventAside/EventAside';
-
+import { sessionService, loadSession } from 'redux-react-session';
 import  {doGetAuctionItemByCode} from './../action/index';
-import  { Carousel } from 'react-responsive-carousel';
-    class Auction extends React.Component {
-    static propTypes = {
-        title: PropTypes.string
-    };
+import  {Carousel} from 'react-responsive-carousel';
+class Auction extends React.Component {
+  static propTypes = {
+    title: PropTypes.string
+  };
 
   constructor(props) {
     super(props);
@@ -36,7 +36,7 @@ import  { Carousel } from 'react-responsive-carousel';
       tab: 'Auction',
       showBookingTicketPopup: false,
       showMapPopup: true,
-      isLogin: false,
+      isLogin: true,
 
       isValidData: false,
       email: null,
@@ -321,10 +321,11 @@ import  { Carousel } from 'react-responsive-carousel';
       }).catch(error => {
       console.log(error)
     });
+
   }
 
   render() {
-    var form_login = <div>
+    let form_login = <div>
       <h4>Login or signup below</h4>
       <form className="ajax-form validated fv-form fv-form-bootstrap"
             autoComplete="off" method="POST"
@@ -414,7 +415,7 @@ import  { Carousel } from 'react-responsive-carousel';
         </button>
       </form>
     </div>;
-    var form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
+    let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
                          action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
                          data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
                          data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
@@ -633,89 +634,117 @@ import  { Carousel } from 'react-responsive-carousel';
 
       <button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')} role="button"
               type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
-        Submit Pledge
+        Submit bid
       </button>
+      &nbsp;&nbsp;
+      <a role="button" className="btn btn-success"
+         href="/event/jkazarian8">Go back to All Items</a>
+    </form>;
+    let form_bid_only=<form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
+                            action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
+                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
+                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
+                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
+                            onSubmit={this.onBidFormClick}>
+      <button type="submit" className="fv-hidden-submit"
+              style={{display: 'none', width: 0, height: 0}}/>
+      <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
+        className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
 
-            <a role="button" className="btn btn-success"
-               href="/event/jkazarian8">Go back to All Items</a>
-        </form>;
-        var form_bid_close =<div className="col-sm-6">
-                        <div className="curr-bid-number">$<span className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
-                        <div className="curr-bid-text">Current Bid</div>
-                    </div>;
-        var div_bid_close =<div className="alert alert-success text-center">Item Has Been Purchased for $<span className="current-bid">400</span></div>
-        var bid_active=this.state.auctionData && this.state.auctionData.purchased;
 
-        return (
+      <button className={cx("btn btn-primary text-uppercase")} role="button"
+              type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+        Submit bid
+      </button>
+      &nbsp;&nbsp;
+      <a role="button" className="btn btn-success"
+         href="/event/jkazarian8">Go back to All Items</a>
+    </form>;
+    let form_bid_close = <div className="col-sm-6">
+      <div className="curr-bid-number">$<span
+        className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
+      <div className="curr-bid-text">Current Bid</div>
+    </div>;
+    let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
+      className="current-bid">400</span></div>
+    let bid_active = this.state.auctionData && this.state.auctionData.purchased;
+
+    return (
+      <div className="row">
+        <div className="col-lg-12">
+          <div id="content-wrapper">
             <div className="row">
-                <div className="col-lg-12">
-                    <div id="content-wrapper">
-                        <div className="row">
-                            <div className="col-lg-3 col-md-4 col-sm-4">
-                                <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings} eventTicketData={this.props.eventTicketData}
-                                             showMapPopup={this.showMapPopup} activeCategory={false} />
-                               </div>
-                            <div className="col-lg-9 col-md-8 col-sm-8">
-                                <div className="main-box clearfix">
-                                    <h1 className="text-center mrg-t-lg" id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
-                                    <div className="row mrg-t-lg">
-                                        <div className="col-md-6">
-                                            <div className="pad-l-md pad-r-md">
-                                                <div className="item-image">
-                                                    <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
-                                                        {this.state.auctionData &&
-                                                        this.state.auctionData.images.map((item,index)=>
-                                                            <ImageList key={index}  item={item} />
-                                                        )
-                                                        }
-                                                    </Carousel>
+              <div className="col-lg-3 col-md-4 col-sm-4">
+                <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings}
+                            eventTicketData={this.props.eventTicketData}
+                            showMapPopup={this.showMapPopup} activeCategory={false}/>
+              </div>
+              <div className="col-lg-9 col-md-8 col-sm-8">
+                <div className="main-box clearfix">
+                  <h1 className="text-center mrg-t-lg"
+                      id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
+                  <div className="row mrg-t-lg">
+                    <div className="col-md-6">
+                      <div className="pad-l-md pad-r-md">
+                        <div className="item-image">
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
+                            {this.state.auctionData &&
+                            this.state.auctionData.images.map((item, index)=>
+                              <ImageList key={index} item={item}/>
+                            )
+                            }
+                          </Carousel>
 
-                                                </div>
-                                            </div>
-                                            <div className="mrg-t-lg pad-l-md pad-r-md">
-                                                {this.state.auctionData && this.state.auctionData.description}
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6" style={{paddingRight: 16}}>
-                                            <div className="row">
-                                                <div className="col-sm-4">
-                                                    <div className="curr-bid-number">$<span
-                                                        className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>
-                                                    <div className="curr-bid-text">Current Bid</div>
-                                                </div>
-                                                {this.state.auctionData &&  this.state.auctionData.buyItNowPrice > 0 &&  <div className="col-sm-4">
-                                                    <div className="curr-bid-number">$<span
-                                                        className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
-                                                    <div className="curr-bid-text">BUY NOW PRICE</div>
-                                                </div>}
-                                                {this.state.auctionData &&  this.state.auctionData.marketValue > 0 &&  <div className="col-sm-4">
-                                                    <div className="curr-bid-number">$<span
-                                                        className="current-bid">{this.state.auctionData.marketValue}</span></div>
-                                                    <div className="curr-bid-text">MARKET VALUE </div>
-                                                </div>}
-                                                {/*{ bid_active ? form_bid_close :'' }*/}
-                                            </div>
-                                            { bid_active ? div_bid_close :'' }
-                                            { !bid_active ?  this.state.isLogin ? form_bid : form_login :'' }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
+                      </div>
+                      <div className="mrg-t-lg pad-l-md pad-r-md">
+                        {this.state.auctionData && this.state.auctionData.description}
+                      </div>
                     </div>
+                    <div className="col-md-6" style={{paddingRight: 16}}>
+                      <div className="row">
+                        <div className="col-sm-4">
+                          <div className="curr-bid-number">$<span
+                            className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span>
+                          </div>
+                          <div className="curr-bid-text">Current Bid</div>
+                        </div>
+                        {this.state.auctionData && this.state.auctionData.buyItNowPrice > 0 &&
+                        <div className="col-sm-4">
+                          <div className="curr-bid-number">$<span
+                            className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
+                          <div className="curr-bid-text">BUY NOW PRICE</div>
+                        </div>}
+                        {this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
+                          <div className="curr-bid-number">$<span
+                            className="current-bid">{this.state.auctionData.marketValue}</span></div>
+                          <div className="curr-bid-text">MARKET VALUE</div>
+                        </div>}
+                        {/*{ bid_active ? form_bid_close :'' }*/}
+                      </div>{console.log('ys',this.props.user)}
+                      { bid_active ? div_bid_close : '' }
+                      { !bid_active ? this.props.authenticated ? this.props.user &&  this.props.user.cardLinked? form_bid_only :form_bid : form_login : '' }
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-        );
-    }
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 class ImageList extends React.Component {
-    render() {
-        return (
-        <div>
-            <img height={250} src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" } />
-        </div>
+  render() {
+    return (
+      <div>
+        <img height={250}
+             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      </div>
 
-        );}
+    );
+  }
 }
 
 const mapDispatchToProps = {
@@ -727,6 +756,8 @@ const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
   eventTicketData: state.event && state.event.ticket_data,
   auction_data: state.event && state.event.auction_data,
+  user: state.session.user,
+  authenticated: state.session.authenticated
 
 });
 

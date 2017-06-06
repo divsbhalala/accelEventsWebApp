@@ -45,17 +45,14 @@ class Layout extends React.Component {
           token: JSON.parse(localStorage.getItem('token'))
         }
       });
-      console.log('pathname', this.props.USER_DATA, JSON.parse(localStorage.getItem('user')));
       if (pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0) {
 
       }
     } else {
-      console.log('pathname', this.props.USER_DATA, JSON.parse(localStorage.getItem('user')));
 
       if (pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0) {
 
       }
-      console.log()
     }
   }
 

@@ -269,7 +269,7 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
-                      { this.state.isLogin ? form_login : form_normal  }
+                      { this.props.authenticated ? form_login : form_normal  }
                     </div>
                   </div>
                 </div>
@@ -291,7 +291,8 @@ const mapStateToProps = (state) => ({
   raffle_data: state.event && state.event.raffle_data,
   eventData: state.event && state.event.data,
   eventTicketData: state.event && state.event.ticket_data,
-
+  user: state.session.user,
+  authenticated: state.session.authenticated,
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Raffle));
