@@ -14,8 +14,8 @@
  */
 
 import passport from 'passport';
-import { Strategy as FacebookStrategy } from 'passport-facebook';
-import { User, UserLogin, UserClaim, UserProfile } from './data/models';
+import {Strategy as FacebookStrategy} from 'passport-facebook';
+import {User, UserLogin, UserClaim, UserProfile} from './data/models';
 import config from './config';
 
 /**
@@ -35,7 +35,7 @@ passport.use(new FacebookStrategy({
     if (req.user) {
       const userLogin = await UserLogin.findOne({
         attributes: ['name', 'key'],
-        where: { name: loginName, key: profile.id },
+        where: {name: loginName, key: profile.id},
       });
       if (userLogin) {
         // There is already a Facebook account that belongs to you.
@@ -46,10 +46,10 @@ passport.use(new FacebookStrategy({
           id: req.user.id,
           email: profile._json.email,
           logins: [
-            { name: loginName, key: profile.id },
+            {name: loginName, key: profile.id},
           ],
           claims: [
-            { type: claimType, value: profile.id },
+            {type: claimType, value: profile.id},
           ],
           profile: {
             displayName: profile.displayName,
@@ -58,9 +58,9 @@ passport.use(new FacebookStrategy({
           },
         }, {
           include: [
-            { model: UserLogin, as: 'logins' },
-            { model: UserClaim, as: 'claims' },
-            { model: UserProfile, as: 'profile' },
+            {model: UserLogin, as: 'logins'},
+            {model: UserClaim, as: 'claims'},
+            {model: UserProfile, as: 'profile'},
           ],
         });
         done(null, {
@@ -71,7 +71,7 @@ passport.use(new FacebookStrategy({
     } else {
       const users = await User.findAll({
         attributes: ['id', 'email'],
-        where: { '$logins.name$': loginName, '$logins.key$': profile.id },
+        where: {'$logins.name$': loginName, '$logins.key$': profile.id},
         include: [
           {
             attributes: ['name', 'key'],
@@ -84,7 +84,7 @@ passport.use(new FacebookStrategy({
       if (users.length) {
         done(null, users[0]);
       } else {
-        let user = await User.findOne({ where: { email: profile._json.email } });
+        let user = await User.findOne({where: {email: profile._json.email}});
         if (user) {
           // There is already an account using this email address. Sign in to
           // that account and link it with Facebook manually from Account Settings.
@@ -94,10 +94,10 @@ passport.use(new FacebookStrategy({
             email: profile._json.email,
             emailConfirmed: true,
             logins: [
-              { name: loginName, key: profile.id },
+              {name: loginName, key: profile.id},
             ],
             claims: [
-              { type: claimType, value: accessToken },
+              {type: claimType, value: accessToken},
             ],
             profile: {
               displayName: profile.displayName,
@@ -106,9 +106,9 @@ passport.use(new FacebookStrategy({
             },
           }, {
             include: [
-              { model: UserLogin, as: 'logins' },
-              { model: UserClaim, as: 'claims' },
-              { model: UserProfile, as: 'profile' },
+              {model: UserLogin, as: 'logins'},
+              {model: UserClaim, as: 'claims'},
+              {model: UserProfile, as: 'profile'},
             ],
           });
           done(null, {

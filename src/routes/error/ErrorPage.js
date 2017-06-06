@@ -23,7 +23,7 @@ class ErrorPage extends React.Component {
 
   render() {
     if (__DEV__) {
-      const { error } = this.props;
+      const {error} = this.props;
       return (
         <div>
           <h1>{error.name}</h1>
@@ -42,5 +42,5 @@ class ErrorPage extends React.Component {
   }
 }
 
-export { ErrorPage as ErrorPageWithoutStyle };
+export {ErrorPage as ErrorPageWithoutStyle};
 export default withStyles(s)(ErrorPage);

@@ -11,8 +11,8 @@
 /* eslint-disable padded-blocks, no-unused-expressions */
 
 import React from 'react';
-import { expect } from 'chai';
-import { render } from 'enzyme';
+import {expect} from 'chai';
+import {render} from 'enzyme';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import App from '../App';
@@ -27,9 +27,12 @@ describe('Layout', () => {
     const store = mockStore(initialState);
 
     const wrapper = render(
-      <App context={{ insertCss: () => {}, store }}>
+      <App context={{
+        insertCss: () => {
+        }, store
+      }}>
         <Layout>
-          <div className="child" />
+          <div className="child"/>
         </Layout>
       </App>,
     );

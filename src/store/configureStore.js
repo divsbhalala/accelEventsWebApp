@@ -1,9 +1,9 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 import createHelpers from './createHelpers';
 import createLogger from './logger';
-import { sessionService } from 'redux-react-session';
+import {sessionService} from 'redux-react-session';
 export default function configureStore(initialState, helpersConfig) {
   const helpers = createHelpers(helpersConfig);
   const middleware = [thunk.withExtraArgument(helpers)];

@@ -264,7 +264,7 @@ class Fund extends React.Component {
   }
 
   render() {
-   let div_login = <div>
+    let div_login = <div>
       <h4><a role="button" href="#login-user" data-toggle="modal" data-form="login">Log in</a> or Sign
         up below</h4>
       <div
@@ -290,7 +290,7 @@ class Fund extends React.Component {
                data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
       </div>
     </div>
-     return (
+    return (
       <div className="row">
         <div className="col-lg-12">
           <div id="content-wrapper">
@@ -310,15 +310,15 @@ class Fund extends React.Component {
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
-                              {this.state.fundData && this.state.fundData.images.length > 0 ?
-                                  this.state.fundData.images.map((item, index)=>
-                                      <ImageList key={index} item={item}/>
-                                  ) : <div className="item-image-inner" style={{
-                                      backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
-                                      width: '',
-                                      transform: 'rotate(0deg)'
-                                  }}/>
-                              }
+                            {this.state.fundData && this.state.fundData.images.length > 0 ?
+                              this.state.fundData.images.map((item, index) =>
+                                <ImageList key={index} item={item}/>
+                              ) : <div className="item-image-inner" style={{
+                                backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                width: '',
+                                transform: 'rotate(0deg)'
+                              }}/>
+                            }
                           </Carousel>
                         </div>
                       </div>
@@ -327,7 +327,7 @@ class Fund extends React.Component {
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
                       <div className="row">
-                           <div className="text-danger text-center bold"> Please activate this module to start accepting
+                        <div className="text-danger text-center bold"> Please activate this module to start accepting
                           pledges.
                         </div>
                         <div className="col-sm-6 col-md-6">
@@ -388,7 +388,7 @@ class Fund extends React.Component {
                           { this.state.lastNameFeedBack && !this.state.lastName &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
                         </div>
-                          { this.props.authenticated ?  div_login: '' }
+                        { this.props.authenticated ? div_login : '' }
                         <style
                           dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                         <div className="stripe-form">
@@ -581,15 +581,15 @@ class Fund extends React.Component {
   }
 }
 class ImageList extends React.Component {
-    render() {
-        return (
-            <div>
-              <img height={250}
-                   src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
-            </div>
+  render() {
+    return (
+      <div>
+        <img height={250}
+             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      </div>
 
-        );
-    }
+    );
+  }
 }
 
 const mapDispatchToProps = {
@@ -602,7 +602,7 @@ const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
   eventTicketData: state.event && state.event.ticket_data,
   fundData: state.event && state.event.auction_data,
-  user :state.user,
+  user: state.user,
 
 });
 

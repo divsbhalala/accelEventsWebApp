@@ -226,9 +226,10 @@ class Raffle extends React.Component {
       </div>
     </form>;
     let form_normal = <div >
-        {this.state.raffleData && this.state.raffleData.active && <div className="text-danger text-center bold"> Please activate this module to start accepting
-          pledges.
-        </div>}
+      {this.state.raffleData && this.state.raffleData.active &&
+      <div className="text-danger text-center bold"> Please activate this module to start accepting
+        pledges.
+      </div>}
       <a role="button" className="btn btn-success btn-block" href="#login-user" data-toggle="modal" data-form="login">Login</a>
       <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
          data-title="Raffle Drawn"
@@ -257,15 +258,15 @@ class Raffle extends React.Component {
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
-                              {this.state.raffleData && this.state.raffleData.images.length > 0 ?
-                                  this.state.raffleData.images.map((item, index)=>
-                                      <ImageList key={index} item={item}/>
-                                  ) : <div className="item-image-inner" style={{
-                                      backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
-                                      width: '',
-                                      transform: 'rotate(0deg)'
-                                  }}/>
-                              }
+                            {this.state.raffleData && this.state.raffleData.images.length > 0 ?
+                              this.state.raffleData.images.map((item, index) =>
+                                <ImageList key={index} item={item}/>
+                              ) : <div className="item-image-inner" style={{
+                                backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                width: '',
+                                transform: 'rotate(0deg)'
+                              }}/>
+                            }
                           </Carousel>
                         </div>
                       </div>
@@ -286,15 +287,15 @@ class Raffle extends React.Component {
   }
 }
 class ImageList extends React.Component {
-    render() {
-        return (
-            <div>
-              <img height={250}
-                   src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
-            </div>
+  render() {
+    return (
+      <div>
+        <img height={250}
+             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      </div>
 
-        );
-    }
+    );
+  }
 }
 
 const mapDispatchToProps = {

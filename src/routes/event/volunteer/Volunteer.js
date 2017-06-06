@@ -28,7 +28,7 @@ class Volunteer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeViews:'select-action',
+      activeViews: 'select-action',
       isValidData: false,
       error: null,
       isLogin: false,
@@ -38,10 +38,10 @@ class Volunteer extends React.Component {
 
   }
 
-  setActiveView=(view)=>{
+  setActiveView = (view) => {
     console.log('v', view);
     this.setState({
-      activeViews:view
+      activeViews: view
     })
   }
 
@@ -54,29 +54,46 @@ class Volunteer extends React.Component {
             <h4 className="text-center"><strong>Select an Action</strong></h4>
             <div className>
               {/* <button class="btn btn-block btn-info mrg-t-lg mrg-b-lg" data-switch-view="attendees-checkin">Check in attendees</button> */}
-              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('check-item-status')}}>Check
+              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('check-item-status')
+              }}>Check
                 Item Status
               </button>
-              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('submit-auction-bids')}}>Submit
+              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('submit-auction-bids')
+              }}>Submit
                 Silent Auction Bid
               </button>
-              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('submit-pledge')}}>Submit
+              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('submit-pledge')
+              }}>Submit
                 Pledge
               </button>
-              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('sell-raffle-tickets')}}>Sell
+              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('sell-raffle-tickets')
+              }}>Sell
                 Raffle Tickets
               </button>
-              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('submit-raffle-tickets')}}>
+              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('submit-raffle-tickets')
+              }}>
                 Submit Raffle Tickets
               </button>
-              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('purchase-event-tickets')}}>
+              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('purchase-event-tickets')
+              }}>
                 Sell Event Tickets
               </button>
-              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('event-ticketing')}}>Check in
+              <button className="btn btn-block btn-info mrg-t-lg mrg-b-lg" onClick={() => {
+                this.setActiveView('event-ticketing')
+              }}>Check in
                 Attendees
               </button>
             </div>
-            <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={()=>{this.setActiveView('donate')}} data-switch-view="donate">Donate</button>
+            <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={() => {
+              this.setActiveView('donate')
+            }} data-switch-view="donate">Donate
+            </button>
             <p className="text-center help-text mrg-t-lg">You can change options from the menu at any time</p>
           </view>
           <view name="check-item-status" className={cx(this.state.activeViews === 'check-item-status' && s.active)}>
@@ -89,7 +106,10 @@ class Volunteer extends React.Component {
               <h5 id="infoMessage"></h5>
             </div>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
           <view name="submit-auction-bids" className={cx(this.state.activeViews === 'submit-auction-bids' && s.active)}>
@@ -1567,7 +1587,7 @@ class Volunteer extends React.Component {
               </div>
               <div className="cc-info">
                 <style
-                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }}/>
+                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                 <div className="stripe-form">
                   <div className="stripe-card-info">
                     <div className="form-group has-feedback">
@@ -1726,7 +1746,10 @@ class Volunteer extends React.Component {
               </div>
             </form>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
           <view name="submit-pledge" className={cx(this.state.activeViews === 'submit-pledge' && s.active)}>
@@ -3192,7 +3215,7 @@ class Volunteer extends React.Component {
               </div>
               <div className="cc-info">
                 <style
-                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }}/>
+                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                 <div className="stripe-form">
                   <div className="stripe-card-info">
                     <div className="form-group has-feedback">
@@ -3351,7 +3374,10 @@ class Volunteer extends React.Component {
               </div>
             </form>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
           <view name="sell-raffle-tickets" className={cx(this.state.activeViews === 'sell-raffle-tickets' && s.active)}>
@@ -4810,7 +4836,7 @@ class Volunteer extends React.Component {
               </div>
               <div className="cc-info" style={{xdisplay: 'none'}}>
                 <style
-                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }}/>
+                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                 <div className="stripe-form">
                   <div className="stripe-card-info">
                     <div className="form-group has-feedback">
@@ -4969,10 +4995,14 @@ class Volunteer extends React.Component {
               </div>
             </form>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
-          <view name="submit-raffle-tickets" className={cx(this.state.activeViews === 'submit-raffle-tickets' && s.active)}>
+          <view name="submit-raffle-tickets"
+                className={cx(this.state.activeViews === 'submit-raffle-tickets' && s.active)}>
             <h4 className="text-center"><strong>Submit Raffle Tickets</strong></h4>
             <form className="ajax-form validated fv-form fv-form-bootstrap"
                   action="/AccelEventsWebApp/events/jkazarian8/volunteer/submit-tickets" method="POST"
@@ -6428,10 +6458,14 @@ class Volunteer extends React.Component {
               </div>
             </form>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
-          <view name="purchase-event-tickets" className={cx(this.state.activeViews === 'purchase-event-tickets' && s.active)}>
+          <view name="purchase-event-tickets"
+                className={cx(this.state.activeViews === 'purchase-event-tickets' && s.active)}>
             <h4 className="text-center"><strong>Sell Event Tickets</strong></h4>
             <div className="order-form">
               <form className="ajax-form validated fv-form fv-form-bootstrap" method="POST"
@@ -6494,13 +6528,20 @@ class Volunteer extends React.Component {
               </div>
             </div>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
-          <view name="ticket-checkout-tickets" className={cx(this.state.activeViews === 'ticket-checkout-tickets' && s.active)}>
+          <view name="ticket-checkout-tickets"
+                className={cx(this.state.activeViews === 'ticket-checkout-tickets' && s.active)}>
             <div className="tickts"/>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
           <view name="event-ticketing" className={cx(this.state.activeViews === 'event-ticketing' && s.active)}>
@@ -9509,7 +9550,10 @@ class Volunteer extends React.Component {
               </li>
             </ul>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
           <view name="donate" className={cx(this.state.activeViews === 'donate' && s.active)}>
@@ -10958,7 +11002,7 @@ class Volunteer extends React.Component {
               </div>
               <div className="cc-info" style={{xdisplay: 'none'}}>
                 <style
-                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }}/>
+                  dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
                 <div className="stripe-form">
                   <div className="stripe-card-info">
                     <div className="form-group has-feedback">
@@ -11117,7 +11161,10 @@ class Volunteer extends React.Component {
               </div>
             </form>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={()=>{this.setActiveView('select-action')}}>Back</button>
+              <button className="btn btn-white" onClick={() => {
+                this.setActiveView('select-action')
+              }}>Back
+              </button>
             </div>
           </view>
         </views>

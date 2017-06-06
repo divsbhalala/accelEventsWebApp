@@ -21,7 +21,7 @@ import  history from './../../../history';
 // carousel styles
 //import 'react-responsive-carousel/lib/styles/carousel.css';
 import  EventAside from './../../../components/EventAside/EventAside';
-import { sessionService, loadSession } from 'redux-react-session';
+import {sessionService, loadSession} from 'redux-react-session';
 import  {doGetAuctionItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 class Auction extends React.Component {
@@ -630,12 +630,12 @@ class Auction extends React.Component {
       <a role="button" className="btn btn-success"
          href="/event/jkazarian8">Go back to All Items</a>
     </form>;
-    let form_bid_only=<form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-                            action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
-                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
-                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
-                            onSubmit={this.onBidFormClick}>
+    let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
+                              action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
+                              data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
+                              data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
+                              data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
+                              onSubmit={this.onBidFormClick}>
       <button type="submit" className="fv-hidden-submit"
               style={{display: 'none', width: 0, height: 0}}/>
       <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
@@ -679,13 +679,13 @@ class Auction extends React.Component {
                         <div className="item-image">
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
                             {this.state.auctionData && this.state.auctionData.images.length > 0 ?
-                            this.state.auctionData.images.map((item, index)=>
-                             <ImageList key={index} item={item}/>
-                            ) : <div className="item-image-inner" style={{
-                                    backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
-                                    width: '',
-                                    transform: 'rotate(0deg)'
-                                }}/>
+                              this.state.auctionData.images.map((item, index) =>
+                                <ImageList key={index} item={item}/>
+                              ) : <div className="item-image-inner" style={{
+                                backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
+                                width: '',
+                                transform: 'rotate(0deg)'
+                              }}/>
                             }
                           </Carousel>
 
@@ -714,10 +714,11 @@ class Auction extends React.Component {
                             className="current-bid">{this.state.auctionData.marketValue}</span></div>
                           <div className="curr-bid-text">MARKET VALUE</div>
                         </div>}
-                      </div>{console.log('ys',this.state.auctionData)}
-                      { bid_active ? div_bid_close : '' }
-                      { !bid_active ? this.props.authenticated ? this.props.user &&  this.props.user.cardLinked ? form_bid_only :form_bid : form_login : '' }
                       </div>
+                      {console.log('ys', this.state.auctionData)}
+                      { bid_active ? div_bid_close : '' }
+                      { !bid_active ? this.props.authenticated ? this.props.user && this.props.user.cardLinked ? form_bid_only : form_bid : form_login : '' }
+                    </div>
                   </div>
                 </div>
               </div>
@@ -733,7 +734,7 @@ class ImageList extends React.Component {
     return (
       <div>
         <img height={250}
-             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/'+this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
       </div>
 
     );

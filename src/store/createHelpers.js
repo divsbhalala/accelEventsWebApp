@@ -6,7 +6,7 @@ function createGraphqlRequest(fetch) {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ query, variables }),
+      body: JSON.stringify({query, variables}),
       credentials: 'include',
     };
     const resp = await fetch('/graphql', fetchConfig);
@@ -15,7 +15,7 @@ function createGraphqlRequest(fetch) {
   };
 }
 
-export default function createHelpers({ fetch, history }) {
+export default function createHelpers({fetch, history}) {
   return {
     fetch,
     history,

@@ -1,11 +1,11 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import {apiUrl as API_URL} from './../../../clientConfig';
-export  function  doGetEventData( eventUrl) {
-  return (dispatch)=>{
+export function doGetEventData(eventUrl) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl,
+      url: API_URL + 'events/' + eventUrl,
       data: {}
     }).then(response => {
       dispatch(storeEventData(response.data));
@@ -13,7 +13,7 @@ export  function  doGetEventData( eventUrl) {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         console.log(error);
         return error;
       });
@@ -22,35 +22,35 @@ export  function  doGetEventData( eventUrl) {
 }
 
 /*----------------Ticketing-------------*/
-export  function  doGetEventTicketSetting( eventUrl) {
-  return (dispatch)=>{
+export function doGetEventTicketSetting(eventUrl) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/ticketing/settings',
+      url: API_URL + 'events/' + eventUrl + '/ticketing/settings',
       data: {}
     }).then(response => {
       dispatch(storeEventTicketData(response.data));
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
 
 }
 
-export  function  doGetEventTicketByOrderId( eventUrl, OrderId) {
-  return (dispatch)=>{
+export function doGetEventTicketByOrderId(eventUrl, OrderId) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/ticketing/order/'+OrderId+'/getformattributes',
+      url: API_URL + 'events/' + eventUrl + '/ticketing/order/' + OrderId + '/getformattributes',
       data: {}
     }).then(response => {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
@@ -58,45 +58,45 @@ export  function  doGetEventTicketByOrderId( eventUrl, OrderId) {
 }
 
 /*----------------Auction-------------*/
-export  function  doGetAuctionSetting( eventUrl) {
-  return (dispatch)=>{
+export function doGetAuctionSetting(eventUrl) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/auction/settings',
+      url: API_URL + 'events/' + eventUrl + '/auction/settings',
       data: {}
     }).then(response => {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
 
 }
-export  function  doGetAuctionItemByCode( eventUrl, itemCode) {
-  return (dispatch)=>{
+export function doGetAuctionItemByCode(eventUrl, itemCode) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/auction/item/'+itemCode,
+      url: API_URL + 'events/' + eventUrl + '/auction/item/' + itemCode,
       data: {}
     });
   }
 
 }
 
-export  function  doGetAuctionItemByLimit( eventUrl, page, size) {
-  return (dispatch)=>{
+export function doGetAuctionItemByLimit(eventUrl, page, size) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/auction/items/?page='+page+'&size='+size,
+      url: API_URL + 'events/' + eventUrl + '/auction/items/?page=' + page + '&size=' + size,
       data: {}
     }).then(response => {
       dispatch(storeAuctionData(response.data));
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
@@ -104,17 +104,17 @@ export  function  doGetAuctionItemByLimit( eventUrl, page, size) {
 }
 
 /*----------------Donation-------------*/
-export  function  doGetDonationSetting( eventUrl) {
-  return (dispatch)=>{
+export function doGetDonationSetting(eventUrl) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/donation/settings',
+      url: API_URL + 'events/' + eventUrl + '/donation/settings',
       data: {}
     }).then(response => {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
@@ -122,28 +122,28 @@ export  function  doGetDonationSetting( eventUrl) {
 }
 
 /*----------------Fund A Need-------------*/
-export  function  doGetFundANeedSetting( eventUrl) {
-  return (dispatch)=>{
+export function doGetFundANeedSetting(eventUrl) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/fundaneed/settings',
+      url: API_URL + 'events/' + eventUrl + '/fundaneed/settings',
       data: {}
     }).then(response => {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
 
 }
 
-export  function  doGetFundANeedItemByCode( eventUrl, itemCode) {
-  return (dispatch)=>{
+export function doGetFundANeedItemByCode(eventUrl, itemCode) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/fundaneed/item/'+itemCode,
+      url: API_URL + 'events/' + eventUrl + '/fundaneed/item/' + itemCode,
       data: {}
     })
     //     .then(response => {
@@ -158,18 +158,18 @@ export  function  doGetFundANeedItemByCode( eventUrl, itemCode) {
 
 }
 
-export  function doGetFundANeedItemByLimit( eventUrl, page, size) {
-  return (dispatch)=>{
+export function doGetFundANeedItemByLimit(eventUrl, page, size) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/fundaneed/items/?page='+page+'&size='+size,
+      url: API_URL + 'events/' + eventUrl + '/fundaneed/items/?page=' + page + '&size=' + size,
       data: {}
     }).then(response => {
       dispatch(storeEventFundANeedData(response.data));
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
@@ -177,28 +177,28 @@ export  function doGetFundANeedItemByLimit( eventUrl, page, size) {
 }
 
 /*----------------Raffle-------------*/
-export  function  doGetRaffleSetting( eventUrl) {
-  return (dispatch)=>{
+export function doGetRaffleSetting(eventUrl) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/raffle/settings',
+      url: API_URL + 'events/' + eventUrl + '/raffle/settings',
       data: {}
     }).then(response => {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
 
 }
 
-export  function  doGetRaffleItemByCode( eventUrl, itemCode) {
-  return (dispatch)=>{
+export function doGetRaffleItemByCode(eventUrl, itemCode) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/raffle/item/'+itemCode,
+      url: API_URL + 'events/' + eventUrl + '/raffle/item/' + itemCode,
       data: {}
     })
     //     .then(response => {
@@ -213,17 +213,17 @@ export  function  doGetRaffleItemByCode( eventUrl, itemCode) {
 
 }
 
-export  function  doGetRaffleItemByLimit( eventUrl, page, size) {
-  return (dispatch)=>{
+export function doGetRaffleItemByLimit(eventUrl, page, size) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/raffle/items/?page='+page+'&size='+size,
+      url: API_URL + 'events/' + eventUrl + '/raffle/items/?page=' + page + '&size=' + size,
       data: {}
     }).then(response => {
       return response;
 
     })
-      .catch( error => {
+      .catch(error => {
         return error;
       });
   }
@@ -231,73 +231,73 @@ export  function  doGetRaffleItemByLimit( eventUrl, page, size) {
 }
 
 
-export  function  doGetSettings( eventUrl, type) {
-  return (dispatch)=>{
+export function doGetSettings(eventUrl, type) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/'+type+'/settings',
+      url: API_URL + 'events/' + eventUrl + '/' + type + '/settings',
       data: {}
     });
   }
 
 }
 
-export  function  doGeItemByCode( eventUrl, itemCode, type) {
-  return (dispatch)=>{
+export function doGeItemByCode(eventUrl, itemCode, type) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/'+type+'/item/'+itemCode,
+      url: API_URL + 'events/' + eventUrl + '/' + type + '/item/' + itemCode,
       data: {}
     });
   }
 
 }
 
-export  function  doGetItemByLimit( eventUrl, page, size, type) {
-  return (dispatch)=>{
+export function doGetItemByLimit(eventUrl, page, size, type) {
+  return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL+'events/'+eventUrl+'/'+type+'/items/?page='+page+'&size='+size,
+      url: API_URL + 'events/' + eventUrl + '/' + type + '/items/?page=' + page + '&size=' + size,
       data: {}
     });
   }
 
 }
 
-export function storeEventData(data){
+export function storeEventData(data) {
   return {
-    type:'STORE_EVENT',
+    type: 'STORE_EVENT',
     data,
   }
 }
 
-export function storeEventRaffleData(data){
+export function storeEventRaffleData(data) {
   return {
-    type:'STORE_EVENT_RAFFLE',
+    type: 'STORE_EVENT_RAFFLE',
     data,
   }
 }
-export function storeEventFundANeedData(data){
+export function storeEventFundANeedData(data) {
   return {
-    type:'STORE_EVENT_FUND_A_NEED',
+    type: 'STORE_EVENT_FUND_A_NEED',
     data,
   }
 }
-export function storeEventDonationData(data){
+export function storeEventDonationData(data) {
   return {
-    type:'STORE_EVENT_TICKET_DONATION',
+    type: 'STORE_EVENT_TICKET_DONATION',
     data,
   }
 }
-export function storeEventTicketData(data){
+export function storeEventTicketData(data) {
   return {
-    type:'STORE_EVENT_TICKET',
+    type: 'STORE_EVENT_TICKET',
     data,
   }
 }
-export function storeAuctionData(data){
+export function storeAuctionData(data) {
   return {
-    type:'STORE_EVENT_AUCTION',
+    type: 'STORE_EVENT_AUCTION',
     data,
   }
 }

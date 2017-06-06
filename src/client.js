@@ -11,13 +11,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FastClick from 'fastclick';
 import queryString from 'query-string';
-import { createPath } from 'history/PathUtils';
+import {createPath} from 'history/PathUtils';
 import App from './components/App';
 import createFetch from './createFetch';
 import configureStore from './store/configureStore';
 import history from './history';
-import { updateMeta } from './DOMUtils';
-import { ErrorReporter, deepForceUpdate } from './devUtils';
+import {updateMeta} from './DOMUtils';
+import {ErrorReporter, deepForceUpdate} from './devUtils';
 
 /* eslint-disable global-require */
 
@@ -29,7 +29,9 @@ const context = {
   insertCss: (...styles) => {
     // eslint-disable-next-line no-underscore-dangle
     const removeCss = styles.map(x => x._insertCss());
-    return () => { removeCss.forEach(f => f()); };
+    return () => {
+      removeCss.forEach(f => f());
+    };
   },
   // Universal HTTP client
   fetch: createFetch({
@@ -37,7 +39,7 @@ const context = {
   }),
   // Initialize a new Redux store
   // http://redux.js.org/docs/basics/UsageWithReact.html
-  store: configureStore(window.App.state, { history }),
+  store: configureStore(window.App.state, {history}),
   storeSubscription: null,
 };
 
@@ -142,7 +144,7 @@ async function onLocationChange(location, action) {
     if (__DEV__) {
       appInstance = null;
       document.title = `Error: ${error.message}`;
-      ReactDOM.render(<ErrorReporter error={error} />, container);
+      ReactDOM.render(<ErrorReporter error={error}/>, container);
       throw error;
     }
 
@@ -166,7 +168,7 @@ if (__DEV__) {
   window.addEventListener('error', (event) => {
     appInstance = null;
     document.title = `Runtime Error: ${event.error.message}`;
-    ReactDOM.render(<ErrorReporter error={event.error} />, container);
+    ReactDOM.render(<ErrorReporter error={event.error}/>, container);
   });
 }
 
@@ -182,7 +184,7 @@ if (module.hot) {
       } catch (error) {
         appInstance = null;
         document.title = `Hot Update Error: ${error.message}`;
-        ReactDOM.render(<ErrorReporter error={error} />, container);
+        ReactDOM.render(<ErrorReporter error={error}/>, container);
         return;
       }
     }

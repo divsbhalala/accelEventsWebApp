@@ -10,11 +10,11 @@ export function onFormSubmit(e) {
   return false;
 }
 
-const getUserDetails=(token)=>{
+const getUserDetails = (token) => {
   return axios({
     method: 'get',
     url: API_URL + 'u/userdetail',
-    headers:{Authorization: token}
+    headers: {Authorization: token}
   })
 }
 
@@ -29,10 +29,10 @@ export function doLogin(email, password) {
       }
     }).then(response => {
       dispatch(storeToken(response.data.access_token));
-      getUserDetails(response.data.access_token).then(resp=>{
+      getUserDetails(response.data.access_token).then(resp => {
         dispatch(storeLoginData(resp.data));
         localStorage.setItem('user', JSON.stringify(resp.data));
-      }).catch(err=>{
+      }).catch(err => {
       })
       localStorage.setItem('token', JSON.stringify(response.data.access_token));
       return response;

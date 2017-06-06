@@ -39,7 +39,7 @@ class HeaderNew extends React.Component {
     this.hideContactPopup = this.hideContactPopup.bind(this);
   }
 
-  logout = ()=> {
+  logout = () => {
     localStorage.clear();
     history.push('/login');
   }
@@ -63,7 +63,7 @@ class HeaderNew extends React.Component {
           <Brand>
             <span>
               { this.props.params && this.props.params.params &&
-              <a href={"/events/"+  this.props.params.params} title={this.props.params.params}
+              <a href={"/events/" + this.props.params.params} title={this.props.params.params}
                  rel="home">{this.props.params.params}</a>}
               <button type="button" className="navbar-toggle" onClick={() => {
                 toggleMenu();
@@ -80,42 +80,42 @@ class HeaderNew extends React.Component {
             <MenuItem eventKey="1" onClick={this.showContactPopup}>
               <i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
             </MenuItem>
-            <MenuItem eventKey="3" href={'/event/'+event+'/volunteer'}>
+            <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
               Volunteer
             </MenuItem>
             <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
 
-              <MenuItem eventKey="5" href={"/scroll/"+event+"/auction"}>
+              <MenuItem eventKey="5" href={"/scroll/" + event + "/auction"}>
                 <span> Auction Scrolling </span>
               </MenuItem>
-              <MenuItem eventKey="5" href={"/scroll/"+event+"/raffle"}>
+              <MenuItem eventKey="5" href={"/scroll/" + event + "/raffle"}>
                 <span> Raffle Scrolling </span>
               </MenuItem>
-              <MenuItem eventKey="5" href={"/scroll/"+event+"/fund"}>
+              <MenuItem eventKey="5" href={"/scroll/" + event + "/fund"}>
                 <span> Fund a Need Scrolling </span>
               </MenuItem>
               <MenuItem divider/>
-              <MenuItem eventKey="5" href={"/goal/"+event+"/auction"}>
+              <MenuItem eventKey="5" href={"/goal/" + event + "/auction"}>
                 <span> Auction Goal </span>
               </MenuItem>
-              <MenuItem eventKey="5" href={"/goal/"+event+"/raffle"}>
+              <MenuItem eventKey="5" href={"/goal/" + event + "/raffle"}>
                 <span> Raffle Goal </span>
               </MenuItem>
-              <MenuItem eventKey="5" href={"/goal/"+event+"/fund"}>
+              <MenuItem eventKey="5" href={"/goal/" + event + "/fund"}>
                 <span> Fund a Need Goal </span>
               </MenuItem>
               <MenuItem divider/>
-              <MenuItem eventKey="5" href={"/table/"+event+"/auction"}>
+              <MenuItem eventKey="5" href={"/table/" + event + "/auction"}>
                 <span> Auction Table </span>
               </MenuItem>
-              <MenuItem eventKey="5" href={"/table/"+event+"/raffle"}>
+              <MenuItem eventKey="5" href={"/table/" + event + "/raffle"}>
                 <span> Raffle Table </span>
               </MenuItem>
-              <MenuItem eventKey="5" href={"/table/"+event+"/fund"}>
+              <MenuItem eventKey="5" href={"/table/" + event + "/fund"}>
                 <span> Fund a Need Table </span>
               </MenuItem>
 
-          </NavDropdown>
+            </NavDropdown>
 
             { !this.props.user && <MenuItem eventKey="8" onClick={(event) => {
               history.push('/login');
@@ -170,7 +170,13 @@ class HeaderNew extends React.Component {
                     <i className="fa fa-comment-o" aria-hidden="true"/>
                   </div>
                   <textarea rows={10} className="form-control" id="message" name="message"
-                            style={{zIndex: 3, position: 'relative',  fontSize: 13, transition: 'none', background: 'transparent !important'}}
+                            style={{
+                              zIndex: 3,
+                              position: 'relative',
+                              fontSize: 13,
+                              transition: 'none',
+                              background: 'transparent !important'
+                            }}
                             defaultValue={" "}/>
 
                 </div>
