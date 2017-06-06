@@ -34,6 +34,7 @@ class EventAside extends React.Component {
     super(props);
     this.state = {
       showBuyRaffelTicketPopup: false,
+      filterCategory:''
     };
     this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
     this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
@@ -41,7 +42,7 @@ class EventAside extends React.Component {
 
   showBuyRaffelTicketPopup = () => {
     this.setState({
-      showBuyRaffelTicketPopup: true
+      showBuyRaffelTicketPopup: this.props.authenticated
     })
   };
   hideBuyRaffelTicketPopup = () => {

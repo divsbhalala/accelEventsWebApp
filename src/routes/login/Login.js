@@ -15,7 +15,6 @@ import _ from 'lodash';
 import {onFormSubmit, doLogin, storeLoginData, storeToken} from './action/index';
 import Link from './../../components/Link/Link';
 import cx from 'classnames';
-
 import {connect} from 'react-redux';
 import {Alert} from 'react-bootstrap';
 import  history from './../../history';

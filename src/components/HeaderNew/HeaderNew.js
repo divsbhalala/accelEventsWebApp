@@ -23,6 +23,7 @@ import $ from "jquery";
 import SidebarNew from '../SidebarNew';
 import cx from 'classnames';
 import PopupModel from './../PopupModal';
+import { sessionService } from 'redux-react-session';
 
 const logo = require('./logo.png');
 
@@ -41,6 +42,8 @@ class HeaderNew extends React.Component {
 
   logout = () => {
     localStorage.clear();
+    sessionService.deleteSession();
+    sessionService.deleteUser();
     history.push('/login');
   }
   showContactPopup = () => {

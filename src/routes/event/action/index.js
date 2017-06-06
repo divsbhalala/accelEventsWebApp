@@ -6,7 +6,8 @@ export function doGetEventData(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl,
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeEventData(response.data));
       localStorage.setItem('eventsData', JSON.stringify(response.data));
@@ -27,7 +28,8 @@ export function doGetEventTicketSetting(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/ticketing/settings',
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeEventTicketData(response.data));
       return response;
@@ -45,7 +47,8 @@ export function doGetEventTicketByOrderId(eventUrl, OrderId) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/ticketing/order/' + OrderId + '/getformattributes',
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -63,7 +66,8 @@ export function doGetAuctionSetting(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/auction/settings',
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -79,21 +83,23 @@ export function doGetAuctionItemByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/auction/item/' + itemCode,
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 
 }
 
-export function doGetAuctionItemByLimit(eventUrl, page, size) {
+export function doGetAuctionItemByLimit(eventUrl,  page, size,  category) {
   return (dispatch) => {
+    let query='?page='+ page + '&size=' + size;
+    if(category){
+      query+='&category='+category;
+    }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/auction/items/',
-      data: {
-        page:page,
-        size:size
-      }
+      url: API_URL + 'events/' + eventUrl + '/auction/items/'+query,
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeAuctionData(response.data));
       return response;
@@ -112,7 +118,8 @@ export function doGetDonationSetting(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/donation/settings',
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -130,7 +137,8 @@ export function doGetFundANeedSetting(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/fundaneed/settings',
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -147,7 +155,8 @@ export function doGetFundANeedItemByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/fundaneed/item/' + itemCode,
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     })
     //     .then(response => {
     //   dispatch(storeEventTicketData(response.data));
@@ -161,12 +170,17 @@ export function doGetFundANeedItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetFundANeedItemByLimit(eventUrl, page, size) {
+export function doGetFundANeedItemByLimit(eventUrl,  page, size,  category) {
   return (dispatch) => {
+    let query='?page='+ page + '&size=' + size;
+    if(category){
+      query+='&category='+category;
+    }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/fundaneed/items/?page=' + page + '&size=' + size,
-      data: {}
+      url: API_URL + 'events/' + eventUrl + '/fundaneed/items/'+query,
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeEventFundANeedData(response.data));
       return response;
@@ -186,7 +200,7 @@ export function doGetRaffleSetting(eventUrl) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/raffle/settings',
       data: {},
-      headers: {Authorization: 'xcqp34BgOS1H3h955xRZqw=='}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -203,7 +217,9 @@ export function doGetRaffleItemByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/raffle/item/' + itemCode,
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+
     })
     //     .then(response => {
     //   dispatch(storeEventRaffleData(response.data));
@@ -217,12 +233,18 @@ export function doGetRaffleItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetRaffleItemByLimit(eventUrl, page, size) {
+export function doGetRaffleItemByLimit(eventUrl,  page, size,  category) {
   return (dispatch) => {
+    let query='?page='+ page + '&size=' + size;
+    if(category){
+      query+='&category='+category;
+    }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/raffle/items/?page=' + page + '&size=' + size,
-      data: {}
+      url: API_URL + 'events/' + eventUrl + '/raffle/items/'+query,
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(response => {
       return response;
 
@@ -241,7 +263,7 @@ export function doGetSettings(eventUrl, type) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/' + type + '/settings',
       data: {},
-      headers: {Authorization: 'xcqp34BgOS1H3h955xRZqw=='}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 
@@ -252,18 +274,24 @@ export function doGeItemByCode(eventUrl, itemCode, type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/' + type + '/item/' + itemCode,
-      data: {}
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 
 }
 
-export function doGetItemByLimit(eventUrl, page, size, type) {
+export function doGetItemByLimit(eventUrl, page, size, type, category) {
   return (dispatch) => {
+    let query='?page='+ page + '&size=' + size;
+    if(category){
+      query+='&category='+category;
+    }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/' + type + '/items/?page=' + page + '&size=' + size,
-      data: {}
+      url: API_URL + 'events/' + eventUrl + '/' + type + '/items/' +query,
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 
