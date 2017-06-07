@@ -34,6 +34,7 @@ import {
   doGetAuctionItemByLimit,
   doGetRaffleItemByLimit,
   doGetFundANeedItemByLimit,
+  storeActiveTabData,
 } from './action/index';
 let ar = [1, 2, 3, 4, 5, 6, 7, 8];
 class Event extends React.Component {
@@ -68,6 +69,7 @@ class Event extends React.Component {
       totalTickets: [],
       totalTicketPrice: 0,
       selectedCategoty:'',
+      lastScrollPos:0,
     };
     this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -80,6 +82,7 @@ class Event extends React.Component {
     this.doGetFundANeedItemByLimit = this.doGetFundANeedItemByLimit.bind(this);
     this.selectHandle = this.selectHandle.bind(this);
     this.setFilterCategory = this.setFilterCategory.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
 
   }
 
@@ -146,9 +149,13 @@ class Event extends React.Component {
       history.push('/404');
     });
   }
-
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
   setActiveTabState = (label) => {
     this.setState({tab: label});
+    this.props.storeActiveTabData({tab:label,lastScrollPos:this.state.lastScrollPos});
+
     if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donation' )) {
       if (label == 'Auction') {
         label = 'auction';
@@ -277,8 +284,8 @@ class Event extends React.Component {
     });
   }
   setFilterCategory=(category)=>{
-    if(this.state.tab){
-      let label=this.state.tab;
+    if(this.props.active_tab_data && this.props.active_tab_data.tab){
+      let label=this.props.active_tab_data && this.props.active_tab_data.tab;
       this.setState({
         selectedCategoty:category
       })
@@ -315,6 +322,18 @@ class Event extends React.Component {
     }
   }
 
+  handleScroll(event) {
+    if(this.props.title && this.props.title=='Event Page'){
+      var body  = document.querySelector('body');
+        this.setState({
+          lastScrollPos:body.scrollTop,
+        });
+      console.log('this.props.active_tab_data && this.props.active_tab_data.tab',this.props.active_tab_data, this.props.active_tab_data && this.props.active_tab_data.tab)
+      this.props.storeActiveTabData({tab:this.props.active_tab_data && this.props.active_tab_data.tab,lastScrollPos:body.scrollTop});
+    }
+
+  }
+
 
   render() {
     let makeItem = function (i) {
@@ -325,8 +344,8 @@ class Event extends React.Component {
       return item;
     };
     return (
-      <div className="row">
-        <div className="col-lg-12">
+      <div className="row" >
+        <div className="col-lg-12" >
           {this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.is_banner_image_enabled &&
           <div className="row">
             <div className={cx("header-img", "text-center")}>
@@ -338,7 +357,7 @@ class Event extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <EventAside activeTab={this.state.tab} eventData={this.props.eventData} settings={this.state.settings}
+                <EventAside activeTab={this.props.active_tab_data && this.props.active_tab_data.tab} eventData={this.props.eventData} settings={this.state.settings}
                             eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup}
                             showMapPopup={this.showMapPopup} activeCategory={true}
                             authenticated={this.props.authenticated}
@@ -350,7 +369,7 @@ class Event extends React.Component {
                 <div className="main-box">
                   <Tabs onSelect={ (index, label) => {
                     this.setActiveTabState(label)
-                  } } selected={this.state.tab} className="tabs-wrapper">
+                  } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
                     <Tab label="The Event">
                       <div className={cx("row item-canvas")}>
                         <div
@@ -579,6 +598,7 @@ const mapDispatchToProps = {
   doGetRaffleItemByLimit: (eventUrl, page, size, type) => doGetRaffleItemByLimit(eventUrl, page, size, type),
   doGetFundANeedItemByLimit: (eventUrl, page, size, type) => doGetFundANeedItemByLimit(eventUrl, page, size, type),
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+  storeActiveTabData: (tab) => storeActiveTabData(tab),
 };
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
@@ -587,7 +607,8 @@ const mapStateToProps = (state) => ({
   eventFundData: state.event && state.event.fund_data,
   eventDonationData: state.event && state.event.donation_data,
   user: state.session.user,
-  authenticated: state.session.authenticated
+  authenticated: state.session.authenticated,
+  active_tab_data: state.event && state.event.active_tab_data,
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Event));

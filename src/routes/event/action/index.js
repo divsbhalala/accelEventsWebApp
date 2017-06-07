@@ -158,14 +158,6 @@ export function doGetFundANeedItemByCode(eventUrl, itemCode) {
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
     })
-    //     .then(response => {
-    //   dispatch(storeEventTicketData(response.data));
-    //   return response;
-    //
-    // })
-    //   .catch( error => {
-    //     return error;
-    //   });
   }
 
 }
@@ -221,14 +213,6 @@ export function doGetRaffleItemByCode(eventUrl, itemCode) {
       headers: {Authorization: localStorage.getItem('token')}
 
     })
-    //     .then(response => {
-    //   dispatch(storeEventRaffleData(response.data));
-    //   return response;
-    //
-    // })
-    //   .catch( error => {
-    //     return error;
-    //   });
   }
 
 }
@@ -331,6 +315,13 @@ export function storeEventTicketData(data) {
 export function storeAuctionData(data) {
   return {
     type: 'STORE_EVENT_AUCTION',
+    data,
+  }
+}
+
+export function storeActiveTabData(data) {
+  return {
+    type: 'STORE_ACTIVE_TAB',
     data,
   }
 }
