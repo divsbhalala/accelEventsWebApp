@@ -67,6 +67,7 @@ class Event extends React.Component {
       totalTicketQty: 0,
       totalTickets: [],
       totalTicketPrice: 0,
+      selectedCategoty:'',
     };
     this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
     this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -275,12 +276,16 @@ class Event extends React.Component {
       totalTicketPrice: totalPrice,
     });
   }
-  setFilterCategory=( category)=>{
+  setFilterCategory=(category)=>{
     if(this.state.tab){
       let label=this.state.tab;
+      this.setState({
+        selectedCategoty:category
+      })
       if (label == 'Auction') {
         this.setState({
           auctionPageCategory:category,
+          auctionPageLoading:true,
           auctionPageCount:0,
           auctionPageItems: [],
         });
@@ -291,6 +296,7 @@ class Event extends React.Component {
       } else if (label == 'Raffle') {
         this.setState({
           rafflePageCategory:category,
+          rafflePageLoading:true,
           rafflePageCount:0,
           rafflePageItems: [],
         })
@@ -300,6 +306,7 @@ class Event extends React.Component {
         this.setState({
           fundANeedPageCategory:category,
           fundANeedPageCount:0,
+          fundANeedPageLoading:true,
           fundANeedPageItems: [],
         })
         this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
@@ -336,6 +343,7 @@ class Event extends React.Component {
                             showMapPopup={this.showMapPopup} activeCategory={true}
                             authenticated={this.props.authenticated}
                             setFilterCategory={this.setFilterCategory}
+                            selectedCategoty={this.state.selectedCategoty}
                 />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">

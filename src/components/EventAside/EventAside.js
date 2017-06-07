@@ -22,6 +22,7 @@ class EventAside extends React.Component {
   static propTypes = {
     activeTab: PropTypes.string,
     buyItNowPrice: PropTypes.string,
+    selectedCategoty: PropTypes.string,
     showBookingPopup: PropTypes.func,
     showMapPopup: PropTypes.func,
     setFilterCategory: PropTypes.func,
@@ -178,15 +179,12 @@ class EventAside extends React.Component {
                 className={cx("img-responsive")}/>
             </a>
             </div>
-            <input type="hidden" value="true" id="causeAuctionCategoryEnabled"/>
-            <input type="hidden" value="true" id="raffleCategoryEnabled"/>
-            <input type="hidden" value="false" id="auctionCategoryEnabled"/>
 
             { this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories &&
             <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
-                <li className={cx("all-items")}>
+                <li className={cx("all-items",this.props.selectedCategoty == '' && "active")} onClick={()=>{this.props.setFilterCategory('')}}>
                   <a href="#" className={cx("category-switcher all-items")} data-category="" data-module="#raffle">
                     <i className={cx("fa fa-ticket")}></i>
                     <span className={cx("cat-name")}>All Items</span>
@@ -195,7 +193,7 @@ class EventAside extends React.Component {
                 </li>
                 {
                   this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
-                    <li className={cx("")} key={item.name + Math.random()} onClick={()=>{this.props.setFilterCategory(item.name)}}>
+                    <li className={cx(this.props.selectedCategoty == item.name && "active")} key={item.name + Math.random()} onClick={()=>{this.props.setFilterCategory(item.name)}}>
                       <a className={cx("category-switcher pointer")}>
                         <i className={cx("fa fa-ticket")}></i>
                         <span className={cx("cat-name")}>{item.name}</span>
