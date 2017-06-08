@@ -55,7 +55,7 @@ class EventAside extends React.Component {
 
   render() {
     return (
-      <div >
+      <div>{console.log('srtt', this.props.settings)}
         <script type="text/javascript"
                 src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
         <div className={cx("main-box", "clearfix")}>
@@ -66,7 +66,8 @@ class EventAside extends React.Component {
             { this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.logoEnabled &&
             <img
               src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/" + this.props.eventData.eventDesignDetail.logoImage}
-              className="img-responsive center-block"/>}
+              className="img-responsive center-block"/>
+            }
             { this.props.activeTab && (this.props.activeTab == 'The Event' ) &&
             <div className={cx("the-event", "mrg-t-lg")}>
               { this.props.showBookingPopup && <a onClick={this.props.showBookingPopup}

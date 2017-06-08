@@ -6,6 +6,7 @@ import {
   STORE_EVENT_TICKET_DONATION,
   STORE_EVENT_AUCTION,
   STORE_ACTIVE_TAB,
+  STORE_ORDER_DATE,
 } from '../constants';
 export default function event(state = {}, action) {
   switch (action.type) {
@@ -23,6 +24,8 @@ export default function event(state = {}, action) {
       return {...state, auction_data: action.data};
     case STORE_ACTIVE_TAB:
       return {...state, active_tab_data: action.data};
+    case STORE_ORDER_DATE:
+      return {...state, order_data: action.data};
     default:
       return state;
   }

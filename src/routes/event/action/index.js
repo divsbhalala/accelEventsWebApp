@@ -90,15 +90,15 @@ export function doGetAuctionItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetAuctionItemByLimit(eventUrl,  page, size,  category) {
+export function doGetAuctionItemByLimit(eventUrl, page, size, category) {
   return (dispatch) => {
-    let query='?page='+ page + '&size=' + size;
-    if(category){
-      query+='&category='+category;
+    let query = '?page=' + page + '&size=' + size;
+    if (category) {
+      query += '&category=' + category;
     }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/auction/items/'+query,
+      url: API_URL + 'events/' + eventUrl + '/auction/items/' + query,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeAuctionData(response.data));
@@ -162,15 +162,15 @@ export function doGetFundANeedItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetFundANeedItemByLimit(eventUrl,  page, size,  category) {
+export function doGetFundANeedItemByLimit(eventUrl, page, size, category) {
   return (dispatch) => {
-    let query='?page='+ page + '&size=' + size;
-    if(category){
-      query+='&category='+category;
+    let query = '?page=' + page + '&size=' + size;
+    if (category) {
+      query += '&category=' + category;
     }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/fundaneed/items/'+query,
+      url: API_URL + 'events/' + eventUrl + '/fundaneed/items/' + query,
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
@@ -217,15 +217,15 @@ export function doGetRaffleItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetRaffleItemByLimit(eventUrl,  page, size,  category) {
+export function doGetRaffleItemByLimit(eventUrl, page, size, category) {
   return (dispatch) => {
-    let query='?page='+ page + '&size=' + size;
-    if(category){
-      query+='&category='+category;
+    let query = '?page=' + page + '&size=' + size;
+    if (category) {
+      query += '&category=' + category;
     }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/raffle/items/'+query,
+      url: API_URL + 'events/' + eventUrl + '/raffle/items/' + query,
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
 
@@ -267,19 +267,51 @@ export function doGeItemByCode(eventUrl, itemCode, type) {
 
 export function doGetItemByLimit(eventUrl, page, size, type, category) {
   return (dispatch) => {
-    let query='?page='+ page + '&size=' + size;
-    if(category){
-      query+='&category='+category;
+    let query = '?page=' + page + '&size=' + size;
+    if (category) {
+      query += '&category=' + category;
     }
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/' + type + '/items/' +query,
+      url: API_URL + 'events/' + eventUrl + '/' + type + '/items/' + query,
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
     });
   }
 
 }
+
+export function doOrderTicket(eventUrl, dto) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/ticketing/orderTicket',
+      data: {
+        eventurl: eventUrl,
+        dto: dto
+      },
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(response => {
+      dispatch(storeOrderData(response.data));
+      return response;
+
+    }).catch(error => {
+        return error;
+      });
+  }
+}
+
+export function doGetOrderById(eventUrl, orderId) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/ticketing/order/'+orderId+'/getformattributes',
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+    });
+  }
+}
+
 
 export function storeEventData(data) {
   return {
@@ -322,6 +354,12 @@ export function storeAuctionData(data) {
 export function storeActiveTabData(data) {
   return {
     type: 'STORE_ACTIVE_TAB',
+    data,
+  }
+}
+export function storeOrderData(data) {
+  return {
+    type: 'STORE_ORDER_DATE',
     data,
   }
 }

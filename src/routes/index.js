@@ -28,6 +28,7 @@ export default {
     require('./scroll').default,
     require('./table').default,
     require('./goal').default,
+    require('./checkout').default,
 
 
     // Wildcard routes, e.g. { path: '*', ... } (must go last)

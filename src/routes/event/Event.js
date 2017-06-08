@@ -35,6 +35,7 @@ import {
   doGetRaffleItemByLimit,
   doGetFundANeedItemByLimit,
   storeActiveTabData,
+  doOrderTicket,
 } from './action/index';
 let ar = [1, 2, 3, 4, 5, 6, 7, 8];
 class Event extends React.Component {
@@ -83,6 +84,7 @@ class Event extends React.Component {
     this.selectHandle = this.selectHandle.bind(this);
     this.setFilterCategory = this.setFilterCategory.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.doOrderTicket = this.doOrderTicket.bind(this);
 
   }
 
@@ -270,12 +272,13 @@ class Event extends React.Component {
     let totalTickets = this.state.totalTickets;
     totalTickets[e.target.name] = {
       price: e.target.dataset && e.target.dataset.price,
-      qty: e.target.value
+      numberofticket: e.target.value,
+      tickettypeid:e.target.name
     };
     let totalPrice = 0;
     totalTickets.map(item => {
       //console.log(item)
-      totalPrice += item.price * item.qty;
+      totalPrice += item.price * item.numberofticket;
     })
     this.setState({
       totalTickets: totalTickets,
@@ -323,17 +326,26 @@ class Event extends React.Component {
   }
 
   handleScroll(event) {
-    if(this.props.title && this.props.title=='Event Page'){
+    /*if(this.props.title && this.props.title=='Event Page'){
       var body  = document.querySelector('body');
         this.setState({
           lastScrollPos:body.scrollTop,
         });
       console.log('this.props.active_tab_data && this.props.active_tab_data.tab',this.props.active_tab_data, this.props.active_tab_data && this.props.active_tab_data.tab)
       this.props.storeActiveTabData({tab:this.props.active_tab_data && this.props.active_tab_data.tab,lastScrollPos:body.scrollTop});
-    }
+    }*/
 
   }
+  doOrderTicket(){
+    let Data={};
+    Data.clientDate=new Date();
+    Data.ticketings=this.state.totalTickets;
 
+    console.log(this.state.totalTickets, 'totalTickets')
+    console.log(this.state.totalTicketPrice, 'totalTicketPrice',Data)
+    let res= this.props.doOrderTicket(this.props.params && this.props.params.params, Data);
+    console.log('res', res)
+  }
 
   render() {
     let makeItem = function (i) {
@@ -357,8 +369,11 @@ class Event extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <EventAside activeTab={this.props.active_tab_data && this.props.active_tab_data.tab} eventData={this.props.eventData} settings={this.state.settings}
-                            eventTicketData={this.props.eventTicketData} showBookingPopup={this.showBookingPopup}
+                <EventAside activeTab={(this.props.active_tab_data && this.props.active_tab_data.tab) || this.state.tab}
+                            eventData={this.props.eventData}
+                            settings={this.state.settings}
+                            eventTicketData={this.props.eventTicketData}
+                            showBookingPopup={this.showBookingPopup}
                             showMapPopup={this.showMapPopup} activeCategory={true}
                             authenticated={this.props.authenticated}
                             setFilterCategory={this.setFilterCategory}
@@ -522,7 +537,7 @@ class Event extends React.Component {
                             { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
                               <select className="form-control" name={item.typeId} data-price={item.price}
                                       onChange={this.selectHandle}
-                                      value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].qty ? this.state.totalTickets[item.typeId].qty : 0}>
+                                      value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
                                 {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
                               </select>
                             </div> : ''}
@@ -569,7 +584,7 @@ class Event extends React.Component {
                     className="total-price">{this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
                 </div>
                 <div className="pull-right">
-                  <button type="button" className="btn btn-success" id="checkout-tickets">checkout</button>
+                  <button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>checkout</button>
                 </div>
               </div>
             </div>
@@ -599,6 +614,7 @@ const mapDispatchToProps = {
   doGetFundANeedItemByLimit: (eventUrl, page, size, type) => doGetFundANeedItemByLimit(eventUrl, page, size, type),
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   storeActiveTabData: (tab) => storeActiveTabData(tab),
+  doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
 };
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
