@@ -24,6 +24,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import {sessionService, loadSession} from 'redux-react-session';
 import  {doGetAuctionItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
+
 class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -54,6 +55,11 @@ class Auction extends React.Component {
       cardHolder: null,
       amount: null,
       cvv: null,
+      month: null,
+      year: null,
+      expMonth:null,
+      expYear:null,
+
       errorReg: null,
 
       firstNameFeedBack: false,
@@ -71,10 +77,35 @@ class Auction extends React.Component {
       errorMsgNumber: null,
       errorMsgcvv: null,
       errorMsgEmail: null,
+
     };
 
   }
+  onBidFormClick = (e) => {
+    e.preventDefault();
 
+    if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        console.log(status, response);
+      });
+      // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
+      //     if(!resp.error){
+      //         history.push('/');
+      //         this.setState({error:""});
+      //     }
+      //     else{
+      //         this.setState({error:"Invalid Email or password"});
+      //     }
+      //
+      // });
+    }
+  };
   onFormClick = (e) => {
     e.preventDefault();
 
@@ -91,7 +122,6 @@ class Auction extends React.Component {
       //
       // });
     }
-
   };
 
   emailValidateHandler = (e) => {
@@ -136,24 +166,7 @@ class Auction extends React.Component {
 
   };
 
-  onBidFormClick = (e) => {
-    e.preventDefault();
 
-
-    if (this.state.isValidBidData) {
-      // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
-      //     if(!resp.error){
-      //         history.push('/');
-      //         this.setState({error:""});
-      //     }
-      //     else{
-      //         this.setState({error:"Invalid Email or password"});
-      //     }
-      //
-      // });
-    }
-
-  };
 
   firstNameValidateHandler = (e) => {
 
@@ -171,7 +184,7 @@ class Auction extends React.Component {
         firstName: true
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
 
   };
   lastNameValidateHandler = (e) => {
@@ -223,6 +236,7 @@ class Auction extends React.Component {
     this.setState({
       cardNumberFeedBack: true
     });
+
 
     if (this.cardNumber.value == '') {
 
@@ -512,7 +526,7 @@ class Auction extends React.Component {
             <div className="input-group">
               <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
               </div>
-              <input type="number" className="form-control" id="cardnumber"
+              <input type="number" className="form-control field-card_number" id="cardnumber"
                      placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
                      required="required" data-fv-field="cardnumber"
                      ref={ref => {
@@ -532,9 +546,11 @@ class Auction extends React.Component {
               <div className="form-group expiration-date has-feedback">
                 <label className="control-label">Expiration Date</label>
                 <div className="input-group">
-                  <div className="input-group-addon"><i className="fa fa-calendar"
+                  <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
                                                         aria-hidden="true"/></div>
-                  <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
+                  <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth"  ref={ref => {
+                    this.expMonth = ref;
+                  }} >
                     <option selected value="10">Jan (01)</option>
                     <option value="02">Feb (02)</option>
                     <option value="03">Mar (03)</option>
@@ -548,7 +564,9 @@ class Auction extends React.Component {
                     <option value="11">Nov (11)</option>
                     <option value="12">Dec (12)</option>
                   </select>
-                  <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear">
+                  <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"  ref={ref => {
+                    this.expYear = ref;
+                  }} >
                     <option value="2016">2016</option>
                     <option value="2017">2017</option>
                     <option value="2018">2018</option>
@@ -595,7 +613,7 @@ class Auction extends React.Component {
                 className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
                 <label className="control-label">CVV Number</label>
                 <div className="input-group">
-                  <input type="number" className="form-control" maxLength={4} size={4}
+                  <input type="number" className="form-control field-cvv" maxLength={4} size={4}
                          data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
                          ref={ref => {
                            this.cvv = ref;
@@ -717,6 +735,7 @@ class Auction extends React.Component {
                       </div>
                       { bid_active ? div_bid_close : '' }
                       { !bid_active ? this.props.authenticated ? this.props.user && this.props.user.cardLinked ? form_bid_only : form_bid : form_login : '' }
+
                     </div>
                   </div>
                 </div>

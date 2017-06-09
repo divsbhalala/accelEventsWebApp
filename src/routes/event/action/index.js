@@ -348,6 +348,53 @@ export function storeAuctionData(data) {
     data,
   }
 }
+//*************  Volunteer   ****************//
+
+export function getItemStatusByCode(eventUrl, itemCode) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/' + itemCode,
+      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+    });
+  }
+}
+//****** Auction Bid*******//
+  export function getUserByEmail(eventUrl, email,modeltype) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + encodeURI(email) +'/?module='+modeltype,
+      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+    });
+  }
+}
+export function getAuctionItemStatusByCode(eventUrl, itemCode) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/' + itemCode,
+      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+    });
+  }
+}
+export function getAttendees(eventUrl) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/getAllAttendeesByEvent',
+      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+    });
+  }
+}export function setAttendees(eventUrl,barcode,status) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/event-ticket-checkin/' + barcode + "/" + status,
+      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+    });
+  }
+}
 
 export function storeActiveTabData(data) {
   return {

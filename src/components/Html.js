@@ -81,6 +81,8 @@ class Html extends React.Component {
       {config.analytics.googleTrackingId &&
       <script src="https://www.google-analytics.com/analytics.js" async defer/>
       }
+      <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
       </body>
       </html>
     );
