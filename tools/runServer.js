@@ -35,7 +35,7 @@ function runServer() {
         server.stdout.on('data', x => process.stdout.write(x));
         pending = false;
         resolve(server);
-      }
+        }
     }
 
     if (server) {

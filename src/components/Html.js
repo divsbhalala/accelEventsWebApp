@@ -44,17 +44,17 @@ class Html extends React.Component {
         <meta name="description" content={description}/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
-        <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="/css/carousel.css"/>
+        <link rel="stylesheet" href="/builds/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="/builds/css/carousel.css"/>
 
-        <link rel="stylesheet" href="/css/font-awesome.min.css"/>
-        <link rel="stylesheet" href="/css/App.css"/>
-        <link rel="stylesheet" href="/css/loader.css"/>
-        <link rel="stylesheet" href="/css/sb-admin.css"/>
-        <link rel="stylesheet" href="/css/admin-style.css"/>
+        <link rel="stylesheet" href="/builds/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="/builds/css/App.css"/>
+        <link rel="stylesheet" href="/builds/css/loader.css"/>
+        <link rel="stylesheet" href="/builds/css/sb-admin.css"/>
+        <link rel="stylesheet" href="/builds/css/admin-style.css"/>
         {/*<link rel="stylesheet" href="/css/host-dashboard.css" />*/}
-        <link rel="stylesheet" href="/css/display.css"/>
-        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="/builds/css/display.css"/>
+        <link rel="stylesheet" href="/builds/css/style.css"/>
         {styles.map(style =>
           <style
             key={style.id}
@@ -66,7 +66,7 @@ class Html extends React.Component {
       <body>
       <div id="app" dangerouslySetInnerHTML={{__html: children}}/>
       <script dangerouslySetInnerHTML={{__html: `window.App=${serialize(app)}`}}/>
-      {scripts.map(script => <script key={script} src={script}/>)}
+      {scripts.map(script => <script key={script} src={'/builds'+script}/>)}
       {config.analytics.googleTrackingId &&
       <script
         dangerouslySetInnerHTML={{

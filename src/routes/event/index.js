@@ -17,7 +17,7 @@ import Volunteer from './volunteer/Volunteer';
 
 const title = 'Event Page';
 export default {
-  path: '/event/:params',
+  path: '/builds/event/:params',
   children: [
     {
       path: '/',
