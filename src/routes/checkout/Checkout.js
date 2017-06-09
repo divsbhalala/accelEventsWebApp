@@ -213,6 +213,37 @@ class Checkout extends React.Component {
 		this.setState({isValidData: !!(this.cardNumber.value && this.cardHolderName.value && this.password.value)});
 
 	};
+	cardCVVValidateHandler = (e) => {
+
+		this.setState({
+			cardCVVFeedBack: true
+		});
+
+		if (this.cardCVV.value == ' ') {
+			this.cardCVV.value = '';
+		}
+
+		if (!this.cardCVV.value) {
+			this.setState({
+				cardCVV: false,
+				cardCVVFeedBackMsg:"The CVV is required and can't be empty",
+			});
+		}
+		else if(this.cardCVV.value && !(this.cardCVV.value.length >=3 && this.cardCVV.value.length <=4)){
+			this.setState({
+				cardCVV: false,
+				cardCVVFeedBackMsg:"The CVV must be more than 4 and less than 3 characters long",
+			});
+		}
+		else {
+			this.setState({
+				cardCVV: true,
+				cardCVVFeedBackMsg:null
+			});
+		}
+		this.setState({isValidData: !!(this.cardCVV.value && this.cardHolderName.value && this.password.value)});
+
+	};
 	cardExpMonthValidateHandler = (e) => {
 
 
@@ -265,8 +296,6 @@ class Checkout extends React.Component {
 		this.setState({isValidData: !!(this.email.value && this.password.value)});
 
 	};
-
-
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -534,7 +563,6 @@ class Checkout extends React.Component {
 																									 }}
 																									 onKeyUp={this.cardHolderNameValidateHandler}/>
 																					</div>
-																					<div className="small text-danger js-error card_error name"/>
 																					{ this.state.cardHolderNameFeedBack && this.state.cardHolderName &&
 																					<i
 																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -565,8 +593,6 @@ class Checkout extends React.Component {
 																									 onKeyUp={this.cardNumberValidateHandler}
 																									 required="required" data-fv-field="cardnumber"/>
 																					</div>
-
-																					<div className="small text-danger js-error card_error number"/>
 																					{ this.state.cardNumberFeedBack && this.state.cardNumber &&
 																					<i
 																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -676,20 +702,26 @@ class Checkout extends React.Component {
 																				</div>
 																			</div>
 																		</div>
-																		<div className="form-group has-feedback">
+																		<div className="form-group">
 																			<div className="row">
 																				<div className="col-md-4 text-right">
 																					<label className="control-label">CVV Number</label>
 																				</div>
-																				<div className="col-md-8 text-left">
+																				<div
+																					className={cx("col-md-8 text-left", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
 																					<div className="input-group">
-																						<input type="number" className="form-control" maxLength={4} size={4}
-																									 data-stripe="cvc" id="cvv" placeholder="CVC/CVV"
-																									 data-fv-field="cvv"/>
+																						<input type="number" className="form-control"
+																						       maxLength={4}
+																						       size={4}
+																									 data-stripe="cvc"
+																									 ref={ref => {
+																										 this.cardCVV = ref;
+																									 }}
+																									 onKeyUp={this.cardCVVValidateHandler}
+																									 id="cvv" placeholder="CVC/CVV" />
 																					</div>
 																					<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																						 data-fv-icon-for="cvv"/>
-																					<div className="small text-danger js-error card_error cvc"/>
 																					{ this.state.cardCVVFeedBack && this.state.cardCVV &&
 																					<i
 																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -698,11 +730,6 @@ class Checkout extends React.Component {
 																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 																					{ this.state.cardCVVFeedBack && !this.state.cardCVV &&
 																					<small className="help-block" >{this.state.cardCVVFeedBackMsg || "The CVV is required and can't be empty"}</small>}
-																					<small className="help-block" >The CVV is required and can't be empty
-																					</small>
-																					<small className="help-block" >The CVV must be more than 4 and less than 3
-																						characters long
-																					</small>
 																				</div>
 																			</div>
 																		</div>
