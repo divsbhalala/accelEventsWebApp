@@ -69,7 +69,6 @@ class Checkout extends React.Component {
 		};
 
 	}
-
 	componentWillMount() {
 		this.props.doGetEventData(this.props.params && this.props.params.params);
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
@@ -87,7 +86,6 @@ class Checkout extends React.Component {
 			//history.push('/404');
 		});
 	}
-
 	emailValidateHandler = (e) => {
 
 		this.setState({
@@ -131,8 +129,6 @@ class Checkout extends React.Component {
 		this.setState({isValidData: !!(this.firstName.value && this.password.value)});
 
 	};
-
-
 	lastNameValidateHandler = (e) => {
 
 		this.setState({
@@ -276,7 +272,6 @@ class Checkout extends React.Component {
 		this.setState({isValidData: !!(this.cardExpYear.value && this.cardHolderName.value && this.password.value)});
 
 	};
-
 	passwordValidateHandler = (e) => {
 
 		this.setState({
@@ -876,7 +871,7 @@ class Checkout extends React.Component {
 														</div>
 														<hr />
 														<div className="mrg-t-lg text-center">
-															<button type="submit" className="btn pay-now btn-success">
+															<button className="btn pay-now btn-success">
 																&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
 															</button>
 														</div>

@@ -285,19 +285,10 @@ export function doOrderTicket(eventUrl, dto) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'events/' + eventUrl + '/ticketing/orderTicket',
-      data: {
-        eventurl: eventUrl,
-        dto: dto
-      },
+      url: API_URL + 'events/' + eventUrl + '/ticketing/order',
+      data: dto,
       headers: {Authorization: localStorage.getItem('token')}
-    }).then(response => {
-      dispatch(storeOrderData(response.data));
-      return response;
-
-    }).catch(error => {
-        return error;
-      });
+    });
   }
 }
 
@@ -305,7 +296,7 @@ export function doGetOrderById(eventUrl, orderId) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/ticketing/order/'+orderId+'/getformattributes',
+      url: API_URL + 'events/' + eventUrl + '/ticketing/order/'+orderId+'/formattributes',
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
     });
