@@ -341,7 +341,7 @@ class Event extends React.Component {
 
 	doOrderTicket() {
 		let Data = {};
-		Data.clientDate = moment().format('DD/MM/YYYY h:mm:ss');
+		Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
 		let ticketings = this.state.totalTickets;
 		ticketings = ticketings.filter(function (n) {
 			return n != null
@@ -352,7 +352,7 @@ class Event extends React.Component {
 		Data.ticketings = ticketings;
 		this.setState({
 			orderTicket: null
-		})
+		});
 		let eventUrl= this.props.params && this.props.params.params;
 		this.props.doOrderTicket(eventUrl, Data)
 			.then(resp => {

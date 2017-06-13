@@ -49,6 +49,7 @@
     "react-loaders": "^2.5.0",
     "react-moment": "^0.2.2",
     "react-redux": "^5.0.4",
+    "react-redux-toastr": "^6.2.7",
     "react-responsive-carousel": "^3.1.19",
     "react-router": "^4.1.1",
     "react-sidenav": "^2.1.1",

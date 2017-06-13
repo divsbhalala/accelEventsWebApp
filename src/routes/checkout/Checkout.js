@@ -26,6 +26,8 @@ import {
 	doGetOrderById,
 	doGetSettings,
 } from './../event/action/index';
+import {createCardToken} from './action/index';
+let Total = 0;
 class Checkout extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
@@ -34,6 +36,7 @@ class Checkout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			totalPrice:0,
 			cardHolder: false,
 			settings: {},
 			isValidData: false,
@@ -67,6 +70,7 @@ class Checkout extends React.Component {
 			zipCode: false,
 			zipCodeFeedBack: false,
 		};
+		this.ticketCheckout = this.ticketCheckout.bind(this);
 
 	}
 	componentWillMount() {
@@ -79,6 +83,12 @@ class Checkout extends React.Component {
 		}).catch(error => {
 			//history.push('/404');
 		});
+		/*this.props.createCardToken().then(resp=>{
+			console.log('resp', resp)
+		}).catch(error=>{
+			console.log('error', error)
+
+		})*/
 
 		this.props.doGetOrderById(this.props.params && this.props.params.params, this.props.params && this.props.params.orderId);
 	}
@@ -286,6 +296,12 @@ class Checkout extends React.Component {
 		}
 
 	};
+	ticketCheckout = (e) =>{
+		e.preventDefault();
+		console.log(e);
+		alert('gg', 'hh');
+		return false;
+	}
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -310,11 +326,11 @@ class Checkout extends React.Component {
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
 								<div className="main-box clearfix">
 									<Timer />
-									<form className="validated fv-form fv-form-bootstrap" noValidate="novalidate">
+									<form className="validated fv-form fv-form-bootstrap" noValidate="novalidate" onSubmit={this.ticketCheckout}>
 										<div className="row">
 											<div className="col-md-10 col-md-offset-1">
 												<h3 className="type-name">second ticket type with longer name test</h3>
-												<div className="project-box gray-box card">
+												{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && <div className="project-box gray-box card">
 													<div className="project-box-header gray-bg">
 														<div className="name text-center">
 															<a href="#">Order Summary</a>
@@ -335,36 +351,39 @@ class Checkout extends React.Component {
 																</tr>
 																</thead>
 																<tbody className="ticket-table-body">
-																<tr className="tickettype-amount">
-																	<td className="text-left">
-																		second ticket type with longer name test
-																	</td>
-																	<td className="text-left ticket-amount" data-ticket-id={43}>
-																		$50.00
-																	</td>
-																	<td className="text-left ticket-amount-fee" data-ticket-id={43}>
-																		$3.19
-																	</td>
-																	<td className="text-center">
-																		<span className="qty">2</span>
-																	</td>
-																	<td width={1}>
-																		$106.38
-																	</td>
-																</tr>
+																{ this.props.orderData.ticketAttribute.orderData.map(item=>
+																	<tr className="tickettype-amount" key={Math.random()}>
+																		<td className="text-left">
+																			{item.ticketTypeName}
+																		</td>
+																		<td className="text-left ticket-amount">
+																			${parseFloat(item.price).toFixed(2)}
+																		</td>
+																		<td className="text-left ticket-amount-fee">
+																			${  parseFloat(parseFloat(item.priceWithFee).toFixed(2)-parseFloat(item.price).toFixed(2)).toFixed(2)}
+																		</td>
+																		<td className="text-center">
+																			<span className="qty">{item.numberofticket}</span>
+																		</td>
+																		<td width={1}>
+																			${parseFloat(item.priceWithFee * item.numberofticket).toFixed(2)}
+																		</td>
+																	</tr>
+																)
+																}
 																<tr className="total-price-tr">
 																	<td colSpan={4} className="text-right">
 																		<strong>Order Total:</strong>
 																	</td>
 																	<td colSpan={1}>
-																		$<span className="total-price">106.38</span>
+																		$<span className="total-price">{parseFloat(this.props.orderData.ticketAttribute.totalPrice).toFixed(2)}</span>
 																	</td>
 																</tr>
 																</tbody>
 															</table>
 														</div>
 													</div>
-												</div>
+												</div>}
 												<div className="project-box gray-box card">
 													<div className="project-box-header gray-bg">
 														<div className="name text-center">
@@ -374,27 +393,9 @@ class Checkout extends React.Component {
 													<div className="project-box-content">
 														<div className="red pull-right">* Required information</div>
 														<h4 className="text-left"><strong>Ticket Buyer</strong></h4>
-														<div className="form-group mrg-t-md">
-															<div className="row">
-																<div className="col-md-4 text-right">
-																	<strong className="text-right"><strong>Name: </strong></strong>
-																</div>
-																<div className="col-md-6 text-left">
-																	asdfasdfasdf User
-																</div>
-															</div>
-														</div>
-														<div className="form-group">
-															<div className="row">
-																<div className="col-md-4 text-right">
-																	<strong className="text-right"><strong>Email: </strong></strong>
-																</div>
-																<div className="col-md-6 text-left">
-																	admin@admin.com
-																</div>
-															</div>
-														</div>
+
 														{ this.props.orderData && this.props.orderData.ticketAttribute &&
+														!this.props.orderData.purchaserDetail &&
 														this.props.orderData.ticketAttribute.buyerInformationFields && this.props.orderData.ticketAttribute.buyerInformationFields.length &&
 														<div className="buyerInformation">
 															{
@@ -533,8 +534,29 @@ class Checkout extends React.Component {
 
 														</div> }
 
+														{ this.props.orderData && this.props.orderData.purchaserDetail &&
 														<div className="buyerInformation">
-														</div>
+															<div className="form-group mrg-t-md">
+																<div className="row">
+																	<div className="col-md-4 text-right">
+																		<strong className="text-right"><strong>Name: </strong></strong>
+																	</div>
+																	<div className="col-md-6 text-left">
+																		{this.props.orderData.purchaserDetail.firstName} {this.props.orderData.purchaserDetail.lastName}
+																	</div>
+																</div>
+															</div>
+															<div className="form-group">
+																<div className="row">
+																	<div className="col-md-4 text-right">
+																		<strong className="text-right"><strong>Email: </strong></strong>
+																	</div>
+																	<div className="col-md-6 text-left">
+																		{this.props.orderData.purchaserDetail.email}
+																	</div>
+																</div>
+															</div>
+														</div>}
 														<div className="buyerQuestion">
 														</div>
 														{ this.props.orderData && this.props.orderData.discountCoupon && <div className="form-group mrg-t-md">
@@ -918,6 +940,7 @@ const mapDispatchToProps = {
 	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
 	doGetOrderById: (eventUrl, orderId) => doGetOrderById(eventUrl, orderId),
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+	createCardToken: (cardNumber, expMonth, expYear, cvc) => createCardToken(cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
 	eventData: state.event && state.event.data,

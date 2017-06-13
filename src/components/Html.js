@@ -45,6 +45,7 @@ class Html extends React.Component {
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
         <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+        <link href="http://diegoddox.github.io/react-redux-toastr/5.0/react-redux-toastr.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/css/carousel.css"/>
 
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
@@ -74,8 +75,9 @@ class Html extends React.Component {
           `ga('create','${config.analytics.googleTrackingId}','auto');ga('send','pageview')`
         }}
       />
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
       }
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://js.stripe.com/v3/"></script>
       {config.analytics.googleTrackingId &&
       <script src="https://www.google-analytics.com/analytics.js" async defer/>
       }

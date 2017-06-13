@@ -66,7 +66,7 @@ class HeaderNew extends React.Component {
           <Brand>
             <span>
               { this.props.params && this.props.params.params &&
-              <a href={"/events/" + this.props.params.params} title={this.props.params.params}
+              <a href={"/event/" + this.props.params.params} title={this.props.params.params}
                  rel="home">{this.props.params.params}</a>}
               <button type="button" className="navbar-toggle" onClick={() => {
                 toggleMenu();
@@ -83,10 +83,10 @@ class HeaderNew extends React.Component {
             <MenuItem eventKey="1" onClick={this.showContactPopup}>
               <i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
             </MenuItem>
-            <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
+            { event && <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
               Volunteer
-            </MenuItem>
-            <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
+            </MenuItem>}
+            { event && <NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
 
               <MenuItem eventKey="5" href={"/scroll/" + event + "/auction"}>
                 <span> Auction Scrolling </span>
@@ -118,7 +118,7 @@ class HeaderNew extends React.Component {
                 <span> Fund a Need Table </span>
               </MenuItem>
 
-            </NavDropdown>
+            </NavDropdown>}
 
             { !this.props.user && <MenuItem eventKey="8" onClick={(event) => {
               history.push('/login');

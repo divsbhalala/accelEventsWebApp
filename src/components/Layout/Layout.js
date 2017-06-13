@@ -36,13 +36,13 @@ class Layout extends React.Component {
     let pathName = location.pathName;
     if (!_.isEmpty(localStorage.getItem('user')) && !_.isEmpty(localStorage.getItem('token'))) {
       this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
-      this.props.storeToken(JSON.parse(localStorage.getItem('token')));
-      sessionService.saveSession(JSON.parse(localStorage.getItem('token')));
+      this.props.storeToken(localStorage.getItem('token'));
+      sessionService.saveSession(localStorage.getItem('token'));
       sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
       this.setState({
         user: {
           data: JSON.parse(localStorage.getItem('user')),
-          token: JSON.parse(localStorage.getItem('token'))
+          token:localStorage.getItem('token')
         }
       });
       if (pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0) {
