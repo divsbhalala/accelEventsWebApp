@@ -80,11 +80,7 @@ class Checkout extends React.Component {
 			//history.push('/404');
 		});
 
-		this.props.doGetOrderById(this.props.params && this.props.params.params, this.props.params && this.props.params.orderId).then(resp => {
-			console.log('res', resp)
-		}).catch(error => {
-			//history.push('/404');
-		});
+		this.props.doGetOrderById(this.props.params && this.props.params.params, this.props.params && this.props.params.orderId);
 	}
 	emailValidateHandler = (e) => {
 
@@ -288,7 +284,6 @@ class Checkout extends React.Component {
 				password: true
 			});
 		}
-		this.setState({isValidData: !!(this.email.value && this.password.value)});
 
 	};
 	render() {
@@ -399,8 +394,34 @@ class Checkout extends React.Component {
 																</div>
 															</div>
 														</div>
+														{ this.props.orderData && this.props.orderData.ticketAttribute &&
+														this.props.orderData.ticketAttribute.buyerInformationFields && this.props.orderData.ticketAttribute.buyerInformationFields.length &&
 														<div className="buyerInformation">
-															<div className="custom-attribute">
+															{
+																this.props.orderData.ticketAttribute.buyerInformationFields.map(item=>
+																	<div className="custom-attribute" key={item.name}>
+																		<div className="form-group mrg-t-md">
+																			<div className="row">
+																				<div className="col-md-4 text-right">
+																					<label className="text-right">{item.name} { item.mandatory && <span className="red">*</span>}</label>
+																				</div>
+																				<div
+																					className={cx("col-md-6 text-left", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+																					<div className="form-group ">
+																						<input type={item.type} className="form-control" name={item.mandatory}
+																						       ref={ref => {
+																								 this.firstName = ref;
+																							 }}
+																						       placeholder={item.name}
+																						       required={item.mandatory}/>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>)
+															}
+															{ console.log()}
+															{/*	<div className="custom-attribute">
 																<div className="form-group mrg-t-md">
 																	<div className="row">
 																		<div className="col-md-4 text-right">
@@ -482,8 +503,8 @@ class Checkout extends React.Component {
 																		</div>
 																	</div>
 																</div>
-															</div>
-															<div className="custom-attribute">
+															</div>*/}
+															{  _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function(item){ return item.type == 'email'; }) &&  <div className="custom-attribute">
 																<div className="form-group mrg-t-md has-feedback has-success">
 																	<div className="row">
 																		<div className="col-md-4 text-right">
@@ -492,11 +513,11 @@ class Checkout extends React.Component {
 																		<div
 																			className={cx("col-md-6 text-left", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
 																			<input type="password" className="form-control" name="password"
-																						 ref={ref => {
+																			       ref={ref => {
 																							 this.password = ref;
 																						 }}
-																						 onKeyUp={this.passwordValidateHandler}
-																						 required="required"/>
+																			       onKeyUp={this.passwordValidateHandler}
+																			       required="required"/>
 																			{ this.state.passwordFeedBack && this.state.password &&
 																			<i
 																				className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -508,14 +529,15 @@ class Checkout extends React.Component {
 																		</div>
 																	</div>
 																</div>
-															</div>
-														</div>
+															</div> }
+
+														</div> }
 
 														<div className="buyerInformation">
 														</div>
 														<div className="buyerQuestion">
 														</div>
-														<div className="form-group mrg-t-md">
+														{ this.props.orderData && this.props.orderData.discountCoupon && <div className="form-group mrg-t-md">
 															<div className="row">
 																<div className="col-md-4 text-right">
 																	<label className="text-right"><strong>Discount Coupon: </strong></label>
@@ -530,7 +552,7 @@ class Checkout extends React.Component {
 																	</span>
 																</div>
 															</div>
-														</div>
+														</div>}
 														<input type="hidden" defaultValue="false" id="hasHolderAttributes"/>
 														<div id="ccDetails" className>
 															<h4 className="text-left"><strong>Payment <span className="small">(Your card info is not stored on Accelevents servers)</span></strong>
@@ -901,6 +923,7 @@ const mapStateToProps = (state) => ({
 	eventData: state.event && state.event.data,
 	user: state.session.user,
 	authenticated: state.session.authenticated,
+	orderData: state.event && state.event.order_data,
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Checkout));

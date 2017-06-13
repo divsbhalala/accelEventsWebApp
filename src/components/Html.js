@@ -74,6 +74,7 @@ class Html extends React.Component {
           `ga('create','${config.analytics.googleTrackingId}','auto');ga('send','pageview')`
         }}
       />
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
       }
       {config.analytics.googleTrackingId &&
       <script src="https://www.google-analytics.com/analytics.js" async defer/>

@@ -299,6 +299,13 @@ export function doGetOrderById(eventUrl, orderId) {
       url: API_URL + 'events/' + eventUrl + '/ticketing/order/'+orderId+'/formattributes',
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+        if(resp && resp.data){
+          dispatch(storeOrderData(resp.data));
+        }
+      return resp;
+    }).catch(error=>{
+      return error;
     });
   }
 }
@@ -350,7 +357,7 @@ export function storeActiveTabData(data) {
 }
 export function storeOrderData(data) {
   return {
-    type: 'STORE_ORDER_DATE',
+    type: 'STORE_ORDER_DATA',
     data,
   }
 }
