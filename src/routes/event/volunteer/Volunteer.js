@@ -15,7 +15,7 @@ import s from './Volunteer.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import  history from './../../../history';
-
+import {Button} from 'react-bootstrap';
 import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
@@ -24,7 +24,12 @@ import  {
   getUserByEmail,
   getAuctionItemStatusByCode,
   getAttendees,
-  setAttendees
+  setAttendees,
+  submitBids,
+  submitPledge,
+  sellTickets,
+  submitTickets,
+  submitDonate
 } from './../action/index';
 
 class Volunteer extends React.Component {
@@ -53,8 +58,26 @@ class Volunteer extends React.Component {
       year: null,
       expMonth:null,
       expYear:null,
+      availTickets:null,
+      raffleTicket:null,
 
       errorReg: null,
+
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue:null,
+      expYearValue:null,
+      emailValue:null,
+      itemCodeValue:null,
+      phoneNumberValue:null,
+      raffleTicketValue:null,
+      submittedTickets:null,
 
       firstNameFeedBack: false,
       lastNameFeedBack: false,
@@ -62,6 +85,9 @@ class Volunteer extends React.Component {
       cardHolderFeedBack: false,
       amountFeedBack: false,
       cvvFeedBack: false,
+      availTicketsFeedBack: false,
+      itemStatusFeedBack: false,
+      raffleTicketFeedBack: false,
 
       errorMsgfirstName: null,
       errorMsglastName: null,
@@ -71,17 +97,22 @@ class Volunteer extends React.Component {
       errorMsgNumber: null,
       errorMsgcvv: null,
       errorMsgEmail: null,
+      errorMsgAvailTickets: null,
+      errorMsgRaffleTicket: null,
 
       auctionItemCode:null,
       userData:null,
       attendees:null,
       itemBarcodeCode:null,
+      attendeesFilter:null,
+      showPopup: false,
+      popupHeader:null,
     }
     this.setActiveView = this.setActiveView.bind(this);
     this.getAttendeesList = this.getAttendeesList.bind(this);
   }
   setActiveView = (view) => {
-    if(view == "event-ticketing"){
+    if(view == "event-ticketing" && this.state.attendees == null){
       this.getAttendeesList();
     }
     this.setState({
@@ -103,8 +134,24 @@ class Volunteer extends React.Component {
       year: null,
       expMonth:null,
       expYear:null,
+      availTickets:null,
 
       errorReg: null,
+
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue:null,
+      expYearValue:null,
+      emailValue:null,
+      itemCodeValue:null,
+      phoneNumberValue:null,
+      raffleTicketValue:null,
 
       firstNameFeedBack: false,
       lastNameFeedBack: false,
@@ -112,6 +159,8 @@ class Volunteer extends React.Component {
       cardHolderFeedBack: false,
       amountFeedBack: false,
       cvvFeedBack: false,
+      availTicketsFeedBack: false,
+      itemStatusFeedBack: false,
 
       errorMsgfirstName: null,
       errorMsglastName: null,
@@ -121,42 +170,48 @@ class Volunteer extends React.Component {
       errorMsgNumber: null,
       errorMsgcvv: null,
       errorMsgEmail: null,
+      errorMsgAvailTickets: null,
+      errorMsgCard: null,
 
       auctionItemCode:null,
       userData:null,
-      attendees:null,
+      //attendees:null,
+      itemBarcodeCode:null,
       attendeesFilter:null,
+      showPopup: false,
+      popupHeader:null,
     })
   };
   itemCodeValidateHandler = (e) => {
-    console.log("->->",this.itemCode.value)
-    if (this.itemCode.value.length == 3) {
+    this.setState({
+      itemStatusFeedBack: true,
+      itemCodeValue:this.itemCode.value,
+    });
+  if (this.itemCode.value.length == 3) {
       this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value)
         .then(resp => {
           if (resp && resp.data) {
             this.setState({
-              itemStatusMsg: resp.data
+              itemStatusMsg: resp.data,
             })
           }
         }).catch(error => {
         this.setState({
-          itemStatusMsg: null
+          itemStatusMsg: null,
         })
        console.log(error)
       });
     }
   };
   setAttendeesHandler = (view,index) => {
-    console.log('e:',view);
     let status = view.status == "Checked In" ? 'false' :'true'
     let statusValue = view.status == "Checked In" ? 'Booked' :'Checked In'
       this.props.setAttendees(this.props.params && this.props.params.params, view.barcode,status)
         .then(resp => {
           if (resp && resp.data) {
-            const attendees = [...this.state.attendees];
-            console.log('attendees[index]',attendees,index);
-            // attendees[index].status = statusValue;
-            // this.setState({ attendees });
+            const attendees = this.state.attendees;
+             attendees.attendees[index].status = statusValue;
+            this.setState({ attendees });
           }
         }).catch(error => {
         this.setState({
@@ -166,12 +221,14 @@ class Volunteer extends React.Component {
       });
   };
   attendeesFilterHandler = (e) => {
-     console.log(this.attendeesFilter.value)
     this.setState({
       attendeesFilter:this.attendeesFilter.value,
     })
    };
   getAuctionItem = (e) => {
+    this.setState({
+      itemCodeValue:this.itemCode.value,
+    });
     if (this.itemCode.value.length == 3) {
       this.props.getAuctionItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value)
         .then(resp => {
@@ -212,7 +269,10 @@ class Volunteer extends React.Component {
           if (resp && resp.data) {
             this.setState({
               userData:resp.data,
-              errorMsgEmail: null
+              errorMsgEmail: null,
+              firstNameValue :resp.data.firstName,
+              lastNameValue :resp.data.lastName,
+              phoneNumberValue :resp.data.phonenumber,
             })
           }
         }).catch(error => {
@@ -227,7 +287,8 @@ class Volunteer extends React.Component {
   };
   emailValidateHandler = (e) => {
     this.setState({
-      emailFeedBack: true
+      emailFeedBack: true,
+      emailValue:this.email.value,
     });
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -246,11 +307,10 @@ class Volunteer extends React.Component {
     this.setState({isValidData: !!(this.email.value)});
   };
   firstNameValidateHandler = (e) => {
-
     this.setState({
-      firstNameFeedBack: true
+      firstNameFeedBack: true,
+      firstNameValue: this.firstName.value,
     });
-
     if (this.firstName.value == '') {
 
       this.setState({
@@ -261,17 +321,13 @@ class Volunteer extends React.Component {
         firstName: true
       });
     }
-
-
   };
   lastNameValidateHandler = (e) => {
-
     this.setState({
-      lastNameFeedBack: true
+      lastNameFeedBack: true,
+      lastNameValue: this.lastName.value,
     });
-
     if (this.lastName.value == '') {
-
       this.setState({
         lastName: false
       });
@@ -280,8 +336,6 @@ class Volunteer extends React.Component {
         lastName: true
       });
     }
-
-
   };
   cardHolderValidateHandler = (e) => {
 
@@ -309,19 +363,15 @@ class Volunteer extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
-
     this.setState({
       cardNumberFeedBack: true
     });
-
-
     if (this.cardNumber.value == '') {
-
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
       });
-    } else if (this.cardNumber.value.length !== 16) {
+    } else if (this.cardNumber.value.length !== 15 && this.cardNumber.value.length !== 16) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -331,24 +381,53 @@ class Volunteer extends React.Component {
         cardNumber: true
       });
     }
-
-
+  };
+  availTicketsValidateHandler = (e) => {
+    let tickets = 0;
+    tickets = this.state.userData && this.state.userData.availableTickets;
+    this.setState({
+      availTicketsFeedBack: true,
+      submittedTickets : this.availTickets.value
+    });
+    if (this.availTickets.value == '') {
+      this.setState({
+        availTickets: false,
+        errorMsgAvailTickets: "Please enter tickets you want to submit.",
+      });
+    } else if (!tickets) {
+      this.setState({
+        availTickets: false,
+        errorMsgAvailTickets: "Please enter Bidder email to submit tickets. ",
+      });
+    } else if (this.availTickets.value > tickets) {
+      this.setState({
+        availTickets: false,
+        errorMsgAvailTickets: " Please enter ticket less than or equal to " + tickets,
+      });
+    } else {
+      this.setState({
+        availTickets: true,
+        errorMsgAvailTickets: "",
+      });
+    }
   };
   amountValidateHandler = (e) => {
+    this.setState({
+      amountFeedBack: true,
+      amountValue:this.amount.value
+    });
     let bid = 0;
     bid = this.state.itemData && this.state.itemData.currentBid + 20 ;
-    this.setState({
-      amountFeedBack: true
-    });
+
     if (this.amount.value == '') {
       this.setState({
         amount: false,
-        errorMsgNumber: "Bid Amount can't be empty",
+        errorMsgAmount: "Bid Amount can't be empty",
       });
     } else if (bid > this.amount.value) {
       this.setState({
         amount: false,
-        errorMsgNumber: "Bids for this item must be placed in increments of at least $25. Please enter a value of at least " ,
+        errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $"+bid+" increments. " + "   Bids for this item must be placed in increments of at least $20",
       });
     } else {
       this.setState({
@@ -380,10 +459,249 @@ class Volunteer extends React.Component {
     }
 
   };
+  raffleTicketValidateHandler = (e) => {
+    this.setState({
+      raffleTicketFeedBack: true,
+      raffleTicketValue: this.raffleTicket.value,
+    });
+    if (this.raffleTicket.value == '') {
+      this.setState({
+        raffleTicket: false,
+        errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
+      });
+    }  else {
+      this.setState({
+        raffleTicket: true
+      });
+    }
+  };
+  componentWillMount(){
+    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+  }
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false
+    })
+  };
+  submiteSilentAuctionBid = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message});
+        }else{
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            paymenttype: 'CC',
+            itemCode: self.state.itemCodeValue,
+            amount: self.state.amountValue,
+            stripeToken: response.id,
+          }
+          self.props.submitBids(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  itemStatusMsg: resp.data,
+                  popupHeader:"Success"
+                })
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+            console.log("------",resp)
+          });
+        }
+       });
+     }
+  };
+  submitPledgeBid = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message});
+        }else{
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            paymenttype: 'CC',
+            itemCode: self.state.itemCodeValue,
+            amount: self.state.amountValue,
+            stripeToken: response.id,
+          }
+          self.props.submitPledge(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: "",
+                  popupHeader:"Failed"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Success",
+                });
+              }
+          });
+        }
+       });
+     }
+  };
+  sellTicketsBid = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
+     if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message});
+        }else{
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            paymenttype: 'CC',
+            itemCode: self.state.itemCodeValue,
+            raffleTicketId: self.state.raffleTicketValue,
+            stripeToken: response.id,
+          }
+          self.props.sellTickets(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: "Ticket Purchased Successfully.",
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+          });
+        }
+       });
+     }
+  };
+  submitTicketsbid = (e) => {
+    e.preventDefault();
+    var self = this;
+    this.setState({isValidBidData: (this.state.email && this.state.availTickets)});
+     if (this.state.isValidBidData) {
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            itemCode: self.state.itemCodeValue,
+            submittedTickets: self.state.submittedTickets,
+          }
+          self.props.submitTickets(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: "",
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+          });
+        }
+  };
+  submitDonatebid = (e) => {
+    e.preventDefault();
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            itemCode: self.state.itemCodeValue,
+            submittedTickets: self.state.submittedTickets,
+            paymenttype: 'CC',
+            amount: self.state.amountValue,
+          }
+          self.props.submitDonate(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              console.log(resp)
+              if (resp && resp.message) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.message,
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+          });
+        }
+  };
+
   render() {
        return (
       <div>
-        {console.log("user : ",this.state.userData)}
         <views>
           { this.state.activeViews === 'select-action' &&
             <view name="select-action" className={cx(this.state.activeViews === 'select-action' && s.active)}>
@@ -443,7 +761,7 @@ class Volunteer extends React.Component {
                      onKeyUp={this.itemCodeValidateHandler} />
             </div>
             <div className="form-group text-center">
-              <h5 id="infoMessage" className={ this.state.itemStatusMsg ? this.state.itemStatusMsg.message :'text-danger'} > { this.state.itemStatusMsg ? this.state.itemStatusMsg.message : 'Invalid Item Code' } </h5>
+              <h5 id="infoMessage" className={ this.state.itemStatusMsg ? this.state.itemStatusMsg.message :'text-danger'} > { this.state.itemStatusMsg  ? this.state.itemStatusMsg.message : this.state.itemStatusFeedBack &&  "Invalid Item Code" } </h5>
             </div>
             <div className="form-group text-center">
               <button className="btn btn-white" onClick={() => {
@@ -461,7 +779,8 @@ class Volunteer extends React.Component {
                   data-validation-fields="getBidValidationFields" data-onsuccess="handleSubmitBidSuccess"
                   data-validate-function="validateForm" data-has-cc-info="true" data-show-cc-confirm="false"
                   data-confirm-message="getBidStripeConfirmMessage" data-switch-view="select-action"
-                  data-view-name="submit-auction-bids" noValidate="novalidate">
+                  data-view-name="submit-auction-bids" noValidate="novalidate"
+                  onSubmit={this.submiteSilentAuctionBid}>
               <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
               <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                 className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
@@ -567,7 +886,6 @@ class Volunteer extends React.Component {
                 { this.state.lastNameFeedBack && !this.state.lastName &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
               </div>  }
-
               <div className="form-group">
                 {this.state.userData && this.state.userData.firstName &&
                 <div className="text-xs" style={{display: 'block'}}>Name: <span
@@ -579,7 +897,6 @@ class Volunteer extends React.Component {
                 <div className="text-xs" style={{display: 'block'}}>Cell Number : <span
                   className="bidder-cell valueCustom">{this.state.userData.phonenumber}</span></div> }
               </div>
-
               <div id="payment-type-selection" className="form-group text-center">
                 <input className="cc-radio" type="radio" name="paymenttype" autoComplete="off" defaultValue="cc"
                        defaultChecked="checked"/> Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
@@ -592,7 +909,7 @@ class Volunteer extends React.Component {
                        ref={ref => {
                          this.itemCode = ref;
                        }}
-                       onKeyUp={this.getAuctionItem}/>
+                       onKeyUp={this.getAuctionItem} />
               </div>
               <h5 id="infoMessage"
                   className='text-danger'> { this.state.itemStatusMsg == 0 && 'Invalid Item Code' } </h5>
@@ -612,21 +929,28 @@ class Volunteer extends React.Component {
                   className="currency-symbol">$</span> {this.state.itemData.buyItNow}<span
                   className="buy-it-now"/></div>
               </div> }
-              <div className="form-group has-feedback">
-                <div className="input-group">
-                  <div className="input-group-addon">$</div>
-                  <input type="number" name="amount" placeholder="Amount" autoComplete="off" className="form-control"
-                         ref={ref => {
-                           this.amount = ref;
-                         }}
-                         onKeyUp={this.amountValidateHandler}/>
-                  { this.state.amountFeedBack && this.state.amount &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                  { this.state.amountFeedBack && !this.state.amount &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+              <div
+                className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="input-group">
+                      <div className="input-group-addon">$</div>
+                      <input type="number" className="form-control" name="itembid" id="itembid"
+                             placeholder="Amount" step required="required"
+                             data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
+                             ref={ref => {
+                               this.amount = ref;
+                             }}
+                             onKeyUp={this.amountValidateHandler}/>
+                      { this.state.amountFeedBack && this.state.amount &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                      { this.state.amountFeedBack && !this.state.amount &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                    </div>
+                    { this.state.amountFeedBack && !this.state.amount &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
+                  </div>
                 </div>
-                { this.state.amountFeedBack && !this.state.amount &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgNumber}</small>}
               </div>
               <div className="cc-info">
                 <style
@@ -676,64 +1000,72 @@ class Volunteer extends React.Component {
                       <small className="help-block"
                              data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
                     </div>
+
                     <div className="row">
                       <div className="col-md-8">
                         <div className="form-group expiration-date has-feedback">
                           <label className="control-label">Expiration Date</label>
                           <div className="input-group">
-                            <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"/></div>
-                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
-                              <option selected value={1}>Jan (01)</option>
-                              <option value={2}>Feb (02)</option>
-                              <option value={3}>Mar (03)</option>
-                              <option value={4}>Apr (04)</option>
-                              <option value={5}>May (05)</option>
-                              <option value={6}>Jun (06)</option>
-                              <option value={7}>Jul (07)</option>
-                              <option value={8}>Aug (08)</option>
-                              <option value={9}>Sep (09)</option>
-                              <option value={10}>Oct (10)</option>
-                              <option value={11}>Nov (11)</option>
-                              <option value={12}>Dec (12)</option>
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                              this.expMonth = ref;
+                            }}>
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
                             </select>
-                            <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear">
-                              <option value={2016}>2016</option>
-                              <option value={2017}>2017</option>
-                              <option value={2018}>2018</option>
-                              <option value={2019}>2019</option>
-                              <option value={2020}>2020</option>
-                              <option value={2021}>2021</option>
-                              <option value={2022}>2022</option>
-                              <option value={2023}>2023</option>
-                              <option value={2024}>2024</option>
-                              <option value={2025}>2025</option>
-                              <option value={2026}>2026</option>
-                              <option value={2027}>2027</option>
-                              <option value={2028}>2028</option>
-                              <option value={2029}>2029</option>
-                              <option value={2030}>2030</option>
-                              <option value={2031}>2031</option>
-                              <option value={2032}>2032</option>
-                              <option value={2033}>2033</option>
-                              <option value={2034}>2034</option>
-                              <option value={2035}>2035</option>
-                              <option value={2036}>2036</option>
-                              <option value={2037}>2037</option>
-                              <option value={2038}>2038</option>
-                              <option value={2039}>2039</option>
-                              <option value={2040}>2040</option>
-                              <option value={2041}>2041</option>
-                              <option value={2042}>2042</option>
-                              <option value={2043}>2043</option>
-                              <option value={2044}>2044</option>
-                              <option value={2045}>2045</option>
-                              <option value={2046}>2046</option>
-                              <option value={2047}>2047</option>
-                              <option value={2048}>2048</option>
-                              <option value={2049}>2049</option>
-                              <option value={2050}>2050</option>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
+                                      this.expYear = ref;
+                                    }}>
+                              <option value="2016">2016</option>
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
                             </select>
                           </div>
+
 
                         </div>
                       </div>
@@ -751,12 +1083,11 @@ class Volunteer extends React.Component {
                             { this.state.cvvFeedBack && this.state.cvv &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                             { this.state.cvvFeedBack && !this.state.cvv &&
-                            <i
-                              className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                           </div>
                           { this.state.cvvFeedBack && !this.state.cvv &&
-                          <small className="help-block"
-                                 data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+                          <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+
                         </div>
                       </div>
                     </div>
@@ -773,7 +1104,7 @@ class Volunteer extends React.Component {
               }}>Back
               </button>
             </div>
-          </view>  }
+          </view> }
           { this.state.activeViews === 'submit-pledge' &&
             <view name="submit-pledge" className={cx(this.state.activeViews === 'submit-pledge' && s.active)}>
             <h4 className="text-center"><strong>Submit Pledge</strong></h4>
@@ -781,14 +1112,15 @@ class Volunteer extends React.Component {
                   action="/AccelEventsWebApp/events/jkazarian8/volunteer/submit-pledge"
                   data-validation-fields="getPledgeValidationFields" data-onsuccess="handleBidSuccess"
                   data-validate-function="validateForm" data-switch-view="select-action" data-view-name="submit-pledge"
-                  noValidate="novalidate">
+                  noValidate="novalidate"
+                  onSubmit={this.submitPledgeBid} >
               <div className="form-group has-feedback">
                 <input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
                        className="form-control mrg-t-lg bidder-email" data-fv-field="email"ref={ref => {
                   this.email = ref;
                 }}
-                       onKeyUp={this.emailValidateHandler}
-                       onBlur={this.checkAuctionUser}
+                   onKeyUp={this.emailValidateHandler}
+                   onBlur={this.checkAuctionUser}
                 />
                 { this.state.emailFeedBack && this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -925,21 +1257,28 @@ class Volunteer extends React.Component {
                 Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
                 <input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"/> Cash
               </div>
-              <div className="form-group has-feedback">
-                <div className="input-group">
-                  <div className="input-group-addon">$</div>
-                  <input type="number" name="amount" placeholder="Amount" autoComplete="off" className="form-control"
-                         ref={ref => {
-                           this.amount = ref;
-                         }}
-                         onKeyUp={this.amountValidateHandler}/>
-                  { this.state.amountFeedBack && this.state.amount &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                  { this.state.amountFeedBack && !this.state.amount &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+              <div
+                className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="input-group">
+                      <div className="input-group-addon">$</div>
+                      <input type="number" className="form-control" name="itembid" id="itembid"
+                             placeholder="Amount" step required="required"
+                             data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
+                             ref={ref => {
+                               this.amount = ref;
+                             }}
+                             onKeyUp={this.amountValidateHandler}/>
+                      { this.state.amountFeedBack && this.state.amount &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                      { this.state.amountFeedBack && !this.state.amount &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                    </div>
+                    { this.state.amountFeedBack && !this.state.amount &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
+                  </div>
                 </div>
-                { this.state.amountFeedBack && !this.state.amount &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgNumber}</small>}
               </div>
               <div className="cc-info">
                 <style
@@ -963,7 +1302,8 @@ class Volunteer extends React.Component {
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.cardHolderFeedBack && !this.state.cardHolder &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
+                      <small className="help-block"
+                             data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
 
                     </div>
                     <div
@@ -985,66 +1325,75 @@ class Volunteer extends React.Component {
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.cardNumberFeedBack && !this.state.cardNumber &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
+                      <small className="help-block"
+                             data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
                     </div>
+
                     <div className="row">
                       <div className="col-md-8">
                         <div className="form-group expiration-date has-feedback">
                           <label className="control-label">Expiration Date</label>
                           <div className="input-group">
-                            <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"/></div>
-                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
-                              <option selected value={1}>Jan (01)</option>
-                              <option value={2}>Feb (02)</option>
-                              <option value={3}>Mar (03)</option>
-                              <option value={4}>Apr (04)</option>
-                              <option value={5}>May (05)</option>
-                              <option value={6}>Jun (06)</option>
-                              <option value={7}>Jul (07)</option>
-                              <option value={8}>Aug (08)</option>
-                              <option value={9}>Sep (09)</option>
-                              <option value={10}>Oct (10)</option>
-                              <option value={11}>Nov (11)</option>
-                              <option value={12}>Dec (12)</option>
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                              this.expMonth = ref;
+                            }}>
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
                             </select>
-                            <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear">
-                              <option value={2016}>2016</option>
-                              <option value={2017}>2017</option>
-                              <option value={2018}>2018</option>
-                              <option value={2019}>2019</option>
-                              <option value={2020}>2020</option>
-                              <option value={2021}>2021</option>
-                              <option value={2022}>2022</option>
-                              <option value={2023}>2023</option>
-                              <option value={2024}>2024</option>
-                              <option value={2025}>2025</option>
-                              <option value={2026}>2026</option>
-                              <option value={2027}>2027</option>
-                              <option value={2028}>2028</option>
-                              <option value={2029}>2029</option>
-                              <option value={2030}>2030</option>
-                              <option value={2031}>2031</option>
-                              <option value={2032}>2032</option>
-                              <option value={2033}>2033</option>
-                              <option value={2034}>2034</option>
-                              <option value={2035}>2035</option>
-                              <option value={2036}>2036</option>
-                              <option value={2037}>2037</option>
-                              <option value={2038}>2038</option>
-                              <option value={2039}>2039</option>
-                              <option value={2040}>2040</option>
-                              <option value={2041}>2041</option>
-                              <option value={2042}>2042</option>
-                              <option value={2043}>2043</option>
-                              <option value={2044}>2044</option>
-                              <option value={2045}>2045</option>
-                              <option value={2046}>2046</option>
-                              <option value={2047}>2047</option>
-                              <option value={2048}>2048</option>
-                              <option value={2049}>2049</option>
-                              <option value={2050}>2050</option>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
+                                      this.expYear = ref;
+                                    }}>
+                              <option value="2016">2016</option>
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
                             </select>
                           </div>
+
 
                         </div>
                       </div>
@@ -1066,6 +1415,7 @@ class Volunteer extends React.Component {
                           </div>
                           { this.state.cvvFeedBack && !this.state.cvv &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+
                         </div>
                       </div>
                     </div>
@@ -1090,7 +1440,8 @@ class Volunteer extends React.Component {
                   action="/AccelEventsWebApp/events/jkazarian8/volunteer/sell-tickets"
                   data-validation-fields="getRafflePurchaseValidationFields" data-onsuccess="handleBidSuccess"
                   data-validate-function="validateForm" data-switch-view="select-action"
-                  data-view-name="sell-raffle-tickets" noValidate="novalidate">
+                  data-view-name="sell-raffle-tickets" noValidate="novalidate"
+                  onSubmit={this.sellTicketsBid} >
               <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
               <div className="form-group has-feedback">
                 <input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
@@ -1216,7 +1567,9 @@ class Volunteer extends React.Component {
               </div>
               <div className="form-group has-feedback">
                 <label className="control-label">Number of tickets</label>
-                <select className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs">
+                <select className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs"  ref={ref => {
+                  this.raffleTicket = ref;
+                }} onChange={this.raffleTicketValidateHandler}>
                   <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
                   <option value={847} data-ticket={1} data-price={5}>
                     1 Ticket For $ 5
@@ -1236,11 +1589,11 @@ class Volunteer extends React.Component {
                   <option value={852} data-ticket={50} data-price={100}>
                     50 Ticket For $ 100
                   </option>
-                </select><i className="form-control-feedback" data-fv-icon-for="ticketpkgs" style={{display: 'none'}}/>
-                <small className="help-block" data-fv-validator="notEmpty" data-fv-for="ticketpkgs"
-                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Please select tickets to buy.
-                </small>
-              </div>
+                </select>
+
+              { this.state.raffleTicketFeedBack && !this.state.raffleTicket &&
+              <small className="help-block" data-fv-result="NOT_VALIDATED"> Raffle Ticket required.</small>}
+            </div>
               <div className="cc-info">
                 <style
                   dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
@@ -1263,7 +1616,8 @@ class Volunteer extends React.Component {
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.cardHolderFeedBack && !this.state.cardHolder &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
+                      <small className="help-block"
+                             data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
 
                     </div>
                     <div
@@ -1285,66 +1639,75 @@ class Volunteer extends React.Component {
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.cardNumberFeedBack && !this.state.cardNumber &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
+                      <small className="help-block"
+                             data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
                     </div>
+
                     <div className="row">
                       <div className="col-md-8">
                         <div className="form-group expiration-date has-feedback">
                           <label className="control-label">Expiration Date</label>
                           <div className="input-group">
-                            <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"/></div>
-                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
-                              <option selected value={1}>Jan (01)</option>
-                              <option value={2}>Feb (02)</option>
-                              <option value={3}>Mar (03)</option>
-                              <option value={4}>Apr (04)</option>
-                              <option value={5}>May (05)</option>
-                              <option value={6}>Jun (06)</option>
-                              <option value={7}>Jul (07)</option>
-                              <option value={8}>Aug (08)</option>
-                              <option value={9}>Sep (09)</option>
-                              <option value={10}>Oct (10)</option>
-                              <option value={11}>Nov (11)</option>
-                              <option value={12}>Dec (12)</option>
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                              this.expMonth = ref;
+                            }}>
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
                             </select>
-                            <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear">
-                              <option value={2016}>2016</option>
-                              <option value={2017}>2017</option>
-                              <option value={2018}>2018</option>
-                              <option value={2019}>2019</option>
-                              <option value={2020}>2020</option>
-                              <option value={2021}>2021</option>
-                              <option value={2022}>2022</option>
-                              <option value={2023}>2023</option>
-                              <option value={2024}>2024</option>
-                              <option value={2025}>2025</option>
-                              <option value={2026}>2026</option>
-                              <option value={2027}>2027</option>
-                              <option value={2028}>2028</option>
-                              <option value={2029}>2029</option>
-                              <option value={2030}>2030</option>
-                              <option value={2031}>2031</option>
-                              <option value={2032}>2032</option>
-                              <option value={2033}>2033</option>
-                              <option value={2034}>2034</option>
-                              <option value={2035}>2035</option>
-                              <option value={2036}>2036</option>
-                              <option value={2037}>2037</option>
-                              <option value={2038}>2038</option>
-                              <option value={2039}>2039</option>
-                              <option value={2040}>2040</option>
-                              <option value={2041}>2041</option>
-                              <option value={2042}>2042</option>
-                              <option value={2043}>2043</option>
-                              <option value={2044}>2044</option>
-                              <option value={2045}>2045</option>
-                              <option value={2046}>2046</option>
-                              <option value={2047}>2047</option>
-                              <option value={2048}>2048</option>
-                              <option value={2049}>2049</option>
-                              <option value={2050}>2050</option>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
+                                      this.expYear = ref;
+                                    }}>
+                              <option value="2016">2016</option>
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
                             </select>
                           </div>
+
 
                         </div>
                       </div>
@@ -1366,6 +1729,7 @@ class Volunteer extends React.Component {
                           </div>
                           { this.state.cvvFeedBack && !this.state.cvv &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+
                         </div>
                       </div>
                     </div>
@@ -1382,7 +1746,7 @@ class Volunteer extends React.Component {
               }}>Back
               </button>
             </div>
-          </view>}
+          </view> }
           { this.state.activeViews === 'submit-raffle-tickets' &&
             <view name="submit-raffle-tickets"
                 className={cx(this.state.activeViews === 'submit-raffle-tickets' && s.active)}>
@@ -1391,7 +1755,8 @@ class Volunteer extends React.Component {
                   action="/AccelEventsWebApp/events/jkazarian8/volunteer/submit-tickets" method="POST"
                   data-validation-fields="getRaffleSubmitValidationFields" data-onsuccess="handleBidSuccess"
                   data-validate-function="validateForm" data-switch-view="select-action"
-                  data-view-name="submit-raffle-tickets" noValidate="novalidate">
+                  data-view-name="submit-raffle-tickets" noValidate="novalidate"
+            onSubmit={this.submitTicketsbid}>
               <div className="form-group has-feedback">
                 <input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
                        className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
@@ -1505,7 +1870,7 @@ class Volunteer extends React.Component {
                 {this.state.userData && this.state.userData.phonenumber &&
                 <div className="text-xs" style={{display: 'block'}}>Cell Number : <span
                   className="bidder-cell valueCustom">{this.state.userData.phonenumber}</span></div> }
-                {this.state.userData && this.state.userData.phonenumber &&
+                {this.state.userData && this.state.userData.availableTickets &&
                 <div className="text-xs" style={{display: 'block'}}>Available Tickets : <span
                   className="bidder-cell valueCustom">{this.state.userData.availableTickets}</span></div> }
               </div>
@@ -1525,12 +1890,19 @@ class Volunteer extends React.Component {
                   className="buy-it-now"/></div>
               </div> }
 
-              <div className="form-group has-feedback">
+              <div  className={cx("form-group", this.state.availTicketsFeedBack && 'has-feedback', this.state.availTicketsFeedBack && this.state.availTickets && 'has-success', this.state.availTicketsFeedBack && (!this.state.availTickets) && 'has-error')}>
                 <input type="number" name="tickets" placeholder="Number Of Ticket" autoComplete="off"
-                       className="form-control" data-fv-field="tickets"/><i className="form-control-feedback"
-                                                                            data-fv-icon-for="tickets"
-                                                                            style={{display: 'none'}}/>
+                       className="form-control" data-fv-field="tickets"  ref={ref => {
+                  this.availTickets = ref;
+                }}
+                       onKeyUp={this.availTicketsValidateHandler}/>
+                { this.state.availTicketsFeedBack && this.state.availTickets &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                { this.state.availTicketsFeedBack && !this.state.availTickets &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
               </div>
+              { this.state.availTicketsFeedBack && !this.state.lastName &&
+              <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
               <div className="form-group">
                 <button className="btn btn-block btn-success submit">Submit</button>
               </div>
@@ -1541,7 +1913,7 @@ class Volunteer extends React.Component {
               }}>Back
               </button>
             </div>
-          </view>}
+          </view> }
           { this.state.activeViews === 'purchase-event-tickets' &&
             <view name="purchase-event-tickets"
                 className={cx(this.state.activeViews === 'purchase-event-tickets' && s.active)}>
@@ -1623,7 +1995,7 @@ class Volunteer extends React.Component {
               }}>Back
               </button>
             </div>
-          </view>}
+          </view> }
           { this.state.activeViews === 'event-ticketing' &&
             <view name="event-ticketing" className={cx(this.state.activeViews === 'event-ticketing' && s.active)}>
             <h4 className="text-center"><strong>Check in attendees</strong></h4>
@@ -1633,10 +2005,9 @@ class Volunteer extends React.Component {
                    }}
                    onKeyUp={this.attendeesFilterHandler} />
             <ul className="list-group attendees-list">
-              {console.log(this.state.attendees && this.state.attendees.attendees)}
               {this.state.attendees  ?
-              this.state.attendees.attendees.filter(({firstname,lastname}) => (firstname + " " + lastname).includes(this.state.attendeesFilter) || null === this.state.attendeesFilter || "" === this.state.attendeesFilter  ).map((item, index) =>
-                <AttendeesList key={index} items={item}  setAttendeesClickHandler={this.setAttendeesHandler} />
+              this.state.attendees.attendees.filter(({firstName,lastName}) => (firstName + " " + lastName).includes(this.state.attendeesFilter) || null == this.state.attendeesFilter || "" == this.state.attendeesFilter ).map((item, index) =>
+                <AttendeesList key={index} index={index} items={item}  setAttendeesClickHandler={this.setAttendeesHandler} />
               ) : "Loading  ...."
             }
             </ul>
@@ -1654,7 +2025,8 @@ class Volunteer extends React.Component {
                   action="/AccelEventsWebApp/events/jkazarian8/volunteer/donate"
                   data-validation-fields="getDonateValidationFields" data-onsuccess="handleBidSuccess"
                   data-validate-function="validateForm" data-switch-view="select-action" data-view-name="donate"
-                  noValidate="novalidate">
+                  noValidate="novalidate"
+            onSubmit={this.submitDonatebid}>
               <div className="form-group has-feedback">
                 <input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
                        className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
@@ -1799,23 +2171,28 @@ class Volunteer extends React.Component {
                 Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
                 <input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"/> Cash
               </div>
-              <div className="form-group has-feedback">
-                <div className="input-group">
-                  <div className="input-group-addon">$</div>
-                  <input type="number" name="amount" placeholder="Amount" autoComplete="off" className="form-control"
-                         data-fv-field="amount"/>
+              <div
+                className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="input-group">
+                      <div className="input-group-addon">$</div>
+                      <input type="number" className="form-control" name="itembid" id="itembid"
+                             placeholder="Amount" step required="required"
+                             data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
+                             ref={ref => {
+                               this.amount = ref;
+                             }}
+                             onKeyUp={this.amountValidateHandler}/>
+                      { this.state.amountFeedBack && this.state.amount &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                      { this.state.amountFeedBack && !this.state.amount &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                    </div>
+                    { this.state.amountFeedBack && !this.state.amount &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
+                  </div>
                 </div>
-                <i className="form-control-feedback fv-bootstrap-icon-input-group" data-fv-icon-for="amount"
-                   style={{display: 'none'}}/>
-                <small className="help-block" data-fv-validator="notEmpty" data-fv-for="amount"
-                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Please enter amount you want to donate.
-                </small>
-                <small className="help-block" data-fv-validator="digits" data-fv-for="amount"
-                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Digits Only Accepted.
-                </small>
-                <small className="help-block" data-fv-validator="integer" data-fv-for="amount"
-                       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
-                </small>
               </div>
               <div className="cc-info">
                 <style
@@ -1839,7 +2216,8 @@ class Volunteer extends React.Component {
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.cardHolderFeedBack && !this.state.cardHolder &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
+                      <small className="help-block"
+                             data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
 
                     </div>
                     <div
@@ -1861,66 +2239,75 @@ class Volunteer extends React.Component {
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.cardNumberFeedBack && !this.state.cardNumber &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
+                      <small className="help-block"
+                             data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
                     </div>
+
                     <div className="row">
                       <div className="col-md-8">
                         <div className="form-group expiration-date has-feedback">
                           <label className="control-label">Expiration Date</label>
                           <div className="input-group">
-                            <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true"/></div>
-                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
-                              <option selected value={1}>Jan (01)</option>
-                              <option value={2}>Feb (02)</option>
-                              <option value={3}>Mar (03)</option>
-                              <option value={4}>Apr (04)</option>
-                              <option value={5}>May (05)</option>
-                              <option value={6}>Jun (06)</option>
-                              <option value={7}>Jul (07)</option>
-                              <option value={8}>Aug (08)</option>
-                              <option value={9}>Sep (09)</option>
-                              <option value={10}>Oct (10)</option>
-                              <option value={11}>Nov (11)</option>
-                              <option value={12}>Dec (12)</option>
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                              this.expMonth = ref;
+                            }}>
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
                             </select>
-                            <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear">
-                              <option value={2016}>2016</option>
-                              <option value={2017}>2017</option>
-                              <option value={2018}>2018</option>
-                              <option value={2019}>2019</option>
-                              <option value={2020}>2020</option>
-                              <option value={2021}>2021</option>
-                              <option value={2022}>2022</option>
-                              <option value={2023}>2023</option>
-                              <option value={2024}>2024</option>
-                              <option value={2025}>2025</option>
-                              <option value={2026}>2026</option>
-                              <option value={2027}>2027</option>
-                              <option value={2028}>2028</option>
-                              <option value={2029}>2029</option>
-                              <option value={2030}>2030</option>
-                              <option value={2031}>2031</option>
-                              <option value={2032}>2032</option>
-                              <option value={2033}>2033</option>
-                              <option value={2034}>2034</option>
-                              <option value={2035}>2035</option>
-                              <option value={2036}>2036</option>
-                              <option value={2037}>2037</option>
-                              <option value={2038}>2038</option>
-                              <option value={2039}>2039</option>
-                              <option value={2040}>2040</option>
-                              <option value={2041}>2041</option>
-                              <option value={2042}>2042</option>
-                              <option value={2043}>2043</option>
-                              <option value={2044}>2044</option>
-                              <option value={2045}>2045</option>
-                              <option value={2046}>2046</option>
-                              <option value={2047}>2047</option>
-                              <option value={2048}>2048</option>
-                              <option value={2049}>2049</option>
-                              <option value={2050}>2050</option>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
+                                      this.expYear = ref;
+                                    }}>
+                              <option value="2016">2016</option>
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
                             </select>
                           </div>
+
 
                         </div>
                       </div>
@@ -1942,6 +2329,7 @@ class Volunteer extends React.Component {
                           </div>
                           { this.state.cvvFeedBack && !this.state.cvv &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+
                         </div>
                       </div>
                     </div>
@@ -1958,8 +2346,25 @@ class Volunteer extends React.Component {
               }}>Back
               </button>
             </div>
-          </view>}
+          </view> }
         </views>
+        <PopupModel
+          id="bookingPopup"
+          showModal={this.state.showPopup}
+          headerText={this.state.popupHeader}
+          modelBody=''
+          onCloseFunc={this.hidePopup}
+          modelFooter="22">
+
+            <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+              { this.state && this.state.errorMsgCard }
+              <div className="modal-footer">
+                {/*<button className="btn btn-success">Confirm</button>*/}
+                <Button>Close</Button>
+              </div>
+            </div>
+
+        </PopupModel>
       </div>
     );
   }
@@ -1967,9 +2372,9 @@ class Volunteer extends React.Component {
 class AttendeesList extends React.Component {
   render() {
     return (
-      <li className="list-group-item checked-in" data-barcode="43def9df-e531-4d29-a367-4cc72539b27d" onClick ={ ()=>{this.props.setAttendeesClickHandler(this.props.items,this.props.key)}}
-          data-filter="jon kaz ` checked in"> <span className="name">{this.props.items.firstname + " " + this.props.items.lastname + this.props.key}</span><span
-        className={cx("status pull-right btn ", this.props.items.status == "Checked In" ? "btn-success" : 'btn-warning')}  >{this.props.items.status == "Checked In" ? "Checked In" : "Registered"  }</span>
+      <li className="list-group-item checked-in" onClick ={ ()=>{this.props.setAttendeesClickHandler(this.props.items,this.props.index)}}>
+        <span className="name">{this.props.items.firstName + " " + this.props.items.lastName }</span>
+        <span className={cx("status pull-right btn ", this.props.items.status == "Checked In" ? "btn-success" : 'btn-warning')}  >{this.props.items.status == "Checked In" ? "Checked In" : "Registered"  }</span>
       </li>
     );
   }
@@ -1980,6 +2385,11 @@ const mapDispatchToProps = {
   getUserByEmail: (eventUrl, itemCode,modeltype) => getUserByEmail(eventUrl, itemCode,modeltype),
   setAttendees: (eventUrl, barcode,status) => setAttendees(eventUrl, barcode,status),
   getAuctionItemStatusByCode: (eventUrl, itemCode) => getAuctionItemStatusByCode(eventUrl, itemCode),
+  submitBids: (eventUrl, userData) => submitBids(eventUrl, userData),
+  submitPledge: (eventUrl, userData) => submitPledge(eventUrl, userData),
+  sellTickets: (eventUrl, userData) => sellTickets(eventUrl, userData),
+  submitTickets: (eventUrl, userData) => submitTickets(eventUrl, userData),
+  submitDonate: (eventUrl, userData) => submitDonate(eventUrl, userData),
 };
 const mapStateToProps = (state) => ({});
 

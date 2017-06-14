@@ -48,6 +48,7 @@
     "react-infinite-scroll-component": "^2.3.0",
     "react-loaders": "^2.5.0",
     "react-moment": "^0.2.2",
+    "react-payment": "^0.1.6",
     "react-redux": "^5.0.4",
     "react-redux-loading-bar": "^2.9.2",
     "react-responsive-carousel": "^3.1.19",

@@ -34,6 +34,7 @@ class PopupModal extends Component { // eslint-disable-line
             </Modal.Body>
             {this.props.modelFooter && <Modal.Footer>
               {<div dangerouslySetInnerHTML={{__html: this.props.modelFooter}}/>}
+              <Modal.Dismiss className='btn btn-default'>Cancel</Modal.Dismiss>
             </Modal.Footer>}
           </Modal>
         </div>

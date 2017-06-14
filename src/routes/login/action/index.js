@@ -12,7 +12,7 @@ export function onFormSubmit(e) {
 const getUserDetails = (token) => {
   return axios({
     method: 'get',
-    url: API_URL + 'u/userdetail',
+    url: API_URL + 'u/userdetail/event/jkazarian0',
     headers: {Authorization: token}
   })
 }
@@ -35,15 +35,12 @@ export function doLogin(email, password) {
       })
       localStorage.setItem('token', response.data.access_token);
       return response;
-
     })
       .catch(error => {
         return error;
       });
   }
-
 }
-
 
 export function storeLoginData(data) {
   return {

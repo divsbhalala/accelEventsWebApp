@@ -64,7 +64,7 @@ export default {
       path: '/volunteer',
       action(props) {
         return {
-          title: "Raffle Page",
+          title: "Volunteer Page",
           component: <Layout params={props.params}><Volunteer params={props.params} title="Volunteer"/></Layout>,
         };
       }

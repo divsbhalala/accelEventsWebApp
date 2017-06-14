@@ -317,7 +317,6 @@ export function storeEventData(data) {
     data,
   }
 }
-
 export function storeEventRaffleData(data) {
   return {
     type: 'STORE_EVENT_RAFFLE',
@@ -354,8 +353,8 @@ export function getItemStatusByCode(eventUrl, itemCode) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/' + itemCode,
-      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
     });
   }
 }
@@ -364,8 +363,8 @@ export function getItemStatusByCode(eventUrl, itemCode) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + encodeURI(email) +'/?module='+modeltype,
-      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+      url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + encodeURI(email) +'/module/'+modeltype,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
     });
   }
 }
@@ -373,8 +372,8 @@ export function getAuctionItemStatusByCode(eventUrl, itemCode) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/' + itemCode,
-      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
     });
   }
 }
@@ -382,16 +381,144 @@ export function getAttendees(eventUrl) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/volunteer/getAllAttendeesByEvent',
-      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+      url: API_URL + 'events/' + eventUrl + '/volunteer/allAttendees',
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
     });
   }
-}export function setAttendees(eventUrl,barcode,status) {
+}
+export function setAttendees(eventUrl,barcode,status) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/volunteer/event-ticket-checkin/' + barcode + "/" + status,
-      headers: {Authorization: 'BpKvwmdLeA5VtQI7VqEdMw=='}
+      url: API_URL + 'events/' + eventUrl + '/volunteer/checkin/barcode/' + barcode + "/checkin/" + status,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+    });
+  }
+}
+export function doSignUp(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'u/loginsignup/' + eventUrl ,
+      data:userData
+    }).then(response => {
+      dispatch(storeToken(response.data.access_token));
+      getUserDetails(response.data.access_token).then(resp => {
+        dispatch(storeLoginData(resp.data));
+        localStorage.setItem('user', JSON.stringify(resp.data));
+      }).catch(err => {
+      })
+      localStorage.setItem('token', JSON.stringify(response.data.access_token));
+      return response;
+    })
+      .catch(error => {
+        return error;
+      });
+  }
+}
+
+export function storeLoginData(data) {
+  return {
+    type: 'STORE_LOGIN_DATA',
+    data
+  }
+}
+export function storeToken(data) {
+  return {
+    type: 'STORE_TOKEN',
+    token: data
+  }
+}
+const getUserDetails = (token) => {
+  return axios({
+    method: 'get',
+    url: API_URL + 'u/userdetail/event/jkazarian0',
+    headers: {Authorization: token}
+  })
+}
+
+export function submitBids(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/submitBids' ,
+      data:userData,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function submitPledge(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/submitPledge' ,
+      data:userData,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function sellTickets(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/sellTickets' ,
+      data:userData,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function submitTickets(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/submitTickets' ,
+      data:userData,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function submitDonate(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/donate' ,
+      data:userData,
+      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
     });
   }
 }

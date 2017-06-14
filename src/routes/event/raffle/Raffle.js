@@ -49,16 +49,6 @@ class Raffle extends React.Component {
     e.preventDefault();
 
     if (this.state.isValidData) {
-      // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
-      //     if(!resp.error){
-      //         history.push('/');
-      //         this.setState({error:""});
-      //     }
-      //     else{
-      //         this.setState({error:"Invalid Email or password"});
-      //     }
-      //
-      // });
     }
 
   };
@@ -132,7 +122,7 @@ class Raffle extends React.Component {
 
       <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
         className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-      <div
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
         <label className="control-label">First Name</label>
         <div className="input-group">
@@ -151,8 +141,8 @@ class Raffle extends React.Component {
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
         <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-      </div>
-      <div
+      </div> : ""}
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
         <label className="control-label">Last Name</label>
         <div className="input-group">
@@ -171,7 +161,7 @@ class Raffle extends React.Component {
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
         <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-      </div>
+      </div> : '' }
 
       <div className="form-group has-feedback">
         <label className="control-label"> You have <span className="available-tickets">0</span> tickets
@@ -193,7 +183,6 @@ class Raffle extends React.Component {
             </small>
             <small className="help-block" data-fv-validator="callback" data-fv-for="itembid"
                    data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Tickets should be more than 0 and less than
-              0
             </small>
             <small className="help-block" data-fv-validator="integer" data-fv-for="itembid"
                    data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
@@ -270,7 +259,8 @@ class Raffle extends React.Component {
                           </Carousel>
                         </div>
                       </div>
-                      <div className="mrg-t-lg pad-l-md pad-r-md">
+                      <div className="mrg-t-lg pad-l-md pad-r-md" dangerouslySetInnerHTML={ {__html: this.state.raffleData && this.state.raffleData.description } } >
+
                       </div>
                     </div>
                     <div className="col-md-6">

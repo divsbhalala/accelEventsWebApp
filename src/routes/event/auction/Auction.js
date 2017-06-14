@@ -13,17 +13,12 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Auction.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings} from './../action/index';
+import {doGetEventData, doGetSettings,doGetAuctionItemByCode,doSignUp} from './../action/index';
 import  history from './../../../history';
-// general styles
-//import 'react-responsive-carousel/lib/styles/main.css';
-
-// carousel styles
-//import 'react-responsive-carousel/lib/styles/carousel.css';
 import  EventAside from './../../../components/EventAside/EventAside';
 import {sessionService, loadSession} from 'redux-react-session';
-import  {doGetAuctionItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
+import PopupModel from './../../../components/PopupModal';
 
 class Auction extends React.Component {
   static propTypes = {
@@ -37,7 +32,6 @@ class Auction extends React.Component {
       tab: 'Auction',
       showBookingTicketPopup: false,
       showMapPopup: true,
-
 
       isValidData: false,
       email: null,
@@ -57,10 +51,23 @@ class Auction extends React.Component {
       cvv: null,
       month: null,
       year: null,
-      expMonth:null,
-      expYear:null,
+      expMonth: null,
+      expYear: null,
+      phoneNumber: null,
 
-      errorReg: null,
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue: null,
+      expYearValue: null,
+      emailValue: null,
+      passwordValue:null,
+      phoneNumberValue:null,
 
       firstNameFeedBack: false,
       lastNameFeedBack: false,
@@ -68,7 +75,9 @@ class Auction extends React.Component {
       cardHolderFeedBack: false,
       amountFeedBack: false,
       cvvFeedBack: false,
+      phoneNumberFeedBack: false,
 
+      errorReg: null,
       errorMsgfirstName: null,
       errorMsglastName: null,
       errorMsgcardNumber: null,
@@ -77,13 +86,15 @@ class Auction extends React.Component {
       errorMsgNumber: null,
       errorMsgcvv: null,
       errorMsgEmail: null,
-
+      errorMsgPhoneNumber: null,
+      showPopup: false,
     };
 
   }
+
   onBidFormClick = (e) => {
     e.preventDefault();
-
+    this.showPopup();
     if (this.state.isValidBidData) {
       const card = {
         number: this.cardNumber.value,
@@ -94,40 +105,32 @@ class Auction extends React.Component {
       Stripe.createToken(card, function (status, response) {
         console.log(status, response);
       });
-      // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
-      //     if(!resp.error){
-      //         history.push('/');
-      //         this.setState({error:""});
-      //     }
-      //     else{
-      //         this.setState({error:"Invalid Email or password"});
-      //     }
-      //
-      // });
     }
   };
-  onFormClick = (e) => {
+  signupForm = (e) => {
     e.preventDefault();
-
-
     if (this.state.isValidData) {
-      // this.props.doLogin(this.email.value, this.password.value ).then((resp)=>{
-      //     if(!resp.error){
-      //         history.push('/');
-      //         this.setState({error:""});
-      //     }
-      //     else{
-      //         this.setState({error:"Invalid Email or password"});
-      //     }
-      //
-      // });
+      let userData={
+        "countryCode": "IN",
+        "email": this.state.emailValue,
+        "password": this.state.passwordValue,
+        "phoneNumber": this.state.phoneNumberValue
+      }
+      this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
+          if(!resp.error){
+            window.location.reload();
+          }
+          else{
+              this.setState({error:"Invalid Email or password"});
+          }
+      });
     }
   };
-
   emailValidateHandler = (e) => {
-
     this.setState({
-      emailFeedBack: true
+      emailFeedBack: true,
+      emailValue:this.email.value,
+
     });
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -149,7 +152,8 @@ class Auction extends React.Component {
   passwordValidateHandler = (e) => {
 
     this.setState({
-      passwordFeedBack: true
+      passwordFeedBack: true,
+      passwordValue:this.password.value,
     });
 
     if (this.password.value == '') {
@@ -165,9 +169,6 @@ class Auction extends React.Component {
     this.setState({isValidData: !!(this.email.value && this.password.value)});
 
   };
-
-
-
   firstNameValidateHandler = (e) => {
 
     this.setState({
@@ -234,7 +235,8 @@ class Auction extends React.Component {
   cardNumberValidateHandler = (e) => {
 
     this.setState({
-      cardNumberFeedBack: true
+      cardNumberFeedBack: true,
+      cardNumberValue:this.cardNumber.value,
     });
 
 
@@ -260,7 +262,8 @@ class Auction extends React.Component {
   amountValidateHandler = (e) => {
 
     this.setState({
-      amountFeedBack: true
+      amountFeedBack: true,
+      amountValue:this.amount.value,
     });
 
     if (this.amount.value == '') {
@@ -305,6 +308,26 @@ class Auction extends React.Component {
     }
     this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
+  phoneNumberValidateHandler = (e) => {
+
+    this.setState({
+      phoneNumberFeedBack: true,
+      phoneNumberValue:this.phoneNumber.value,
+    });
+
+    if (this.phoneNumber.value == '') {
+
+      this.setState({
+        cvv: false,
+        errorMsgPhoneNumber: "phoneNumber is Require",
+      });
+    }  else {
+      this.setState({
+        phoneNumber: true
+      });
+    }
+   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
 
   componentWillMount() {
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -327,6 +350,16 @@ class Auction extends React.Component {
     });
 
   }
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false
+    })
+  };
 
   render() {
     let form_login = <div>
@@ -338,7 +371,7 @@ class Auction extends React.Component {
             data-validation-fields="getAuctionLoginValidationFields"
             action="/AccelEventsWebApp/events/jkazarian8/loginsignup"
             noValidate="novalidate"
-            onSubmit={this.onFormClick}>
+            onSubmit={this.signupForm}>
 
         <div className="ajax-msg-box text-center mrg-b-lg"
              style={{display: 'none'}}><span
@@ -380,7 +413,8 @@ class Auction extends React.Component {
                 <input type="tel" className="int-tel-field "
                        data-country="CA" autoComplete="off"
                        data-fv-field="intTelField"
-                       placeholder="204-234-5678"/>
+                       placeholder="204-234-5678"
+                       ref={ref => {this.phoneNumber = ref}} onKeyUp={this.phoneNumberValidateHandler} />
               </div>
             </div>
           </div>
@@ -429,7 +463,14 @@ class Auction extends React.Component {
               style={{display: 'none', width: 0, height: 0}}/>
       <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
         className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-      <div
+
+      <div className="form-group">
+        <div className="text-xs" style={{display: 'block'}}>Email Address <br /> <span
+          className="bidder-email">{this.props.user.email}</span></div>
+        <div className="text-xs" style={{display: 'block'}}>Cell Number <br /> <span
+          className="bidder-name">{this.props.user.phonenumber}</span></div>
+      </div>
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
         <label className="control-label">First Name</label>
         <div className="input-group">
@@ -448,8 +489,8 @@ class Auction extends React.Component {
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
         <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-      </div>
-      <div
+      </div> :""}
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
         <label className="control-label">Last Name</label>
         <div className="input-group">
@@ -468,7 +509,7 @@ class Auction extends React.Component {
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
         <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-      </div>
+      </div> :''}
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
         <div className="row">
@@ -490,13 +531,11 @@ class Auction extends React.Component {
             </div>
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgNumber}</small>}
-
-
           </div>
         </div>
       </div>
-
-      <style
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.linkedCard.stripeCards.length == 0 ) ?
+       <div> <style
         dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
       <div className="stripe-form">
         <div className="stripe-card-info">
@@ -547,10 +586,10 @@ class Auction extends React.Component {
                 <label className="control-label">Expiration Date</label>
                 <div className="input-group">
                   <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-                                                        aria-hidden="true"/></div>
-                  <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth"  ref={ref => {
+                                                                        aria-hidden="true"/></div>
+                  <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                     this.expMonth = ref;
-                  }} >
+                  }}>
                     <option selected value="10">Jan (01)</option>
                     <option value="02">Feb (02)</option>
                     <option value="03">Mar (03)</option>
@@ -564,9 +603,10 @@ class Auction extends React.Component {
                     <option value="11">Nov (11)</option>
                     <option value="12">Dec (12)</option>
                   </select>
-                  <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"  ref={ref => {
-                    this.expYear = ref;
-                  }} >
+                  <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                          ref={ref => {
+                            this.expYear = ref;
+                          }}>
                     <option value="2016">2016</option>
                     <option value="2017">2017</option>
                     <option value="2018">2018</option>
@@ -632,13 +672,12 @@ class Auction extends React.Component {
           </div>
         </div>
       </div>
-
       <div className="form-group">
         <div className="checkbox-nice">
           <input type="checkbox" id="uptodate" name="uptodate" defaultChecked/> <label
           htmlFor="uptodate">Stay up to date with Accelevents</label>
         </div>
-      </div>
+      </div></div> : "" }
 
       <button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')} role="button"
               type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
@@ -674,7 +713,7 @@ class Auction extends React.Component {
       <div className="curr-bid-text">Current Bid</div>
     </div>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
-      className="current-bid">400</span></div>
+      className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
 
     return (
@@ -706,11 +745,10 @@ class Auction extends React.Component {
                               }}/>
                             }
                           </Carousel>
-
                         </div>
                       </div>
-                      <div className="mrg-t-lg pad-l-md pad-r-md">
-                        {this.state.auctionData && this.state.auctionData.description}
+                      <div className="mrg-t-lg pad-l-md pad-r-md" dangerouslySetInnerHTML={ {__html: this.state.auctionData && this.state.auctionData.description } } >
+
                       </div>
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
@@ -734,8 +772,7 @@ class Auction extends React.Component {
                         </div>}
                       </div>
                       { bid_active ? div_bid_close : '' }
-                      { !bid_active ? this.props.authenticated ? this.props.user && this.props.user.cardLinked ? form_bid_only : form_bid : form_login : '' }
-
+                      { !bid_active ? this.props.authenticated ? this.props.user ? form_bid_only : form_bid : form_login : '' }
                     </div>
                   </div>
                 </div>
@@ -743,6 +780,23 @@ class Auction extends React.Component {
             </div>
           </div>
         </div>
+        <PopupModel
+          id="bookingPopup"
+          showModal={this.state.showPopup}
+          headerText="Confirm"
+          modelBody=''
+          onCloseFunc={this.hidePopup}>
+          <form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST">
+            <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+              Your card ending in {this.state.cardNumberValue && this.state.cardNumberValue[this.state.cardNumberValue.length - 4]}
+               will be charged ${this.state.amountValue } for {this.state.auctionData && this.state.auctionData.name}
+              <div className="modal-footer">
+                <button className="btn btn-success">Confirm</button>
+                <button className="btn btn-green">Close</button>
+              </div>
+            </div>
+          </form>
+        </PopupModel>
       </div>
     );
   }
@@ -763,6 +817,7 @@ const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   doGetAuctionItemByCode: (eventUrl, itemCode) => doGetAuctionItemByCode(eventUrl, itemCode),
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+  doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
 };
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
@@ -770,7 +825,6 @@ const mapStateToProps = (state) => ({
   auction_data: state.event && state.event.auction_data,
   user: state.session.user,
   authenticated: state.session.authenticated
-
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));
