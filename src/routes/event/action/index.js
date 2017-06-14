@@ -304,8 +304,8 @@ export function doGetOrderById(eventUrl, orderId) {
           dispatch(storeOrderData(resp.data));
         }
       return resp;
-    }).catch(error=>{
-      return error;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
     });
   }
 }

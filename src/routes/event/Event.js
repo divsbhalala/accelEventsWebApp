@@ -183,7 +183,7 @@ class Event extends React.Component {
 				});
 			})
 				.catch(error => {
-					console.log(error)
+					console.log(error);
 					// history.push('/404');
 				});
 		}
@@ -280,7 +280,7 @@ class Event extends React.Component {
 		totalTickets.map(item => {
 			//console.log(item)
 			totalPrice += item.price * item.numberofticket;
-		})
+		});
 		this.setState({
 			totalTickets: totalTickets,
 			totalTicketQty: 0 + parseInt(e.target.value) + this.state.totalTicketQty,
@@ -320,12 +320,12 @@ class Event extends React.Component {
 					fundANeedPageCount: 0,
 					fundANeedPageLoading: true,
 					fundANeedPageItems: [],
-				})
+				});
 				this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
 
 			}
 		}
-	}
+	};
 
 	handleScroll(event) {
 		/*if(this.props.title && this.props.title=='Event Page'){
@@ -353,11 +353,11 @@ class Event extends React.Component {
 		this.setState({
 			orderTicket: null
 		});
-		let eventUrl= this.props.params && this.props.params.params;
+		let eventUrl = this.props.params && this.props.params.params;
 		this.props.doOrderTicket(eventUrl, Data)
 			.then(resp => {
 				if (resp && resp.data && resp.data.orderId) {
-					history.push('/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
+					history.push('/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
 				}
 				else {
 					this.setState({
