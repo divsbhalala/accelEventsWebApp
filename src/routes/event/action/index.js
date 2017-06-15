@@ -354,7 +354,7 @@ export function getItemStatusByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -364,7 +364,7 @@ export function getItemStatusByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + encodeURI(email) +'/module/'+modeltype,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -373,7 +373,7 @@ export function getAuctionItemStatusByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -382,7 +382,7 @@ export function getAttendees(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/allAttendees',
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -391,7 +391,7 @@ export function setAttendees(eventUrl,barcode,status) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/checkin/barcode/' + barcode + "/checkin/" + status,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -443,7 +443,7 @@ export function submitBids(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/submitBids' ,
       data:userData,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -460,7 +460,7 @@ export function submitPledge(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/submitPledge' ,
       data:userData,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -477,7 +477,7 @@ export function sellTickets(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/sellTickets' ,
       data:userData,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -494,7 +494,7 @@ export function submitTickets(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/submitTickets' ,
       data:userData,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -511,7 +511,24 @@ export function submitDonate(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/donate' ,
       data:userData,
-      headers: {Authorization: '4Fi93BT8RHKjxrcAokNagA=='}
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function submitAuctionBid(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/auction/bid' ,
+      data:userData,
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

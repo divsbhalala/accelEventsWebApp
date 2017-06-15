@@ -487,6 +487,9 @@ class Volunteer extends React.Component {
     this.setState({
       showPopup: false
     })
+    if (this.state.popupHeader == "Success"){
+      window.location.reload();
+    }
   };
   submiteSilentAuctionBid = (e) => {
     e.preventDefault();
@@ -556,14 +559,14 @@ class Volunteer extends React.Component {
             errorMsgCard: response.error.message});
         }else{
           const user = {
-            email: self.state.emailValue,
-            countryCode: "IN",
+            amount: self.state.amountValue,
             cellNumber: self.state.phoneNumberValue,
+            countryCode: "IN",
+            email: self.state.emailValue,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
             paymenttype: 'CC',
             itemCode: self.state.itemCodeValue,
-            amount: self.state.amountValue,
             stripeToken: response.id,
           }
           self.props.submitPledge(self.props.params && self.props.params.params, user)
@@ -571,13 +574,13 @@ class Volunteer extends React.Component {
               if (resp && resp.data) {
                 self.setState({
                   showPopup: true,
-                  errorMsgCard: "",
-                  popupHeader:"Failed"});
+                  errorMsgCard: "Pledge Submit Successfully",
+                  popupHeader:"Success"});
               }else{
                 self.setState({
                   showPopup: true,
                   errorMsgCard: resp.errorMessage,
-                  popupHeader:"Success",
+                  popupHeader:"Failed",
                 });
               }
           });
@@ -2354,13 +2357,13 @@ class Volunteer extends React.Component {
           headerText={this.state.popupHeader}
           modelBody=''
           onCloseFunc={this.hidePopup}
-          modelFooter="22">
+         >
 
             <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
               { this.state && this.state.errorMsgCard }
               <div className="modal-footer">
                 {/*<button className="btn btn-success">Confirm</button>*/}
-                <Button>Close</Button>
+                <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
               </div>
             </div>
 
