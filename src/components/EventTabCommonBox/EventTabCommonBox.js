@@ -144,7 +144,7 @@ class EventTabCommonBox extends React.Component {
               { this.props.actionTitle &&
               <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.actionClassName)}
-                    style={{width: '50%'}}>{this.props.actionTitle}</Link>}
+                    >{this.props.actionTitle}</Link>}
               { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor &&
               <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.auctionBuyNowTitle}</Link>}

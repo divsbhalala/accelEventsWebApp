@@ -56,7 +56,7 @@ class Html extends React.Component {
         {/*<link rel="stylesheet" href="/css/host-dashboard.css" />*/}
         <link rel="stylesheet" href="/css/display.css"/>
         <link rel="stylesheet" href="/css/style.css"/>
-        <link rel="stylesheet" href="/css/react-style.min.css"/>
+        <link rel="stylesheet" href="/css/react-styles.min.css"/>
         {styles.map(style =>
           <style
             key={style.id}

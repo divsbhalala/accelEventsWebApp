@@ -427,8 +427,8 @@ class Event extends React.Component {
 												<InfiniteScroll
 													next={this.doGetLoadMoreAuctionItem}
 													hasMore={this.state.auctionPageLoading}
-													loader={<h4 className="text-center mrg-t-md"><span
-                            className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
+													loader={<div className="text-center"><span
+                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
 													{
 														this.state.auctionPageItems.map((item) =>
 															<EventTabCommonBox key={item.id + Math.random().toString()}
@@ -448,7 +448,7 @@ class Event extends React.Component {
 															                   images={item.images}
 															                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
 															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
-															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success w-50"}
+															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 															                   auctionPurchaseFor={ item.purchased}
 															                   buyItNowPrice={ item.buyItNowPrice > 0 ? "Buy now $" + item.buyItNowPrice : null}
 															                   auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
@@ -466,8 +466,8 @@ class Event extends React.Component {
 												<InfiniteScroll
 													next={this.doGetLoadMoreRaffleItem}
 													hasMore={this.state.rafflePageLoading}
-													loader={<h4 className="text-center mrg-t-md"><span
-                            className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
+                          loader={<div className="text-center"><span
+                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
 													{
 														this.state.rafflePageItems.map((item) =>
 															<EventTabCommonBox key={item.id + Math.random().toString()}
@@ -487,7 +487,7 @@ class Event extends React.Component {
 															                   images={item.images}
 															                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
 															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Raffle Closed" : "Raffle"}
-															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success w-50"}
+															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 															/>
 														)
 													}
@@ -499,8 +499,8 @@ class Event extends React.Component {
 												<InfiniteScroll
 													next={this.doGetLoadMoreFundANeedItem}
 													hasMore={this.state.fundANeedPageLoading}
-													loader={<h4 className="text-center mrg-t-md"><span
-                            className="fa fa-spinner fa-pulse fa-fw"></span></h4>}>
+                          loader={<div className="text-center"><span
+                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
 													{
 														this.state.fundANeedPageItems.map((item) =>
 															<EventTabCommonBox key={item.id + Math.random().toString()}
@@ -520,7 +520,7 @@ class Event extends React.Component {
 															                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
 															                   images={item.images}
 															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "PLEDGing Closed" : "PLEDGE"}
-															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success w-50"}
+															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 
 															/>
 														)
