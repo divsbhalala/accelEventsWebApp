@@ -116,39 +116,36 @@ class Auction extends React.Component {
         } else {
           self.setState({
             showPopup: true,
-            errorMsgCard: " Your card ending in " + self.state.cardNumberValue && this.state.cardNumberValue[this.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " + this.state.auctionData && this.state.auctionData.name ,
+            errorMsgCard: " Your card ending in " +  self.state.cardNumberValue[self.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
             popupHeader:"Success",
             stripeToken: response.id,
           })
-
         }
       });
     }
   };
   placeBid = () => {
-    {
-      var self = this;
       const user = {
-        email: self.props.user.email,
+        email: this.props.user.email,
         countryCode: "IN",
-        cellNumber: self.state.phoneNumberValue,
-        firstname: self.state.firstNameValue,
-        lastname: self.state.lastNameValue,
+        cellNumber: this.state.phoneNumberValue,
+        firstname: this.state.firstNameValue,
+        lastname: this.state.lastNameValue,
         paymenttype: 'CC',
-        itemCode: self.state.auctionData.code,
-        amount: self.state.amountValue,
-        stripeToken: sefl.stripeToken,
+        itemCode: this.state.auctionData.code,
+        amount: this.state.amountValue,
+        stripeToken: this.stripeToken,
       }
-      self.props.submitAuctionBid(self.props.params && self.props.params.params, user)
+    this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
         .then(resp => {
           if (resp && resp.data) {
-            self.setState({
+            this.setState({
               showPopup: true,
-              errorMsgCard: "Success , Your card ending in " + self.state.cardNumberValue && this.state.cardNumberValue[this.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " + this.state.auctionData && this.state.auctionData.name ,
+              errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue[this.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " +  this.state.auctionData.name ,
               popupHeader:"Success"
             })
           }else{
-            self.setState({
+            this.setState({
               showPopup: true,
               errorMsgCard: resp.errorMessage,
               popupHeader:"Failed"
@@ -156,7 +153,6 @@ class Auction extends React.Component {
           }
           console.log("------",resp)
         });
-    }
   }
   signupForm = (e) => {
     e.preventDefault();
@@ -332,7 +328,7 @@ class Auction extends React.Component {
         amount: true
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
   };
   cvvValidateHandler = (e) => {
@@ -1034,7 +1030,6 @@ class Auction extends React.Component {
           headerText={this.state.popupHeader}
           modelBody=''
           onCloseFunc={this.hidePopup}>
-          <form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST">
             <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
               { this.state && this.state.errorMsgCard }
               <div className="modal-footer">
@@ -1042,8 +1037,7 @@ class Auction extends React.Component {
                 <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
               </div>
             </div>
-          </form>
-        </PopupModel>
+         </PopupModel>
       </div>
     );
   }
