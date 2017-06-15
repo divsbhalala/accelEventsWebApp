@@ -19,6 +19,7 @@ import Footer from '../Footer';
 import {connect} from 'react-redux';
 import {sessionService, loadSession} from 'redux-react-session';
 import  {storeLoginData, storeToken} from './../../routes/login/action/index';
+import LoadingBar from 'react-redux-loading-bar';
 class Layout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
@@ -58,7 +59,8 @@ class Layout extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="test">
+        <LoadingBar />
         <HeaderNew user={this.state.user} admin={this.state.isAdmin} params={this.props.params}/>
         <div className="page-wrapper" id={this.state.isAdmin && "page-wrapper" }>
           {/*{this.state.user && <Sidebar className="w-20" user={this.state.user} />}*/}

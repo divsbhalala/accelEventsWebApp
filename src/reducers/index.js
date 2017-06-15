@@ -4,12 +4,12 @@ import event from './event';
 import order from './order';
 import runtime from './runtime';
 import {sessionReducer} from 'redux-react-session';
-import {reducer as toastrReducer} from 'react-redux-toastr';
+import { loadingBarReducer } from 'react-redux-loading-bar'
 export default combineReducers({
   user,
   event,
   order,
   runtime,
   session: sessionReducer,
-  toastr: toastrReducer
+  loadingBar: loadingBarReducer,
 });

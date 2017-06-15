@@ -1,8 +1,8 @@
 import axios from 'axios';
 import {apiUrl as API_URL} from './../../../clientConfig';
 let stripe_url = 'https://api.stripe.com/v1/';
-let secret_key = 'pk_test_fu5aDnh3A784u3bIiAY80DQ1';
-export function createCardToken(cardNumber, expMonth, expYear, cvc){
+let secret_key = 'pk_test_x9BXBdwFPlxaTKaWz1iv8Jzz';
+export function createCardToken(stripeKey, cardNumber, expMonth, expYear, cvc){
 	let cardDetails = {
 		"card[number]": cardNumber,
 		"card[exp_month]": expMonth,
@@ -24,7 +24,7 @@ export function createCardToken(cardNumber, expMonth, expYear, cvc){
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'Authorization': 'Bearer ' + secret_key
+				'Authorization': 'Bearer ' + stripeKey || secret_key
 			}
 		})
 	}

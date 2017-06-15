@@ -2706,10 +2706,6 @@ eventemitter3@1.x.x:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-1.2.0.tgz#1c86991d816ad1e504750e73874224ecf3bec508"
 
-eventemitter3@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-2.0.3.tgz#b5e1079b59fb5e1ba2771c0a993be060a58c99ba"
-
 events@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
@@ -5990,13 +5986,11 @@ react-proxy@^3.0.0-alpha.0:
   dependencies:
     lodash "^4.6.1"
 
-react-redux-toastr@^6.2.7:
-  version "6.2.7"
-  resolved "https://registry.yarnpkg.com/react-redux-toastr/-/react-redux-toastr-6.2.7.tgz#82471f5a39980fc52be45f92e00a895470754748"
+react-redux-loading-bar@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/react-redux-loading-bar/-/react-redux-loading-bar-2.9.2.tgz#f0e604ee35af5ecb25addb10bf24ca3d478c95a8"
   dependencies:
-    classnames "^2.2.3"
-    eventemitter3 "^2.0.3"
-    prop-types "^15.5.7"
+    prop-types "^15.5.6"
 
 react-redux@^5.0.4:
   version "5.0.4"

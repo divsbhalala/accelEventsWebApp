@@ -29,6 +29,7 @@ import {
 } from './../event/action/index';
 import {createCardToken, orderTicket} from './action/index';
 let Total = 0;
+let attendee = {};
 class Checkout extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
@@ -37,9 +38,12 @@ class Checkout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			attendee: [],
 			totalPrice: 0,
+			focusOn:null,
+			orderData:{},
 			cardHolder: false,
-			isloaded: false,
+			isLoaded: false,
 			isTimeout: false,
 			settings: {},
 			isValidData: false,
@@ -82,7 +86,6 @@ class Checkout extends React.Component {
 	componentWillMount() {
 		let eventUrl = this.props.params && this.props.params.params;
 		this.props.doGetEventData(eventUrl);
-		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 		this.props.doGetSettings(eventUrl, 'ticketing').then(resp => {
 			this.setState({
 				settings: resp && resp.data
@@ -90,25 +93,23 @@ class Checkout extends React.Component {
 		}).catch(error => {
 			//history.push('/404');
 		});
-		/*this.props.createCardToken().then(resp=>{
-		 console.log('resp', resp)
-		 }).catch(error=>{
-		 console.log('error', error)
-
-		 })*/
-
+		this.setState({
+			orderData: this.props.orderData
+		});
 		this.props.doGetOrderById(eventUrl, this.props.params && this.props.params.orderId).then(resp=> {
-			if (resp && resp.errorCode && resp.errorCode == "4060425") {
+			if (resp && resp.errorCode) {
 				this.setState({
 					isTimeout: true
 				})
 			}
 			this.setState({
-				isloaded: true
+				isLoaded: true
 			})
 		});
 	}
-
+	componentDidMount() {
+		console.log('reMounted')
+	}
 	emailValidateHandler = (e) => {
 
 		this.setState({
@@ -318,20 +319,13 @@ class Checkout extends React.Component {
 			this.cardExpYear.value &&
 			this.cardExpMonth.value &&
 			this.cardCVV.value) {
-			this.props.createCardToken(this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
+			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
 				console.log('resp', resp);
 				if (resp && resp.data && resp.data.id) {
 					let request = {
-						"clientDate": "string",
+						"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
 						"hasholderattributes": this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.hasHolderAttributes,
-						"purchaser": {
-							"attributes": [
-								{
-									"key": "string",
-									"value": "string"
-								}
-							]
-						},
+						"purchaser": {},
 						"stripeToken": resp.data.id
 					};
 
@@ -364,10 +358,10 @@ class Checkout extends React.Component {
 							let index = _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
 								return item.type == 'email';
 							});
-							if(index > -1){
+							if (index > -1) {
 								request.purchaser.attributes = [];
 								request.purchaser.attributes = request.purchaser.attributes.concat({
-									"Email" : this.props.orderData && this.props.orderData.purchaserDetail && this.props.orderData && this.props.orderData.purchaserDetail.email
+									"Email": this.props.orderData && this.props.orderData.purchaserDetail && this.props.orderData && this.props.orderData.purchaserDetail.email
 								})
 							}
 						}
@@ -375,9 +369,9 @@ class Checkout extends React.Component {
 					console.log('request', request);
 					let eventUrl = this.props.params && this.props.params.params;
 					let orderId = this.props.params && this.props.params.orderId;
-					this.props.orderTicket(eventUrl, orderId, request).then(resp =>{
+					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
 
-					}).catch(error=>{
+					}).catch(error=> {
 
 					})
 
@@ -400,13 +394,20 @@ class Checkout extends React.Component {
 	ticketTimeOut = () => {
 		this.setState({isTimeout: true})
 	};
-	setValue = (field, event) => {
+	setValue = (field, key, event) => {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
 		//Instead, we want to save the data for when the form is submitted
-		var object = {};
-		object[field] = event.target.value;
-		this.setState(object);
+		var object = attendee || {};
+		if(!object[key]){
+			object[key]={};
+		}
+		if(!object[key][field]){
+			object[key][field]='';
+		}
+		object[key][field] = event.target.value;
+		attendee= object;
+		console.log('h', object);
 	};
 
 	render() {
@@ -418,7 +419,7 @@ class Checkout extends React.Component {
 			return item;
 		};
 		return (
-			(this.state.isloaded) ?
+			(this.state.isLoaded) ?
 				(!this.state.isTimeout) ?
 					<div className="row">
 						<div className="col-lg-12">
@@ -531,7 +532,7 @@ class Checkout extends React.Component {
 																								 this.firstName = ref;
 																						  }}
 																									placeholder={item.name}
-																									onChange={this.setValue.bind(this, item.name)}
+																									onkeyup={this.setValue.bind(this, item.name)}
 																									required={item.mandatory}/>
 																							</div>
 																						</div>
@@ -539,89 +540,6 @@ class Checkout extends React.Component {
 																				</div>
 																			</div>)
 																	}
-																	{/*	<div className="custom-attribute">
-																	 <div className="form-group mrg-t-md">
-																	 <div className="row">
-																	 <div className="col-md-4 text-right">
-																	 <label className="text-right">First Name<span className="red">*</span></label>
-																	 </div>
-																	 <div
-																	 className={cx("col-md-6 text-left", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-																	 <div className="form-group ">
-																	 <input type="text" className="form-control" name="First Name"
-																	 ref={ref => {
-																	 this.firstName = ref;
-																	 }}
-																	 onKeyUp={this.firstNameValidateHandler}
-																	 required="required"/>
-																	 { this.state.firstNameFeedBack && this.state.firstName &&
-																	 <i
-																	 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																	 { this.state.firstNameFeedBack && !this.state.firstName &&
-																	 <i
-																	 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																	 { this.state.firstNameFeedBack && !this.state.firstName &&
-																	 <small className="help-block">The First Name is required.</small> }
-																	 </div>
-																	 </div>
-																	 </div>
-																	 </div>
-																	 </div>
-																	 <div className="custom-attribute">
-																	 <div className="form-group mrg-t-md">
-																	 <div className="row">
-																	 <div className="col-md-4 text-right">
-																	 <label className="text-right">Last Name<span className="red">*</span></label>
-																	 </div>
-																	 <div
-																	 className={cx("col-md-6 text-left", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-																	 <div className="form-group">
-																	 <input type="text" className="form-control" name="Last Name"
-																	 ref={ref => {
-																	 this.lastName = ref;
-																	 }}
-																	 onKeyUp={this.lastNameValidateHandler}
-																	 required="required"/>
-																	 { this.state.lastNameFeedBack && this.state.lastName &&
-																	 <i
-																	 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																	 { this.state.lastNameFeedBack && !this.state.lastName &&
-																	 <i
-																	 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																	 { this.state.lastNameFeedBack && !this.state.lastName &&
-																	 <small className="help-block">The Last Name is required.</small>}
-																	 </div>
-																	 </div>
-																	 </div>
-																	 </div>
-																	 </div>
-																	 <div className="custom-attribute">
-																	 <div className="form-group mrg-t-md">
-																	 <div className="row">
-																	 <div className="col-md-4 text-right">
-																	 <label className="text-right">Email<span className="red">*</span></label>
-																	 </div>
-																	 <div
-																	 className={cx("col-md-6 text-left", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
-																	 <div className="form-group">
-																	 <input type="email" className="form-control" name="Email"
-																	 ref={ref => {
-																	 this.email = ref;
-																	 }}
-																	 onKeyUp={this.emailValidateHandler}/>
-																	 { this.state.emailFeedBack && this.state.email &&
-																	 <i
-																	 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																	 { this.state.emailFeedBack && !this.state.email &&
-																	 <i
-																	 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																	 { this.state.emailFeedBack && !this.state.email &&
-																	 <small className="help-block">The Email is required.</small> }
-																	 </div>
-																	 </div>
-																	 </div>
-																	 </div>
-																	 </div>*/}
 																	{  _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
 																		return item.type == 'email';
 																	}) && <div className="custom-attribute">
@@ -1041,6 +959,52 @@ class Checkout extends React.Component {
 																	</div>
 																</div>
 																<hr />
+																{ this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.attendees ?
+																	this.props.orderData.ticketAttribute.attendees.map((item, itemKey) =><div
+																		className="attendee-data" key={Math.random()}>
+																		<h4 className="text-left">
+																			<strong>{item.header} - Ticket Holder Name</strong>
+																		</h4>
+																		{
+																			item.attributes ?
+																			item.attributes.map((attrib, key)=>
+																				<div className="holder-attribute" key={Math.random()}>
+																					<div className="custom-attribute">{console.log('reRender')}
+																						<div className="form-group mrg-t-md">
+																							<div className="row">
+																								<div className="col-md-4 text-right">
+																									<label className="text-right">{attrib.name}
+																										{ attrib.mandatory && <span className="red">*</span>}
+																									</label>
+																								</div>
+																								<div className="col-md-6 text-left">
+																									<div className="form-group has-feedback">
+																										<input type="text"
+																										       placeholder={attrib.name}
+																										       className="form-control"
+																										       name={attrib.name}
+																										       required={ attrib.mandatory}
+																										       value={attrib.value || this.state.attendee && this.state.attendee[itemKey] && this.state.attendee[itemKey][attrib.name] }
+																										       onChange={this.setValue.bind(this, attrib.name, itemKey)}
+																										/>
+																										<i className="form-control-feedback"/>
+																										<small className="help-block">The First Name is required.</small>
+																									</div>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																					<input type="hidden" name="tableId" defaultValue={0}/>
+																				</div>
+																			):""
+																		}
+																		<div className="holder-question">
+																			<input type="hidden" name="tableId" defaultValue={0}/>
+																		</div>
+																		<hr />
+																	</div>)
+																	: ''
+																}
 																<div className="mrg-t-lg text-center">
 																	<button className="btn pay-now btn-success">
 																		&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
@@ -1068,7 +1032,7 @@ const mapDispatchToProps = {
 	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
 	doGetOrderById: (eventUrl, orderId) => doGetOrderById(eventUrl, orderId),
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
-	createCardToken: (cardNumber, expMonth, expYear, cvc) => createCardToken(cardNumber, expMonth, expYear, cvc),
+	createCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => createCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 	orderTicket: (eventurl, orderid, ticketBookingDto) => orderTicket(eventurl, orderid, ticketBookingDto),
 };
 const mapStateToProps = (state) => ({
