@@ -1,0 +1,93 @@
+.tabs {
+  .nav-tabs {
+    .nav-link {
+      cursor: pointer;
+    }
+  }
+}
+.card {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  margin-top: 10px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  background-clip: padding-box;
+  &.item-card {
+    padding-bottom: 15px;
+  }
+  .flex-row {
+    margin: 0;
+    &+.flex-row {
+        margin: 0;
+    }
+  }
+  .card-image {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 1px;
+    img {
+      border-radius: 2px 2px 0 0;
+      background-clip: padding-box;
+      position: relative;
+      z-index: 1;
+    }
+  }
+  .card-content {
+    padding: 16px;
+    border-radius: 0 0 2px 2px;
+    background-clip: padding-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 86px;
+    p {
+      margin: 0;
+      color: inherit;
+    }
+  }
+  .action-wrap {
+    border-top: 1px solid rgba(160, 160, 160, 0.2);
+    a:hover {
+      text-decoration: none;
+    }
+    .card-action {
+      padding: 16px;
+      height: 100px;
+      .btn {
+        margin-bottom: -8px
+      }
+    }
+    .action-btns {
+      a {
+        transition: color 0.3s ease;
+        text-transform: uppercase;
+        &+a {
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+}
+@media ( max-width : 321px) {
+  .card {
+    .card-action {
+      a.actionlinks {
+        margin-right: 0px;
+      }
+    }
+  }
+}
+
+@media ( max-width : 424px) {
+  .card {
+    .card-action {
+      a.actionlinks {
+        padding-left: 9px;
+        padding-right: 9px;
+      }
+    }
+  }
+}
+.infinite-scroll-component {
+  p:last-child {
+    visibility: hidden;
+  }
+}
