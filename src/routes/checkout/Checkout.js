@@ -41,6 +41,7 @@ class Checkout extends React.Component {
 		this.state = {
 			attendee: [],
 			buyerInformationFields :[],
+			errorBuyer: [],
 			errorAttendee: [],
 			isFormSubmited : false,
 			totalPrice: 0,
@@ -320,61 +321,44 @@ class Checkout extends React.Component {
 		let purchaserDetail = this.props.orderData && this.props.orderData.purchaserDetail;
 		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
 		if(ticketAttribute.buyerInformationFields && ! purchaserDetail){
-
+			ticketAttribute.buyerInformationFields.map((item, index)=>{
+				if(!buyerInformationFields[index]){
+					buyerInformationFields[index] = {};
+				}
+				if(!buyerInformationFields[index][field.name]){
+					buyerInformationFields[index][field.name]={};
+				}
+				if(field.mandatory && !buyerInformationFields[index][field.name].value){
+					buyerInformationFields[index][field.name]['error'] = true;
+				}
+			});
+			this.setState({
+				errorBuyer: attendee
+			});
 		}
 		if(hasHolderAttributes){
-			if(!_.isEmpty(attendee)){
-				if(ticketAttribute && ticketAttribute.attendees){
-					ticketAttribute.attendees.map((item, index)=>{
-						if(!attendee[index]){
-							attendee[index] = {};
-						}
-						if(item.attributes){
-							item.attributes.map((field, key)=>{
-								if(!attendee[index][key]){
-									attendee[index][key] = {};
-								}
-								if(!attendee[index][key][field.name]){
-									attendee[index][key][field.name]={};
-								}
-								if(field.mandatory && !attendee[index][key][field.name].value){
-									attendee[index][key][field.name]['error'] = true;
-								}
-							})
-						}
-					});
-					this.setState({
-						errorAttendee: attendee
-					});
-				}
-				console.log(attendee)
-			}
-			else {
-				alert('Invalid Data');
-				if(ticketAttribute && ticketAttribute.attendees){
-					ticketAttribute.attendees.map((item, index)=>{
-						if(!attendee[index]){
-							attendee[index] = {};
-						}
-						if(item.attributes){
-							item.attributes.map((field, key)=>{
-								if(!attendee[index][key]){
-									attendee[index][key] = {};
-								}
-								if(!attendee[index][key][field.name]){
-									attendee[index][key][field.name]={};
-								}
-								if(field.mandatory){
-									attendee[index][key][field.name]['error'] = true;
-								}
-							})
-						}
-					});
-					this.setState({
-						errorAttendee: attendee
-					});
-				}
-				return false;
+			if(ticketAttribute && ticketAttribute.attendees){
+				ticketAttribute.attendees.map((item, index)=>{
+					if(!attendee[index]){
+						attendee[index] = {};
+					}
+					if(item.attributes){
+						item.attributes.map((field, key)=>{
+							if(!attendee[index][key]){
+								attendee[index][key] = {};
+							}
+							if(!attendee[index][key][field.name]){
+								attendee[index][key][field.name]={};
+							}
+							if(field.mandatory && !attendee[index][key][field.name].value){
+								attendee[index][key][field.name]['error'] = true;
+							}
+						})
+					}
+				});
+				this.setState({
+					errorAttendee: attendee
+				});
 			}
 		}
 		else if (this.cardNumber.value &&
@@ -466,7 +450,6 @@ class Checkout extends React.Component {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
 		//Instead, we want to save the data for when the form is submitted
-		console.log(event.target)
 		let object = attendee || {};
 		let value = event.target.value;
 		if(!object[key]){
@@ -507,7 +490,6 @@ class Checkout extends React.Component {
 		else if(value && event.target.parentElement){
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
-			console.log(event.target, event.target.parentElement)
 		}
 		attendee= object;
 	};
@@ -548,7 +530,6 @@ class Checkout extends React.Component {
 		else if(value && event.target.parentElement){
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
-			console.log(event.target, event.target.parentElement)
 		}
 	};
 
