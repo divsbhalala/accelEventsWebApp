@@ -317,6 +317,9 @@ class Checkout extends React.Component {
 		e.preventDefault();
 		console.log(e);
 		debugger;
+		this.setState({
+			isFormSubmited: true
+		});
 		let ticketAttribute = this.props.orderData && this.props.orderData.ticketAttribute;
 		let purchaserDetail = this.props.orderData && this.props.orderData.purchaserDetail;
 		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
@@ -353,6 +356,7 @@ class Checkout extends React.Component {
 							if(field.mandatory && !attendee[index][key][field.name].value){
 								attendee[index][key][field.name]['error'] = true;
 							}
+							console.log(attendee[index][key], field)
 						})
 					}
 				});
@@ -638,7 +642,7 @@ class Checkout extends React.Component {
 																	{
 																		this.props.orderData.ticketAttribute.buyerInformationFields.map((item, key)=>
 																			<div className="custom-attribute" key={item.name}>
-																				<div className="form-group mrg-t-md">
+																				<div className={cx("form-group mrg-t-md")}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
 																							<label className="text-right">{item.name} { item.mandatory &&
@@ -646,7 +650,10 @@ class Checkout extends React.Component {
 																						</div>
 																						<div
 																							className={cx("col-md-6 text-left", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-																							<div className="form-group ">
+																							<div className={cx("form-group ",
+																							this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name]  && 'has-feedback',
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error'
+																								)}>
 																								<input
 																									type={item.type}
 																									className="form-control"
@@ -654,6 +661,15 @@ class Checkout extends React.Component {
 																									placeholder={item.name}
 																									onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
 																									required={item.mandatory}
+																									defaultValue={item.value ||
+																									(
+																										 this.state.errorAttendee &&
+																										 this.state.errorAttendee[itemKey] &&
+																										 this.state.errorAttendee[itemKey][key] &&
+																										 this.state.errorAttendee[itemKey][key][attrib.name] &&
+																										 this.state.errorAttendee[itemKey][key][attrib.name].value
+																								  )
+																					        }
 																								/>
 																								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
@@ -680,14 +696,9 @@ class Checkout extends React.Component {
 																						 }}
 																					       onKeyUp={this.passwordValidateHandler}
 																					       required="required"/>
-																					{ this.state.passwordFeedBack && this.state.password &&
-																					<i
-																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																					{ this.state.passwordFeedBack && !this.state.password &&
-																					<i
-																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																					{ this.state.passwordFeedBack && !this.state.password &&
-																					<small className="help-block">This value is not valid</small> }
+																					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																					<small className="help-block">This value is not valid</small>
 																				</div>
 																			</div>
 																		</div>
@@ -747,48 +758,60 @@ class Checkout extends React.Component {
 																			dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
 																		<div className="stripe-form">
 																			<div className="stripe-card-info">
-																				<div className="form-group">
+																				<div className={cx("form-group",
+																				(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																				(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName && 'has-success',
+																				(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')
+																				}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
-																							<label className="control-label">Card Holder Name</label>
+																							<label className="">Card Holder Name</label>
 																						</div>
 																						<div
-																							className={cx("col-md-6 text-left", (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																							className={cx("col-md-6 text-left")}>
+																							<div className={cx("input-group",
+																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
 																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName && 'has-success',
-																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')}>
-																							<div className="input-group">
+																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')
+																								}>
 																								<div className="input-group-addon">
 																									<i className="fa fa-user" aria-hidden="true"/>
 																								</div>
 																								<input type="text" className="form-control" id="cardname"
 																								       placeholder="Name on the card"
 																								       ref={ref => {
-																										 this.cardHolderName = ref;
-																									 }}
+																												 this.cardHolderName = ref;
+																											 }}
 																								       onKeyUp={this.cardHolderNameValidateHandler}/>
 																							</div>
-																							{ this.state.cardHolderNameFeedBack && this.state.cardHolderName &&
+																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																							{ this.state.cardHolderNameFeedBack && !this.state.cardHolderName &&
+																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && !this.state.cardHolderName &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																							{ this.state.cardHolderNameFeedBack && !this.state.cardHolderName &&
+																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && !this.state.cardHolderName &&
 																							<small
 																								className="help-block">{this.state.cardHolderNameFeedBackMsg || "The card holder name is required and can't be empty" }</small>}
 																						</div>
 																					</div>
 																				</div>
-																				<div className="form-group has-feedback">
+																				<div className={cx("form-group",
+																					(this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																					(this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber && 'has-success',
+																					(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')
+																				}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
-																							<label className="control-label">Credit Card Number</label>
+																							<label className="">Credit Card Number</label>
 																						</div>
 																						<div
-																							className={cx("col-md-6 text-left", (this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																							className={cx("col-md-6 text-left")}>
+																							<div className={cx("input-group",
+																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
 																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber && 'has-success',
-																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')}>
-																							<div className="input-group">
+																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')
+																								}>
 																								<div className="input-group-addon">
 																									<i className="fa fa-credit-card" aria-hidden="true"/>
 																								</div>
@@ -800,25 +823,33 @@ class Checkout extends React.Component {
 																								       onKeyUp={this.cardNumberValidateHandler}
 																								       required="required" data-fv-field="cardnumber"/>
 																							</div>
-																							{ this.state.cardNumberFeedBack && this.state.cardNumber &&
+																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited)&& this.state.cardNumber &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																							{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
+																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited)&& !this.state.cardNumber &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																							{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
+																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited)&& !this.state.cardNumber &&
 																							<small
 																								className="help-block">{this.state.cardNumberFeedBackMsg || "The credit card number is required and can't be empty "}</small>}
 																						</div>
 																					</div>
 																				</div>
-																				<div className="form-group expiration-date has-feedback">
+																				<div className={cx("form-group expiration-date",
+																				((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
+																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && 'has-success',
+																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) && 'has-error')
+																								}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
-																							<label className="control-label">Expiration Date</label>
+																							<label className="">Expiration Date</label>
 																						</div>
-																						<div className="col-md-8 text-left">
-																							<div className="input-group">
+																						<div className={cx("col-md-8 text-left")}>
+																							<div className={cx("input-group",
+																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
+																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && 'has-success',
+																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) && 'has-error')
+																								}>
 																								<div className="input-group-addon">
 																									<i className="fa fa-calendar" aria-hidden="true"/></div>
 																								<select className data-stripe="exp_month"
@@ -888,8 +919,7 @@ class Checkout extends React.Component {
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group"
 																								data-fv-icon-for="expMonth"/>
-																							{ null && <small className="help-block">The expiration month is required
-																							</small>}
+																							{ ((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && <small className="help-block">Invalid card Expiration date </small>}
 																							{ null && <small className="help-block" >The expiration month can contain digits only
 																							</small>}
 																							{ null && <small className="help-block" >Your card is Expired
@@ -902,15 +932,21 @@ class Checkout extends React.Component {
 																						</div>
 																					</div>
 																				</div>
-																				<div className="form-group">
+																				<div className={cx("form-group",
+																					(this.state.cardCVVFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																					(this.state.cardCVVFeedBack || this.state.isFormSubmited) && this.state.cardCVV && 'has-success',
+																					(this.state.cardCVVFeedBack || this.state.isFormSubmited) && (!this.state.cardCVV) && 'has-error'
+																				)}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
-																							<label className="control-label">CVV Number</label>
+																							<label className="">CVV Number</label>
 																						</div>
 																						<div
-																							className={cx("col-md-8 text-left", (this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
-																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber && 'has-success',
-																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')}>
+																							className={cx("col-md-8 text-left",
+																							(this.state.cardCVVFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																							(this.state.cardCVVFeedBack || this.state.isFormSubmited) && this.state.cardCVV && 'has-success',
+																							(this.state.cardCVVFeedBack || this.state.isFormSubmited) && (!this.state.cardCVV) && 'has-error')
+																							}>
 																							<div className="input-group">
 																								<input type="number" className="form-control"
 																								       maxLength={4}
@@ -924,13 +960,13 @@ class Checkout extends React.Component {
 																							</div>
 																							<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																							   data-fv-icon-for="cvv"/>
-																							{ this.state.cardCVVFeedBack && this.state.cardCVV &&
+																							{ (this.state.cardCVVFeedBack || this.state.isFormSubmited) && this.state.cardCVV &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																							{ this.state.cardCVVFeedBack && !this.state.cardCVV &&
+																							{ (this.state.cardCVVFeedBack || this.state.isFormSubmited) && !this.state.cardCVV &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																							{ this.state.cardCVVFeedBack && !this.state.cardCVV &&
+																							{ (this.state.cardCVVFeedBack || this.state.isFormSubmited) && !this.state.cardCVV &&
 																							<small
 																								className="help-block">{this.state.cardCVVFeedBackMsg || "The CVV is required and can't be empty"}</small>}
 																						</div>
@@ -940,7 +976,7 @@ class Checkout extends React.Component {
 																			<div className="form-group">
 																				<div className="row">
 																					<div className="col-md-4 text-right">
-																						<label className="control-label">Address Line 1</label>
+																						<label className="">Address Line 1</label>
 																					</div>
 																					<div className="col-md-6 text-left">
 																						<div className="input-group">
@@ -956,7 +992,7 @@ class Checkout extends React.Component {
 																			<div className="form-group">
 																				<div className="row">
 																					<div className="col-md-4 text-right">
-																						<label className="control-label">Address Line 2</label>
+																						<label className="">Address Line 2</label>
 																					</div>
 																					<div className="col-md-6 text-left">
 																						<div className="input-group">
@@ -972,7 +1008,7 @@ class Checkout extends React.Component {
 																			<div className="form-group">
 																				<div className="row">
 																					<div className="col-md-4 text-right">
-																						<label className="control-label">City</label>
+																						<label className="">City</label>
 																					</div>
 																					<div className="col-md-6 text-left">
 																						<div className="input-group">
@@ -987,7 +1023,7 @@ class Checkout extends React.Component {
 																			<div className="form-group">
 																				<div className="row">
 																					<div className="col-md-4 text-right">
-																						<label className="control-label">State</label>
+																						<label className="">State</label>
 																					</div>
 																					<div className="col-md-6 text-left">
 																						<div className="input-group">
@@ -1054,7 +1090,7 @@ class Checkout extends React.Component {
 																			<div className="form-group has-feedback">
 																				<div className="row">
 																					<div className="col-md-4 text-right">
-																						<label className="control-label">Zip Code</label>
+																						<label className="">Zip Code</label>
 																					</div>
 																					<div className="col-md-6 text-left">
 																						<div className="input-group">
@@ -1089,7 +1125,7 @@ class Checkout extends React.Component {
 																			item.attributes.map((attrib, key)=>
 																				<div className="holder-attribute" key={Math.random()}>
 																					<div className="custom-attribute">
-																						<div className="form-group mrg-t-md">
+																						<div className={cx("form-group mrg-t-md")}>
 																							<div className="row">
 																								<div className="col-md-4 text-right">
 																									<label className="text-right">{attrib.name}
@@ -1098,7 +1134,7 @@ class Checkout extends React.Component {
 																								</div>
 																								<div className="col-md-6 text-left">
 																									<div className={cx("form-group",
-																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name] && 'has-feedback',
+																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
 																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
 																									)}>
 																										<input type="text"
