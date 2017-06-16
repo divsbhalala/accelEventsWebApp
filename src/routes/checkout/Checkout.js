@@ -26,6 +26,7 @@ import {
 	doGetEventData,
 	doGetOrderById,
 	doGetSettings,
+	doSignUp,
 } from './../event/action/index';
 import {createCardToken, orderTicket} from './action/index';
 let Total = 0;
@@ -86,6 +87,7 @@ class Checkout extends React.Component {
 		this.ticketCheckout = this.ticketCheckout.bind(this);
 		this.ticketTimeOut = this.ticketTimeOut.bind(this);
 		this.validateEmail = this.validateEmail.bind(this);
+		this.doCheckout = this.doCheckout.bind(this);
 
 	}
 
@@ -130,44 +132,6 @@ class Checkout extends React.Component {
 		else {
 			this.setState({
 				email: true
-			});
-		}
-	};
-	firstNameValidateHandler = (e) => {
-
-		this.setState({
-			firstNameFeedBack: true
-		});
-		if (this.firstName.value == ' ') {
-			this.firstName.value = '';
-		}
-		if (!this.firstName.value) {
-			this.setState({
-				firstName: false
-			});
-		}
-		else {
-			this.setState({
-				firstName: true
-			});
-		}
-	};
-	lastNameValidateHandler = (e) => {
-
-		this.setState({
-			lastNameFeedBack: true
-		});
-		if (this.lastName.value == ' ') {
-			this.lastName.value = '';
-		}
-		if (!this.lastName.value) {
-			this.setState({
-				lastName: false
-			});
-		}
-		else {
-			this.setState({
-				lastName: true
 			});
 		}
 	};
@@ -316,11 +280,10 @@ class Checkout extends React.Component {
 	ticketCheckout = (e) => {
 		e.preventDefault();
 		let validData = false;
-		debugger;
-
 		this.setState({
 			isFormSubmited: true
 		});
+		let eventUrl = this.props.params && this.props.params.params;
 		let orderData = this.props.orderData ;
 		let purchaserDetail = orderData && orderData.purchaserDetail;
 		let ticketAttribute = orderData && orderData.ticketAttribute;
@@ -371,80 +334,135 @@ class Checkout extends React.Component {
 		}
 
 		setTimeout(()=>{
+			let emailIndex = _.findIndex(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
+				return item.type == 'email';
+			});
+			console.log(emailIndex, buyerInformationFields, buyerInformationFields[emailIndex]);
 			validData = document.getElementsByClassName("has-error").length == 0;
-			if (validData && this.cardNumber.value &&
-				this.cardExpMonth.value &&
-				this.cardExpYear.value &&
-				this.cardExpMonth.value &&
-				this.cardCVV.value) {
-				this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
-					console.log('resp', resp);
-					if (resp && resp.data && resp.data.id) {
-						let request = {
-							"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
-							"hasholderattributes": hasHolderAttributes,
-							"purchaser": {},
-							"stripeToken": resp.data.id
-						};
-
-						if (request.hasholderattributes) {
-							request.holder = [
-								{
-									"attributes": attendee,
-									"questions": [
-										{
-											"key": "string",
-											"value": "string"
-										}
-									],
-									"tableid": 0,
-									"tickettypeid": 0
-								}
-							];
+			if(validData){
+				if(!this.props.authenticated){
+					alert('unauthneticated');
+					let requestData;
+					if(emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error == false){
+						let Email = buyerInformationFields[emailIndex]['Email'];
+						requestData ={
+							email : buyerInformationFields[emailIndex]['Email'].value,
+							password : this.password && this.password.value
 						}
-
-						if (ticketAttribute) {
-							if (ticketAttribute.buyerQuestions) {
-								request.purchaser.questions = [];
-							}
-							if (ticketAttribute.buyerInformationFields) {
-								let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
-									return item.type == 'email';
-								});
-								if (index > -1) {
-									request.purchaser.attributes = [];
-									request.purchaser.attributes = request.purchaser.attributes.concat({
-										"Email": orderData && orderData.purchaserDetail  && orderData.purchaserDetail.email
-									})
-								}
-							}
+					}
+					else{
+						alert('No email adddress found');
+					}
+					console.log('requestData', requestData);
+					this.props.doSignUp(eventUrl, requestData).then(resp=>{
+						console.log(resp);
+						if(resp && !resp.errorCode){
+							this.doCheckout(ticketAttribute, orderData);
 						}
-						console.log('request', request);
-						let eventUrl = this.props.params && this.props.params.params;
-						let orderId = this.props.params && this.props.params.orderId;
-						this.props.orderTicket(eventUrl, orderId, request).then(resp => {
-
-						}).catch(error=> {
-
-						})
-
-					}
-					else {
-						alert('Invalid Data');
-
-					}
-
-				}).catch(error=> {
-					console.log('error', error);
-					alert('Invalid Data');
-				})
+						else {
+							alert('Error in user Signup');
+						}
+					}).catch(error=>{
+						alert('Error in user Signup');
+					})
+				}
+				else{
+					alert('authenticated');
+					this.doCheckout(ticketAttribute, orderData);
+				}
 			}
 			else {
 				alert('Invalid Data');
 			}
-		},100)
+
+		},100);
 
 		return false;
+	};
+
+	doCheckout = (ticketAttribute, orderData)=>{
+		if (this.cardNumber.value &&
+			this.cardExpMonth.value &&
+			this.cardExpYear.value &&
+			this.cardExpMonth.value &&
+			this.cardCVV.value) {
+			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
+				console.log('resp', resp);
+				if (resp && resp.data && resp.data.id) {
+					let request = {
+						"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
+						"hasholderattributes": ticketAttribute.hasHolderAttributes,
+						"purchaser": {},
+						"stripeToken": resp.data.id
+					};
+
+					if (request.hasholderattributes) {
+						let holder =[];
+						if(attendee){
+							attendee[0].map((item, itemKey)=>{
+								let keys =_.keys(item);
+								keys.map(keyItem =>{
+									if(item[keyItem].key){
+										holder.push({
+											key : item[keyItem].key,
+											value : item[keyItem].value,
+										})
+									}
+								})
+							})
+						}
+						console.log('holder', holder);
+						request.holder = [
+							{
+								"attributes": holder,
+								"questions": [
+									{
+										"key": "string",
+										"value": "string"
+									}
+								],
+								"tableid": 0,
+								"tickettypeid": 0
+							}
+						];
+					}
+
+					if (ticketAttribute) {
+						if (ticketAttribute.buyerQuestions) {
+							request.purchaser.questions = [];
+						}
+						if (ticketAttribute.buyerInformationFields) {
+							let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
+								return item.type == 'email';
+							});
+							if (index > -1) {
+								request.purchaser.attributes = [];
+								request.purchaser.attributes = request.purchaser.attributes.concat({
+									"Email": orderData && orderData.purchaserDetail  && orderData.purchaserDetail.email
+								})
+							}
+						}
+					}
+					let eventUrl = this.props.params && this.props.params.params;
+					let orderId = this.props.params && this.props.params.orderId;
+					console.log(JSON.stringify(request))
+					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
+						console.log('res of request', resp)
+					}).catch(error=> {
+						console.log('error of request', error)
+					})
+
+				}
+				else {
+					alert('Invalid Data');
+
+				}
+
+			}).catch(error=> {
+				console.log('error', error);
+				alert('Invalid Data');
+			})
+		}
 	};
 	ticketTimeOut = () => {
 		this.setState({isTimeout: true})
@@ -653,9 +671,9 @@ class Checkout extends React.Component {
 																							<span className="red">*</span>}</label>
 																						</div>
 																						<div
-																							className={cx("col-md-6 text-left", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+																							className={cx("col-md-6 text-left")}>
 																							<div className={cx("form-group ",
-																							this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name]  && 'has-feedback',
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name]  && 'has-feedback',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value && 'has-success'
 																								)}>
@@ -707,7 +725,6 @@ class Checkout extends React.Component {
 																			</div>
 																		</div>
 																	</div> }
-
 																</div> }
 
 																{ this.props.orderData && this.props.orderData.purchaserDetail &&
@@ -1205,6 +1222,7 @@ const mapDispatchToProps = {
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	createCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => createCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 	orderTicket: (eventurl, orderid, ticketBookingDto) => orderTicket(eventurl, orderid, ticketBookingDto),
+	doSignUp: (eventurl, userData) => doSignUp(eventurl, userData),
 };
 const mapStateToProps = (state) => ({
 	eventData: state.event && state.event.data,

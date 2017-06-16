@@ -1,5 +1,7 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import {sessionService, loadSession} from 'redux-react-session';
+
 import {apiUrl as API_URL} from './../../../clientConfig';
 export function doGetEventData(eventUrl) {
   return (dispatch) => {
@@ -403,12 +405,14 @@ export function doSignUp(eventUrl,userData) {
       data:userData
     }).then(response => {
       dispatch(storeToken(response.data.access_token));
-      getUserDetails(response.data.access_token).then(resp => {
+      getUserDetails(response.data && response.data.access_token).then(resp => {
         dispatch(storeLoginData(resp.data));
         localStorage.setItem('user', JSON.stringify(resp.data));
+        localStorage.setItem('token', response.data.access_token);
+        sessionService.saveSession(localStorage.getItem('token'));
+        sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
       }).catch(err => {
-      })
-      localStorage.setItem('token', JSON.stringify(response.data.access_token));
+      });
       return response;
     })
       .catch(error => {
