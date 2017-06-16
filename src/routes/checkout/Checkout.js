@@ -485,13 +485,19 @@ class Checkout extends React.Component {
 				else {
 					alert('Invalid Data');
 
-				}
+					}
 
-			}).catch(error=> {
-				console.log('error', error);
+				}).catch(error=> {
+					console.log('error', error);
+					alert('Invalid Data');
+				})
+			}
+			else {
 				alert('Invalid Data');
-			})
-		}
+			}
+		},100)
+
+		return false;
 	};
 	ticketTimeOut = () => {
 		this.setState({isTimeout: true})

@@ -58,9 +58,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/style.css"/>
 
         <link rel="stylesheet" href="/css/react-styles.min.css"/>
-
         <link rel="stylesheet" href="/css/telInput.css"/>
-
         {styles.map(style =>
           <style
             key={style.id}
