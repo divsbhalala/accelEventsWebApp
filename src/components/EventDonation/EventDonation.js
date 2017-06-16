@@ -35,12 +35,100 @@ class EventDonation extends React.Component {
     super(props);
     this.state = {
       donationRate: 15,
-      showDonationPopup: false
+      showDonationPopup: false,
+
+      isValidData: false,
+      email: null,
+      password: null,
+      error: null,
+      emailFeedBack: false,
+      passwordFeedBack: false,
+      auctionData: null,
+
+      isValidBidData: false,
+
+      firstName: null,
+      lastName: null,
+      cardNumber: null,
+      cardHolder: null,
+      amount: null,
+      cvv: null,
+      month: null,
+      year: null,
+      expMonth: null,
+      expYear: null,
+      phoneNumber: null,
+      popupHeader:null,
+
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue: null,
+      expYearValue: null,
+      emailValue: null,
+      passwordValue:null,
+      phoneNumberValue:null,
+      errorMsgCard:null,
+
+      firstNameFeedBack: false,
+      lastNameFeedBack: false,
+      cardNumberFeedBack: false,
+      cardHolderFeedBack: false,
+      amountFeedBack: false,
+      cvvFeedBack: false,
+      phoneNumberFeedBack: false,
+
+      errorReg: null,
+      errorMsgfirstName: null,
+      errorMsglastName: null,
+      errorMsgcardNumber: null,
+      errorMsgcardHolder: null,
+      errorMsgamount: null,
+      errorMsgNumber: null,
+      errorMsgcvv: null,
+      errorMsgEmail: null,
+      errorMsgPhoneNumber: null,
+      showPopup: false,
+      stripeToken:null,
     }
     this.showDonationPopup = this.showDonationPopup.bind(this);
     this.hideDonationPopup = this.hideDonationPopup.bind(this);
   }
-
+  onBidFormClick = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+    if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message,
+            popupHeader:"Failed"
+          });
+        } else {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: " Your card ending in " +  self.state.cardNumberValue[self.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
+            popupHeader:"Success",
+            stripeToken: response.id,
+          })
+        }
+      });
+    }
+  };
   handleRadioChange = (event) => {
     this.setState({
       donationRate: event.currentTarget.value
@@ -112,7 +200,7 @@ class EventDonation extends React.Component {
         <PopupModel
           id="mapPopup"
           showModal={this.state.showDonationPopup}
-          headerText="Event Location"
+          headerText="Submit Donation"
           onCloseFunc={this.hideDonationPopup}
         >
           <div className="main-box-body clearfix">

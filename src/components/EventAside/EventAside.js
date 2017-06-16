@@ -36,7 +36,8 @@ class EventAside extends React.Component {
     super(props);
     this.state = {
       showBuyRaffelTicketPopup: false,
-      filterCategory:''
+      filterCategory:'',
+      serachSring:''
     };
     this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
     this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
@@ -52,10 +53,12 @@ class EventAside extends React.Component {
       showBuyRaffelTicketPopup: false
     })
   };
-
+  serachString = (e) =>{
+    this.props.setSearchString(this.serachKey.value);
+  }
   render() {
     return (
-      <div>{console.log('srtt', this.props.settings)}
+      <div>
         <script type="text/javascript"
                 src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
         <div className={cx("main-box", "clearfix")}>
@@ -171,7 +174,9 @@ class EventAside extends React.Component {
                onClick={this.showBuyRaffelTicketPopup}>{moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
             { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) &&
             <div className={cx("search-bar card")} data-module="">
-              <input type="text" className={cx("form-control")} placeholder="Search Items..."/>
+              <input type="text" className={cx("form-control")} placeholder="Search Items..." onChange={this.serachString}  ref={ref => {
+                this.serachKey = ref;
+              }}/>
             </div> }
             <div className={cx("text-center powered-by-sidebar")}><span>Powered by </span><a
               href="https://www.accelevents.com" target="_blank">
@@ -180,12 +185,11 @@ class EventAside extends React.Component {
                 className={cx("img-responsive")}/>
             </a>
             </div>
-
-            { this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories &&
+            { this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories && this.props.activeCategory &&
             <div id="divItemCategories" className={cx("item-categories hidden-xs")}>
               <h4 className={cx("")}>Categories</h4>
               <ul className={cx("nav nav-pills nav-stacked category-list ")}>
-                <li className={cx("all-items",this.props.selectedCategoty == '' && "active")} onClick={()=>{this.props.setFilterCategory('')}}>
+                <li className={cx("all-items",this.props.selectedCategoty == '' && "active")} >
                   <a href="#" className={cx("category-switcher all-items")} data-category="" data-module="#raffle">
                     <i className={cx("fa fa-ticket")}></i>
                     <span className={cx("cat-name")}>All Items</span>

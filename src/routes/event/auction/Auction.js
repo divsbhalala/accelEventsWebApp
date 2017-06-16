@@ -96,7 +96,14 @@ class Auction extends React.Component {
 
   onBidFormClick = (e) => {
     e.preventDefault();
-    console.log(this.state)
+    console.log("---",this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0);
+    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+      this.setState({
+        showPopup: true,
+        errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
+        popupHeader:"Confirm",
+      })
+    }
     var self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
     if (this.state.isValidBidData) {
@@ -116,7 +123,7 @@ class Auction extends React.Component {
         } else {
           self.setState({
             showPopup: true,
-            errorMsgCard: " Your card ending in " +  self.state.cardNumberValue[self.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
+            errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
             popupHeader:"Success",
             stripeToken: response.id,
           })
@@ -141,7 +148,7 @@ class Auction extends React.Component {
           if (resp && resp.data) {
             this.setState({
               showPopup: true,
-              errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue[this.state.cardNumberValue.length - 4] + " will be charged $ "+  self.state.amountValue  + " for  " +  this.state.auctionData.name ,
+              errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue.slice( - 4) + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
               popupHeader:"Success"
             })
           }else{
@@ -154,6 +161,29 @@ class Auction extends React.Component {
           console.log("------",resp)
         });
   }
+  placeBidByAmount = () => {
+    const user = {
+      itemCode: this.state.auctionData.code,
+      amount: this.state.amountValue,
+    }
+    this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && resp.message) {
+          this.setState({
+            showPopup: true,
+            errorMsgCard: "Thank you for your purchase!",
+            popupHeader:"Successfully"
+          })
+        }else{
+          this.setState({
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed"
+          });
+        }
+        console.log("------",resp)
+      });
+  }
   signupForm = (e) => {
     e.preventDefault();
     if (this.state.isValidData) {
@@ -165,7 +195,11 @@ class Auction extends React.Component {
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
           if(!resp.error){
-           // window.location.reload();
+            this.setState({
+              showPopup: true,
+              errorMsgCard: "Thank you for Registration!",
+              popupHeader:"Successfully"
+            })
           }
           else{
               this.setState({error:"Invalid Email or password"});
@@ -294,7 +328,7 @@ class Auction extends React.Component {
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
       });
-    } else if (this.cardNumber.value.length !== 16) {
+    } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -365,7 +399,7 @@ class Auction extends React.Component {
     if (this.phoneNumber.value == '') {
 
       this.setState({
-        cvv: false,
+        phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
       });
     }  else {
@@ -406,6 +440,7 @@ class Auction extends React.Component {
     this.setState({
       showPopup: false
     })
+    this.reRender();
   };
   reRender = ()=>{
     window.location.reload();
@@ -723,8 +758,8 @@ class Auction extends React.Component {
         Submit bid
       </button>
       &nbsp;&nbsp;
-      <a role="button" className="btn btn-success"
-         href="/event/jkazarian8">Go back to All Items</a>
+      <a role="button" className="btn btn-success btn-block" href={this.props.params && "/event/" + this.props.params.params }>
+        Go back to All Items</a>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
                               action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
@@ -953,8 +988,8 @@ class Auction extends React.Component {
         Submit bid
       </button>
       &nbsp;&nbsp;
-      <a role="button" className="btn btn-success"
-         href="/event/jkazarian8">Go back to All Items</a>
+      <a role="button" className="btn btn-success btn-block" href={this.props.params && "/event/" + this.props.params.params }>
+        Go back to All Items</a>
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
       className="current-bid">400</span></div>;
@@ -1034,6 +1069,7 @@ class Auction extends React.Component {
               { this.state && this.state.errorMsgCard }
               <div className="modal-footer">
                 {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.placeBid} >Confirm</button> : ""}
+                {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.placeBidByAmount} >Confirm</button> : ""}
                 <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
               </div>
             </div>

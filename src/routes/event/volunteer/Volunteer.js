@@ -652,10 +652,10 @@ class Volunteer extends React.Component {
           }
           self.props.submitTickets(self.props.params && self.props.params.params, user)
             .then(resp => {
-              if (resp && resp.data) {
+              if (resp && resp.message) {
                 self.setState({
                   showPopup: true,
-                  errorMsgCard: "",
+                  errorMsgCard: resp.message,
                   popupHeader:"Success"});
               }else{
                 self.setState({

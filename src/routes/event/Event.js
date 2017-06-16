@@ -57,16 +57,19 @@ class Event extends React.Component {
 			auctionPageItems: [],
 			auctionPageLoading: true,
 			auctionPageCategory: '',
+			auctionPagesearchString: '',
 			rafflePageCount: 0,
 			rafflePageLimit: 8,
 			rafflePageItems: [],
 			rafflePageLoading: true,
 			rafflePageCategory: '',
+			rafflePageSearchString: '',
 			fundANeedPageCount: 0,
 			fundANeedPageLimit: 8,
 			fundANeedPageItems: [],
 			fundANeedPageLoading: true,
 			fundANeedPageCategory: '',
+			fundANeedPageSearchString: '',
 			totalTicketQty: 0,
 			totalTickets: [],
 			totalTicketPrice: 0,
@@ -80,14 +83,161 @@ class Event extends React.Component {
 		this.hideMapPopup = this.hideMapPopup.bind(this);
 		this.setActiveTabState = this.setActiveTabState.bind(this);
 		this.doGetAuctionItemByLimit = this.doGetAuctionItemByLimit.bind(this);
+		this.doGetAuctionItemBySearch = this.doGetAuctionItemBySearch.bind(this);
 		this.doGetRaffleItemByLimit = this.doGetRaffleItemByLimit.bind(this);
 		this.doGetFundANeedItemByLimit = this.doGetFundANeedItemByLimit.bind(this);
 		this.selectHandle = this.selectHandle.bind(this);
 		this.setFilterCategory = this.setFilterCategory.bind(this);
+		this.setSearchString = this.setSearchString.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.doOrderTicket = this.doOrderTicket.bind(this);
 
 	}
+  emailValidateHandler = (e) => {
+    this.setState({
+      emailFeedBack: true,
+      emailValue:this.email.value,
+    });
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (this.email.value == '') {
+      this.setState({
+        email: false,
+        errorMsgEmail: "Email is required.",
+      });
+    }
+    else {
+      this.setState({
+        email: re.test(this.email.value),
+        errorMsgEmail: "Invalid Email.",
+      });
+    }
+    this.setState({isValidData: !!(this.email.value)});
+  };
+  firstNameValidateHandler = (e) => {
+    this.setState({
+      firstNameFeedBack: true,
+      firstNameValue: this.firstName.value,
+    });
+    if (this.firstName.value == '') {
+
+      this.setState({
+        firstName: false
+      });
+    } else {
+      this.setState({
+        firstName: true
+      });
+    }
+  };
+  lastNameValidateHandler = (e) => {
+    this.setState({
+      lastNameFeedBack: true,
+      lastNameValue: this.lastName.value,
+    });
+    if (this.lastName.value == '') {
+      this.setState({
+        lastName: false
+      });
+    } else {
+      this.setState({
+        lastName: true
+      });
+    }
+  };
+  cardHolderValidateHandler = (e) => {
+
+    this.setState({
+      cardHolderFeedBack: true
+    });
+
+    if (this.cardHolder.value == '') {
+
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name is required and can't be empty",
+      });
+    } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      });
+    } else {
+      this.setState({
+        cardHolder: true
+      });
+    }
+
+
+  };
+  cardNumberValidateHandler = (e) => {
+    this.setState({
+      cardNumberFeedBack: true
+    });
+    if (this.cardNumber.value == '') {
+      this.setState({
+        cardNumber: false,
+        errorMsgcardNumber: "Enter Card Number ",
+      });
+    } else if (this.cardNumber.value.length !== 15 && this.cardNumber.value.length !== 16) {
+      this.setState({
+        cardNumber: false,
+        errorMsgcardNumber: " Please enter a Valid Card Number ",
+      });
+    } else {
+      this.setState({
+        cardNumber: true
+      });
+    }
+  };
+  amountValidateHandler = (e) => {
+    this.setState({
+      amountFeedBack: true,
+      amountValue:this.amount.value
+    });
+    let bid = 0;
+    bid = this.state.itemData && this.state.itemData.currentBid + 20 ;
+
+    if (this.amount.value == '') {
+      this.setState({
+        amount: false,
+        errorMsgAmount: "Bid Amount can't be empty",
+      });
+    } else if (bid > this.amount.value) {
+      this.setState({
+        amount: false,
+        errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $"+bid+" increments. " + "   Bids for this item must be placed in increments of at least $20",
+      });
+    } else {
+      this.setState({
+        amount: true
+      });
+    }
+  };
+  cvvValidateHandler = (e) => {
+
+    this.setState({
+      cvvFeedBack: true
+    });
+
+    if (this.cvv.value == '') {
+
+      this.setState({
+        cvv: false,
+        errorMsgcvv: "The CVV is required and can't be empty",
+      });
+    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+      this.setState({
+        cvv: false,
+        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+      });
+    } else {
+      this.setState({
+        cvv: true
+      });
+    }
+
+  };
 
 	doGetLoadMoreAuctionItem = () => {
 		this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
@@ -150,11 +300,9 @@ class Event extends React.Component {
 			history.push('/404');
 		});
 	}
-
 	componentDidMount() {
 		window.addEventListener('scroll', this.handleScroll);
 	}
-
 	setActiveTabState = (label) => {
 		this.setState({tab: label});
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
@@ -188,9 +336,8 @@ class Event extends React.Component {
 				});
 		}
 	};
-
 	doGetAuctionItemByLimit(eventUrl) {
-		this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory).then(resp => {
+   	this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory,this.state.auctionPageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
 					this.setState({
@@ -200,7 +347,6 @@ class Event extends React.Component {
 				this.setState({
 					auctionPageItems: this.state.auctionPageItems.concat(resp.data && resp.data.items),
 					auctionPageCount: this.state.auctionPageCount + 1
-
 				})
 			}
 			else {
@@ -214,8 +360,24 @@ class Event extends React.Component {
 			})
 		})
 	}
-
-
+	doGetAuctionItemBySearch(eventUrl) {
+   	this.props.doGetAuctionItemByLimit(eventUrl, 0, this.state.auctionPageLimit, this.state.auctionPageCategory,this.state.auctionPageSearchString).then(resp => {
+			if (resp && resp.data && resp.data.items) {
+				this.setState({
+					auctionPageItems: resp.data && resp.data.items,
+				})
+			}
+			else {
+				this.setState({
+					auctionPageLoading: false
+				})
+			}
+		}).catch(error => {
+			this.setState({
+				auctionPageLoading: false
+			})
+		})
+	}
 	doGetRaffleItemByLimit(eventUrl) {
 		this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
@@ -241,8 +403,29 @@ class Event extends React.Component {
 			})
 		})
 	}
-
-
+	doGetRaffleItemBySearch(eventUrl) {
+		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory,this.state.rafflePageSearchString).then(resp => {
+			if (resp && resp.data && resp.data.items) {
+				if (resp.data && resp.data.items.length ) {
+					this.setState({
+						rafflePageLoading: false
+					})
+				}
+				this.setState({
+					rafflePageItems: resp.data.items,
+				})
+			}
+			else {
+				this.setState({
+					rafflePageLoading: false
+				})
+			}
+		}).catch(error => {
+			this.setState({
+				rafflePageLoading: false
+			})
+		})
+	}
 	doGetFundANeedItemByLimit(eventUrl) {
 		this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
@@ -255,6 +438,27 @@ class Event extends React.Component {
 					fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data.items),
 					fundANeedPageCount: this.state.fundANeedPageCount + 1
 
+				})
+			}
+			else {
+				this.setState({
+					fundANeedPageLoading: false
+				})
+			}
+		}).catch(error => {
+			this.setState({
+				fundANeedPageLoading: false
+			})
+		})
+	}
+	doGetFundANeedItemBySearch(eventUrl) {
+	  this.props.doGetFundANeedItemByLimit(eventUrl,0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory,this.state.fundANeedPageSearchString).then(resp => {
+			if (resp && resp.data && resp.data.items) {
+			  this.setState({
+						fundANeedPageLoading: false
+					})
+				this.setState({
+					fundANeedPageItems:resp.data.items,
 				})
 			}
 			else {
@@ -324,6 +528,38 @@ class Event extends React.Component {
 				this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
 
 			}
+		}
+	};
+	setSearchString = (searchString)=> {
+		if (this.props.active_tab_data && this.props.active_tab_data.tab) {
+			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
+			this.setState({
+				selectedSearchString: searchString
+			})
+			if (label == 'Auction') {
+				this.setState({
+					auctionPageSearchString: searchString,
+					});
+				setTimeout(() => {
+					this.doGetAuctionItemBySearch(this.props.params && this.props.params.params);
+				}, 500);
+
+			} else if (label == 'Raffle') {
+				this.setState({
+					rafflePageSearchString: searchString,
+				});
+        setTimeout(() => {
+          this.doGetRaffleItemBySearch(this.props.params && this.props.params.params);
+        },500);
+			} else if (label == 'Fund a Need') {
+				this.setState({
+					fundANeedPageSearchString: searchString,
+				});
+        setTimeout(() => {
+				this.doGetFundANeedItemBySearch(this.props.params && this.props.params.params);
+        }, 500);
+
+      }
 		}
 	};
 
@@ -402,6 +638,7 @@ class Event extends React.Component {
 								            authenticated={this.props.authenticated}
 								            setFilterCategory={this.setFilterCategory}
 								            selectedCategoty={this.state.selectedCategoty}
+                            setSearchString={this.setSearchString}
 								/>
 							</div>
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
@@ -636,9 +873,9 @@ const mapDispatchToProps = {
 	doGetEventTicketSetting: (eventUrl) => doGetEventTicketSetting(eventUrl),
 	doGeItemByCode: (eventUrl, itemCode, type) => doGeItemByCode(eventUrl, itemCode, type),
 	doGetItemByLimit: (eventUrl, page, size, type) => doGetItemByLimit(eventUrl, page, size, type),
-	doGetAuctionItemByLimit: (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
-	doGetRaffleItemByLimit: (eventUrl, page, size, type) => doGetRaffleItemByLimit(eventUrl, page, size, type),
-	doGetFundANeedItemByLimit: (eventUrl, page, size, type) => doGetFundANeedItemByLimit(eventUrl, page, size, type),
+	doGetAuctionItemByLimit: (eventUrl, page, size, type,searchString) => doGetAuctionItemByLimit(eventUrl, page, size, type,searchString),
+	doGetRaffleItemByLimit: (eventUrl, page, size, type,searchString) => doGetRaffleItemByLimit(eventUrl, page, size, type,searchString),
+	doGetFundANeedItemByLimit: (eventUrl, page, size, type,searchString) => doGetFundANeedItemByLimit(eventUrl, page, size, type,searchString),
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	storeActiveTabData: (tab) => storeActiveTabData(tab),
 	doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),

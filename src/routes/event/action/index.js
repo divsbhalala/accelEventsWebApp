@@ -92,11 +92,13 @@ export function doGetAuctionItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetAuctionItemByLimit(eventUrl, page, size, category) {
+export function doGetAuctionItemByLimit(eventUrl, page, size, category,searchString) {
   return (dispatch) => {
     let query = '?page=' + page + '&size=' + size;
     if (category) {
       query += '&category=' + category;
+    }if (searchString) {
+      query += '&searchString=' + searchString;
     }
     return axios({
       method: 'get',
@@ -164,11 +166,13 @@ export function doGetFundANeedItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetFundANeedItemByLimit(eventUrl, page, size, category) {
+export function doGetFundANeedItemByLimit(eventUrl, page, size, category,searchString) {
   return (dispatch) => {
     let query = '?page=' + page + '&size=' + size;
     if (category) {
       query += '&category=' + category;
+    }if (searchString) {
+      query += '&searchString=' + searchString;
     }
     return axios({
       method: 'get',
@@ -219,11 +223,14 @@ export function doGetRaffleItemByCode(eventUrl, itemCode) {
 
 }
 
-export function doGetRaffleItemByLimit(eventUrl, page, size, category) {
+export function doGetRaffleItemByLimit(eventUrl, page, size, category,searchString) {
   return (dispatch) => {
     let query = '?page=' + page + '&size=' + size;
     if (category) {
       query += '&category=' + category;
+    }
+    if (searchString) {
+      query += '&searchString=' + searchString;
     }
     return axios({
       method: 'get',
@@ -397,6 +404,7 @@ export function setAttendees(eventUrl,barcode,status) {
     });
   }
 }
+//********* Auction ************//
 export function doSignUp(eventUrl,userData) {
   return (dispatch) => {
     return axios({
@@ -554,5 +562,22 @@ export function storeOrderData(data) {
   return {
     type: 'STORE_ORDER_DATA',
     data,
+  }
+}
+export function submitRaffleTickets(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/raffle/submittickets' ,
+      data:userData,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
   }
 }
