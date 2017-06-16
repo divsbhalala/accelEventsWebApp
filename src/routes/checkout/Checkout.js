@@ -328,16 +328,17 @@ class Checkout extends React.Component {
 				if(!buyerInformationFields[index]){
 					buyerInformationFields[index] = {};
 				}
-				if(!buyerInformationFields[index][field.name]){
-					buyerInformationFields[index][field.name]={};
+				if(!buyerInformationFields[index][item.name]){
+					buyerInformationFields[index][item.name]={};
 				}
-				if(field.mandatory && !buyerInformationFields[index][field.name].value){
-					buyerInformationFields[index][field.name]['error'] = true;
+				if(item.mandatory && !buyerInformationFields[index][item.name].value){
+					buyerInformationFields[index][item.name]['error'] = true;
 				}
 			});
 			this.setState({
-				errorBuyer: attendee
+				errorBuyer: buyerInformationFields
 			});
+			console.log('buyerInformationFields', buyerInformationFields)
 		}
 		if(hasHolderAttributes){
 			if(ticketAttribute && ticketAttribute.attendees){
@@ -363,6 +364,7 @@ class Checkout extends React.Component {
 				this.setState({
 					errorAttendee: attendee
 				});
+				console.log('a', attendee)
 			}
 		}
 		else if (this.cardNumber.value &&
@@ -652,7 +654,8 @@ class Checkout extends React.Component {
 																							className={cx("col-md-6 text-left", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
 																							<div className={cx("form-group ",
 																							this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name]  && 'has-feedback',
-																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error'
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value && 'has-success'
 																								)}>
 																								<input
 																									type={item.type}
@@ -663,11 +666,10 @@ class Checkout extends React.Component {
 																									required={item.mandatory}
 																									defaultValue={item.value ||
 																									(
-																										 this.state.errorAttendee &&
-																										 this.state.errorAttendee[itemKey] &&
-																										 this.state.errorAttendee[itemKey][key] &&
-																										 this.state.errorAttendee[itemKey][key][attrib.name] &&
-																										 this.state.errorAttendee[itemKey][key][attrib.name].value
+																										 this.state.errorBuyer &&
+																										 this.state.errorBuyer[key] &&
+																										 this.state.errorBuyer[key][item.name] &&
+																										 this.state.errorBuyer[key][item.name].value
 																								  )
 																					        }
 																								/>
@@ -1136,6 +1138,7 @@ class Checkout extends React.Component {
 																									<div className={cx("form-group",
 																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
 																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
+																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value && 'has-success',
 																									)}>
 																										<input type="text"
 																										       placeholder={attrib.name}

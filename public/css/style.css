@@ -2222,7 +2222,7 @@ input:-webkit-autofill {
 {
   display: none;
 }
-.form-group.has-feedback .help-block{
+.form-group.has-feedback.has-error .help-block{
   display: block;
 }
 .form-group .glyphicon-ok,
