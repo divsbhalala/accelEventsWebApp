@@ -315,13 +315,15 @@ class Checkout extends React.Component {
 	};
 	ticketCheckout = (e) => {
 		e.preventDefault();
-		console.log(e);
+		let validData = false;
 		debugger;
+
 		this.setState({
 			isFormSubmited: true
 		});
-		let ticketAttribute = this.props.orderData && this.props.orderData.ticketAttribute;
-		let purchaserDetail = this.props.orderData && this.props.orderData.purchaserDetail;
+		let orderData = this.props.orderData ;
+		let purchaserDetail = orderData && orderData.purchaserDetail;
+		let ticketAttribute = orderData && orderData.ticketAttribute;
 		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
 		if(ticketAttribute.buyerInformationFields && ! purchaserDetail){
 			ticketAttribute.buyerInformationFields.map((item, index)=>{
@@ -367,81 +369,81 @@ class Checkout extends React.Component {
 				console.log('a', attendee)
 			}
 		}
-		else if (this.cardNumber.value &&
-			this.cardExpMonth.value &&
-			this.cardExpYear.value &&
-			this.cardExpMonth.value &&
-			this.cardCVV.value) {
-			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
-				console.log('resp', resp);
-				if (resp && resp.data && resp.data.id) {
-					let request = {
-						"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
-						"hasholderattributes": hasHolderAttributes,
-						"purchaser": {},
-						"stripeToken": resp.data.id
-					};
 
-					if (request.hasholderattributes) {
-						request.holder = [
-							{
-								"attributes": [
-									{
-										"key": "string",
-										"value": "string"
-									}
-								],
-								"questions": [
-									{
-										"key": "string",
-										"value": "string"
-									}
-								],
-								"tableid": 0,
-								"tickettypeid": 0
+		setTimeout(()=>{
+			validData = document.getElementsByClassName("has-error").length == 0;
+			if (validData && this.cardNumber.value &&
+				this.cardExpMonth.value &&
+				this.cardExpYear.value &&
+				this.cardExpMonth.value &&
+				this.cardCVV.value) {
+				this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
+					console.log('resp', resp);
+					if (resp && resp.data && resp.data.id) {
+						let request = {
+							"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
+							"hasholderattributes": hasHolderAttributes,
+							"purchaser": {},
+							"stripeToken": resp.data.id
+						};
+
+						if (request.hasholderattributes) {
+							request.holder = [
+								{
+									"attributes": attendee,
+									"questions": [
+										{
+											"key": "string",
+											"value": "string"
+										}
+									],
+									"tableid": 0,
+									"tickettypeid": 0
+								}
+							];
+						}
+
+						if (ticketAttribute) {
+							if (ticketAttribute.buyerQuestions) {
+								request.purchaser.questions = [];
 							}
-						];
+							if (ticketAttribute.buyerInformationFields) {
+								let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
+									return item.type == 'email';
+								});
+								if (index > -1) {
+									request.purchaser.attributes = [];
+									request.purchaser.attributes = request.purchaser.attributes.concat({
+										"Email": orderData && orderData.purchaserDetail  && orderData.purchaserDetail.email
+									})
+								}
+							}
+						}
+						console.log('request', request);
+						let eventUrl = this.props.params && this.props.params.params;
+						let orderId = this.props.params && this.props.params.orderId;
+						this.props.orderTicket(eventUrl, orderId, request).then(resp => {
+
+						}).catch(error=> {
+
+						})
+
+					}
+					else {
+						alert('Invalid Data');
+
 					}
 
-					if (ticketAttribute) {
-						if (ticketAttribute.buyerQuestions) {
-							request.purchaser.questions = [];
-						}
-						if (ticketAttribute.buyerInformationFields) {
-							let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
-								return item.type == 'email';
-							});
-							if (index > -1) {
-								request.purchaser.attributes = [];
-								request.purchaser.attributes = request.purchaser.attributes.concat({
-									"Email": this.props.orderData && this.props.orderData.purchaserDetail && this.props.orderData && this.props.orderData.purchaserDetail.email
-								})
-							}
-						}
-					}
-					console.log('request', request);
-					let eventUrl = this.props.params && this.props.params.params;
-					let orderId = this.props.params && this.props.params.orderId;
-					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
-
-					}).catch(error=> {
-
-					})
-
-				}
-				else {
+				}).catch(error=> {
+					console.log('error', error);
 					alert('Invalid Data');
-
-				}
-
-			}).catch(error=> {
-				console.log('error', error);
+				})
+			}
+			else {
 				alert('Invalid Data');
-			})
-		}
-		else {
-			alert('Invalid Data');
-		}
+			}
+		},100)
+
 		return false;
 	};
 	ticketTimeOut = () => {
@@ -691,7 +693,7 @@ class Checkout extends React.Component {
 																					<label className="text-right">Password<span className="red">*</span></label>
 																				</div>
 																				<div
-																					className={cx("col-md-6 text-left", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
+																					className={cx("col-md-6 form-group text-left", (this.state.passwordFeedBack || this.state.isFormSubmited) && 'has-feedback', (this.state.passwordFeedBack || this.state.isFormSubmited ) && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
 																					<input type="password" className="form-control" name="password"
 																					       ref={ref => {
 																							 this.password = ref;
