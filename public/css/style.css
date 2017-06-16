@@ -2216,9 +2216,24 @@ input:-webkit-autofill {
   cursor: hand;
   cursor: pointer;
 }
-.input-group-addon, .form-control {
-    border-radius: 0;
-    border-width: 1px;
-::-ms-clear {
-    display: none;
+.form-group .form-control-feedback,
+.form-group .help-block,
+.form-group.has-feedback.has-success .help-block
+{
+  display: none;
+}
+.form-group.has-feedback .help-block{
+  display: block;
+}
+.form-group .glyphicon-ok,
+.form-group .glyphicon-remove
+{
+  display: none;
+}
+.form-group.has-feedback.has-success .glyphicon-ok
+{
+  display: block;
+}
+.form-group.has-feedback.has-error .glyphicon-remove{
+  display: block;
 }

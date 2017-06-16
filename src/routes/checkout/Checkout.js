@@ -30,6 +30,7 @@ import {
 import {createCardToken, orderTicket} from './action/index';
 let Total = 0;
 let attendee = {};
+let buyerInformationFields = {};
 class Checkout extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
@@ -39,6 +40,9 @@ class Checkout extends React.Component {
 		super(props);
 		this.state = {
 			attendee: [],
+			buyerInformationFields :[],
+			errorAttendee: [],
+			isFormSubmited : false,
 			totalPrice: 0,
 			focusOn:null,
 			orderData:{},
@@ -80,6 +84,7 @@ class Checkout extends React.Component {
 		};
 		this.ticketCheckout = this.ticketCheckout.bind(this);
 		this.ticketTimeOut = this.ticketTimeOut.bind(this);
+		this.validateEmail = this.validateEmail.bind(this);
 
 	}
 
@@ -106,9 +111,6 @@ class Checkout extends React.Component {
 				isLoaded: true
 			})
 		});
-	}
-	componentDidMount() {
-		console.log('reMounted')
 	}
 	emailValidateHandler = (e) => {
 
@@ -314,7 +316,68 @@ class Checkout extends React.Component {
 		e.preventDefault();
 		console.log(e);
 		debugger;
-		if (this.cardNumber.value &&
+		let ticketAttribute = this.props.orderData && this.props.orderData.ticketAttribute;
+		let purchaserDetail = this.props.orderData && this.props.orderData.purchaserDetail;
+		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
+		if(ticketAttribute.buyerInformationFields && ! purchaserDetail){
+
+		}
+		if(hasHolderAttributes){
+			if(!_.isEmpty(attendee)){
+				if(ticketAttribute && ticketAttribute.attendees){
+					ticketAttribute.attendees.map((item, index)=>{
+						if(!attendee[index]){
+							attendee[index] = {};
+						}
+						if(item.attributes){
+							item.attributes.map((field, key)=>{
+								if(!attendee[index][key]){
+									attendee[index][key] = {};
+								}
+								if(!attendee[index][key][field.name]){
+									attendee[index][key][field.name]={};
+								}
+								if(field.mandatory && !attendee[index][key][field.name].value){
+									attendee[index][key][field.name]['error'] = true;
+								}
+							})
+						}
+					});
+					this.setState({
+						errorAttendee: attendee
+					});
+				}
+				console.log(attendee)
+			}
+			else {
+				alert('Invalid Data');
+				if(ticketAttribute && ticketAttribute.attendees){
+					ticketAttribute.attendees.map((item, index)=>{
+						if(!attendee[index]){
+							attendee[index] = {};
+						}
+						if(item.attributes){
+							item.attributes.map((field, key)=>{
+								if(!attendee[index][key]){
+									attendee[index][key] = {};
+								}
+								if(!attendee[index][key][field.name]){
+									attendee[index][key][field.name]={};
+								}
+								if(field.mandatory){
+									attendee[index][key][field.name]['error'] = true;
+								}
+							})
+						}
+					});
+					this.setState({
+						errorAttendee: attendee
+					});
+				}
+				return false;
+			}
+		}
+		else if (this.cardNumber.value &&
 			this.cardExpMonth.value &&
 			this.cardExpYear.value &&
 			this.cardExpMonth.value &&
@@ -324,7 +387,7 @@ class Checkout extends React.Component {
 				if (resp && resp.data && resp.data.id) {
 					let request = {
 						"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
-						"hasholderattributes": this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.hasHolderAttributes,
+						"hasholderattributes": hasHolderAttributes,
 						"purchaser": {},
 						"stripeToken": resp.data.id
 					};
@@ -350,12 +413,12 @@ class Checkout extends React.Component {
 						];
 					}
 
-					if (this.props.orderData && this.props.orderData.ticketAttribute) {
-						if (this.props.orderData.ticketAttribute.buyerQuestions) {
+					if (ticketAttribute) {
+						if (ticketAttribute.buyerQuestions) {
 							request.purchaser.questions = [];
 						}
-						if (this.props.orderData.ticketAttribute.buyerInformationFields) {
-							let index = _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
+						if (ticketAttribute.buyerInformationFields) {
+							let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
 								return item.type == 'email';
 							});
 							if (index > -1) {
@@ -394,20 +457,99 @@ class Checkout extends React.Component {
 	ticketTimeOut = () => {
 		this.setState({isTimeout: true})
 	};
-	setValue = (field, key, event) => {
+	validateEmail = (email) => {
+		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	};
+
+	setAttendeesValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
 		//Instead, we want to save the data for when the form is submitted
-		var object = attendee || {};
+		console.log(event.target)
+		let object = attendee || {};
+		let value = event.target.value;
 		if(!object[key]){
-			object[key]={};
+			object[key]=[];
 		}
-		if(!object[key][field]){
-			object[key][field]='';
+		if(!object[key][itemKey]){
+			object[key][itemKey] = {};
 		}
-		object[key][field] = event.target.value;
+		if(!object[key][itemKey][field.name]){
+			object[key][itemKey][field.name]={};
+		}
+		object[key][itemKey][field.name] = {
+			"key" : field.name,
+			"value" : value
+		};
+		if(field.mandatory){
+			if(!event.target.value){
+				object[key][itemKey][field.name]['error']=true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+			else{
+				object[key][itemKey][field.name]['error']=false;
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if(value && field && field.type === 'email'){
+			object[key][itemKey][field.name]['error'] = !this.validateEmail(value);
+			if(this.validateEmail(value)){
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else{
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if(value && event.target.parentElement){
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+			console.log(event.target, event.target.parentElement)
+		}
 		attendee= object;
-		console.log('h', object);
+	};
+	buyerInformationFieldsHandler = (field, key, event) => {
+	 	let object = buyerInformationFields || {};
+	 	if(!object[key]){
+	 		object[key]={}
+	 	}
+	 	if(!object[key][field.name]){
+			object[key][field.name] = {};
+		}
+		let value = event.target.value;
+		object[key][field.name] ={
+	 		key : field.name,
+			value : value
+		};
+		object[key][field.name]['error']=false;
+		if(field.mandatory){
+			if(!value){
+				object[key][field.name]['error']=true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if(value && field.name && field.type === 'email'){
+			object[key][field.name]['error'] = !this.validateEmail(value);
+			if(this.validateEmail(value)){
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else{
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if(value && event.target.parentElement){
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+			console.log(event.target, event.target.parentElement)
+		}
 	};
 
 	render() {
@@ -513,7 +655,7 @@ class Checkout extends React.Component {
 																this.props.orderData.ticketAttribute.buyerInformationFields && this.props.orderData.ticketAttribute.buyerInformationFields.length &&
 																<div className="buyerInformation">
 																	{
-																		this.props.orderData.ticketAttribute.buyerInformationFields.map(item=>
+																		this.props.orderData.ticketAttribute.buyerInformationFields.map((item, key)=>
 																			<div className="custom-attribute" key={item.name}>
 																				<div className="form-group mrg-t-md">
 																					<div className="row">
@@ -528,12 +670,13 @@ class Checkout extends React.Component {
 																									type={item.type}
 																									className="form-control"
 																									name={item.mandatory}
-																									ref={ref => {
-																								 this.firstName = ref;
-																						  }}
 																									placeholder={item.name}
-																									onkeyup={this.setValue.bind(this, item.name)}
-																									required={item.mandatory}/>
+																									onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
+																									required={item.mandatory}
+																								/>
+																								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																								<small className="help-block">{ "The " + item.name + " is invalid."}</small>
 																							</div>
 																						</div>
 																					</div>
@@ -543,7 +686,7 @@ class Checkout extends React.Component {
 																	{  _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
 																		return item.type == 'email';
 																	}) && <div className="custom-attribute">
-																		<div className="form-group mrg-t-md has-feedback has-success">
+																		<div className="form-group mrg-t-md">
 																			<div className="row">
 																				<div className="col-md-4 text-right">
 																					<label className="text-right">Password<span className="red">*</span></label>
@@ -629,7 +772,9 @@ class Checkout extends React.Component {
 																							<label className="control-label">Card Holder Name</label>
 																						</div>
 																						<div
-																							className={cx("col-md-6 text-left", this.state.cardHolderNameFeedBack && 'has-feedback', this.state.cardHolderNameFeedBack && this.state.cardHolderName && 'has-success', this.state.cardHolderNameFeedBack && (!this.state.cardHolderName) && 'has-error')}>
+																							className={cx("col-md-6 text-left", (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName && 'has-success',
+																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')}>
 																							<div className="input-group">
 																								<div className="input-group-addon">
 																									<i className="fa fa-user" aria-hidden="true"/>
@@ -659,7 +804,9 @@ class Checkout extends React.Component {
 																							<label className="control-label">Credit Card Number</label>
 																						</div>
 																						<div
-																							className={cx("col-md-6 text-left", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
+																							className={cx("col-md-6 text-left", (this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber && 'has-success',
+																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')}>
 																							<div className="input-group">
 																								<div className="input-group-addon">
 																									<i className="fa fa-credit-card" aria-hidden="true"/>
@@ -760,27 +907,16 @@ class Checkout extends React.Component {
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group"
 																								data-fv-icon-for="expMonth"/>
-																							{ null && <small className="help-block" data-fv-validator="notEmpty"
-																							                 data-fv-for="expMonth" data-fv-result="NOT_VALIDATED"
-																							>The expiration month is required
+																							{ null && <small className="help-block">The expiration month is required
 																							</small>}
-																							{ null && <small className="help-block" data-fv-validator="digits"
-																							                 data-fv-for="expMonth" data-fv-result="NOT_VALIDATED"
-																							>The expiration month can contain digits only
+																							{ null && <small className="help-block" >The expiration month can contain digits only
 																							</small>}
-																							{ null && <small className="help-block" data-fv-validator="callback"
-																							                 data-fv-for="expMonth" data-fv-result="NOT_VALIDATED"
-																							>Your card is Expired
+																							{ null && <small className="help-block" >Your card is Expired
 																							</small>}
-																							{ null && <small className="help-block" data-fv-validator="notEmpty"
-																							                 data-fv-for="expYear" data-fv-result="NOT_VALIDATED"
-																							>The expiration year is required
+																							{ null && <small className="help-block">The expiration year is required
 																							</small>}
 																							{ null &&
-																							<small className="help-block" data-fv-validator="digits"
-																							       data-fv-for="expYear"
-																							       data-fv-result="NOT_VALIDATED">The expiration
-																								year can contain digits only
+																							<small className="help-block" >The expiration year can contain digits only
 																							</small>}
 																						</div>
 																					</div>
@@ -791,7 +927,9 @@ class Checkout extends React.Component {
 																							<label className="control-label">CVV Number</label>
 																						</div>
 																						<div
-																							className={cx("col-md-8 text-left", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
+																							className={cx("col-md-8 text-left", (this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber && 'has-success',
+																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')}>
 																							<div className="input-group">
 																								<input type="number" className="form-control"
 																								       maxLength={4}
@@ -969,7 +1107,7 @@ class Checkout extends React.Component {
 																			item.attributes ?
 																			item.attributes.map((attrib, key)=>
 																				<div className="holder-attribute" key={Math.random()}>
-																					<div className="custom-attribute">{console.log('reRender')}
+																					<div className="custom-attribute">
 																						<div className="form-group mrg-t-md">
 																							<div className="row">
 																								<div className="col-md-4 text-right">
@@ -978,17 +1116,28 @@ class Checkout extends React.Component {
 																									</label>
 																								</div>
 																								<div className="col-md-6 text-left">
-																									<div className="form-group has-feedback">
+																									<div className={cx("form-group",
+																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name] && 'has-feedback',
+																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
+																									)}>
 																										<input type="text"
 																										       placeholder={attrib.name}
 																										       className="form-control"
 																										       name={attrib.name}
 																										       required={ attrib.mandatory}
-																										       value={attrib.value || this.state.attendee && this.state.attendee[itemKey] && this.state.attendee[itemKey][attrib.name] }
-																										       onChange={this.setValue.bind(this, attrib.name, itemKey)}
+																										       defaultValue={attrib.value ||
+																													 (this.state.attendee &&
+																													 this.state.attendee[itemKey] &&
+																													 this.state.attendee[itemKey][key] &&
+																													 this.state.attendee[itemKey][key][attrib.name]) || (
+																														 this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
+																													 )
+																										       }
+																										       onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
 																										/>
-																										<i className="form-control-feedback"/>
-																										<small className="help-block">The First Name is required.</small>
+																										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																										<small className="help-block">{ "The " + attrib.name + " is invalid."}</small>
 																									</div>
 																								</div>
 																							</div>
