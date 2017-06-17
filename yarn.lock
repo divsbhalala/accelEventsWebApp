@@ -5927,6 +5927,12 @@ react-addons-transition-group@^15.2.1:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.3.2.tgz#b6385c4db1e5df371825e0615b04360ed94430fe"
 
+react-bootstrap-sweetalert@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-sweetalert/-/react-bootstrap-sweetalert-3.0.0.tgz#65378a42f37845676acf98e8c43ce4a61f23306f"
+  dependencies:
+    object-assign "^4.1.0"
+
 react-bootstrap-table@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/react-bootstrap-table/-/react-bootstrap-table-3.3.3.tgz#18956dd84fe676cda0e030a78deb627610a2e628"

@@ -797,7 +797,7 @@ class Event extends React.Component {
 														<div className="col-md-7">No Of Tickets</div>
 														{ item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
 															<select className="form-control" name={item.typeId} data-price={item.price}
-															        disabled = {moment(item.endDate).diff(moment()) <= 0}
+															        disabled = {moment(item.endDate).diff(moment()) <= 0 && 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
 																{makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
