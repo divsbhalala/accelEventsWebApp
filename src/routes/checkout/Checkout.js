@@ -31,6 +31,7 @@ import {
 import {createCardToken, orderTicket} from './action/index';
 let Total = 0;
 let attendee = {};
+let questions = {};
 let buyerInformationFields = {};
 class Checkout extends React.Component {
 	static propTypes = {
@@ -41,9 +42,11 @@ class Checkout extends React.Component {
 		super(props);
 		this.state = {
 			attendee: [],
+			questions: [],
 			buyerInformationFields :[],
 			errorBuyer: [],
 			errorAttendee: [],
+			ticketPurchaseSuccessPopup : true,
 			isFormSubmited : false,
 			totalPrice: 0,
 			focusOn:null,
@@ -88,6 +91,8 @@ class Checkout extends React.Component {
 		this.ticketTimeOut = this.ticketTimeOut.bind(this);
 		this.validateEmail = this.validateEmail.bind(this);
 		this.doCheckout = this.doCheckout.bind(this);
+		this.hideTicketPurchaseSuccessPopup = this.hideTicketPurchaseSuccessPopup.bind(this);
+		this.showTicketPurchaseSuccessPopup = this.showTicketPurchaseSuccessPopup.bind(this);
 
 	}
 
@@ -325,6 +330,21 @@ class Checkout extends React.Component {
 							console.log(attendee[index][key], field)
 						})
 					}
+					if(item.questions){
+						item.questions.map((field, key)=>{
+							if(!questions[index][key]){
+								questions[index][key] = {};
+							}
+							if(!questions[index][key][field.name]){
+								questions[index][key][field.name]={};
+							}
+							if(field.mandatory && !questions[index][key][field.name].value){
+								questions[index][key][field.name]['error'] = true;
+							}
+							console.log(questions[index][key], field)
+						})
+					}
+
 				});
 				this.setState({
 					errorAttendee: attendee
@@ -398,6 +418,7 @@ class Checkout extends React.Component {
 
 					if (request.hasholderattributes) {
 						let holder =[];
+						let holderQuestions =[];
 						if(attendee){
 							attendee[0].map((item, itemKey)=>{
 								let keys =_.keys(item);
@@ -411,16 +432,24 @@ class Checkout extends React.Component {
 								})
 							})
 						}
+						if(questions){
+							questions[0].map((item, itemKey)=>{
+								let keys =_.keys(item);
+								keys.map(keyItem =>{
+									if(item[keyItem].key){
+										questions.push({
+											key : item[keyItem].key,
+											value : item[keyItem].value,
+										})
+									}
+								})
+							})
+						}
 						console.log('holder', holder);
 						request.holder = [
 							{
 								"attributes": holder,
-								"questions": [
-									{
-										"key": "string",
-										"value": "string"
-									}
-								],
+								"questions": questions,
 								"tableid": 0,
 								"tickettypeid": 0
 							}
@@ -519,6 +548,53 @@ class Checkout extends React.Component {
 		}
 		attendee= object;
 	};
+	setQuestionsValue = (field, key, itemKey, event) => {
+		//If the input fields were directly within this
+		//this component, we could use this.refs.[FIELD].value
+		//Instead, we want to save the data for when the form is submitted
+		let object = questions || {};
+		let value = event.target.value;
+		if(!object[key]){
+			object[key]=[];
+		}
+		if(!object[key][itemKey]){
+			object[key][itemKey] = {};
+		}
+		if(!object[key][itemKey][field.name]){
+			object[key][itemKey][field.name]={};
+		}
+		object[key][itemKey][field.name] = {
+			"key" : field.name,
+			"value" : value
+		};
+		if(field.mandatory){
+			if(!event.target.value){
+				object[key][itemKey][field.name]['error']=true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+			else{
+				object[key][itemKey][field.name]['error']=false;
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if(value && field && field.type === 'email'){
+			object[key][itemKey][field.name]['error'] = !this.validateEmail(value);
+			if(this.validateEmail(value)){
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else{
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if(value && event.target.parentElement){
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+		}
+		questions= object;
+	};
 	buyerInformationFieldsHandler = (field, key, event) => {
 	 	let object = buyerInformationFields || {};
 	 	if(!object[key]){
@@ -557,6 +633,17 @@ class Checkout extends React.Component {
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
 		}
+	};
+
+	hideTicketPurchaseSuccessPopup = ()=>{
+			this.setState({
+				ticketPurchaseSuccessPopup : false
+			})
+	};
+	showTicketPurchaseSuccessPopup = ()=>{
+			this.setState({
+				ticketPurchaseSuccessPopup : true
+			})
 	};
 
 	render() {
@@ -1188,6 +1275,51 @@ class Checkout extends React.Component {
 																		}
 																		<div className="holder-question">
 																			<input type="hidden" name="tableId" defaultValue={0}/>
+																			{
+																				item.questions ?
+																					item.questions.map((attrib, key)=>
+																						<div className="holder-attribute" key={Math.random()}>
+																							<div className="custom-attribute">
+																								<div className={cx("form-group mrg-t-md")}>
+																									<div className="row">
+																										<div className="col-md-4 text-right">
+																											<label className="text-right">{attrib.name}
+																												{ attrib.mandatory && <span className="red">*</span>}
+																											</label>
+																										</div>
+																										<div className="col-md-6 text-left">
+																											<div className={cx("form-group",
+																										this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && (this.state.errorQuestions[itemKey][key][attrib.name].key || this.state.errorQuestions[itemKey][key][attrib.name].error) && 'has-feedback',
+																										this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].error && 'has-error',
+																										this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value && 'has-success',
+																									)}>
+																												<input type="text"
+																												       placeholder={attrib.name}
+																												       className="form-control"
+																												       name={attrib.name}
+																												       required={ attrib.mandatory}
+																												       defaultValue={attrib.value ||
+																													 (this.state.questions &&
+																													 this.state.questions[itemKey] &&
+																													 this.state.questions[itemKey][key] &&
+																													 this.state.questions[itemKey][key][attrib.name]) || (
+																														 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value
+																													 )
+																										       }
+																												       onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
+																												/>
+																												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small className="help-block">{ "The " + attrib.name + " is invalid."}</small>
+																											</div>
+																										</div>
+																									</div>
+																								</div>
+																							</div>
+																							<input type="hidden" name="tableId" defaultValue={0}/>
+																						</div>
+																					):""
+																			}
 																		</div>
 																		<hr />
 																	</div>)
@@ -1210,6 +1342,14 @@ class Checkout extends React.Component {
 								</div>
 							</div>
 						</div>
+						<PopupModel
+							id="ticketPurchaseSucessPopup"
+							showModal={this.state.ticketPurchaseSuccessPopup}
+							headerText="Event Location"
+							onCloseFunc={this.hideTicketPurchaseSuccessPopup}
+						>
+							<div><h1>Location</h1></div>
+						</PopupModel>
 					</div> : <TimeOut eventUrl={this.props.params && this.props.params.params}/>
 				: <div></div>
 		);
