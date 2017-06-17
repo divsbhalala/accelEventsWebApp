@@ -766,7 +766,7 @@ class Event extends React.Component {
 											</div>
 										</Tab>
 										<Tab label="Donation">
-											<div className="row"><EventDonation /></div>
+											<div className="row"><EventDonation user={this.props.user} authenticated={this.props.authenticated} /></div>
 										</Tab>
 									</Tabs>
 								</div>
