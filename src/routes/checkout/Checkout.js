@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 import history from './../../history';
 import Moment from 'react-moment';
 import moment from 'moment';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 import EventAside from './../../components/EventAside/EventAside';
 import PopupModel from './../../components/PopupModal';
@@ -33,6 +34,7 @@ let Total = 0;
 let attendee = {};
 let questions = {};
 let buyerInformationFields = {};
+let eventUrl;
 class Checkout extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
@@ -43,14 +45,16 @@ class Checkout extends React.Component {
 		this.state = {
 			attendee: [],
 			questions: [],
-			buyerInformationFields :[],
+			buyerInformationFields: [],
 			errorBuyer: [],
 			errorAttendee: [],
-			ticketPurchaseSuccessPopup : true,
-			isFormSubmited : false,
+			ticketPurchaseSuccessPopup: false,
+			isFormSubmited: false,
+			formError: null,
+			showFormError: false,
 			totalPrice: 0,
-			focusOn:null,
-			orderData:{},
+			focusOn: null,
+			orderData: {},
 			cardHolder: false,
 			isLoaded: false,
 			isTimeout: false,
@@ -97,7 +101,7 @@ class Checkout extends React.Component {
 	}
 
 	componentWillMount() {
-		let eventUrl = this.props.params && this.props.params.params;
+		eventUrl = this.props.params && this.props.params.params;
 		this.props.doGetEventData(eventUrl);
 		this.props.doGetSettings(eventUrl, 'ticketing').then(resp => {
 			this.setState({
@@ -109,7 +113,7 @@ class Checkout extends React.Component {
 		this.setState({
 			orderData: this.props.orderData
 		});
-		this.props.doGetOrderById(eventUrl, this.props.params && this.props.params.orderId).then(resp=> {
+		this.props.doGetOrderById(eventUrl, this.props.params && this.props.params.orderId).then(resp => {
 			if (resp && resp.errorCode) {
 				this.setState({
 					isTimeout: true
@@ -120,6 +124,7 @@ class Checkout extends React.Component {
 			})
 		});
 	}
+
 	emailValidateHandler = (e) => {
 
 		this.setState({
@@ -289,19 +294,19 @@ class Checkout extends React.Component {
 			isFormSubmited: true
 		});
 		let eventUrl = this.props.params && this.props.params.params;
-		let orderData = this.props.orderData ;
+		let orderData = this.props.orderData;
 		let purchaserDetail = orderData && orderData.purchaserDetail;
 		let ticketAttribute = orderData && orderData.ticketAttribute;
 		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
-		if(ticketAttribute.buyerInformationFields && ! purchaserDetail){
-			ticketAttribute.buyerInformationFields.map((item, index)=>{
-				if(!buyerInformationFields[index]){
+		if (ticketAttribute.buyerInformationFields && !purchaserDetail) {
+			ticketAttribute.buyerInformationFields.map((item, index) => {
+				if (!buyerInformationFields[index]) {
 					buyerInformationFields[index] = {};
 				}
-				if(!buyerInformationFields[index][item.name]){
-					buyerInformationFields[index][item.name]={};
+				if (!buyerInformationFields[index][item.name]) {
+					buyerInformationFields[index][item.name] = {};
 				}
-				if(item.mandatory && !buyerInformationFields[index][item.name].value){
+				if (item.mandatory && !buyerInformationFields[index][item.name].value) {
 					buyerInformationFields[index][item.name]['error'] = true;
 				}
 			});
@@ -310,35 +315,35 @@ class Checkout extends React.Component {
 			});
 			console.log('buyerInformationFields', buyerInformationFields)
 		}
-		if(hasHolderAttributes){
-			if(ticketAttribute && ticketAttribute.attendees){
-				ticketAttribute.attendees.map((item, index)=>{
-					if(!attendee[index]){
+		if (hasHolderAttributes) {
+			if (ticketAttribute && ticketAttribute.attendees) {
+				ticketAttribute.attendees.map((item, index) => {
+					if (!attendee[index]) {
 						attendee[index] = {};
 					}
-					if(item.attributes){
-						item.attributes.map((field, key)=>{
-							if(!attendee[index][key]){
+					if (item.attributes) {
+						item.attributes.map((field, key) => {
+							if (!attendee[index][key]) {
 								attendee[index][key] = {};
 							}
-							if(!attendee[index][key][field.name]){
-								attendee[index][key][field.name]={};
+							if (!attendee[index][key][field.name]) {
+								attendee[index][key][field.name] = {};
 							}
-							if(field.mandatory && !attendee[index][key][field.name].value){
+							if (field.mandatory && !attendee[index][key][field.name].value) {
 								attendee[index][key][field.name]['error'] = true;
 							}
 							console.log(attendee[index][key], field)
 						})
 					}
-					if(item.questions){
-						item.questions.map((field, key)=>{
-							if(!questions[index][key]){
+					if (item.questions && questions && questions.length) {
+						item.questions.map((field, key) => {
+							if (!questions[index][key]) {
 								questions[index][key] = {};
 							}
-							if(!questions[index][key][field.name]){
-								questions[index][key][field.name]={};
+							if (!questions[index][key][field.name]) {
+								questions[index][key][field.name] = {};
 							}
-							if(field.mandatory && !questions[index][key][field.name].value){
+							if (field.mandatory && !questions[index][key][field.name].value) {
 								questions[index][key][field.name]['error'] = true;
 							}
 							console.log(questions[index][key], field)
@@ -353,60 +358,69 @@ class Checkout extends React.Component {
 			}
 		}
 
-		setTimeout(()=>{
+		setTimeout(() => {
 			let emailIndex = _.findIndex(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
 				return item.type == 'email';
 			});
 			console.log(emailIndex, buyerInformationFields, buyerInformationFields[emailIndex]);
 			validData = document.getElementsByClassName("has-error").length == 0;
-			if(validData){
-				if(!this.props.authenticated){
-					alert('unauthneticated');
+			if (validData) {
+				if (!this.props.authenticated) {
 					let requestData;
-					if(emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error == false){
+					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error == false) {
 						let Email = buyerInformationFields[emailIndex]['Email'];
-						requestData ={
-							email : buyerInformationFields[emailIndex]['Email'].value,
-							password : this.password && this.password.value
-						}
-					}
-					else{
-						alert('No email adddress found');
-					}
-					console.log('requestData', requestData);
-					this.props.doSignUp(eventUrl, requestData).then(resp=>{
-						console.log(resp);
-						if(resp && !resp.errorCode){
-							this.doCheckout(ticketAttribute, orderData);
-						}
-						else {
+						requestData = {
+							email: buyerInformationFields[emailIndex]['Email'].value,
+							password: this.password && this.password.value
+						};
+						this.props.doSignUp(eventUrl, requestData).then(resp => {
+							console.log(resp);
+							if (resp && !resp.errorCode) {
+								this.doCheckout(ticketAttribute, orderData);
+							}
+							else {
+								alert('Error in user Signup');
+							}
+						}).catch(error => {
 							alert('Error in user Signup');
-						}
-					}).catch(error=>{
-						alert('Error in user Signup');
-					})
+							this.setState({
+								showFormError : true,
+								formError : "Oops! Error while processing"
+							});
+
+						})
+					}
+					else {
+						this.setState({
+							showFormError : true,
+							formError : "Invalid Email Address"
+						});
+					}
+
 				}
-				else{
-					alert('authenticated');
+				else {
 					this.doCheckout(ticketAttribute, orderData);
 				}
 			}
 			else {
-				alert('Invalid Data');
+				this.setState({
+					showFormError : true,
+					formError : "Invalid Data"
+				});
 			}
 
-		},100);
+		}, 100);
 
 		return false;
 	};
 
-	doCheckout = (ticketAttribute, orderData)=>{
+	doCheckout = (ticketAttribute, orderData) => {
 		if (this.cardNumber.value &&
 			this.cardExpMonth.value &&
 			this.cardExpYear.value &&
 			this.cardExpMonth.value &&
 			this.cardCVV.value) {
-			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp=> {
+			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp => {
 				console.log('resp', resp);
 				if (resp && resp.data && resp.data.id) {
 					let request = {
@@ -417,29 +431,29 @@ class Checkout extends React.Component {
 					};
 
 					if (request.hasholderattributes) {
-						let holder =[];
-						let holderQuestions =[];
-						if(attendee){
-							attendee[0].map((item, itemKey)=>{
-								let keys =_.keys(item);
-								keys.map(keyItem =>{
-									if(item[keyItem].key){
+						let holder = [];
+						let holderQuestions = [];
+						if (attendee && attendee[0]) {
+							attendee[0].map((item, itemKey) => {
+								let keys = _.keys(item);
+								keys.map(keyItem => {
+									if (item[keyItem].key) {
 										holder.push({
-											key : item[keyItem].key,
-											value : item[keyItem].value,
+											key: item[keyItem].key,
+											value: item[keyItem].value,
 										})
 									}
 								})
 							})
 						}
-						if(questions){
-							questions[0].map((item, itemKey)=>{
-								let keys =_.keys(item);
-								keys.map(keyItem =>{
-									if(item[keyItem].key){
-										questions.push({
-											key : item[keyItem].key,
-											value : item[keyItem].value,
+						if (questions && questions[0]) {
+							questions[0].map((item, itemKey) => {
+								let keys = _.keys(item);
+								keys.map(keyItem => {
+									if (item[keyItem].key) {
+										holderQuestions.push({
+											key: item[keyItem].key,
+											value: item[keyItem].value,
 										})
 									}
 								})
@@ -449,7 +463,7 @@ class Checkout extends React.Component {
 						request.holder = [
 							{
 								"attributes": holder,
-								"questions": questions,
+								"questions": holderQuestions,
 								"tableid": 0,
 								"tickettypeid": 0
 							}
@@ -467,29 +481,57 @@ class Checkout extends React.Component {
 							if (index > -1) {
 								request.purchaser.attributes = [];
 								request.purchaser.attributes = request.purchaser.attributes.concat({
-									"Email": orderData && orderData.purchaserDetail  && orderData.purchaserDetail.email
+									"Email": orderData && orderData.purchaserDetail && orderData.purchaserDetail.email
 								})
 							}
 						}
 					}
 					let eventUrl = this.props.params && this.props.params.params;
 					let orderId = this.props.params && this.props.params.orderId;
-					console.log(JSON.stringify(request))
+					console.log(JSON.stringify(request));
 					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
-						console.log('res of request', resp)
-					}).catch(error=> {
-						console.log('error of request', error)
+						console.log('res of request', resp);
+						debugger;
+						if (resp && resp.data && resp.data.message == 'Success') {
+							this.showTicketPurchaseSuccessPopup();
+						}
+						else {
+							console.log('error of request', error);
+							this.setState({
+								showFormError : true,
+								formError : "Oops! Error while checkout"
+							});
+						}
+					}).catch(error => {
+						debugger;
+						console.log('error of request', error);
+						this.setState({
+							showFormError : true,
+							formError : "Oops! Error while checkout"
+						});
 					})
 
 				}
 				else {
 					alert('Invalid Data');
+					this.setState({
+						showFormError : true,
+						formError : "Invalid"
+					});
 
 				}
 
-			}).catch(error=> {
-				console.log('error', error);
-				alert('Invalid Data');
+			}).catch((error) => {
+				this.setState({
+					cardExpYear: false
+				});
+				console.log('error', error && error.response && error.response.data && error.response.data.error && error.response.data.error.message );
+				debugger;
+				this.setState({
+					showFormError : true,
+					formError : (error && error.response && error.response.data && error.response.data.error && error.response.data.error.message) || "Invalid Data"
+				});
+				// alert('Opps! Error while getting card token ');
 			})
 		}
 	};
@@ -507,46 +549,46 @@ class Checkout extends React.Component {
 		//Instead, we want to save the data for when the form is submitted
 		let object = attendee || {};
 		let value = event.target.value;
-		if(!object[key]){
-			object[key]=[];
+		if (!object[key]) {
+			object[key] = [];
 		}
-		if(!object[key][itemKey]){
+		if (!object[key][itemKey]) {
 			object[key][itemKey] = {};
 		}
-		if(!object[key][itemKey][field.name]){
-			object[key][itemKey][field.name]={};
+		if (!object[key][itemKey][field.name]) {
+			object[key][itemKey][field.name] = {};
 		}
 		object[key][itemKey][field.name] = {
-			"key" : field.name,
-			"value" : value
+			"key": field.name,
+			"value": value
 		};
-		if(field.mandatory){
-			if(!event.target.value){
-				object[key][itemKey][field.name]['error']=true;
+		if (field.mandatory) {
+			if (!event.target.value) {
+				object[key][itemKey][field.name]['error'] = true;
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
 			}
-			else{
-				object[key][itemKey][field.name]['error']=false;
+			else {
+				object[key][itemKey][field.name]['error'] = false;
 			}
 		}
 		event.target.parentElement.classList.add('has-feedback');
-		if(value && field && field.type === 'email'){
+		if (value && field && field.type === 'email') {
 			object[key][itemKey][field.name]['error'] = !this.validateEmail(value);
-			if(this.validateEmail(value)){
+			if (this.validateEmail(value)) {
 				event.target.parentElement.classList.remove('has-error');
 				event.target.parentElement.classList.add('has-success');
 			}
-			else{
+			else {
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
 			}
 		}
-		else if(value && event.target.parentElement){
+		else if (value && event.target.parentElement) {
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
 		}
-		attendee= object;
+		attendee = object;
 	};
 	setQuestionsValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
@@ -554,96 +596,101 @@ class Checkout extends React.Component {
 		//Instead, we want to save the data for when the form is submitted
 		let object = questions || {};
 		let value = event.target.value;
-		if(!object[key]){
-			object[key]=[];
+		if (!object[key]) {
+			object[key] = [];
 		}
-		if(!object[key][itemKey]){
+		if (!object[key][itemKey]) {
 			object[key][itemKey] = {};
 		}
-		if(!object[key][itemKey][field.name]){
-			object[key][itemKey][field.name]={};
+		if (!object[key][itemKey][field.name]) {
+			object[key][itemKey][field.name] = {};
 		}
 		object[key][itemKey][field.name] = {
-			"key" : field.name,
-			"value" : value
+			"key": field.name,
+			"value": value
 		};
-		if(field.mandatory){
-			if(!event.target.value){
-				object[key][itemKey][field.name]['error']=true;
+		if (field.mandatory) {
+			if (!event.target.value) {
+				object[key][itemKey][field.name]['error'] = true;
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
 			}
-			else{
-				object[key][itemKey][field.name]['error']=false;
+			else {
+				object[key][itemKey][field.name]['error'] = false;
 			}
 		}
 		event.target.parentElement.classList.add('has-feedback');
-		if(value && field && field.type === 'email'){
+		if (value && field && field.type === 'email') {
 			object[key][itemKey][field.name]['error'] = !this.validateEmail(value);
-			if(this.validateEmail(value)){
+			if (this.validateEmail(value)) {
 				event.target.parentElement.classList.remove('has-error');
 				event.target.parentElement.classList.add('has-success');
 			}
-			else{
+			else {
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
 			}
 		}
-		else if(value && event.target.parentElement){
+		else if (value && event.target.parentElement) {
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
 		}
-		questions= object;
+		questions = object;
 	};
 	buyerInformationFieldsHandler = (field, key, event) => {
-	 	let object = buyerInformationFields || {};
-	 	if(!object[key]){
-	 		object[key]={}
-	 	}
-	 	if(!object[key][field.name]){
+		let object = buyerInformationFields || {};
+		if (!object[key]) {
+			object[key] = {}
+		}
+		if (!object[key][field.name]) {
 			object[key][field.name] = {};
 		}
 		let value = event.target.value;
-		object[key][field.name] ={
-	 		key : field.name,
-			value : value
+		object[key][field.name] = {
+			key: field.name,
+			value: value
 		};
-		object[key][field.name]['error']=false;
-		if(field.mandatory){
-			if(!value){
-				object[key][field.name]['error']=true;
+		object[key][field.name]['error'] = false;
+		if (field.mandatory) {
+			if (!value) {
+				object[key][field.name]['error'] = true;
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
 
 			}
 		}
 		event.target.parentElement.classList.add('has-feedback');
-		if(value && field.name && field.type === 'email'){
+		if (value && field.name && field.type === 'email') {
 			object[key][field.name]['error'] = !this.validateEmail(value);
-			if(this.validateEmail(value)){
+			if (this.validateEmail(value)) {
 				event.target.parentElement.classList.remove('has-error');
 				event.target.parentElement.classList.add('has-success');
 			}
-			else{
+			else {
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
 			}
 		}
-		else if(value && event.target.parentElement){
+		else if (value && event.target.parentElement) {
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
 		}
 	};
 
-	hideTicketPurchaseSuccessPopup = ()=>{
-			this.setState({
-				ticketPurchaseSuccessPopup : false
-			})
+	hideFormError = () => {
+		this.setState({
+			showFormError: false
+		})
 	};
-	showTicketPurchaseSuccessPopup = ()=>{
-			this.setState({
-				ticketPurchaseSuccessPopup : true
-			})
+	hideTicketPurchaseSuccessPopup = () => {
+		this.setState({
+			ticketPurchaseSuccessPopup: false
+		})
+	};
+	showTicketPurchaseSuccessPopup = () => {
+		this.setState({
+			ticketPurchaseSuccessPopup: true
+		})
 	};
 
 	render() {
@@ -675,7 +722,7 @@ class Checkout extends React.Component {
 												time={this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.remainingSeconds}
 												onEnd={this.ticketTimeOut}/>
 											<form className="validated fv-form fv-form-bootstrap" noValidate="novalidate"
-											      onSubmit={this.ticketCheckout}>
+														onSubmit={this.ticketCheckout}>
 												<div className="row">
 													<div className="col-md-10 col-md-offset-1">
 														<h3 className="type-name">second ticket type with longer name test</h3>
@@ -701,7 +748,7 @@ class Checkout extends React.Component {
 																		</tr>
 																		</thead>
 																		<tbody className="ticket-table-body">
-																		{ this.props.orderData.ticketAttribute.orderData.map(item=>
+																		{ this.props.orderData.ticketAttribute.orderData.map(item =>
 																			<tr className="tickettype-amount" key={Math.random()}>
 																				<td className="text-left">
 																					{item.ticketTypeName}
@@ -749,7 +796,7 @@ class Checkout extends React.Component {
 																this.props.orderData.ticketAttribute.buyerInformationFields && this.props.orderData.ticketAttribute.buyerInformationFields.length &&
 																<div className="buyerInformation">
 																	{
-																		this.props.orderData.ticketAttribute.buyerInformationFields.map((item, key)=>
+																		this.props.orderData.ticketAttribute.buyerInformationFields.map((item, key) =>
 																			<div className="custom-attribute" key={item.name}>
 																				<div className={cx("form-group mrg-t-md")}>
 																					<div className="row">
@@ -760,10 +807,10 @@ class Checkout extends React.Component {
 																						<div
 																							className={cx("col-md-6 text-left")}>
 																							<div className={cx("form-group ",
-																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name]  && 'has-feedback',
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && 'has-feedback',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value && 'has-success'
-																								)}>
+																							)}>
 																								<input
 																									type={item.type}
 																									className="form-control"
@@ -773,16 +820,19 @@ class Checkout extends React.Component {
 																									required={item.mandatory}
 																									defaultValue={item.value ||
 																									(
-																										 this.state.errorBuyer &&
-																										 this.state.errorBuyer[key] &&
-																										 this.state.errorBuyer[key][item.name] &&
-																										 this.state.errorBuyer[key][item.name].value
-																								  )
-																					        }
+																										this.state.errorBuyer &&
+																										this.state.errorBuyer[key] &&
+																										this.state.errorBuyer[key][item.name] &&
+																										this.state.errorBuyer[key][item.name].value
+																									)
+																									}
 																								/>
-																								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
-																								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
-																								<small className="help-block">{ "The " + item.name + " is invalid."}</small>
+																								<i
+																									className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																								<i
+																									className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																								<small
+																									className="help-block">{ "The " + item.name + " is invalid."}</small>
 																							</div>
 																						</div>
 																					</div>
@@ -800,13 +850,15 @@ class Checkout extends React.Component {
 																				<div
 																					className={cx("col-md-6 form-group text-left", (this.state.passwordFeedBack || this.state.isFormSubmited) && 'has-feedback', (this.state.passwordFeedBack || this.state.isFormSubmited ) && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
 																					<input type="password" className="form-control" name="password"
-																					       ref={ref => {
-																							 this.password = ref;
-																						 }}
-																					       onKeyUp={this.passwordValidateHandler}
-																					       required="required"/>
-																					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
-																					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																								 ref={ref => {
+																									 this.password = ref;
+																								 }}
+																								 onKeyUp={this.passwordValidateHandler}
+																								 required="required"/>
+																					<i
+																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																					<i
+																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
 																					<small className="help-block">This value is not valid</small>
 																				</div>
 																			</div>
@@ -847,8 +899,8 @@ class Checkout extends React.Component {
 																		</div>
 																		<div className="col-md-4 text-left">
 																			<input type="text" className="form-control" name="discountcoupon"
-																			       id="discountcoupon"
-																			       placeholder="Discount coupon"/>
+																						 id="discountcoupon"
+																						 placeholder="Discount coupon"/>
 																		</div>
 																		<div className="col-md-2">
 																	<span className="input-group-btn">
@@ -867,9 +919,9 @@ class Checkout extends React.Component {
 																		<div className="stripe-form">
 																			<div className="stripe-card-info">
 																				<div className={cx("form-group",
-																				(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
-																				(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName && 'has-success',
-																				(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')
+																					(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																					(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName && 'has-success',
+																					(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')
 																				}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
@@ -881,16 +933,16 @@ class Checkout extends React.Component {
 																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && 'has-feedback',
 																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName && 'has-success',
 																								(this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && (!this.state.cardHolderName) && 'has-error')
-																								}>
+																							}>
 																								<div className="input-group-addon">
 																									<i className="fa fa-user" aria-hidden="true"/>
 																								</div>
 																								<input type="text" className="form-control" id="cardname"
-																								       placeholder="Name on the card"
-																								       ref={ref => {
+																											 placeholder="Name on the card"
+																											 ref={ref => {
 																												 this.cardHolderName = ref;
 																											 }}
-																								       onKeyUp={this.cardHolderNameValidateHandler}/>
+																											 onKeyUp={this.cardHolderNameValidateHandler}/>
 																							</div>
 																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName &&
 																							<i
@@ -919,35 +971,35 @@ class Checkout extends React.Component {
 																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && 'has-feedback',
 																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber && 'has-success',
 																								(this.state.cardNumberFeedBack || this.state.isFormSubmited) && (!this.state.cardNumber) && 'has-error')
-																								}>
+																							}>
 																								<div className="input-group-addon">
 																									<i className="fa fa-credit-card" aria-hidden="true"/>
 																								</div>
 																								<input type="number" className="form-control" id="cardnumber"
-																								       placeholder="8888-8888-8888-8888" maxLength={16}
-																								       ref={ref => {
-																										 this.cardNumber = ref;
-																									 }}
-																								       onKeyUp={this.cardNumberValidateHandler}
-																								       required="required" data-fv-field="cardnumber"/>
+																											 placeholder="8888-8888-8888-8888" maxLength={16}
+																											 ref={ref => {
+																												 this.cardNumber = ref;
+																											 }}
+																											 onKeyUp={this.cardNumberValidateHandler}
+																											 required="required" data-fv-field="cardnumber"/>
 																							</div>
-																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited)&& this.state.cardNumber &&
+																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited)&& !this.state.cardNumber &&
+																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited) && !this.state.cardNumber &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited)&& !this.state.cardNumber &&
+																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited) && !this.state.cardNumber &&
 																							<small
 																								className="help-block">{this.state.cardNumberFeedBackMsg || "The credit card number is required and can't be empty "}</small>}
 																						</div>
 																					</div>
 																				</div>
 																				<div className={cx("form-group expiration-date",
-																				((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
-																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && 'has-success',
-																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) && 'has-error')
-																								}>
+																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
+																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && 'has-success',
+																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) && 'has-error')
+																				}>
 																					<div className="row">
 																						<div className="col-md-4 text-right">
 																							<label className="">Expiration Date</label>
@@ -957,15 +1009,16 @@ class Checkout extends React.Component {
 																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
 																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && 'has-success',
 																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) && 'has-error')
-																								}>
+																							}>
 																								<div className="input-group-addon">
 																									<i className="fa fa-calendar" aria-hidden="true"/></div>
 																								<select className data-stripe="exp_month"
-																								        id="exp-month"
-																								        data-fv-field="expMonth"
-																								        ref={ref => {
-																											this.cardExpMonth = ref;}}
-																								        onChange={this.cardExpMonthValidateHandler}
+																												id="exp-month"
+																												data-fv-field="expMonth"
+																												ref={ref => {
+																													this.cardExpMonth = ref;
+																												}}
+																												onChange={this.cardExpMonthValidateHandler}
 																								>
 																									<option selected value={1}>Jan (01)</option>
 																									<option value={2}>Feb (02)</option>
@@ -982,9 +1035,11 @@ class Checkout extends React.Component {
 
 																								</select>
 																								<select className data-stripe="exp_year" id="exp-year"
-																								        data-fv-field="expYear"
-																								        ref={ref => {this.cardExpYear = ref;}}
-																								        onChange={this.cardExpYearValidateHandler}
+																												data-fv-field="expYear"
+																												ref={ref => {
+																													this.cardExpYear = ref;
+																												}}
+																												onChange={this.cardExpYearValidateHandler}
 																								>
 																									<option value={2016}>2016</option>
 																									<option value={2017}>2017</option>
@@ -1027,15 +1082,17 @@ class Checkout extends React.Component {
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group"
 																								data-fv-icon-for="expMonth"/>
-																							{ ((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && <small className="help-block">Invalid card Expiration date </small>}
-																							{ null && <small className="help-block" >The expiration month can contain digits only
+																							{ ((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) &&
+																							<small className="help-block">Invalid card Expiration date </small>}
+																							{ null &&
+																							<small className="help-block">The expiration month can contain digits only
 																							</small>}
-																							{ null && <small className="help-block" >Your card is Expired
+																							{ null && <small className="help-block">Your card is Expired
 																							</small>}
 																							{ null && <small className="help-block">The expiration year is required
 																							</small>}
 																							{ null &&
-																							<small className="help-block" >The expiration year can contain digits only
+																							<small className="help-block">The expiration year can contain digits only
 																							</small>}
 																						</div>
 																					</div>
@@ -1051,23 +1108,23 @@ class Checkout extends React.Component {
 																						</div>
 																						<div
 																							className={cx("col-md-8 text-left",
-																							(this.state.cardCVVFeedBack || this.state.isFormSubmited) && 'has-feedback',
-																							(this.state.cardCVVFeedBack || this.state.isFormSubmited) && this.state.cardCVV && 'has-success',
-																							(this.state.cardCVVFeedBack || this.state.isFormSubmited) && (!this.state.cardCVV) && 'has-error')
+																								(this.state.cardCVVFeedBack || this.state.isFormSubmited) && 'has-feedback',
+																								(this.state.cardCVVFeedBack || this.state.isFormSubmited) && this.state.cardCVV && 'has-success',
+																								(this.state.cardCVVFeedBack || this.state.isFormSubmited) && (!this.state.cardCVV) && 'has-error')
 																							}>
 																							<div className="input-group">
 																								<input type="number" className="form-control"
-																								       maxLength={4}
-																								       size={4}
-																								       data-stripe="cvc"
-																								       ref={ref => {
-																										 this.cardCVV = ref;
-																									 }}
-																								       onChange={this.cardCVVValidateHandler}
-																								       id="cvv" placeholder="CVC/CVV"/>
+																											 maxLength={4}
+																											 size={4}
+																											 data-stripe="cvc"
+																											 ref={ref => {
+																												 this.cardCVV = ref;
+																											 }}
+																											 onChange={this.cardCVVValidateHandler}
+																											 id="cvv" placeholder="CVC/CVV"/>
 																							</div>
 																							<i className="form-control-feedback fv-bootstrap-icon-input-group"
-																							   data-fv-icon-for="cvv"/>
+																								 data-fv-icon-for="cvv"/>
 																							{ (this.state.cardCVVFeedBack || this.state.isFormSubmited) && this.state.cardCVV &&
 																							<i
 																								className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1092,7 +1149,7 @@ class Checkout extends React.Component {
 																								<i className="fa fa-home" aria-hidden="true"/>
 																							</div>
 																							<input type="text" className="form-control" data-stripe="address_line1"
-																							       name="address_1"/>
+																										 name="address_1"/>
 																						</div>
 																					</div>
 																				</div>
@@ -1108,7 +1165,7 @@ class Checkout extends React.Component {
 																								<i className="fa fa-road" aria-hidden="true"/>
 																							</div>
 																							<input type="text" className="form-control" data-stripe="address_line2"
-																							       name="address_2"/>
+																										 name="address_2"/>
 																						</div>
 																					</div>
 																				</div>
@@ -1123,7 +1180,7 @@ class Checkout extends React.Component {
 																							<div className="input-group-addon">
 																								<i className="fa fa-globe" aria-hidden="true"/></div>
 																							<input type="text" className="form-control" data-stripe="address_city"
-																							       name="address_city"/>
+																										 name="address_city"/>
 																						</div>
 																					</div>
 																				</div>
@@ -1138,7 +1195,7 @@ class Checkout extends React.Component {
 																							<div className="input-group-addon">
 																								<i className="fa fa-map-o" aria-hidden="true"/></div>
 																							<select className="form-control" data-stripe="address_state"
-																							        data-attribute-type="text" name="address_state">
+																											data-attribute-type="text" name="address_state">
 																								<option value={-1}>State</option>
 																								<option value="AL">ALABAMA</option>
 																								<option value="AK">ALASKA</option>
@@ -1206,13 +1263,13 @@ class Checkout extends React.Component {
 																								<i className="fa fa-map-marker" aria-hidden="true"/>
 																							</div>
 																							<input type="number" className="form-control" size={6}
-																							       data-stripe="address_zip" name="address_zip"
-																							       data-fv-field="address_zip"/>
+																										 data-stripe="address_zip" name="address_zip"
+																										 data-fv-field="address_zip"/>
 																						</div>
 																						<i className="form-control-feedback fv-bootstrap-icon-input-group"
-																						   data-fv-icon-for="address_zip"/>
+																							 data-fv-icon-for="address_zip"/>
 																						<small className="help-block" data-fv-validator="integer"
-																						       data-fv-for="address_zip" data-fv-result="NOT_VALIDATED"
+																									 data-fv-for="address_zip" data-fv-result="NOT_VALIDATED"
 																						>This value is not valid
 																						</small>
 																					</div>
@@ -1223,61 +1280,64 @@ class Checkout extends React.Component {
 																</div>
 																<hr />
 																{ this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.attendees ?
-																	this.props.orderData.ticketAttribute.attendees.map((item, itemKey) =><div
+																	this.props.orderData.ticketAttribute.attendees.map((item, itemKey) => <div
 																		className="attendee-data" key={Math.random()}>
 																		<h4 className="text-left">
 																			<strong>{item.header} - Ticket Holder Name</strong>
 																		</h4>
 																		{
 																			item.attributes ?
-																			item.attributes.map((attrib, key)=>
-																				<div className="holder-attribute" key={Math.random()}>
-																					<div className="custom-attribute">
-																						<div className={cx("form-group mrg-t-md")}>
-																							<div className="row">
-																								<div className="col-md-4 text-right">
-																									<label className="text-right">{attrib.name}
-																										{ attrib.mandatory && <span className="red">*</span>}
-																									</label>
-																								</div>
-																								<div className="col-md-6 text-left">
-																									<div className={cx("form-group",
-																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
-																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
-																										this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value && 'has-success',
-																									)}>
-																										<input type="text"
-																										       placeholder={attrib.name}
-																										       className="form-control"
-																										       name={attrib.name}
-																										       required={ attrib.mandatory}
-																										       defaultValue={attrib.value ||
-																													 (this.state.attendee &&
-																													 this.state.attendee[itemKey] &&
-																													 this.state.attendee[itemKey][key] &&
-																													 this.state.attendee[itemKey][key][attrib.name]) || (
-																														 this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
-																													 )
-																										       }
-																										       onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
-																										/>
-																										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
-																										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
-																										<small className="help-block">{ "The " + attrib.name + " is invalid."}</small>
+																				item.attributes.map((attrib, key) =>
+																					<div className="holder-attribute" key={Math.random()}>
+																						<div className="custom-attribute">
+																							<div className={cx("form-group mrg-t-md")}>
+																								<div className="row">
+																									<div className="col-md-4 text-right">
+																										<label className="text-right">{attrib.name}
+																											{ attrib.mandatory && <span className="red">*</span>}
+																										</label>
+																									</div>
+																									<div className="col-md-6 text-left">
+																										<div className={cx("form-group",
+																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
+																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
+																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value && 'has-success',
+																										)}>
+																											<input type="text"
+																														 placeholder={attrib.name}
+																														 className="form-control"
+																														 name={attrib.name}
+																														 required={ attrib.mandatory}
+																														 defaultValue={attrib.value ||
+																														 (this.state.attendee &&
+																														 this.state.attendee[itemKey] &&
+																														 this.state.attendee[itemKey][key] &&
+																														 this.state.attendee[itemKey][key][attrib.name]) || (
+																															 this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
+																														 )
+																														 }
+																														 onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
+																											/>
+																											<i
+																												className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																											<i
+																												className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																											<small
+																												className="help-block">{ "The " + attrib.name + " is invalid."}</small>
+																										</div>
 																									</div>
 																								</div>
 																							</div>
 																						</div>
+																						<input type="hidden" name="tableId" defaultValue={0}/>
 																					</div>
-																					<input type="hidden" name="tableId" defaultValue={0}/>
-																				</div>
-																			):""
+																				) : ""
 																		}
 																		<div className="holder-question">
 																			<input type="hidden" name="tableId" defaultValue={0}/>
 																			{
 																				item.questions ?
-																					item.questions.map((attrib, key)=>
+																					item.questions.map((attrib, key) =>
 																						<div className="holder-attribute" key={Math.random()}>
 																							<div className="custom-attribute">
 																								<div className={cx("form-group mrg-t-md")}>
@@ -1289,28 +1349,31 @@ class Checkout extends React.Component {
 																										</div>
 																										<div className="col-md-6 text-left">
 																											<div className={cx("form-group",
-																										this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && (this.state.errorQuestions[itemKey][key][attrib.name].key || this.state.errorQuestions[itemKey][key][attrib.name].error) && 'has-feedback',
-																										this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].error && 'has-error',
-																										this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value && 'has-success',
-																									)}>
+																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && (this.state.errorQuestions[itemKey][key][attrib.name].key || this.state.errorQuestions[itemKey][key][attrib.name].error) && 'has-feedback',
+																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].error && 'has-error',
+																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value && 'has-success',
+																											)}>
 																												<input type="text"
-																												       placeholder={attrib.name}
-																												       className="form-control"
-																												       name={attrib.name}
-																												       required={ attrib.mandatory}
-																												       defaultValue={attrib.value ||
-																													 (this.state.questions &&
-																													 this.state.questions[itemKey] &&
-																													 this.state.questions[itemKey][key] &&
-																													 this.state.questions[itemKey][key][attrib.name]) || (
-																														 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value
-																													 )
-																										       }
-																												       onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
+																															 placeholder={attrib.name}
+																															 className="form-control"
+																															 name={attrib.name}
+																															 required={ attrib.mandatory}
+																															 defaultValue={attrib.value ||
+																															 (this.state.questions &&
+																															 this.state.questions[itemKey] &&
+																															 this.state.questions[itemKey][key] &&
+																															 this.state.questions[itemKey][key][attrib.name]) || (
+																																 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value
+																															 )
+																															 }
+																															 onChange={this.setQuestionsValue.bind(this, attrib, itemKey, key)}
 																												/>
-																												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
-																												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
-																												<small className="help-block">{ "The " + attrib.name + " is invalid."}</small>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " is invalid."}</small>
 																											</div>
 																										</div>
 																									</div>
@@ -1318,7 +1381,7 @@ class Checkout extends React.Component {
 																							</div>
 																							<input type="hidden" name="tableId" defaultValue={0}/>
 																						</div>
-																					):""
+																					) : ""
 																			}
 																		</div>
 																		<hr />
@@ -1342,15 +1405,20 @@ class Checkout extends React.Component {
 								</div>
 							</div>
 						</div>
-						<PopupModel
-							id="ticketPurchaseSucessPopup"
-							showModal={this.state.ticketPurchaseSuccessPopup}
-							headerText="Event Location"
-							onCloseFunc={this.hideTicketPurchaseSuccessPopup}
+						{ this.state.ticketPurchaseSuccessPopup &&
+						<SweetAlert title="Thank you for supporting the event. Please check your inbox for your tickets."
+												onConfirm={() => {
+													history.push('/event/' + eventUrl)
+												}}/> }
+						{ this.state.showFormError && <SweetAlert
+							warning
+							confirmBtnText="Continue"
+							confirmBtnBsStyle="danger"
+							title={ this.state.formError || "Invalid Data"}
+							onConfirm={this.hideFormError}
 						>
-							<div><h1>Location</h1></div>
-						</PopupModel>
-					</div> : <TimeOut eventUrl={this.props.params && this.props.params.params}/>
+						</SweetAlert> }
+					</div> : <TimeOut eventUrl={eventUrl}/>
 				: <div></div>
 		);
 	}
