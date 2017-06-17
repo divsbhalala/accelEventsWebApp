@@ -8,7 +8,7 @@ class PopupModal extends Component { // eslint-disable-line
     id: PropTypes.string,
     headerText: PropTypes.string,
     modelBody: PropTypes.string,
-    modelFooter: PropTypes.string,
+    modelFooter: PropTypes.object,
     showModal: PropTypes.bool,
     onCloseFunc: PropTypes.func,
   }
@@ -33,7 +33,8 @@ class PopupModal extends Component { // eslint-disable-line
               {this.props.children}
             </Modal.Body>
             {this.props.modelFooter && <Modal.Footer>
-              {<div dangerouslySetInnerHTML={{__html: this.props.modelFooter}}/>}
+              {this.props.modelFooter}
+
             </Modal.Footer>}
           </Modal>
         </div>

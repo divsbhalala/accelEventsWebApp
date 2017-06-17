@@ -1345,10 +1345,11 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="ticketPurchaseSucessPopup"
 							showModal={this.state.ticketPurchaseSuccessPopup}
-							headerText="Event Location"
+							headerText="Payment Successfull"
 							onCloseFunc={this.hideTicketPurchaseSuccessPopup}
+						  footer = {<p>Here</p>}
 						>
-							<div><h1>Location</h1></div>
+							<div><h3>Thank you for supporting the event. Please check your inbox for your tickets.</h3></div>
 						</PopupModel>
 					</div> : <TimeOut eventUrl={this.props.params && this.props.params.params}/>
 				: <div></div>
