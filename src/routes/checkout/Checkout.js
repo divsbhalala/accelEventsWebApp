@@ -33,6 +33,7 @@ let Total = 0;
 let attendee = {};
 let questions = {};
 let buyerInformationFields = {};
+let eventUrl;
 class Checkout extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
@@ -97,7 +98,7 @@ class Checkout extends React.Component {
 	}
 
 	componentWillMount() {
-		let eventUrl = this.props.params && this.props.params.params;
+		eventUrl = this.props.params && this.props.params.params;
 		this.props.doGetEventData(eventUrl);
 		this.props.doGetSettings(eventUrl, 'ticketing').then(resp => {
 			this.setState({
@@ -1353,11 +1354,15 @@ class Checkout extends React.Component {
 							showModal={this.state.ticketPurchaseSuccessPopup}
 							headerText="Payment Successfull"
 							onCloseFunc={this.hideTicketPurchaseSuccessPopup}
-						  footer = {<p>Here</p>}
+							modelFooter = {<button className="btn btn-success" onClick={
+								()=>{
+									history.push( '/event/'+ eventUrl)
+								}
+							}>Close</button>}
 						>
-							<div><h3>Thank you for supporting the event. Please check your inbox for your tickets.</h3></div>
+							<div>Thank you for supporting the event. Please check your inbox for your tickets.</div>
 						</PopupModel>
-					</div> : <TimeOut eventUrl={this.props.params && this.props.params.params}/>
+					</div> : <TimeOut eventUrl={eventUrl}/>
 				: <div></div>
 		);
 	}
