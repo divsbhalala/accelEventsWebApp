@@ -598,3 +598,20 @@ export function giveDonate(eventUrl,userData) {
     });
   }
 }
+export function fundaNeed(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/fundaneed/pledge' ,
+      data:userData,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}

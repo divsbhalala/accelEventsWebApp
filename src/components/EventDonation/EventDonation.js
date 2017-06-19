@@ -40,6 +40,7 @@ class EventDonation extends React.Component {
       showDonationPopup: false,
 
       isValidData: false,
+      isError: false,
       email: null,
       password: null,
       error: null,
@@ -340,7 +341,6 @@ class EventDonation extends React.Component {
   };
   submitDonatebid = (e) => {
     e.preventDefault();
-    console.log('-><><',this.state)
     var self = this
     if(!this.props.authenticated){
       let userData={
@@ -349,10 +349,9 @@ class EventDonation extends React.Component {
         "password": this.state.passwordValue,
         "phoneNumber": this.state.phoneNumberValue
       }
-      this.props.doSignUp("jkazarian0",userData ).then((resp)=>{
+      this.props.doSignUp(this.props.eventUrl,userData ).then((resp)=>{
         var self = this;
         if(!resp.error){
-         // if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
               const card = {
                 number: this.cardNumber.value,
                 cvc: this.cvv.value,
@@ -362,31 +361,32 @@ class EventDonation extends React.Component {
               Stripe.createToken(card, function (status, response) {
                 if (response.error) {
                   self.setState({
-                    errorMsgCard: response.error.message,
+                    errorMsg: response.error.message,
+                    isError:true,
                   });
                 } else {
                   const user = {
                     stripeToken : response.id,
                     amount: self.state.amountValue,
                   }
-                  self.props.giveDonate("jkazarian0", user)
+                  self.props.giveDonate(self.props.eventUrl, user)
                     .then(resp => {
                       console.log(resp)
                       if (resp && resp.message) {
                         self.setState({
-                          errorMsgCard: resp.message,
+                          errorMsg: resp.message,
+                          isError:false,
                         });
                       }else{
                         self.setState({
-                          errorMsgCard: resp.errorMessage,
+                          errorMsg: resp.errorMessage,
+                          isError:true,
                         });
                       }
                     });
                 }
               });
-        //  }
-        }
-        else{
+        } else{
           this.setState({error:"Invalid Email or password"});
         }
       });
@@ -401,7 +401,8 @@ class EventDonation extends React.Component {
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
           self.setState({
-            errorMsgCard: response.error.message,
+            errorMsg: response.error.message,
+            isError:true,
           });
         } else {
           const user = {
@@ -410,16 +411,18 @@ class EventDonation extends React.Component {
             email:self.props.user.email,
             paymenttype:"CC",
           }
-          self.props.giveDonate("jkazarian0", user)
+          self.props.giveDonate(self.props.eventUrl, user)
             .then(resp => {
               console.log(resp)
               if (resp && resp.message) {
                 self.setState({
-                  errorMsgCard: resp.message,
+                  errorMsg: resp.message,
+                  isError:false,
                 });
               }else{
                 self.setState({
-                  errorMsgCard: resp.errorMessage,
+                  errorMsg: resp.errorMessage,
+                  isError:true,
                 });
               }
             });
@@ -432,25 +435,33 @@ class EventDonation extends React.Component {
         email:self.props.user.email,
         paymenttype:"CC",
       }
-      this.props.giveDonate("jkazarian0", user)
+      this.props.giveDonate(this.props.eventUrl, user)
         .then(resp => {
           console.log(resp)
           if (resp && resp.message) {
             this.setState({
               errorMsg: resp.message,
+              isError:false,
             });
           }else{
             this.setState({
               errorMsg: resp.errorMessage,
+              isError:true,
             });
           }
         });
     }
+    this.setState({
+      showDonationPopup:false
+    })
   }
 
   render() {
     return (
       <div id="donationfrom" className={cx("col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10")}>
+        { this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-danger">{this.state.errorMsg}</p> }
+        { !this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-success">{this.state.errorMsg}</p> }
+
         <div className={cx("form-group")}>
           <div className={cx("btn-group")} data-toggle="buttons">
 
@@ -807,5 +818,9 @@ const mapDispatchToProps = {
   submitAuctionBid: (eventUrl, userData) => submitAuctionBid(eventUrl, userData),
   giveDonate: (eventUrl, userData) => giveDonate(eventUrl, userData),
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  user: state.session.user,
+  authenticated: state.session.authenticated,
+});
+
 export default connect(mapStateToProps,mapDispatchToProps)(withStyles(s)(EventDonation));

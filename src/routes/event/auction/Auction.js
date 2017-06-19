@@ -29,7 +29,6 @@ class Auction extends React.Component {
     super(props);
     this.state = {
       settings: null,
-      tab: 'Auction',
       showBookingTicketPopup: false,
       showMapPopup: true,
 
@@ -229,14 +228,11 @@ class Auction extends React.Component {
 
   };
   passwordValidateHandler = (e) => {
-
     this.setState({
       passwordFeedBack: true,
       passwordValue:this.password.value,
     });
-
     if (this.password.value == '') {
-
       this.setState({
         password: false
       });
@@ -246,7 +242,6 @@ class Auction extends React.Component {
       });
     }
     this.setState({isValidData: !!(this.email.value && this.password.value)});
-
   };
   firstNameValidateHandler = (e) => {
 
