@@ -56,7 +56,7 @@ class Checkout extends React.Component {
 			focusOn: null,
 			orderData: {},
 			cardHolder: false,
-			isLoaded: false,
+			isLoaded: true,
 			isTimeout: false,
 			settings: {},
 			isValidData: false,
@@ -114,6 +114,7 @@ class Checkout extends React.Component {
 			orderData: this.props.orderData
 		});
 		this.props.doGetOrderById(eventUrl, this.props.params && this.props.params.orderId).then(resp => {
+			console.log('here', resp)
 			if (resp && resp.errorCode) {
 				this.setState({
 					isTimeout: true
@@ -541,7 +542,6 @@ class Checkout extends React.Component {
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
 	};
-
 	setAttendeesValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
