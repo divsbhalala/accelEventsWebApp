@@ -14,12 +14,13 @@ import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetFundANeedItemByCode,doGetEventData, doGetSettings,fundaNeed,doSignUp} from './../action/index';
+import {doGetEventData, doGetSettings} from './../action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
+import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 
 class Fund extends React.Component {
@@ -833,14 +834,14 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <button className={cx("btn btn-primary text-uppercase")}
+                        <button className={cx("btn btn-primary text-uppercase", !this.state.isValidData && 'disabled')}
                                 role="button" type="submit"
                                 data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
                           Submit Pledge
                         </button>
 
                         <a role="button" className="btn btn-success"
-                           href={this.props.params && "/event/" + this.props.params.params} >Go back to All Items</a>
+                           href="/AccelEventsWebApp/events/jkazarian8#causeauction">Go back to All Items</a>
                       </form>
                     </div>
                   </div>
