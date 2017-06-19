@@ -24,6 +24,7 @@ import EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox'
 import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 import {
 	doGetEventData,
@@ -48,6 +49,8 @@ class Event extends React.Component {
 		this.state = {
 			isLoaded : false,
 			tab: 'The Event',
+			formError: '',
+			showFormError:false,
 			totalAuction: ar,
 			showBookingTicketPopup: false,
 			showMapPopup: false,
@@ -97,6 +100,7 @@ class Event extends React.Component {
 		this.setSearchString = this.setSearchString.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.doOrderTicket = this.doOrderTicket.bind(this);
+		this.hideFormError = this.hideFormError.bind(this);
 
 	}
   emailValidateHandler = (e) => {
@@ -244,7 +248,6 @@ class Event extends React.Component {
     }
 
   };
-
 	doGetLoadMoreAuctionItem = () => {
 		this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 		setTimeout(() => {
@@ -294,7 +297,11 @@ class Event extends React.Component {
 			showMapPopup: false
 		})
 	};
-
+	hideFormError = () => {
+		this.setState({
+			showFormError: false
+		})
+	};
 	componentWillMount() {
 		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=>{
 			this.setState({
@@ -635,13 +642,20 @@ class Event extends React.Component {
 					history.push('/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
 				}
 				else {
+					debugger;
 					this.setState({
-						orderTicket: "Error while Oraring Tickets"
+						formError: "Error while Oraring Tickets",
+						showFormError: true,
+						showBookingTicketPopup: false
 					})
 				}
 			}).catch(error => {
+			// this.state.formError
 			this.setState({
-				orderTicket: "Error while Oraring Tickets"
+				orderTicket: "Error while Oraring Tickets",
+				showFormError: true,
+				showBookingTicketPopup: false,
+				formError :  (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordaring Tickets"
 			})
 		})
 	}
@@ -827,8 +841,8 @@ class Event extends React.Component {
 					modelBody=''
 					onCloseFunc={this.hideBookingPopup}
 				>
-					<form action="/AccelEventsWebApp/u/checkout/jkazarian8/orderTicket" method="POST">
-						<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+					<form method="POST">
+						<div className="ticket-type-container">
 							{
 								this.state.settings && this.state.settings.tickeTypes && (this.state.settings.tickeTypes).map(item =>
 									<div className="sale-card" key={item.typeId.toString()}>
@@ -906,6 +920,14 @@ class Event extends React.Component {
 				>
 					<div><h1>Location</h1></div>
 				</PopupModel>
+				{ this.state.showFormError && <SweetAlert
+					warning
+					confirmBtnText="Continue"
+					confirmBtnBsStyle="danger"
+					title={ this.state.formError || "Invalid Data"}
+					onConfirm={this.hideFormError}
+				>
+				</SweetAlert> }
 			</div>
 		);
 	}
