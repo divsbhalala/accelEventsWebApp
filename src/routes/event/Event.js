@@ -75,6 +75,11 @@ class Event extends React.Component {
 			totalTicketPrice: 0,
 			selectedCategoty: '',
 			lastScrollPos: 0,
+			activeEventTickets :true,
+			activeFund :true,
+			activeAuction :true,
+			activeRaffle :true,
+			activeDonation :true,
 		};
 		this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
 		this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -290,7 +295,37 @@ class Event extends React.Component {
 	};
 
 	componentWillMount() {
-		this.props.doGetEventData(this.props.params && this.props.params.params);
+		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=>{
+			this.setState({
+				activeEventTickets :this.props.eventData && this.props.eventData.ticketingEnabled,
+				activeAuction :this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeRaffle :this.props.eventData && this.props.eventData.raffleEnabled,
+				activeFund :true,
+				activeDonation :this.props.eventData && this.props.eventData.donationEnabled,
+			})
+			if(this.state.activeEventTickets) {
+					this.setState({
+						tab: 'The Event'
+					})
+			}else if(this.state.activeAuction) {
+				this.setState({
+					tab: 'Auction'
+				})
+			}else  if(this.state.activeRaffle) {
+				this.setState({
+					tab: 'Raffle'
+				})
+			} else  if(this.state.activeFund) {
+				this.setState({
+					tab: 'Fund a Need'
+				})
+			}else {
+				this.setState({
+					tab: 'Donation'
+				})
+			}
+			this.setActiveTabState(this.state.tab)
+		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
 			this.setState({
@@ -306,7 +341,7 @@ class Event extends React.Component {
 	setActiveTabState = (label) => {
 		this.setState({tab: label});
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
-
+		{console.log(this.state)}
 		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donation' )) {
 			if (label == 'Auction') {
 				label = 'auction';
@@ -641,24 +676,28 @@ class Event extends React.Component {
                             setSearchString={this.setSearchString}
 								/>
 							</div>
+							{
+								console.log("props ---> ",this.state)
+							}
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
 								<div className="main-box">
 									<Tabs onSelect={ (index, label) => {
                     this.setActiveTabState(label)
                   } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
-										<Tab label="The Event">
-											<div className={cx("row item-canvas")}>
-												<div
-													className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
-											</div>
-											<div className={cx("row text-center")}>
-												<div className={cx("col-md-offset-3 col-md-6")}>
-													<a onClick={this.showBookingPopup}
-													   className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
-														Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
+
+											<Tab label="The Event">
+												<div className={cx("row item-canvas")}>
+													<div
+														className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
 												</div>
-											</div>
-										</Tab>
+												<div className={cx("row text-center")}>
+													<div className={cx("col-md-offset-3 col-md-6")}>
+														<a onClick={this.showBookingPopup}
+															 className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
+															Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
+													</div>
+												</div>
+											</Tab>
 										<Tab label="Auction">
 											<div className="row">
 												<InfiniteScroll
