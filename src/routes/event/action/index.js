@@ -581,3 +581,20 @@ export function submitRaffleTickets(eventUrl,userData) {
     });
   }
 }
+export function giveDonate(eventUrl,userData) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl + '/donation/donate' ,
+      data:userData,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}

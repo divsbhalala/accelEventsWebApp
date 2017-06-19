@@ -96,7 +96,6 @@ class Auction extends React.Component {
 
   onBidFormClick = (e) => {
     e.preventDefault();
-    console.log("---",this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0);
     if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
       this.setState({
         showPopup: true,
