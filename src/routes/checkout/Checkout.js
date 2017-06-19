@@ -503,7 +503,6 @@ class Checkout extends React.Component {
 							});
 						}
 					}).catch(error => {
-						debugger;
 						console.log('error of request', error);
 						this.setState({
 							showFormError : true,
@@ -513,15 +512,15 @@ class Checkout extends React.Component {
 
 				}
 				else {
-					alert('Invalid Data');
 					this.setState({
 						showFormError : true,
-						formError : "Invalid"
+						formError : "Invalid Credit card details"
 					});
 
 				}
 
 			}).catch((error) => {
+				console.log('r', error);
 				this.setState({
 					cardExpYear: false
 				});
@@ -1406,10 +1405,10 @@ class Checkout extends React.Component {
 							</div>
 						</div>
 						{ this.state.ticketPurchaseSuccessPopup &&
-						<SweetAlert title="Thank you for supporting the event. Please check your inbox for your tickets."
+						<SweetAlert title=""
 												onConfirm={() => {
 													history.push('/event/' + eventUrl)
-												}}/> }
+												}}>Thank you for supporting the event. Please check your inbox for your tickets.</SweetAlert> }
 						{ this.state.showFormError && <SweetAlert
 							warning
 							confirmBtnText="Continue"

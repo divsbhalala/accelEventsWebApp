@@ -46,6 +46,7 @@ class Event extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isLoaded : false,
 			tab: 'The Event',
 			totalAuction: ar,
 			showBookingTicketPopup: false,
@@ -336,6 +337,9 @@ class Event extends React.Component {
 		});
 	}
 	componentDidMount() {
+		this.setState({
+			isLoaded: true
+		})
 		window.addEventListener('scroll', this.handleScroll);
 	}
 	setActiveTabState = (label) => {
@@ -680,25 +684,25 @@ class Event extends React.Component {
 								console.log("props ---> ",this.state)
 							}
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
-								<div className="main-box">
+								{ this.state.tab && this.state.isLoaded && <div className="main-box">
 									<Tabs onSelect={ (index, label) => {
                     this.setActiveTabState(label)
                   } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
 
-											<Tab label="The Event">
-												<div className={cx("row item-canvas")}>
-													<div
-														className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
+										<Tab label="The Event" disabled={!this.state.activeEventTickets}>
+											<div className={cx("row item-canvas")}>
+												<div
+													className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
+											</div>
+											<div className={cx("row text-center")}>
+												<div className={cx("col-md-offset-3 col-md-6")}>
+													<a onClick={this.showBookingPopup}
+														 className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
+														Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
 												</div>
-												<div className={cx("row text-center")}>
-													<div className={cx("col-md-offset-3 col-md-6")}>
-														<a onClick={this.showBookingPopup}
-															 className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
-															Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
-													</div>
-												</div>
-											</Tab>
-										<Tab label="Auction">
+											</div>
+										</Tab>
+										<Tab label="Auction" disabled={!this.state.activeAuction}>
 											<div className="row">
 												<InfiniteScroll
 													next={this.doGetLoadMoreAuctionItem}
@@ -737,7 +741,7 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Raffle">
+										<Tab label="Raffle" disabled={!this.state.activeRaffle}>
 											<div className="row">
 												<InfiniteScroll
 													next={this.doGetLoadMoreRaffleItem}
@@ -770,7 +774,7 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Fund a Need">
+										<Tab label="Fund a Need" disabled={!this.state.activeFund}>
 											<div className="row">
 												<InfiniteScroll
 													next={this.doGetLoadMoreFundANeedItem}
@@ -804,11 +808,11 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Donation">
+										<Tab label="Donation" disabled={this.state.activeFund}>
 											<div className="row"><EventDonation user={this.props.user} authenticated={this.props.authenticated} /></div>
 										</Tab>
 									</Tabs>
-								</div>
+								</div>}
 
 							</div>
 

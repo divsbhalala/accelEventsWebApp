@@ -2237,3 +2237,6 @@ input:-webkit-autofill {
 .form-group.has-feedback.has-error .glyphicon-remove{
   display: block;
 }
+.tabs a.nav-link.disabled{
+  display: none;
+}
