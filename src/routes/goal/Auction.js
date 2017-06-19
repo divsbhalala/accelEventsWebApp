@@ -88,13 +88,13 @@ class Auction extends React.Component {
                           <div className={cx("row timer")}>
 
                             <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                              moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
+                              moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
                             }</span></div>
                             <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                              moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
+                              moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
+                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
                               || '00'}</span></div>
                             <div className={cx("col-xs-4")}><span className={cx("seconds")}>00</span></div>
                           </div>

@@ -644,6 +644,7 @@ class Raffle extends React.Component {
                     data-validation-fields="getDonateModalValidationFields" action="/AccelEventsWebApp/events/12/D"
                     noValidate="novalidate"
               onSubmit={this.buyRaffleTicket}>
+                { this.state.errorMsgCard }
                 <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                 <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                   className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/>

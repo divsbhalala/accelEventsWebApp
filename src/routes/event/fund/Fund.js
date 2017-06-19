@@ -101,18 +101,18 @@ class Fund extends React.Component {
     var self = this
     if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
       this.setState({
-        showPopup: true,
+        showMapPopup: true,
         errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
         popupHeader:"Confirm",
       })
     }else{
       this.setState({
-        showPopup: true,
+        showMapPopup: true,
         errorMsg: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.fundData.name ,
         popupHeader:"Confirm",
       })
     }
-    this.submiteFundForm()
+
   }
   submiteFundForm = () => {
 
@@ -152,11 +152,13 @@ class Fund extends React.Component {
                     self.setState({
                       errorMsg: resp.message,
                       isError:false,
+                      popupHeader:"Success",
                     });
                   }else{
                     self.setState({
                       errorMsg: resp.errorMessage,
                       isError:true,
+                      popupHeader:"Failed",
                     });
                   }
                 });
@@ -179,6 +181,7 @@ class Fund extends React.Component {
           self.setState({
             errorMsg: response.error.message,
             isError:true,
+            popupHeader:"Failed",
           });
         } else {
           const user = {
@@ -195,11 +198,13 @@ class Fund extends React.Component {
                 self.setState({
                   errorMsg: resp.message,
                   isError:false,
+                  popupHeader:"Success",
                 });
               }else{
                 self.setState({
                   errorMsg: resp.errorMessage,
                   isError:true,
+                  popupHeader:"Failed",
                 });
               }
             });
@@ -220,17 +225,19 @@ class Fund extends React.Component {
             this.setState({
               errorMsg: resp.message,
               isError:false,
+              popupHeader:"Success",
             });
           }else{
             this.setState({
               errorMsg: resp.errorMessage,
               isError:true,
+              popupHeader:"Failed",
             });
           }
         });
     }
     this.setState({
-      showDonationPopup:false
+      showDonationPopup:false,
     })
   }
 
@@ -253,7 +260,7 @@ class Fund extends React.Component {
         errorMsgEmail: "Invalid Email.",
       });
     }
-    //this.setState({isValidData: !!(this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value && this.password.value)});
 
   };
   passwordValidateHandler = (e) => {
@@ -462,6 +469,17 @@ class Fund extends React.Component {
   reRender = ()=>{
     window.location.reload();
   }
+  showPopup = () => {
+    this.setState({
+      showDonationPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showDonationPopup: false
+    })
+    this.reRender();
+  };
   render() {
     return (
       <div className="row">
@@ -521,7 +539,6 @@ class Fund extends React.Component {
                                 style={{display: 'none', width: 0, height: 0}}/>
                         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                           className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-                        {console.log(this.props)}
                         { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
                           className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                           <label className="control-label">First Name</label>
@@ -782,7 +799,7 @@ class Fund extends React.Component {
                           { this.state.passwordFeedBack && !this.state.password &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
-                        </div>}
+                        </div> }
 
                         <div
                           className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
@@ -816,7 +833,7 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <button className={cx("btn btn-primary text-uppercase", !this.state.isValidData && 'disabled')}
+                        <button className={cx("btn btn-primary text-uppercase")}
                                 role="button" type="submit"
                                 data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
                           Submit Pledge
@@ -835,16 +852,16 @@ class Fund extends React.Component {
         <PopupModel
           id="mapPopup"
           showModal={this.state.showMapPopup}
-          headerText="Event Location"
+          headerText= {this.state.popupHeader}
           modelBody='<div><h1>Location</h1></div>'
           onCloseFunc={this.hideMapPopup}
         >
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}
+              {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}
-              <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
+              <button className="btn badge-danger" onClick={this.reRender}>Close</button>
             </div>
           </div>
         </PopupModel>

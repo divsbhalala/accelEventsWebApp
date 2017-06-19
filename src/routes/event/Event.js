@@ -822,7 +822,7 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Donation" disabled={this.state.activeFund}>
+										<Tab label="Donation" disabled={!this.state.activeDonation}>
 											<div className="row"><EventDonation  eventUrl={this.props.params && this.props.params.params} /></div>
 										</Tab>
 									</Tabs>
