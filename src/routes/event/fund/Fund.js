@@ -14,7 +14,7 @@ import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings} from './../action/index';
+import {doGetEventData, doGetSettings,doSignUp,fundaNeed} from './../action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
@@ -96,7 +96,6 @@ class Fund extends React.Component {
     }
 
   }
-
   onFormClick = (e) => {
     e.preventDefault();
     var self = this
@@ -157,7 +156,7 @@ class Fund extends React.Component {
                     });
                   }else{
                     self.setState({
-                      errorMsg: resp.errorMessage,
+                      errorMsg: resp.errors,
                       isError:true,
                       popupHeader:"Failed",
                     });
@@ -241,7 +240,6 @@ class Fund extends React.Component {
       showDonationPopup:false,
     })
   }
-
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -377,30 +375,25 @@ class Fund extends React.Component {
 
   };
   amountValidateHandler = (e) => {
-    this.setState({
-      amountFeedBack: true,
-      amountValue:this.amount.value,
-      amount: true,
-    });
-
+    let amount=true
+    let errorMsgAmount=""
     if (this.amount.value == '') {
-      this.setState({
-        amount: false,
-        errorMsgNumber: "Bid Amount can't be empty",
-      });
+      errorMsgAmount= "Bid Amount can't be empty"
+      amount=false
+    }else if (this.state.fundData.startingBid + this.state.fundData.pledgePrice  > this.amount.value) {
+      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + (this.state.fundData.startingBid + this.state.fundData.pledgePrice)
+      amount=false
+    } else {
+      amount=true
     }
-    // else if (this.state.auctionData.currentBid + 25 > this.amount.value) {
-    //   this.setState({
-    //     amount: false,
-    //     errorMsgNumber: "Bids for this item must be placed in increments of at least $25. Please enter a value of at least " + this.state.auctionData.currentBid,
-    //   });
-    // } else {
-    //   this.setState({
-    //     amount: true
-    //   });
-    // }
-    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
-
+    this.setState({
+      isValidBidData: ( this.amount.value && amount),
+      amount:amount,
+      amountFeedBack: true,
+      errorMsgAmount:errorMsgAmount,
+      amountValue:this.amount.value
+    });
+   // console.log(this.state.isValidBidData,this.amount.value , this.state.amount)
   };
   cvvValidateHandler = (e) => {
 
@@ -468,7 +461,7 @@ class Fund extends React.Component {
     });
   }
   reRender = ()=>{
-    window.location.reload();
+    // window.location.reload();
   }
   showPopup = () => {
     this.setState({
@@ -477,7 +470,7 @@ class Fund extends React.Component {
   };
   hidePopup = () => {
     this.setState({
-      showDonationPopup: false
+      showMapPopup: false
     })
     this.reRender();
   };
@@ -822,7 +815,7 @@ class Fund extends React.Component {
                               </div>
                               { this.state.amountFeedBack && !this.state.amount &&
                               <small className="help-block" data-fv-validator="emailAddress" data-fv-for="email"
-                                     data-fv-result="NOT_VALIDATED">{this.state.errorMsgNumber}</small>}
+                                     data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
 
                             </div>
                           </div>
@@ -834,12 +827,11 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <button className={cx("btn btn-primary text-uppercase", !this.state.isValidData && 'disabled')}
+                        <button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')}
                                 role="button" type="submit"
                                 data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
                           Submit Pledge
                         </button>
-
                         <a role="button" className="btn btn-success"
                            href="/AccelEventsWebApp/events/jkazarian8#causeauction">Go back to All Items</a>
                       </form>
@@ -862,7 +854,7 @@ class Fund extends React.Component {
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}
-              <button className="btn badge-danger" onClick={this.reRender}>Close</button>
+              <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
         </PopupModel>
@@ -873,11 +865,10 @@ class Fund extends React.Component {
 class ImageList extends React.Component {
   render() {
     return (
-      <div>
-        <img height={250}
+      <div className="item-image">
+        <img className="item-image-inner"
              src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
       </div>
-
     );
   }
 }
@@ -885,7 +876,6 @@ class ImageList extends React.Component {
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   doGetFundANeedItemByCode: (eventUrl, itemCode) => doGetFundANeedItemByCode(eventUrl, itemCode),
-  //doGetAuctionItemByCode: (eventUrl, itemCode) => doGetAuctionItemByCode(eventUrl, itemCode),
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   fundaNeed: (eventUrl, data) => fundaNeed(eventUrl, data),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),

@@ -244,14 +244,11 @@ class Auction extends React.Component {
     //this.setState({isValidData: !!(this.email.value && this.password.value)});
   };
   firstNameValidateHandler = (e) => {
-
     this.setState({
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value
     });
-
     if (this.firstName.value == '') {
-
       this.setState({
         firstName: false
       });
@@ -261,14 +258,12 @@ class Auction extends React.Component {
       });
     }
     this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
-
   };
   lastNameValidateHandler = (e) => {
     this.setState({
       lastNameFeedBack: true,
       lastNameValue: this.lastName.value,
     });
-
     if (this.lastName.value == '') {
 
       this.setState({
@@ -336,28 +331,24 @@ class Auction extends React.Component {
 
   };
   amountValidateHandler = (e) => {
-    this.setState({
-      amountFeedBack: true,
-      amountValue:this.amount.value,
-    });
-
+    let amount=true
+    let errorMsgAmount=""
     if (this.amount.value == '') {
-      this.setState({
-        amount: false,
-        errorMsgNumber: "Bid Amount can't be empty",
-      });
-    } else if (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement  > this.amount.value) {
-      this.setState({
-        amount: false,
-        errorMsgNumber: "Bids for this item must be placed in increments of at least $"+this.state.auctionData.bidIncrement+". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement),
-      });
+      errorMsgAmount= "Bid Amount can't be empty"
+      amount=false
+    }else if (this.state.auctionData.startingBid + this.state.auctionData.bidIncrement  > this.amount.value) {
+      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.auctionData.bidIncrement+". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
+      amount=false
     } else {
-      this.setState({
-        amount: true
-      });
+      amount=true
     }
-    this.setState({isValidBidData: ( this.amount.value && this.state.amount)});
-
+    this.setState({
+      isValidBidData: ( this.amount.value && amount),
+      amount:amount,
+      amountFeedBack: true,
+      errorMsgAmount:errorMsgAmount,
+      amountValue:this.amount.value
+    });
   };
   cvvValidateHandler = (e) => {
 
@@ -501,13 +492,12 @@ class Auction extends React.Component {
         </div>
         <div
           className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
-          <label className="control-label login-password">Enter or Create
-            Password</label>
+          <label className="control-label login-password">Enter or Create Password</label>
           <div className="input-group">
             <div className="input-group-addon">
               <i className="fa fa-key" aria-hidden="true"/>
             </div>
-            <input type="password" className="form-control" name="password"
+            <input type="password" className="form-control zindex" name="password"
                    autoComplete="new-password"
                    placeholder="Enter or create a password"
                    data-fv-field="paswd"
@@ -604,7 +594,7 @@ class Auction extends React.Component {
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
             { this.state.amountFeedBack && !this.state.amount &&
-            <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgNumber}</small>}
+            <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
           </div>
         </div>
       </div>
@@ -836,7 +826,7 @@ class Auction extends React.Component {
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
             { this.state.amountFeedBack && !this.state.amount &&
-            <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgNumber}</small>}
+            <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
           </div>
         </div>
       </div>

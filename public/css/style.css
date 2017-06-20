@@ -2241,3 +2241,4 @@ input:-webkit-autofill {
   display: none;
 }
 .control-dots{ visibility: hidden; }
+.zindex{z-index: 0 !important;}
