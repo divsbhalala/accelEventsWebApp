@@ -1,0 +1,286 @@
+.goal-thermometer{
+    position:relative;
+    padding:0;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#000;
+    font-weight: bold;
+    opacity:0;
+}
+
+.therm-numbers {
+    margin-left: 18%;
+    opacity: 0.4;
+    width: 50px;
+}
+
+.therm-number{
+    position:absolute;
+    text-align:right;
+    font-size:17px;
+}
+
+.therm-graphics {
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.therm-top {
+    height: auto;
+    left: 18.4%;
+    position: absolute;
+    top: -63px;
+    width: 62.9%;
+}
+
+.therm-body-bg {
+    left: 18.8%;
+    position: absolute;
+    top: 13px;
+    width: 63%;
+}
+
+.therm-body-mercury {
+    bottom: 51px;
+    height: 2px;
+    left: 28.3%;
+    position: absolute;
+    width: 44.16%;
+}
+
+.therm-body-fore {
+    background-repeat: repeat-y;
+    left: 27%;
+    position: absolute;
+    top: 13px;
+    width: 24px;
+}
+
+.therm-bottom {
+    height: auto;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+
+.therm-tooltip {
+    left: 90%;
+    position: absolute;
+    width: 200px;
+}
+
+.therm-tooltip .tip-left{
+    float:left;
+    width:19px;
+    height:32px;
+}
+
+.therm-tooltip .tip-middle{
+    float:left;
+    height:32px;
+    font-size:15px;
+}
+
+.therm-tooltip .tip-middle p{
+    position:relative;
+    margin:0;
+    padding-right:4px;
+    padding-left:3px;
+    top:6px;
+    height:32px;
+    opacity:.7;
+    background-size:64px 64px;
+    -moz-background-size: 100%;
+}
+
+.therm-tooltip .tip-right{
+    float:left;
+    width:9px;
+    height:32px;
+}
+
+
+/* New Goal Meter */
+
+@media (min-width: 768px) {
+    .goalcontainer{
+        margin: 10% auto;
+        margin-left: 35% ;
+        width: 530px!important;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .goalcontainer{
+        margin: 116px auto;
+        width: 530px!important;
+    }
+}
+.glass {
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+.thermometer, .thermometer--very-low, .thermometer--low, .thermometer--moderate, .thermometer--high, .thermometer--very-high {
+    max-width: 90%;
+    margin: 2rem auto;
+}
+.thermometer span, .thermometer--very-low span, .thermometer--low span, .thermometer--moderate span, .thermometer--high span, .thermometer--very-high span {
+    font-family: Verdana;
+    font-size: 1rem;
+    color: #ccc;
+    min-width: 100%;
+    text-align: center;
+    display: block;
+    margin-bottom: 1.25rem;
+}
+.thermometer .liquid, .thermometer--very-low .liquid, .thermometer--low .liquid, .thermometer--moderate .liquid, .thermometer--high .liquid, .thermometer--very-high .liquid {
+    display: block;
+    width: 100%;
+    height: 4rem;
+    border: 1px solid #d2d2d2;
+    border-radius: 20px;
+    margin: .25rem auto 0;
+    position: relative;
+}
+.thermometer .liquid:before, .thermometer--very-low .liquid:before, .thermometer--low .liquid:before, .thermometer--moderate .liquid:before, .thermometer--high .liquid:before, .thermometer--very-high .liquid:before {
+    position: absolute;
+    content: "";
+    height: 70%;
+    left: 3px;
+    top: 14%;
+    border-radius: 20px;
+    -webkit-transition: width .3s ease;
+    transition: width .3s ease;
+}
+.thermometer .ruler, .thermometer--very-low .ruler, .thermometer--low .ruler, .thermometer--moderate .ruler, .thermometer--high .ruler, .thermometer--very-high .ruler {
+    height: 2em;
+    width: 100%;
+    margin-top: 2px;
+    margin-left:5px;
+}
+.thermometer .ruler .ticks--very-low line, .thermometer--very-low .ruler .ticks--very-low line, .thermometer--low .ruler .ticks--very-low line, .thermometer--moderate .ruler .ticks--very-low line, .thermometer--high .ruler .ticks--very-low line, .thermometer--very-high .ruler .ticks--very-low line, .thermometer .ruler .ticks--low line, .thermometer--very-low .ruler .ticks--low line, .thermometer--low .ruler .ticks--low line, .thermometer--moderate .ruler .ticks--low line, .thermometer--high .ruler .ticks--low line, .thermometer--very-high .ruler .ticks--low line, .thermometer .ruler .ticks--moderate line, .thermometer--very-low .ruler .ticks--moderate line, .thermometer--low .ruler .ticks--moderate line, .thermometer--moderate .ruler .ticks--moderate line, .thermometer--high .ruler .ticks--moderate line, .thermometer--very-high .ruler .ticks--moderate line, .thermometer .ruler .ticks--high line, .thermometer--very-low .ruler .ticks--high line, .thermometer--low .ruler .ticks--high line, .thermometer--moderate .ruler .ticks--high line, .thermometer--high .ruler .ticks--high line, .thermometer--very-high .ruler .ticks--high line, .thermometer .ruler .ticks--very-high line, .thermometer--very-low .ruler .ticks--very-high line, .thermometer--low .ruler .ticks--very-high line, .thermometer--moderate .ruler .ticks--very-high line, .thermometer--high .ruler .ticks--very-high line, .thermometer--very-high .ruler .ticks--very-high line {
+    stroke-width: 2px;
+    shape-rendering: crispEdges;
+}
+.thermometer .ruler .ticks--very-low, .thermometer--very-low .ruler .ticks--very-low, .thermometer--low .ruler .ticks--very-low, .thermometer--moderate .ruler .ticks--very-low, .thermometer--high .ruler .ticks--very-low, .thermometer--very-high .ruler .ticks--very-low {
+    stroke: #249AA7;
+}
+.thermometer .ruler .ticks--low, .thermometer--very-low .ruler .ticks--low, .thermometer--low .ruler .ticks--low, .thermometer--moderate .ruler .ticks--low, .thermometer--high .ruler .ticks--low, .thermometer--very-high .ruler .ticks--low {
+    stroke: #B8E1F2;
+}
+.thermometer .ruler .ticks--moderate, .thermometer--very-low .ruler .ticks--moderate, .thermometer--low .ruler .ticks--moderate, .thermometer--moderate .ruler .ticks--moderate, .thermometer--high .ruler .ticks--moderate, .thermometer--very-high .ruler .ticks--moderate {
+    stroke: #ABD25E;
+}
+.thermometer .ruler .ticks--high, .thermometer--very-low .ruler .ticks--high, .thermometer--low .ruler .ticks--high, .thermometer--moderate .ruler .ticks--high, .thermometer--high .ruler .ticks--high, .thermometer--very-high .ruler .ticks--high {
+    stroke: #F8C830;
+}
+.thermometer .ruler .ticks--very-high, .thermometer--very-low .ruler .ticks--very-high, .thermometer--low .ruler .ticks--very-high, .thermometer--moderate .ruler .ticks--very-high, .thermometer--high .ruler .ticks--very-high, .thermometer--very-high .ruler .ticks--very-high {
+    stroke: #F1594A;
+}
+.thermometer--very-low strong {
+    color: #249AA7;
+}
+.thermometer--very-low .liquid:before {
+    background: #249AA7;
+}
+
+.thermometer--low .liquid:before {
+    background: #B8E1F2;
+}
+.thermometer--moderate strong {
+    color: #ABD25E;
+}
+
+.thermometer--moderate .liquid:before {
+    background: #ABD25E;
+}
+.thermometer--high strong {
+    color: #F8C830;
+}
+
+.thermometer--high .liquid:before {
+    background: #F8C830;
+}
+.thermometer--very-high strong {
+    color: #F1594A;
+}
+.thermometer--very-high strong:before {
+    content: " blazing";
+}
+.thermometer--very-high .liquid:before {
+    background: #F1594A;
+
+}
+
+.markers{
+    width:100%;
+    margin-left:5px;
+}
+
+.markers text{
+    font-size:18px;
+    font-weight:600;
+}
+
+#goal-tooltip,
+#tooltip {
+    position: relative;
+    width: 60px;
+    height: 100px;
+    background: orange;
+    margin-bottom: 20px;
+    left: -5%;
+    top: -10px;
+    opacity: 1;
+    visibility: visible;
+
+    -webkit-transition: all .3s 1s ease;
+    -moz-transition: all .3s 1s ease;
+    -ms-transition: all .3s 1s ease;
+    -o-transition: all .3s 1s ease;
+    transition: all .3s 1s ease;
+
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+#goal-tooltip {
+    background: #1dbad6;
+}
+
+
+#goal-tooltip:after,
+#tooltip:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    width: 20px;
+    height: 20px;
+    background: orange;
+    left: 20px;
+
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+
+
+    box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.2);
+    -webkit-box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.2);
+}
+
+#goal-tooltip:after {
+    background: #1dbad6;
+}
+#goal-tooltip span, #tooltip span{
+    transform: rotate(90deg);
+    font-size :18px;
+    font-weight : 400;
+    color : white;
+    padding-left: 25px;
+}

@@ -604,7 +604,7 @@ class Raffle extends React.Component {
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
-                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} >
                             {this.state.raffleData && this.state.raffleData.images.length > 0 ?
                               this.state.raffleData.images.map((item, index) =>
                                 <ImageList key={index} item={item}/>
