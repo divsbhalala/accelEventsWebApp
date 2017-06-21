@@ -17,7 +17,8 @@ import {doGetRaffleItemByCode,
   doGetEventData,
   doGetSettings,
   submitRaffleTickets,
-  doSignUp} from './../action/index';
+  doSignUp,
+  purchaseTickets} from './../action/index';
 import  history from './../../../history';
 
 import  EventAside from './../../../components/EventAside/EventAside';
@@ -37,6 +38,7 @@ class Raffle extends React.Component {
 
 
       firstNameFeedBack: false,
+      ticketsFeedBack: false,
       lastNameFeedBack: false,
       showAlertPopup : false,
       showDonationPopup : false,
@@ -80,6 +82,7 @@ class Raffle extends React.Component {
       emailValue: null,
       passwordValue:null,
       phoneNumberValue:null,
+      tickets:null,
 
       cardNumberFeedBack: false,
       cardHolderFeedBack: false,
@@ -97,11 +100,16 @@ class Raffle extends React.Component {
       errorMsgcvv: null,
       errorMsgEmail: null,
       errorMsgPhoneNumber: null,
+      errorMsg: null,
+      errorMsgTickets:null,
+
       showPopup: false,
       stripeToken:null,
       submittedTickets:null,
       showDonationPopup:false,
+      raffleTicketValue:null,
     }
+    this.purchaseTicket=this.purchaseTicket.bind(this);
 
   }
   onFormClick = (e) => {
@@ -112,6 +120,7 @@ class Raffle extends React.Component {
 
   };
   emailValidateHandler = (e) => {
+
     this.setState({
       emailFeedBack: true,
       emailValue:this.email.value,
@@ -240,7 +249,8 @@ class Raffle extends React.Component {
   cvvValidateHandler = (e) => {
 
     this.setState({
-      cvvFeedBack: true
+      cvvFeedBack: true,
+      cardNumberValue:this.cardNumber.value,
     });
 
     if (this.cvv.value == '') {
@@ -278,7 +288,61 @@ class Raffle extends React.Component {
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
+  expMonthValidateHandler = (e) => {
+    this.setState({
+      expMonthFeedBack: true,
+      expMonthValue:this.expMonth.value,
+    });
+    if (this.expMonth.value == '') {
+      this.setState({
+        expMonth: false,
+        errorMsgExpMonth: "Expire Month is Require",
+      });
+    }  else {
+      this.setState({
+        expMonth: true
+      });
+    }
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+  expYearValidateHandler = (e) => {
+    this.setState({
+      expYearFeedBack: true,
+      expYearValue:this.expYear.value,
+    });
+    if (this.expYear.value == '') {
+      this.setState({
+        expYear: false,
+        errorMsgexpYear: "Expire Year is Require",
+      });
+    }  else {
+      this.setState({
+        phoneNumber: true
+      });
+    }
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+  ticketsValidateHandler = (e) => {
 
+    let tickets=true
+    let errorMsgTickets=""
+    if (this.tickets.value == '') {
+      errorMsgTickets= "Number Of Tickets can't be empty"
+      tickets=false
+    }else if ( this.state.raffleData.availableTickets  < this.tickets.value) {
+      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets
+      tickets=false
+    } else {
+      tickets=true
+    }
+    this.setState({
+      isValidData: ( this.tickets.value && tickets),
+      tickets:tickets,
+      ticketsFeedBack: true,
+      errorMsgTickets:errorMsgTickets,
+      raffleTicketValue:this.tickets.value
+    });
+   };
   raffleTicketValidateHandler = (e) => {
     this.setState({
       raffleTicketFeedBack: true,
@@ -339,7 +403,7 @@ class Raffle extends React.Component {
         } else {
           self.setState({
             showAlertPopup: true,
-            errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.auctionData.name ,
+            errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.raffleData.name ,
             popupAlertHeader:"Success",
             stripeToken: response.id,
           })
@@ -349,7 +413,6 @@ class Raffle extends React.Component {
   };
   byTicket = () => {
     if (!this.props.authenticated) {
-
       let userData={
         "countryCode": "IN",
         "email": this.state.emailValue,
@@ -358,91 +421,128 @@ class Raffle extends React.Component {
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
         if(!resp.error){
-          this.submiteByTicket();
+          this.setState({
+            showAlertPopup:true,
+            showDonationPopup:false,
+            errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.raffleData.name ,
+            popupHeader:"Confirm",
+          })
+          //this.submiteByTicket();
         }
         else{
           this.setState({error:"Invalid Email or password"});
         }
       });
     }else{
-      this.submiteByTicket();
+      if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ){
+        this.setState({
+          showAlertPopup:true,
+          showDonationPopup:false,
+          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.raffleData.name ,
+          popupHeader:"Confirm",
+        })
+      }else{
+          this.purchaseTicket();
+      }
+      //this.submiteByTicket();
     }
   }
-  submiteByTicket = () => {
-    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+  submiteByTicket = (e) => {
+    e.preventDefault();
       const user = {
         itemCode: this.state.raffleData.code,
         submittedTickets: this.state.raffleTicketValue,
       }
       this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
-          if (resp && resp.data) {
+          if (!resp.errorMessage) {
+            this.setState({
+              showAlertPopup: true,
+              errorMsg: resp.message,
+              popupHeader:"Success. "
+            })
+          }else{
+            this.setState({
+              showAlertPopup: true,
+              errorMsg: resp.errorMessage,
+              popupHeader:"Failed"
+            });
+          }
+        });
+  }
+  purchaseTicket = (e) => {
+    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+      const user = {
+        compTicketCode: this.state.raffleData.code,
+        raffleTicketId: this.state.raffleTicketValue,
+      }
+      this.props.purchaseTickets(this.props.params && this.props.params.params, user)
+        .then(resp => {
+          if (resp ) {
             this.setState({
               showPopup: true,
-              errorMsgCard: "Tickets Purchase Success ",
+              errorMsg: resp.message,
               popupHeader:"Success"
             })
           }else{
             this.setState({
               showPopup: true,
-              errorMsgCard: resp.errorMessage,
+              errorMsg: resp.errorMessage,
               popupHeader:"Failed"
             });
           }
-          console.log("------",resp)
         });
     }else{
-      var self = this;
-      this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-      if (this.state.isValidBidData) {
+     let self = this;
+     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
         const card = {
-          number: this.cardNumber.value,
-          cvc: this.cvv.value,
-          exp_month: this.expMonth.value,
-          exp_year: this.expYear.value,
+          number: this.state.cardNumberValue,
+          cvc: this.state.cvvValue,
+          exp_month: this.state.expMonthValue,
+          exp_year: this.state.expYearValue,
         }
         Stripe.createToken(card, function (status, response) {
           if (response.error) {
             self.setState({
               showPopup: true,
-              errorMsgCard: response.error.message,
+              errorMsg: response.error.message,
               popupHeader:"Failed"
             });
           } else {
             self.setState({
-              showPopup: true,
-              errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ for  " +  self.state.raffleData.name ,
-              popupHeader:"Success",
+              showPopup: false,
+              errorMsg: " ",
+           //   popupHeader:"Success",
               stripeToken: response.id,
             })
             self.byBid();
           }
         });
-      }
+     }
     }
   }
   byBid = () => {
     const user = {
-      itemCode: this.state.raffleData.code,
-      submittedTickets: this.state.raffleTicketValue,
+      compTicketCode: this.state.raffleData.code,
+      raffleTicketId: this.state.raffleTicketValue,
       stripeToken:this.state.stripeToken,
     }
-    this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
+    this.props.purchaseTickets(this.props.params && this.props.params.params, user)
       .then(resp => {
-        if (resp && resp.data) {
+        if (resp) {
           this.setState({
             showPopup: true,
-            errorMsgCard: "Tickets Purchase Success ",
+            errorMsg:  resp.message,
             popupHeader:"Success"
           })
         }else{
           this.setState({
             showPopup: true,
-            errorMsgCard: resp.errorMessage,
+            errorMsg: resp.errorMessage,
             popupHeader:"Failed"
           });
         }
-        console.log("------",resp)
       });
   }
   showAlertPopup = () => {
@@ -457,7 +557,7 @@ class Raffle extends React.Component {
     //  showPopup: false,
       showAlertPopup: false,
     })
-    this.reRender();
+   // this.reRender();
   };
   hideDonationPopup = () => {
     this.setState({
@@ -471,7 +571,7 @@ class Raffle extends React.Component {
   };
 
   reRender = ()=>{
-    window.location.reload();
+    //window.location.reload();
   }
   //submitTickets
   render() {
@@ -480,7 +580,7 @@ class Raffle extends React.Component {
                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
-                           onSubmit={this.onFormClick}>
+                           onSubmit={this.submiteByTicket}>
 
       <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
         className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
@@ -526,29 +626,25 @@ class Raffle extends React.Component {
       </div> : '' }
 
       <div className="form-group has-feedback">
-        <label className="control-label"> You have <span className="available-tickets">0</span> tickets
+        <label className="control-label"> You have <span className="available-tickets">{this.state.raffleData && this.state.raffleData.availableTickets}</span> tickets
           remaining.</label>
         <div className="row">
           <div className="col-md-5 col-lg-5">
-            <div className="input-group">
+            <div
+              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
               <input type="number" className="form-control" name="itembid"  required="required"
-                     data-isprocessingfeestopurchaser="false" data-fv-field="itembid"/>
-            </div>
-            <i className="form-control-feedback fv-bootstrap-icon-input-group" data-fv-icon-for="itembid"
-               style={{display: 'none'}}/>
-            <small className="help-block" data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Number of Tickets
-              should be greater than zero.
-            </small>
-            <small className="help-block" data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Digits Only
-              Accepted.
-            </small>
-            <small className="help-block" data-fv-validator="callback" data-fv-for="itembid"
-                   data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Tickets should be more than 0 and less than
-            </small>
-            <small className="help-block" data-fv-validator="integer" data-fv-for="itembid"
-                   data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>This value is not valid
-            </small>
+                 ref={ref => {
+                 this.tickets = ref;
+              }}
+                   onKeyUp={this.ticketsValidateHandler}/>
+              { this.state.ticketsFeedBack && this.state.tickets &&
+              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+              { this.state.ticketsFeedBack && !this.state.tickets &&
+              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+               </div>
+            <small style={{color: 'red'}}
+              data-fv-result="NOT_VALIDATED">{this.state.errorMsgTickets}</small>
           </div>
         </div>
       </div>
@@ -581,7 +677,7 @@ class Raffle extends React.Component {
       <a role="button" className="btn btn-success btn-block" href="#login-user" data-toggle="modal" data-form="login">Login</a>
       <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
          onClick={this.showDonatePopup} >Get Tickets</a>
-      <a role="button" className="btn btn-success"
+      <a role="button" className="btn btn-success btn-block"
          href={this.props.params && "/event" + this.props.params.params } >Go back to All Items</a>
     </div>;
 
@@ -599,7 +695,7 @@ class Raffle extends React.Component {
               <div className="col-lg-9 col-md-8 col-sm-8">
                 <div className="main-box clearfix">
                   <h1 className="text-center mrg-t-lg"
-                      id="item-name">{this.state.raffleData && this.state.raffleData.name}</h1>
+                      id="item-name">{this.state.raffleData && this.state.raffleData.name }</h1>
                   <div className="row mrg-t-lg">
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
@@ -637,6 +733,7 @@ class Raffle extends React.Component {
           onCloseFunc={this.hideDonationPopup}
         >
           <div className="main-box-body clearfix">
+
             <div className="payment-area collapse in">
               <form className="ajax-form validated fv-form fv-form-bootstrap" data-has-cc-info="true"
                     data-show-cc-confirm="true" data-confirm-message="getDonateConfirmMessage" id="donate-payment-form"
@@ -644,11 +741,15 @@ class Raffle extends React.Component {
                     data-validation-fields="getDonateModalValidationFields" action="/AccelEventsWebApp/events/12/D"
                     noValidate="novalidate"
               onSubmit={this.buyRaffleTicket}>
-                { this.state.errorMsgCard }
+
                 <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                 <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
-                  className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/>
+                  className="fa fa-spinner fa-pulse fa-fw"/>
+               <span className="resp-message"/>
                 </div>
+                { this.state.errorMsgCard }
+                { this.state.errorMsg }
+                {console.log("this.state.errorMsg",this.state.errorMsg)}
                 { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
                   className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                   <label className="control-label">First Name</label>
@@ -851,7 +952,7 @@ class Raffle extends React.Component {
                                                                                       aria-hidden="true"/></div>
                                 <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                   this.expMonth = ref;
-                                }}>
+                                }}  onChange={this.expMonthValidateHandler} >
                                   <option selected value="10">Jan (01)</option>
                                   <option value="02">Feb (02)</option>
                                   <option value="03">Mar (03)</option>
@@ -868,7 +969,7 @@ class Raffle extends React.Component {
                                 <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
                                         ref={ref => {
                                           this.expYear = ref;
-                                        }}>
+                                        }} onChange={this.expYearValidateHandler} >
                                   <option value="2016">2016</option>
                                   <option value="2017">2017</option>
                                   <option value="2018">2018</option>
@@ -949,15 +1050,15 @@ class Raffle extends React.Component {
         <PopupModel
           id="alertPopup"
           showModal={this.state.showAlertPopup}
-          headerText={this.state.popupAlertHeader}
+          headerText={this.state.popupHeader}
           modelBody=''
           onCloseFunc={this.hidePopup}>
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
-            { this.state && this.state.errorMsgCard }
+            { this.state.errorMsg }
             <div className="modal-footer">
               {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}
-              {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}
-              <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
+              {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.purchaseTicket} >Confirm</button> : ""}
+              <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>
           </div>
         </PopupModel>
@@ -968,8 +1069,8 @@ class Raffle extends React.Component {
 class ImageList extends React.Component {
   render() {
     return (
-      <div>
-        <img height={250}
+      <div className="item-image">
+        <img className="item-image-inner"
              src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
       </div>
 
@@ -982,6 +1083,7 @@ const mapDispatchToProps = {
   doGetRaffleItemByCode: (eventUrl, itemCode) => doGetRaffleItemByCode(eventUrl, itemCode),
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   submitRaffleTickets: (eventUrl, userData) => submitRaffleTickets(eventUrl, userData),
+  purchaseTickets: (eventUrl, userData) => purchaseTickets(eventUrl, userData),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
 };
 const mapStateToProps = (state) => ({
