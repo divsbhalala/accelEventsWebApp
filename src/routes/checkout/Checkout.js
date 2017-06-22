@@ -386,15 +386,16 @@ class Checkout extends React.Component {
 							password: this.password && this.password.value
 						};
 						this.props.doSignUp(eventUrl, requestData).then(resp => {
-							console.log(resp);
-							if (resp && !resp.errorCode) {
+						if (resp && !resp.errorCode) {
 								this.doCheckout(ticketAttribute, orderData);
 							}
 							else {
-								alert('Error in user Signup');
+							this.setState({
+								showFormError : true,
+								formError : resp.errorMessage
+							});
 							}
 						}).catch(error => {
-							alert('Error in user Signup');
 							this.setState({
 								showFormError : true,
 								formError : "Oops! Error while processing"
@@ -503,7 +504,6 @@ class Checkout extends React.Component {
 					console.log(JSON.stringify(request));
 					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
 						console.log('res of request', resp);
-						debugger;
 						if (resp && resp.data && resp.data.message == 'Success') {
 							this.showTicketPurchaseSuccessPopup();
 						}
@@ -515,7 +515,6 @@ class Checkout extends React.Component {
 							});
 						}
 					}).catch(error => {
-						debugger;
 						console.log('error of request', error);
 						this.setState({
 							showFormError : true,

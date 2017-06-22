@@ -420,12 +420,13 @@ export function doSignUp(eventUrl,userData) {
         sessionService.saveSession(localStorage.getItem('token'));
         sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
       }).catch(err => {
+				return err;
       });
       return response;
     })
-      .catch(error => {
-        return error;
-      });
+      .catch((error, code, status)=>{
+				return error && error.response && error.response.data;
+			});
   }
 }
 
