@@ -581,7 +581,22 @@ export function submitRaffleTickets(eventUrl,userData) {
     });
   }
 }
-export function giveDonate(eventUrl,userData) {
+export function couponCode(eventurl, orderid, couponcode) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventurl + '/tickets/order/'+ orderid+'/coupon/'+couponcode,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}export function giveDonate(eventUrl,userData) {
   return (dispatch) => {
     return axios({
       method: 'post',

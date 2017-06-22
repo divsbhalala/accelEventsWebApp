@@ -28,6 +28,7 @@ import {
 	doGetOrderById,
 	doGetSettings,
 	doSignUp,
+	couponCode
 } from './../event/action/index';
 import {createCardToken, orderTicket} from './action/index';
 let Total = 0;
@@ -90,6 +91,11 @@ class Checkout extends React.Component {
 			state: false,
 			zipCode: false,
 			zipCodeFeedBack: false,
+			discount:null,
+			coupon:null,
+			showMapPopup: false,
+			popupAlertHeader:null,
+			errorMsg:null,
 		};
 		this.ticketCheckout = this.ticketCheckout.bind(this);
 		this.ticketTimeOut = this.ticketTimeOut.bind(this);
@@ -97,6 +103,7 @@ class Checkout extends React.Component {
 		this.doCheckout = this.doCheckout.bind(this);
 		this.hideTicketPurchaseSuccessPopup = this.hideTicketPurchaseSuccessPopup.bind(this);
 		this.showTicketPurchaseSuccessPopup = this.showTicketPurchaseSuccessPopup.bind(this);
+		this.getDiscount = this.getDiscount.bind(this);
 
 	}
 
@@ -144,6 +151,11 @@ class Checkout extends React.Component {
 				email: true
 			});
 		}
+	};
+	couponValidateHandler = (e) => {
+			this.setState({
+				coupon: this.coupon.value
+			});
 	};
 	cardHolderNameValidateHandler = (e) => {
 
@@ -692,7 +704,40 @@ class Checkout extends React.Component {
 			ticketPurchaseSuccessPopup: true
 		})
 	};
+	getDiscount = (e) => {
+		let eventUrl = this.props.params && this.props.params.params;
+		let orderId = this.props.params && this.props.params.orderId;
+		this.props.couponCode(eventUrl,orderId ,this.state.coupon ).then(resp => {
+			if (resp && !resp.errorMessage ) {
+				this.setState({
+					popupAlertHeader:"Success",
+					showMapPopup:true,
+					errorMsg:'Coupon Applied Successfully',
+					totalPrice:resp.totalPrice,
+					discount:resp.discountAmount,
+				})
+			}
+			else {
+				this.setState({
+					popupAlertHeader:"Error",
+					showMapPopup:true,
+					errorMsg:resp.errorMessage
+				})
+		}
+	})
+	}
 
+	showMapPopup = (e) => {
+		e.preventDefault();
+		this.setState({
+			showMapPopup: true
+		})
+	};
+	hideMapPopup = () => {
+		this.setState({
+			showMapPopup: false
+		})
+	};
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -768,13 +813,22 @@ class Checkout extends React.Component {
 																			</tr>
 																		)
 																		}
+																		{ this.state.discount &&  <tr className="total-price-tr">
+																			<td colSpan={4} className="text-right">
+																				<strong>Discount:</strong>
+																			</td>
+																			<td colSpan={1}>
+																				$<span
+																				className="total-price">{parseFloat(this.state.discount).toFixed(2)}</span>
+																			</td>
+																		</tr>}
 																		<tr className="total-price-tr">
 																			<td colSpan={4} className="text-right">
 																				<strong>Order Total:</strong>
 																			</td>
 																			<td colSpan={1}>
 																				$<span
-																				className="total-price">{parseFloat(this.props.orderData.ticketAttribute.totalPrice).toFixed(2)}</span>
+																				className="total-price">{ this.state.totalPrice ? this.state.totalPrice : parseFloat(this.props.orderData.ticketAttribute.totalPrice).toFixed(2)}</span>
 																			</td>
 																		</tr>
 																		</tbody>
@@ -900,11 +954,16 @@ class Checkout extends React.Component {
 																		<div className="col-md-4 text-left">
 																			<input type="text" className="form-control" name="discountcoupon"
 																						 id="discountcoupon"
-																						 placeholder="Discount coupon"/>
+																						 placeholder="Discount coupon"
+																						 ref={ref => {
+																							 this.coupon = ref;
+																						 }}
+																						 onChange={this.couponValidateHandler}
+																						 />
 																		</div>
 																		<div className="col-md-2">
 																	<span className="input-group-btn">
-																		<button type="button" className="btn btn-primary" id="discoupon">Apply</button>
+																		<button type="button" className="btn btn-primary" id="discoupon" onClick={this.getDiscount} >Apply</button>
 																	</span>
 																		</div>
 																	</div>
@@ -1405,6 +1464,19 @@ class Checkout extends React.Component {
 								</div>
 							</div>
 						</div>
+						<PopupModel
+							id="alertPopup"
+							showModal={this.state.showMapPopup}
+							headerText={this.state.popupAlertHeader}
+							modelBody=''
+							onCloseFunc={this.hidePopup}>
+							<div className="ticket-type-container">
+								{ this.state && this.state.errorMsg }
+								<div className="modal-footer">
+									<button className="btn btn-green" onClick={this.hideMapPopup}>Close</button>
+								</div>
+							</div>
+						</PopupModel>
 						{ this.state.ticketPurchaseSuccessPopup &&
 						<SweetAlert title="Thank you for supporting the event. Please check your inbox for your tickets."
 												onConfirm={() => {
@@ -1430,6 +1502,7 @@ const mapDispatchToProps = {
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	createCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => createCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 	orderTicket: (eventurl, orderid, ticketBookingDto) => orderTicket(eventurl, orderid, ticketBookingDto),
+	couponCode: (eventurl, orderid, couponcode) => couponCode(eventurl, orderid, couponcode),
 	doSignUp: (eventurl, userData) => doSignUp(eventurl, userData),
 };
 const mapStateToProps = (state) => ({
