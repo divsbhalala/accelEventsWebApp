@@ -12,6 +12,9 @@ import PropTypes from 'prop-types';
 import serialize from 'serialize-javascript';
 import config from '../config';
 
+import rrui from 'react-phone-number-input/rrui.css'
+import rpni from 'react-phone-number-input/style.css'
+
 /* eslint-disable react/no-danger */
 
 class Html extends React.Component {
@@ -47,6 +50,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/bootstrap.min.css"/>
         <link href="http://diegoddox.github.io/react-redux-toastr/5.0/react-redux-toastr.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/css/carousel.css"/>
+        <link rel="stylesheet" href="/css/goal-thermometer.css"/>
 
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/css/App.css"/>
@@ -59,6 +63,8 @@ class Html extends React.Component {
 
         <link rel="stylesheet" href="/css/react-styles.min.css"/>
         <link rel="stylesheet" href="/css/telInput.css"/>
+        <link rel="stylesheet" href="/css/rrui.css"/>
+        <link rel="stylesheet" href="/css/style2.css"/>
         {styles.map(style =>
           <style
             key={style.id}

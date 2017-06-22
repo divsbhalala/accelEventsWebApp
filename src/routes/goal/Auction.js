@@ -47,8 +47,9 @@ class Auction extends React.Component {
           <div className="col-lg-12">
             <div id="content-wrapper">
               <div className="row">
-                <h1 className="text-center" style={{marginTop: 120, marginBottom: 0}}>Auction Goal</h1>
-                <h4 className="text-center" style={{marginTop: 5}}> Text your Bid To: (410) 927-5356 with the item's
+                <h1 className="text-center" style={{marginTop: 120}}>Auction Goal</h1>
+                <h4 className="text-center" style={{marginTop: 5, marginBottom: 50}}>
+                  Text your Bid To: (410) 927-5356 with the item's
                   three letter code and bid amount ex. ABC$300. </h4>
               </div>
               <div className="row">
@@ -71,8 +72,74 @@ class Auction extends React.Component {
                     </div>
                   </div> }
                 </div>
+                <style dangerouslySetInnerHTML={{__html: ".liquid:before{width:30.25% !important;}"}} />
                 <div className="col-md-6">
-                  Auction Goal
+                  <div className="col-md-6">
+                    <div className="goalcontainer">
+                      <div className>
+                        <div className="thermometer--very-high">
+                          <div className="glass">
+                            <div id="tooltip" style={{left: '30.25%'}}>
+                              <span>${ this.state.settings && this.state.settings.totalFundRaised}</span>
+                            </div>
+                            <div className="liquid" />
+                            <svg className="ruler">
+                              <rect x="0px" y={0} width="20%" height="100%" fill="url(#ticks--very-low)" rx={2} />
+                              <rect x="20%" y={0} width="20%" height="100%" fill="url(#ticks--low)" rx={2} />
+                              <rect x="40%" y={0} width="20%" height="100%" fill="url(#ticks--moderate)" rx={2} />
+                              <rect x="60%" y={0} width="20%" height="100%" fill="url(#ticks--high)" rx={2} />
+                              <rect x="80%" y={0} width="20%" height="10k%" fill="url(#ticks--very-high)" rx={2} />
+                              <defs>
+                                <pattern id="ticks--very-low" className="ticks--very-low" width="60px" height="100%" patternUnits="userSpaceOnUse" x={0}>
+                                  <line x1="1px" x2="1px" y2="6px" />
+                                  <line x1="12px" x2="12px" y2="6px" />
+                                  <line x1="24px" x2="24px" y2="6px" />
+                                  <line x1="36px" x2="36px" y2="6px" />
+                                  <line x1="48px" x2="48px" y2="10px" />
+                                </pattern>
+                                <pattern id="ticks--low" className="ticks--low" width="60px" height="100%" patternUnits="userSpaceOnUse" x={0}>
+                                  <line x1="1px" x2="1px" y2="6px" />
+                                  <line x1="12px" x2="12px" y2="6px" />
+                                  <line x1="24px" x2="24px" y2="6px" />
+                                  <line x1="36px" x2="36px" y2="6px" />
+                                  <line x1="48px" x2="48px" y2="10px" />
+                                </pattern>
+                                <pattern id="ticks--moderate" className="ticks--moderate" width="60px" height="100%" patternUnits="userSpaceOnUse" x={0}>
+                                  <line x1="1px" x2="1px" y2="6px" />
+                                  <line x1="12px" x2="12px" y2="6px" />
+                                  <line x1="24px" x2="24px" y2="6px" />
+                                  <line x1="36px" x2="36px" y2="6px" />
+                                  <line x1="48px" x2="48px" y2="10px" />
+                                </pattern>
+                                <pattern id="ticks--high" className="ticks--high" width="60px" height="100%" patternUnits="userSpaceOnUse" x={0}>
+                                  <line x1="1px" x2="1px" y2="6px" />
+                                  <line x1="12px" x2="12px" y2="6px" />
+                                  <line x1="24px" x2="24px" y2="6px" />
+                                  <line x1="36px" x2="36px" y2="6px" />
+                                  <line x1="48px" x2="48px" y2="10px" />
+                                </pattern>
+                                <pattern id="ticks--very-high" className="ticks--very-high" width="60px" height="100%" patternUnits="userSpaceOnUse" x={0}>
+                                  <line x1="1px" x2="1px" y2="6px" />
+                                  <line x1="12px" x2="12px" y2="6px" />
+                                  <line x1="24px" x2="24px" y2="6px" />
+                                  <line x1="36px" x2="36px" y2="6px" />
+                                  <line x1="48px" x2="48px" y2="10px" />
+                                </pattern>
+                              </defs>
+                            </svg>
+                            <svg className="markers">
+                              <text x="8px" y="15px" style={{writingMode: 'tb'}} fill="#249AA7">$0</text>
+                              <text x="108px" y="15px" style={{writingMode: 'tb'}} fill="#B8E1F2">$2500</text>
+                              <text x="228px" y="15px" style={{writingMode: 'tb'}} fill="#ABD25E">$5000</text>
+                              <text x="348px" y="15px" style={{writingMode: 'tb'}} fill="#F8C830">$7500</text>
+                              <text x="468px" y="15px" style={{writingMode: 'tb'}} fill="#F1594A">$10000</text>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
                 <div className="col-md-3">
                   {this.state.settings &&
@@ -88,13 +155,13 @@ class Auction extends React.Component {
                           <div className={cx("row timer")}>
 
                             <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                              moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
+                              moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
                             }</span></div>
                             <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                              moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
+                              moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
+                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
                               || '00'}</span></div>
                             <div className={cx("col-xs-4")}><span className={cx("seconds")}>00</span></div>
                           </div>

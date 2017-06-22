@@ -352,7 +352,7 @@ class Event extends React.Component {
 	setActiveTabState = (label) => {
 		this.setState({tab: label});
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
-		{console.log(this.state)}
+
 		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donation' )) {
 			if (label == 'Auction') {
 				label = 'auction';
@@ -642,7 +642,6 @@ class Event extends React.Component {
 					history.push('/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
 				}
 				else {
-					debugger;
 					this.setState({
 						formError: "Error while Oraring Tickets",
 						showFormError: true,
@@ -650,7 +649,6 @@ class Event extends React.Component {
 					})
 				}
 			}).catch(error => {
-			// this.state.formError
 			this.setState({
 				orderTicket: "Error while Oraring Tickets",
 				showFormError: true,
@@ -694,9 +692,6 @@ class Event extends React.Component {
                             setSearchString={this.setSearchString}
 								/>
 							</div>
-							{
-								console.log("props ---> ",this.state)
-							}
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
 								{ this.state.tab && this.state.isLoaded && <div className="main-box">
 									<Tabs onSelect={ (index, label) => {
@@ -788,7 +783,7 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Fund a Need" disabled={!this.state.activeFund}>
+										<Tab label="Fund a Need">
 											<div className="row">
 												<InfiniteScroll
 													next={this.doGetLoadMoreFundANeedItem}
@@ -822,8 +817,8 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Donation" disabled={this.state.activeFund}>
-											<div className="row"><EventDonation user={this.props.user} authenticated={this.props.authenticated} /></div>
+										<Tab label="Donation" disabled={!this.state.activeDonation}>
+											<div className="row"><EventDonation  eventUrl={this.props.params && this.props.params.params} /></div>
 										</Tab>
 									</Tabs>
 								</div>}

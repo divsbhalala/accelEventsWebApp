@@ -2240,3 +2240,5 @@ input:-webkit-autofill {
 .tabs a.nav-link.disabled{
   display: none;
 }
+.control-dots{ visibility: hidden; }
+.zindex{z-index: 0 !important;}
