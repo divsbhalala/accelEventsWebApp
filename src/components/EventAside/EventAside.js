@@ -172,7 +172,7 @@ class EventAside extends React.Component {
                data-toggle="modal"
                href="#info-modal" data-title="Raffle Drawn"
                onClick={this.showBuyRaffelTicketPopup}>{moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
-            { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) &&
+            { this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.activeCategory &&
             <div className={cx("search-bar card")} data-module="">
               <input type="text" className={cx("form-control")} placeholder="Search Items..." onChange={this.serachString}  ref={ref => {
                 this.serachKey = ref;
