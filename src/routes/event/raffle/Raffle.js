@@ -1056,7 +1056,7 @@ class Raffle extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}
+              {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.purchaseTicket} >Confirm</button> : ""}
               <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>
