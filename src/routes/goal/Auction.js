@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetSettings} from './../event/action/index';
+import {doGetSettings,getGoalData} from './../event/action/index';
 import s from './goal.css';
 import moment from 'moment';
 
@@ -28,16 +28,25 @@ class Auction extends React.Component {
       isLogin: false,
       settings: null,
       itemList: null,
+      goaldata:null,
+      goalPer:0,
     }
   }
 
   componentWillMount() {
+    let totalFundRaised=0
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+      totalFundRaised=resp.data.totalFundRaised
       this.setState({
         settings: resp && resp.data
       });
+      this.props.getGoalData(this.props.params && this.props.params.params, 'auction').then(resp => {
+        this.setState({
+          goaldata: resp,
+          goalPer:totalFundRaised * 100  / resp.fundRaisingGoal
+        });
+        })
     })
-
   }
 
   render() {
@@ -49,8 +58,7 @@ class Auction extends React.Component {
               <div className="row">
                 <h1 className="text-center" style={{marginTop: 120}}>Auction Goal</h1>
                 <h4 className="text-center" style={{marginTop: 5, marginBottom: 50}}>
-                  Text your Bid To: (410) 927-5356 with the item's
-                  three letter code and bid amount ex. ABC$300. </h4>
+                  {this.state.goaldata && this.state.goaldata.bidInstructions} </h4>
               </div>
               <div className="row">
                 <div className="col-md-3">
@@ -72,15 +80,15 @@ class Auction extends React.Component {
                     </div>
                   </div> }
                 </div>
-                <style dangerouslySetInnerHTML={{__html: ".liquid:before{width:30.25% !important;}"}} />
+                <style dangerouslySetInnerHTML={{__html: ".liquid:before{width:"+this.state.goalPer+"% !important;}"}} />
                 <div className="col-md-6">
                   <div className="col-md-6">
                     <div className="goalcontainer">
                       <div className>
-                        <div className="thermometer--very-high">
+                        <div className={this.state.goalPer<=20 ?'thermometer--very-low' : this.state.goalPer<=40 ? 'thermometer--low' : this.state.goalPer<=60 ? 'thermometer--moderate' :  this.state.goalPer <= 80  ? 'thermometer--high' : 'thermometer--very-high'}>
                           <div className="glass">
-                            <div id="tooltip" style={{left: '30.25%'}}>
-                              <span>${ this.state.settings && this.state.settings.totalFundRaised}</span>
+                            <div id="tooltip" style={{left: this.state.goalPer+'%'}}>
+                              <span>${this.state.settings && this.state.settings.totalFundRaised}</span>
                             </div>
                             <div className="liquid" />
                             <svg className="ruler">
@@ -129,10 +137,10 @@ class Auction extends React.Component {
                             </svg>
                             <svg className="markers">
                               <text x="8px" y="15px" style={{writingMode: 'tb'}} fill="#249AA7">$0</text>
-                              <text x="108px" y="15px" style={{writingMode: 'tb'}} fill="#B8E1F2">$2500</text>
-                              <text x="228px" y="15px" style={{writingMode: 'tb'}} fill="#ABD25E">$5000</text>
-                              <text x="348px" y="15px" style={{writingMode: 'tb'}} fill="#F8C830">$7500</text>
-                              <text x="468px" y="15px" style={{writingMode: 'tb'}} fill="#F1594A">$10000</text>
+                              <text x="108px" y="15px" style={{writingMode: 'tb'}} fill="#B8E1F2">${ this.state.goaldata && Math.round(this.state.goaldata.fundRaisingGoal / 4)}</text>
+                              <text x="228px" y="15px" style={{writingMode: 'tb'}} fill="#ABD25E">${ this.state.goaldata && Math.round(this.state.goaldata.fundRaisingGoal / 2)}</text>
+                              <text x="348px" y="15px" style={{writingMode: 'tb'}} fill="#F8C830">${ this.state.goaldata && Math.round((this.state.goaldata.fundRaisingGoal / 4) * 3)}</text>
+                              <text x="468px" y="15px" style={{writingMode: 'tb'}} fill="#F1594A">${ this.state.goaldata && Math.round(this.state.goaldata.fundRaisingGoal )} </text>
                             </svg>
                           </div>
                         </div>
@@ -188,6 +196,7 @@ class Auction extends React.Component {
 
 const mapDispatchToProps = {
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+  getGoalData: (eventUrl,type) => getGoalData(eventUrl,type),
 };
 const mapStateToProps = (state) => ({});
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

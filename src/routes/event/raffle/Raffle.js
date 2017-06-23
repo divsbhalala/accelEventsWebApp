@@ -455,12 +455,15 @@ class Raffle extends React.Component {
       }
       this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
+         let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
+          console.log(updateraffleData)
           if (!resp.errorMessage) {
             this.setState({
               showAlertPopup: true,
               errorMsg: resp.message,
-              popupHeader:"Success. "
-            })
+              popupHeader:"Success. ",
+              raffleData: updateraffleData,
+           })
           }else{
             this.setState({
               showAlertPopup: true,
@@ -478,17 +481,19 @@ class Raffle extends React.Component {
       }
       this.props.purchaseTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
+          // let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
           if (resp ) {
             this.setState({
               showPopup: true,
               errorMsg: resp.message,
-              popupHeader:"Success"
+              popupHeader:"Success",
+            //  raffleData: updateraffleData,
             })
           }else{
             this.setState({
               showPopup: true,
               errorMsg: resp.errorMessage,
-              popupHeader:"Failed"
+             // popupHeader:"Failed"
             });
           }
         });
@@ -530,12 +535,12 @@ class Raffle extends React.Component {
     }
     this.props.purchaseTickets(this.props.params && this.props.params.params, user)
       .then(resp => {
-        if (resp) {
+        if (!resp.errorMessage) {
           this.setState({
             showPopup: true,
             errorMsg:  resp.message,
-            popupHeader:"Success"
-          })
+            popupHeader:"Success",
+           })
         }else{
           this.setState({
             showPopup: true,
@@ -1056,7 +1061,7 @@ class Raffle extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}
+              {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.purchaseTicket} >Confirm</button> : ""}
               <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>

@@ -20,7 +20,7 @@ import {sessionService, loadSession} from 'redux-react-session';
 import  {Carousel} from 'react-responsive-carousel';
 import PopupModel from './../../../components/PopupModal';
 import Phone from 'react-phone-number-input'
-import { parse, format, asYouType ,isValidNumber} from 'libphonenumber-js'
+import { parse,isValidNumber} from 'libphonenumber-js'
 class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -100,13 +100,12 @@ class Auction extends React.Component {
     if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
       this.setState({
         showPopup: true,
-        errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
+        errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for " + this.state.auctionData.name ,
         popupHeader:"Confirm",
       })
-    }
+    } else {
     var self = this;
-    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-    if (this.state.isValidBidData) {
+    if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
       const card = {
         number: this.cardNumber.value,
         cvc: this.cvv.value,
@@ -129,7 +128,7 @@ class Auction extends React.Component {
           })
         }
       });
-    }
+    }}
   };
   placeBid = () => {
       const user = {
@@ -476,6 +475,7 @@ class Auction extends React.Component {
               <div className="input-group">
                 <Phone
                   placeholder="Enter phone number"
+                  className="form-control"
                   value={ this.state.phone }
                   onChange={ phone => this.setState({ phone }) }
                   onKeyUp={this.phoneNumberValidateHandler}
