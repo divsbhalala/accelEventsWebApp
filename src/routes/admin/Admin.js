@@ -21,6 +21,9 @@ import s from './Admin.css';
 import StatWidget from '../../components/Widget';
 import BoxWidget from '../../components/Widget/Box';
 import PenalBoxWidget from '../../components/Widget/PenalBox';
+import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
+import SideNav, { Nav, NavIcon, NavText } from 'react-sidenav';
+
 class Admin extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -28,14 +31,11 @@ class Admin extends React.Component {
 
   render() {
     return (
-      <div className={cx('dashboard')}>
-        <div className={s.container}>
-
+      <div className="container-fluid">
+        <div className="">
           <div className="row">
-            <div className="col-lg-12">
+           <div className="col-lg-offset-2 col-sm-10">
               <PageHeader>Dashboard</PageHeader>
-            </div>
-          </div>
           <div className="row form-group flexrow">
 
             <div className="col-lg-6 col-sm-6 col-xs-12">
@@ -404,7 +404,7 @@ class Admin extends React.Component {
                         <div className="desc">Specify when the silent auction winners will be selected (East Coast Time).</div>
                       </div>
                       <div className="actions">
-                        <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
+       d                 <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
                           <span className="label label-danger">Set Date &amp; Time</span>
                         </a>
                       </div>
@@ -519,6 +519,8 @@ class Admin extends React.Component {
                 </div>
               </div>
             </div>
+          </div>
+          </div>
           </div>
 
         </div>

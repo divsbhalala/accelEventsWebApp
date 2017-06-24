@@ -14,7 +14,7 @@ import './AdminLayout.css';
 import Header from '../Header';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
-
+import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
 class AdminLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
@@ -24,6 +24,7 @@ class AdminLayout extends React.Component {
     return (
       <div>
         <Header />
+        <AdminSiderbar />
         {this.props.children}
         {this.props.showFeedBack && <Feedback />}
         <Footer />

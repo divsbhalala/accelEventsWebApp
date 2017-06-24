@@ -57,7 +57,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/loader.css"/>
         <link rel="stylesheet" href="/css/sb-admin.css"/>
         <link rel="stylesheet" href="/css/admin-style.css"/>
-        {/*<link rel="stylesheet" href="/css/host-dashboard.css" />*/}
+
         <link rel="stylesheet" href="/css/display.css"/>
         <link rel="stylesheet" href="/css/style.css"/>
 
@@ -65,6 +65,8 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/telInput.css"/>
         <link rel="stylesheet" href="/css/rrui.css"/>
         <link rel="stylesheet" href="/css/style2.css"/>
+        <link rel="stylesheet" href="/css/host-dashboard.css" />
+        <link rel="stylesheet" href="http://www.stagingaccel.com:8080/AccelEventsWebApp/css/vt-icons.css" />
         {styles.map(style =>
           <style
             key={style.id}
@@ -75,6 +77,7 @@ class Html extends React.Component {
       </head>
       <body>
       <div id="app" dangerouslySetInnerHTML={{__html: children}}/>
+      <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
       <script dangerouslySetInnerHTML={{__html: `window.App=${serialize(app)}`}}/>
       {scripts.map(script => <script key={script} src={script}/>)}
       {config.analytics.googleTrackingId &&

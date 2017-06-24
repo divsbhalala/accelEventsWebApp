@@ -40,3 +40,13 @@ export  function orderTicket(eventurl, orderid, ticketBookingDto) {
 		})
 	}
 }
+export  function confirmAuctionBid(eventurl, itemIds, stripeToken) {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + '/checkout/' + eventurl +'/auction/confirmBid?itemIds='+itemIds+'&stripeToken='+stripeToken,
+			data: ticketBookingDto,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}

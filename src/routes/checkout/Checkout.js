@@ -537,7 +537,6 @@ class Checkout extends React.Component {
 					cardExpYear: false
 				});
 				console.log('error', error && error.response && error.response.data && error.response.data.error && error.response.data.error.message );
-				debugger;
 				this.setState({
 					showFormError : true,
 					formError : (error && error.response && error.response.data && error.response.data.error && error.response.data.error.message) || "Invalid Data"
