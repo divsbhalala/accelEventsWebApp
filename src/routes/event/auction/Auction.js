@@ -419,6 +419,28 @@ class Auction extends React.Component {
       console.log(error)
     });
   }
+  componentReRender = () => {
+    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+    this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+      .then(resp => {
+        if (resp && resp.data) {
+          this.setState({
+            auctionData: resp.data
+          })
+        }
+      }).catch(error => {
+      console.log(error)
+    });
+  }
+
   showPopup = () => {
     this.setState({
       showPopup: true
@@ -428,7 +450,7 @@ class Auction extends React.Component {
     this.setState({
       showPopup: false
     })
-    //this.reRender();
+    this.componentReRender();
   };
   reRender = ()=>{
     window.location.reload();

@@ -445,22 +445,19 @@ class Account extends React.Component {
 				                        <button className="btn btn-primary" type="submit">Make payment</button>
 			                        </div>
 		                        </form>
-	                        </div>
-
+														<BootstrapTable data={products} striped hover search>
+															<TableHeaderColumn isKey dataField='id'>Product ID</TableHeaderColumn>
+															<TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
+															<TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
+														</BootstrapTable>
+                            <CKEditor
+                              value={this.state.content}
+                              onChange={this.updateContent.bind(this)} />
+													</div>
                         </div>
                       </div>
                     </div>
                   </div>
-	                <div className="col-md-8 form">
-		                <BootstrapTable data={products} striped hover search>
-			                <TableHeaderColumn isKey dataField='id'>Product ID</TableHeaderColumn>
-			                <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
-			                <TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
-		                </BootstrapTable>
-		                <CKEditor
-			                value={this.state.content}
-			                onChange={this.updateContent.bind(this)} />
-	                </div>
                 </div>
               </div>
             </div>
