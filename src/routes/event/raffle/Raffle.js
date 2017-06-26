@@ -108,7 +108,8 @@ class Raffle extends React.Component {
       submittedTickets:null,
       showDonationPopup:false,
       raffleTicketValue:null,
-    }
+      popupTicketHeader: "Pay Now",
+  }
     this.purchaseTicket=this.purchaseTicket.bind(this);
 
   }
@@ -508,6 +509,7 @@ class Raffle extends React.Component {
               showPopup: true,
               errorMsg: resp.message,
               popupHeader:"Success",
+              popupTicketHeader:"Close"
             //  raffleData: updateraffleData,
             })
           }else{
@@ -588,7 +590,10 @@ class Raffle extends React.Component {
   hideDonationPopup = () => {
     this.setState({
       showDonationPopup: false,
+      popupTicketHeader: "Pay Now",
+      errorMsg:""
     })
+    this.componentReRender();
   };
   showDonatePopup = () => {
     this.setState({
@@ -657,13 +662,17 @@ class Raffle extends React.Component {
         <div className="row">
           <div className="col-md-5 col-lg-5">
             <div
-              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error')}>
+              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? 'aaa' : 'disabled')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
-              <input type="number" className="form-control" name="itembid"  required="required"
+              <input type="number"  name="itembid"  required="required"
+                     className={cx("form-control")}
+                     disabled={(this.state.raffleData && this.state.raffleData.availableTickets > 0) ? '' : 'disabled'}
+
                  ref={ref => {
                  this.tickets = ref;
               }}
-                   onKeyUp={this.ticketsValidateHandler}/>
+                   onKeyUp={this.ticketsValidateHandler}
+              />
               { this.state.ticketsFeedBack && this.state.tickets &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
               { this.state.ticketsFeedBack && !this.state.tickets &&
@@ -996,7 +1005,6 @@ class Raffle extends React.Component {
                                         ref={ref => {
                                           this.expYear = ref;
                                         }} onChange={this.expYearValidateHandler} >
-                                  <option value="2016">2016</option>
                                   <option value="2017">2017</option>
                                   <option value="2018">2018</option>
                                   <option value="2019">2019</option>
@@ -1033,8 +1041,6 @@ class Raffle extends React.Component {
                                   <option value="2050">2050</option>
                                 </select>
                               </div>
-
-
                             </div>
                           </div>
                           <div className="col-md-4">
@@ -1068,7 +1074,8 @@ class Raffle extends React.Component {
                       </div>
                     </div></div> : "" }
 
-                <button type="submit" className="btn btn-green" onClick={this.byTicket} >Pay Now</button>
+                {this.state.popupTicketHeader == "Pay Now" ? <button type="submit" className="btn btn-green" onClick={this.byTicket} >Pay Now</button>
+               : <button className="btn badge-danger" onClick={this.hideDonationPopup}>Close</button> }
               </form>
             </div>
           </div>

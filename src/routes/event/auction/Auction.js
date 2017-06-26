@@ -335,7 +335,7 @@ class Auction extends React.Component {
     if (this.amount.value == '') {
       errorMsgAmount= "Bid Amount can't be empty"
       amount=false
-    } else if (this.state.auctionData.startingBid + this.state.auctionData.bidIncrement  > this.amount.value) {
+    } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value) {
       errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.auctionData.bidIncrement+". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
       amount=false
     } else {
@@ -694,7 +694,6 @@ class Auction extends React.Component {
                           ref={ref => {
                             this.expYear = ref;
                           }}>
-                    <option value="2016">2016</option>
                     <option value="2017">2017</option>
                     <option value="2018">2018</option>
                     <option value="2019">2019</option>
