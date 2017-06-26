@@ -1,5 +1,20 @@
 import React from 'react';
+import Link from '../Link';
+
 class AdminSiderbar extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			activeState:''
+		};
+		this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
+		this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
+	}
+	showBuyRaffelTicketPopup = () => {
+		this.setState({
+			showBuyRaffelTicketPopup: this.props.authenticated
+		})
+	};
 
 	render() {
 		return (
@@ -18,147 +33,147 @@ class AdminSiderbar extends React.Component {
 							<ul className="nav nav-pills nav-stacked">
 								<li className="nav-header nav-header-first hidden-sm hidden-xs">Navigation</li>
 								<li className=" active ">
-									<a href="/admin" className="dropdown-toggle">
+									<Link to="/admin" className="dropdown-toggle">
 										<i className="vt vt-dashboard" />
 										<span>Dashboard</span>
-									</a>
+									</Link>
 									<ul className="submenu">
 										<li className>
-											<a href="/admin/auction-performance">
+											<Link to="/admin/auction-performance">
 												Silent Auction Performance
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/raffle-performance">
+											<Link to="/admin/raffle-performance">
 												Raffle Performance
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/fund-performance">
+											<Link to="/admin/fund-performance">
 												Fund a Need Performance
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/donation-performance">
+											<Link to="/admin/donation-performance">
 												Donation Performance
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/ticket-performance">
+											<Link to="/admin/ticket-performance">
 												Ticket Sales Performance
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</li>
 								<li className>
-									<a href="/admin/design">
+									<Link to="/admin/design">
 										<i className="vt vt-design" />
 										<span>Design</span>
-									</a>
+									</Link>
 								</li>
 								<li className>
-									<a href="#" className="dropdown-toggle">
+									<Link to="#" className="dropdown-toggle">
 										<i className="vt vt-event-ticketing" />
 										<span>Ticketing</span>
-									</a>
+									</Link>
 									<ul className="submenu">
 										<li className>
-											<a href="/admin/event-ticket-create">
+											<Link to="/admin/event-ticket-create">
 												Create Event
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/event-ticketing-settings">
+											<Link to="/admin/event-ticketing-settings">
 												Event Registration Settings
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/event-ticketing-orders">
+											<Link to="/admin/event-ticketing-orders">
 												Ticket Orders
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</li>
 								<li className>
-									<a href="#" className="dropdown-toggle">
+									<Link to="#" className="dropdown-toggle">
 										<i className="vt vt-gavel" />
 										<span>Silent Auction Management</span>
-									</a>
+									</Link>
 									<ul className="submenu">
 										<li className>
-											<a href="/admin/silent-auction-add-items">
+											<Link to="/admin/silent-auction-add-items">
 												Add Items
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/silent-auction-settings">
+											<Link to="/admin/silent-auction-settings">
 												Settings
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</li>
 								<li className>
-									<a href="#" className="dropdown-toggle">
+									<Link to="#" className="dropdown-toggle">
 										<i className="vt vt-raffle" />
 										<span>Raffle</span>
-									</a>
+									</Link>
 									<ul className="submenu">
 										<li className>
-											<a href="/admin/raffle-add-items">
+											<Link to="/admin/raffle-add-items">
 												Add Items
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/raffle-settings">
+											<Link to="/admin/raffle-settings">
 												Settings
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</li>
 								<li className>
-									<a href="#" className="dropdown-toggle">
+									<Link to="#" className="dropdown-toggle">
 										<i className="vt vt-cause" />
 										<span>Fund a Need</span>
-									</a>
+									</Link>
 									<ul className="submenu">
 										<li className>
-											<a href="/admin/cause-auction-add-items">
+											<Link to="/admin/cause-auction-add-items">
 												Add Items
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/cause-auction-settings">
+											<Link to="/admin/cause-auction-settings">
 												Settings
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</li>
 								<li>
-									<a href="/admin/user-management-volunteers">
+									<Link to="/admin/user-management-volunteers">
 										<i className="vt vt-user-settings" />
 										<span>User Management</span>
-									</a>
+									</Link>
 								</li>
 								<li className>
-									<a href="#" className="dropdown-toggle">
+									<Link to="#" className="dropdown-toggle">
 										<i className="vt vt-settings-gears" />
 										<span>Settings</span>
-									</a>
+									</Link>
 									<ul className="submenu">
 										<li className>
-											<a href="/admin/settings-general">
+											<Link to="/admin/settings-general">
 												General Settings
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/settings-credit-card">
+											<Link to="/admin/settings-credit-card">
 												Credit Card Processing
-											</a>
+											</Link>
 										</li>
 										<li className>
-											<a href="/admin/settings-account">
+											<Link to="/admin/settings-account">
 												Billing
-											</a>
+											</Link>
 										</li>
 									</ul>
 								</li>

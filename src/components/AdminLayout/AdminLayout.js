@@ -15,6 +15,9 @@ import Header from '../Header';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
 import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import SidebarNew from '../../components/SidebarNew';
+
 class AdminLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,

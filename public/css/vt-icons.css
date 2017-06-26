@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "accelevents-icons";
+  src:url("../fonts/accelevents.eot");
+  src:url("../fonts/accelevents.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/accelevents.woff") format("woff"),
+    url("../fonts/accelevents.ttf") format("truetype"),
+    url("../fonts/accelevents.svg#accelevents") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "accelevents-icons" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000;
+}
+
+.vt:before {
+  font-family: "accelevents-icons" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000;
+}
+
+.vt-dashboard:before {
+  content: "\e000";
+}
+.vt-gavel:before {
+  content: "\e001";
+}
+.vt-design:before {
+  content: "\e002";
+}
+.vt-raffle:before {
+  content: "\e003";
+}
+.vt-settings:before {
+  content: "\e004";
+}
+.vt-settings-gears:before {
+  content: "\e005";
+}
+.vt-cause:before {
+  content: "\e006";
+}
+.vt-user-settings:before {
+  content: "\e007";
+}
+.vt-event-ticketing:before {
+  content: "\e008";
+}

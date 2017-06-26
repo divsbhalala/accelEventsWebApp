@@ -66,7 +66,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/rrui.css"/>
         <link rel="stylesheet" href="/css/style2.css"/>
         <link rel="stylesheet" href="/css/host-dashboard.css" />
-        <link rel="stylesheet" href="http://www.stagingaccel.com:8080/AccelEventsWebApp/css/vt-icons.css" />
+        <link rel="stylesheet" href="/css/vt-icons.css" />
         {styles.map(style =>
           <style
             key={style.id}
