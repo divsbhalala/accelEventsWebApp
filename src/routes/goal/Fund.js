@@ -33,20 +33,27 @@ class Fund extends React.Component {
 
   componentWillMount() {
     let totalFundRaised=0
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
-      totalFundRaised=resp.data.totalFundRaised
+    // this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+    //   totalFundRaised=resp.data.totalFundRaised
+    //   this.setState({
+    //     settings: resp && resp.data
+    //   });
+    //   this.props.getGoalData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+    //     this.setState({
+    //       goaldata: resp,
+    //       goalPer:totalFundRaised * 100  / resp.fundRaisingGoal
+    //     });
+    //   })
+    // })
+    this.props.getGoalData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+      totalFundRaised=resp.totalRised
       this.setState({
-        settings: resp && resp.data
+        goaldata: resp,
+        goalPer:totalFundRaised * 100  / resp.fundRaisingGoal,
+        settings:resp
       });
-      this.props.getGoalData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
-        this.setState({
-          goaldata: resp,
-          goalPer:totalFundRaised * 100  / resp.fundRaisingGoal
-        });
-      })
     })
   }
-
   render() {
     return (
       <div className="container">
@@ -71,7 +78,7 @@ class Fund extends React.Component {
                       <div className={cx("project-box-content")}>
                         <div className={cx("value text-center")}>
                           <div className={cx("ticker big")}>
-                            <span className="total-funds-raised">{this.state.settings.totalFundRaised}</span>
+                            <span className="total-funds-raised">{this.state.settings.totalRised}</span>
                           </div>
                         </div>
                       </div>
@@ -86,7 +93,7 @@ class Fund extends React.Component {
                         <div className={this.state.goalPer<=20 ?'thermometer--very-low' : this.state.goalPer<=40 ? 'thermometer--low' : this.state.goalPer<=60 ? 'thermometer--moderate' :  this.state.goalPer <= 80  ? 'thermometer--high' : 'thermometer--very-high'}>
                           <div className="glass">
                             <div id="tooltip" style={{left: this.state.goalPer+'%'}}>
-                              <span>${this.state.settings && this.state.settings.totalFundRaised}</span>
+                              <span>${this.state.settings && this.state.settings.totalRised}</span>
                             </div>
                             <div className="liquid" />
                             <svg className="ruler">
@@ -161,13 +168,13 @@ class Fund extends React.Component {
                           <div className={cx("row timer")}>
 
                             <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                              moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
+                              moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                              && moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+                              && moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
                             }</span></div>
                             <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                              moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-                              && moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.endDate).add(-moment(this.state.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
+                              moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
+                              && moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
                               || '00'}</span></div>
                             <div className={cx("col-xs-4")}><span className={cx("seconds")}>00</span></div>
                           </div>
@@ -190,6 +197,7 @@ class Fund extends React.Component {
       </div>
     );
   }
+
 }
 
 const mapDispatchToProps = {

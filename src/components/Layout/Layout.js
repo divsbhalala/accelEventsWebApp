@@ -19,6 +19,7 @@ import Footer from '../Footer';
 import {connect} from 'react-redux';
 import {sessionService, loadSession} from 'redux-react-session';
 import  {storeLoginData, storeToken} from './../../routes/login/action/index';
+
 import LoadingBar from 'react-redux-loading-bar';
 class Layout extends React.Component {
   static propTypes = {

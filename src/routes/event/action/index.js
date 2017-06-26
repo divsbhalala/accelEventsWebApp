@@ -404,6 +404,35 @@ export function setAttendees(eventUrl,barcode,status) {
     });
   }
 }
+
+export function doLogin(email, password,rememberme=false) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'u/login',
+      data: {
+        username: email,
+        password: password,
+        rememberme:rememberme,
+      }
+    }).then(response => {
+      dispatch(storeToken(response.data.access_token));
+      getUserDetails(response.data.access_token).then(resp => {
+        dispatch(storeLoginData(resp.data));
+        localStorage.setItem('user', JSON.stringify(resp.data));
+        localStorage.setItem('token', response.data.access_token);
+        sessionService.saveSession(localStorage.getItem('token'));
+        sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+      }).catch(err => {
+        return err;
+      })
+      return response;
+    })
+      .catch((error, code, status)=>{
+        return error && error.response && error.response.data;
+      });
+  }
+}
 //********* Auction ************//
 export function doSignUp(eventUrl,userData) {
   return (dispatch) => {
