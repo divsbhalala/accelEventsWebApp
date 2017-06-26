@@ -48,6 +48,7 @@ class Html extends React.Component {
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
         <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="http://allenfang.github.io/react-bootstrap-table/css/react-bootstrap-table-all.min.css"/>
         <link href="http://diegoddox.github.io/react-redux-toastr/5.0/react-redux-toastr.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/css/carousel.css"/>
         <link rel="stylesheet" href="/css/goal-thermometer.css"/>

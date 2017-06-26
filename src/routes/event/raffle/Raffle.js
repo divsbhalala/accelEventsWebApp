@@ -381,6 +381,27 @@ class Raffle extends React.Component {
       console.log(error)
     });
   }
+  componentReRender() {
+    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+    this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+      .then(resp => {
+        if (resp && resp.data) {
+          this.setState({
+            raffleData: resp.data
+          })
+        }
+      }).catch(error => {
+      console.log(error)
+    });
+  }
   buyRaffleTicket = (e) => {
     e.preventDefault();
 
