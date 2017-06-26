@@ -382,6 +382,7 @@ class Fund extends React.Component {
       amount=false
     }else if (this.state.fundData.startingBid + this.state.fundData.pledgePrice  > this.amount.value) {
       errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + (this.state.fundData.startingBid + this.state.fundData.pledgePrice)
+      //errorMsgAmount= " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.fundData.name ,
       amount=false
     } else {
       amount=true
@@ -460,6 +461,27 @@ class Fund extends React.Component {
       console.log(error)
     });
   }
+  componentRernder() {
+    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+    this.props.doGetFundANeedItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+      .then(resp => {
+        if (resp && resp.data) {
+          this.setState({
+            fundData: resp.data
+          })
+        }
+      }).catch(error => {
+      console.log(error)
+    });
+  }
   reRender = ()=>{
     // window.location.reload();
   }
@@ -472,7 +494,7 @@ class Fund extends React.Component {
     this.setState({
       showMapPopup: false
     })
-    this.reRender();
+   this.componentRernder();
   };
   render() {
     return (
@@ -675,7 +697,6 @@ class Fund extends React.Component {
                                                 ref={ref => {
                                                   this.expYear = ref;
                                                 }}>
-                                          <option value="2016">2016</option>
                                           <option value="2017">2017</option>
                                           <option value="2018">2018</option>
                                           <option value="2019">2019</option>
@@ -816,7 +837,6 @@ class Fund extends React.Component {
                               { this.state.amountFeedBack && !this.state.amount &&
                               <small className="help-block" data-fv-validator="emailAddress" data-fv-for="email"
                                      data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
-
                             </div>
                           </div>
                         </div>
@@ -833,7 +853,7 @@ class Fund extends React.Component {
                           Submit Pledge
                         </button>
                         <a role="button" className="btn btn-success"
-                           href="/AccelEventsWebApp/events/jkazarian8#causeauction">Go back to All Items</a>
+                           href={this.props.params && "/event/" + this.props.params.params }>Go back to All Items</a>
                       </form>
                     </div>
                   </div>
