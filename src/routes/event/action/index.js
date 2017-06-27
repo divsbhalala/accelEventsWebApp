@@ -356,6 +356,12 @@ export function storeAuctionData(data) {
     data,
   }
 }
+export function storeIsVolunteer(data) {
+  return {
+    type: 'IS_VOLUNTEER',
+    data,
+  }
+}
 //*************  Volunteer   ****************//
 
 export function getItemStatusByCode(eventUrl, itemCode) {
@@ -690,6 +696,21 @@ export function getGoalData(eventUrl,type) {
         return resp.data;
       }
       return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+
+export function isVolunteer(eventUrl) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl +'/volunteer/isVolunteer' ,
+     headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      dispatch(storeIsVolunteer(resp.data));
+      return resp.data;
     }).catch((error, code, status)=>{
       return error && error.response && error.response.data;
     });

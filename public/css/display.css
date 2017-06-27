@@ -116,7 +116,7 @@ header {
 
 .nav>li>a>i {
   padding-right: 10px;
-  margin-top: 4px;
+  /*margin-top: 4px;*/
 }
 
 /* Tabs panel */

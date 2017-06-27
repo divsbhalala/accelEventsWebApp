@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -37,6 +28,7 @@ import {
 	doGetFundANeedItemByLimit,
 	storeActiveTabData,
 	doOrderTicket,
+	isVolunteer,
 } from './action/index';
 let ar = [1, 2, 3, 4, 5, 6, 7, 8];
 class Event extends React.Component {
@@ -342,6 +334,7 @@ class Event extends React.Component {
 		}).catch(error => {
 			history.push('/404');
 		});
+		this.props.isVolunteer(this.props.params && this.props.params.params);
 	}
 	componentDidMount() {
 		this.setState({
@@ -408,7 +401,12 @@ class Event extends React.Component {
 	}
 	doGetAuctionItemBySearch(eventUrl) {
    	this.props.doGetAuctionItemByLimit(eventUrl, 0, this.state.auctionPageLimit, this.state.auctionPageCategory,this.state.auctionPageSearchString).then(resp => {
-			if (resp && resp.data && resp.data.items) {
+			if (resp && resp.data && resp.data.items && resp.data.items) {
+				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
+					this.setState({
+						auctionPageLoading: false
+					})
+				}
 				this.setState({
 					auctionPageItems: resp.data && resp.data.items,
 				})
@@ -452,7 +450,7 @@ class Event extends React.Component {
 	doGetRaffleItemBySearch(eventUrl) {
 		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory,this.state.rafflePageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
-				if (resp.data && resp.data.items.length ) {
+				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
 					this.setState({
 						rafflePageLoading: false
 					})
@@ -500,9 +498,11 @@ class Event extends React.Component {
 	doGetFundANeedItemBySearch(eventUrl) {
 	  this.props.doGetFundANeedItemByLimit(eventUrl,0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory,this.state.fundANeedPageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
-			  this.setState({
+				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
+					this.setState({
 						fundANeedPageLoading: false
 					})
+				}
 				this.setState({
 					fundANeedPageItems:resp.data.items,
 				})
@@ -712,7 +712,11 @@ class Event extends React.Component {
 											</div>
 										</Tab>
 										<Tab label="Auction" disabled={!this.state.activeAuction}>
-											<div className="row">
+											<div className="row" id="auction">
+												{ !this.state.auctionPageItems.length && !this.state.auctionPageLoading && <div className="no-items-container text-center">
+													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
+												</div>}
+
 												<InfiniteScroll
 													next={this.doGetLoadMoreAuctionItem}
 													hasMore={this.state.auctionPageLoading}
@@ -739,7 +743,7 @@ class Event extends React.Component {
 															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
 															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 															                   auctionPurchaseFor={ item.purchased}
-															                   buyItNowPrice={ item.buyItNowPrice > 0 ? "Buy now $" + item.buyItNowPrice : null}
+															                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now $" + item.buyItNowPrice : null}
 															                   auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
 															                   auctionBuyNowClassName="item-link btn btn-success actionlinks"
 															                   marketValue={item.marketValue > 0 ? '$' + item.marketValue : null}
@@ -751,7 +755,10 @@ class Event extends React.Component {
 											</div>
 										</Tab>
 										<Tab label="Raffle" disabled={!this.state.activeRaffle}>
-											<div className="row">
+											<div className="row" id="raffle">
+												{ !this.state.rafflePageItems.length && !this.state.rafflePageLoading && <div className="no-items-container text-center">
+													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
+												</div>}
 												<InfiniteScroll
 													next={this.doGetLoadMoreRaffleItem}
 													hasMore={this.state.rafflePageLoading}
@@ -783,8 +790,11 @@ class Event extends React.Component {
 												</InfiniteScroll>
 											</div>
 										</Tab>
-										<Tab label="Fund a Need">
-											<div className="row">
+										<Tab label="Fund a Need" disabled={!this.state.activeFund}>
+											<div className="row" id="causeauction">
+												{ !this.state.fundANeedPageItems.length && !this.state.fundANeedPageLoading && <div className="no-items-container text-center">
+													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
+												</div>}
 												<InfiniteScroll
 													next={this.doGetLoadMoreFundANeedItem}
 													hasMore={this.state.fundANeedPageLoading}
@@ -939,6 +949,7 @@ const mapDispatchToProps = {
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	storeActiveTabData: (tab) => storeActiveTabData(tab),
 	doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
+	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
 };
 const mapStateToProps = (state) => ({
 	eventData: state.event && state.event.data,
