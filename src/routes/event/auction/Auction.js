@@ -21,6 +21,8 @@ import  {Carousel} from 'react-responsive-carousel';
 import PopupModel from './../../../components/PopupModal';
 import Phone from 'react-phone-number-input'
 import { parse,isValidNumber} from 'libphonenumber-js'
+import Button from 'react-bootstrap-button-loader';
+
 class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -92,6 +94,7 @@ class Auction extends React.Component {
       showPopup: false,
       stripeToken:null,
       phone:null,
+      loading:false,
     };
   }
 
@@ -144,11 +147,12 @@ class Auction extends React.Component {
       }
     this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
         .then(resp => {
-          if (resp && resp.data) {
+          if (resp && !resp.errorMessage) {
             this.setState({
               showPopup: true,
-              errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue.slice( - 4) + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
-              popupHeader:"Success"
+             // errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue.slice( - 4) + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
+              errorMsgCard:resp.message,
+              popupHeader:"Successfully",
             })
           }else{
             this.setState({
@@ -160,17 +164,20 @@ class Auction extends React.Component {
         });
   }
   placeBidByAmount = () => {
+    this.setState({
+      loading:true,
+    })
     const user = {
       itemCode: this.state.auctionData.code,
       amount: this.state.amountValue,
     }
     this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
       .then(resp => {
-        if (resp && resp.message) {
+        if (resp && !resp.errorMessage) {
           this.setState({
             showPopup: true,
             errorMsgCard:resp.message,
-            popupHeader:"Successfully"
+            popupHeader:"Successfully",
           })
         }else{
           this.setState({
@@ -179,10 +186,16 @@ class Auction extends React.Component {
             popupHeader:"Failed"
           });
         }
+        this.setState({
+          loading:false,
+        })
       });
   }
   signupForm = (e) => {
     e.preventDefault();
+    this.setState({
+      loading:true,
+    })
     //if (this.state.isValidData) {
       let userData={
         "countryCode": parse(this.state.phone).country,
@@ -191,15 +204,21 @@ class Auction extends React.Component {
         "phoneNumber": parse(this.state.phone).phone,
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
-          if(!resp.error){
+          if(!resp.errorMessage){
             this.setState({
               showPopup: true,
               errorMsgCard: "Thank you for Registration!",
-              popupHeader:"Successfully"
+              popupHeader:"Successfully",
+              loading:false,
             })
           }
           else{
-              this.setState({error:"Invalid Email or password"});
+            this.setState({
+              showPopup: true,
+              errorMsgCard: resp.errorMessage,
+              popupHeader:"Failed",
+              loading:false,
+            })
           }
       });
     //}
@@ -457,6 +476,8 @@ class Auction extends React.Component {
   }
   render() {
     let form_login = <div>
+      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+        { this.state.errorMsgCard }</div>
       <h4>Login or signup below</h4>
       <form className="ajax-form validated fv-form fv-form-bootstrap"
             autoComplete="off" method="POST"
@@ -466,7 +487,7 @@ class Auction extends React.Component {
             action="/AccelEventsWebApp/events/jkazarian8/loginsignup"
             noValidate="novalidate"
             onSubmit={this.signupForm}>
-         <div
+        <div
           className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
           <label className="control-label">Email Address</label>
           <div className="input-group">
@@ -538,10 +559,10 @@ class Auction extends React.Component {
           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
         </div>
-        <button className={cx("btn btn-primary text-uppercase", this.state.isValidData && 'disabled')} role="button"
-                type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+        <Button className={cx("btn btn-primary text-uppercase", this.state.isValidData && 'disabled')} role="button"
+                loading={this.state.loading}   type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
           SUBMIT
-        </button>
+        </Button>
       </form>
     </div>;
     let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1086,7 +1107,7 @@ class Auction extends React.Component {
               { this.state && this.state.errorMsgCard }
               <div className="modal-footer">
                 {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.placeBid} >Confirm</button> : ""}
-                {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.placeBidByAmount} >Confirm</button> : ""}
+                {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount} loading={this.state.loading}>Confirm</Button> : ""}
                 <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
               </div>
             </div>

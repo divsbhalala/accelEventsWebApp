@@ -527,6 +527,26 @@ class EventDonation extends React.Component {
                 <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                   className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/>
                 </div>
+                { this.props.authenticated && <div>
+                  <div className="form-group" >
+                  <label className="control-label">Email Address</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-envelope" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="lastname" value={this.props.user.email} data-fv-field="lastName" disabled={true} />
+                  </div>
+                  </div>
+
+                  <div className="form-group" >
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="lastname" value={this.props.user.phonenumber} data-fv-field="lastName" disabled={true} />
+                  </div>
+                  </div> </div>}
                 { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
                   className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                   <label className="control-label">First Name</label>

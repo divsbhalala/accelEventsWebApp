@@ -50,3 +50,13 @@ export  function confirmAuctionBid(eventurl, itemIds, stripeToken) {
 		})
 	}
 }
+
+export  function getBidConfirmation(eventurl, userId, itemId) {
+	return (dispatch) => {
+		return axios({
+			method: 'get',
+			url: API_URL + '/checkout/' + eventurl +'/auction/confirmBid/user/'+ userId +'item/'+itemId,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}

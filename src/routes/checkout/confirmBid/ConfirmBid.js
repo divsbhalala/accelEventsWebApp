@@ -13,7 +13,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ConfirmBid.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {confirmAuctionBid,createCardToken, orderTicket} from './../action/index';
+import {confirmAuctionBid,createCardToken, orderTicket, getBidConfirmation} from './../action/index';
 
 class ConfirmBid extends React.Component {
   static propTypes = {
@@ -29,14 +29,14 @@ class ConfirmBid extends React.Component {
     this.setState({
       isVisibleConfirmBid:true,
     })
-  }
+  };
   doConfirmAuctionBid = () =>{
     this.props.confirmAuctionBid('eventurl', props.itemCode, 'stripeToken').then(resp => {
 
     }).catch((error) => {
 
     })
-  }
+  };
   render() {
     return (
       <div className="container">
@@ -107,7 +107,8 @@ class ConfirmBid extends React.Component {
 }
 
 const mapDispatchToProps = {
-  confirmAuctionBid : (eventurl, itemIds, stripeToken)  => confirmAuctionBid(eventurl, itemIds, stripeToken)
+  confirmAuctionBid : (eventurl, itemIds, stripeToken)  => confirmAuctionBid(eventurl, itemIds, stripeToken),
+  getBidConfirmation : (eventurl, userId, itemIds)  => getBidConfirmation(eventurl, userId, itemIds)
 };
 const mapStateToProps = (state) => ({});
 

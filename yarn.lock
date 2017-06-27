@@ -5824,6 +5824,13 @@ prop-types@15.x, prop-types@^15.0.0, prop-types@^15.5.4, prop-types@^15.5.6, pro
   dependencies:
     fbjs "^0.8.9"
 
+prop-types@^15.5.10:
+  version "15.5.10"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.3.1"
+
 proxy-addr@~1.1.3:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-1.1.4.tgz#27e545f6960a44a627d9b44467e35c1b6b4ce2f3"
@@ -5989,6 +5996,13 @@ react-addons-transition-group@^15.2.1:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.3.2.tgz#b6385c4db1e5df371825e0615b04360ed94430fe"
 
+react-bootstrap-button-loader@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-button-loader/-/react-bootstrap-button-loader-1.0.8.tgz#f5ced2a511827f3c5600cd8534bb030e1374ad16"
+  dependencies:
+    prop-types "^15.5.10"
+    react-loader "^2.4.0"
+
 react-bootstrap-sweetalert@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-bootstrap-sweetalert/-/react-bootstrap-sweetalert-3.0.0.tgz#65378a42f37845676acf98e8c43ce4a61f23306f"
@@ -6085,6 +6099,14 @@ react-icons-kit@^1.0.7:
 react-infinite-scroll-component@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-2.3.0.tgz#f31a58b599f25e91a05297fdda1671e6e7d8cbae"
+
+react-loader@^2.4.0:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/react-loader/-/react-loader-2.4.2.tgz#14e2b9139fc5693da5cdbdc928032d5b1aeb94c2"
+  dependencies:
+    create-react-class "^15.5.2"
+    prop-types "^15.5.8"
+    spin.js "2.x"
 
 react-loaders@^2.5.0:
   version "2.5.0"
@@ -6986,6 +7008,10 @@ spdx-license-ids@^1.0.2:
 specificity@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/specificity/-/specificity-0.3.0.tgz#332472d4e5eb5af20821171933998a6bc3b1ce6f"
+
+spin.js@2.x:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/spin.js/-/spin.js-2.3.2.tgz#6caa56d520673450fd5cfbc6971e6d0772c37a1a"
 
 split2@^0.2.1:
   version "0.2.1"

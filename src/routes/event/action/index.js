@@ -452,10 +452,9 @@ export function doSignUp(eventUrl,userData) {
 				return err;
       });
       return response;
-    })
-      .catch((error, code, status)=>{
+    }).catch((error, code, status)=>{
 				return error && error.response && error.response.data;
-			});
+    });
   }
 }
 

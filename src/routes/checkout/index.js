@@ -17,12 +17,13 @@ export default {
       }
     },
     {
-      path: '/:bidId/confirmbid/:ItemCode',
+      path: '/:userId/confirmbid/:ItemCode',
       action(props) {
         return {
           title: "Confirm Bid Page",
           component: <Layout params={props.params}><ConfirmBid params={props.params}
                                                             itemCode={props.params && props.params.ItemCode}
+                                                            userId={props.params && props.params.userId}
                                                             title="ConfirmBid"/></Layout>,
         };
       }

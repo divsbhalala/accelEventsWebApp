@@ -22,6 +22,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 
 import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
+import Button from 'react-bootstrap-button-loader';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -93,12 +94,13 @@ class Fund extends React.Component {
       errorMsgPhoneNumber: null,
       showPopup: false,
       stripeToken:null,
+      loading:false,
     }
 
   }
   onFormClick = (e) => {
     e.preventDefault();
-    var self = this
+     var self = this
     if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
       this.setState({
         showMapPopup: true,
@@ -115,7 +117,9 @@ class Fund extends React.Component {
 
   }
   submiteFundForm = () => {
-
+    this.setState({
+      loading: true,
+    })
     var self = this
     if(!this.props.authenticated){
       let userData={
@@ -138,6 +142,7 @@ class Fund extends React.Component {
               self.setState({
                 errorMsg: response.error.message,
                 isError:true,
+                loading:false,
               });
             } else {
               const user = {
@@ -153,12 +158,14 @@ class Fund extends React.Component {
                       errorMsg: resp.message,
                       isError:false,
                       popupHeader:"Success",
+                      loading:false,
                     });
                   }else{
                     self.setState({
-                      errorMsg: resp.errors,
+                      errorMsg: resp.errorMessage,
                       isError:true,
                       popupHeader:"Failed",
+                      loading:false,
                     });
                   }
                 });
@@ -182,6 +189,7 @@ class Fund extends React.Component {
             errorMsg: response.error.message,
             isError:true,
             popupHeader:"Failed",
+            loading:false,
           });
         } else {
           const user = {
@@ -199,19 +207,21 @@ class Fund extends React.Component {
                   errorMsg: resp.message,
                   isError:false,
                   popupHeader:"Success",
+                  loading:false,
                 });
               }else{
                 self.setState({
                   errorMsg: resp.errorMessage,
                   isError:true,
                   popupHeader:"Failed",
+                  loading:false,
                 });
               }
             });
         }
       });
     }
-    else{
+    else if(self.state.amountValue){
       const user = {
         amount: self.state.amountValue,
         email:self.props.user.email,
@@ -226,15 +236,21 @@ class Fund extends React.Component {
               errorMsg: resp.message,
               isError:false,
               popupHeader:"Success",
+              loading:false,
             });
           }else{
             this.setState({
               errorMsg: resp.errorMessage,
               isError:true,
               popupHeader:"Failed",
+              loading:false,
             });
           }
         });
+    }else {
+      this.setState({
+        loading:false,
+      })
     }
     this.setState({
       showDonationPopup:false,
@@ -380,8 +396,8 @@ class Fund extends React.Component {
     if (this.amount.value == '') {
       errorMsgAmount= "Bid Amount can't be empty"
       amount=false
-    }else if (this.state.fundData.startingBid + this.state.fundData.pledgePrice  > this.amount.value) {
-      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + (this.state.fundData.startingBid + this.state.fundData.pledgePrice)
+    }else if (this.state.fundData.pledgePrice  > this.amount.value) {
+      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)
       //errorMsgAmount= " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.fundData.name ,
       amount=false
     } else {
@@ -534,9 +550,8 @@ class Fund extends React.Component {
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
                       <div className="row">
-                        <div className="text-danger text-center bold">
-                          {this.state.errorMsg}
-                        </div>
+                        <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                          { this.state.errorMsg }</div>
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
@@ -847,11 +862,11 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')}
+                        <Button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')}
                                 role="button" type="submit"
-                                data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+                                loading={this.state.loading}>
                           Submit Pledge
-                        </button>
+                        </Button>
                         <a role="button" className="btn btn-success"
                            href={this.props.params && "/event/" + this.props.params.params }>Go back to All Items</a>
                       </form>
@@ -873,7 +888,7 @@ class Fund extends React.Component {
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
-              {this.state.popupHeader == "Confirm" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}
+              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.submiteFundForm} >Confirm</Button> : ""}
               <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
