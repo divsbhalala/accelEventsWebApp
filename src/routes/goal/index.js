@@ -20,7 +20,7 @@ export default {
     },
     {
       path: '/auction',
-      action(props) {
+      async action(props) {
         return {
           title: "Auction Page",
           component: <Layout params={props.params}><Auction params={props.params}
@@ -31,7 +31,7 @@ export default {
     },
     {
       path: '/fund',
-      action(props) {
+      async action(props) {
         return {
           title: "Fund Page",
           component: <Layout params={props.params}><Fund params={props.params}
@@ -42,7 +42,7 @@ export default {
     },
     {
       path: '/raffle',
-      action(props) {
+      async action(props) {
         return {
           title: "Raffle Page",
           component: <Layout params={props.params}><Raffle params={props.params}

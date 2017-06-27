@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import {Link} from 'react-router';
+import Link from '../Link';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
 	Nav,
@@ -228,8 +228,8 @@ class HeaderNew extends React.Component {
 					<Brand>
             <span>
               { this.props.params && this.props.params.params &&
-              <a href={"/event/" + this.props.params.params} title={this.props.params.params}
-                 rel="home">{this.props.params.params}</a>}
+              <Link to={"/event/" + this.props.params.params} title={this.props.params.params}
+                 rel="home">{this.props.params.params}</Link>}
               <button type="button" className="navbar-toggle" onClick={() => {
                 toggleMenu();
               }} style={{position: 'absolute', right: 0, top: 0}}>

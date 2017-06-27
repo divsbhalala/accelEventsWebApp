@@ -9,7 +9,7 @@ export default {
 
   path: '/contact',
 
-  action() {
+  async action() {
     return {
       title,
       component: <Layout><Contact title={title}/></Layout>,

@@ -18,7 +18,7 @@ export default {
     },
     {
       path: '/:userId/confirmbid/:ItemCode',
-      action(props) {
+      async action(props) {
         return {
           title: "Confirm Bid Page",
           component: <Layout params={props.params}><ConfirmBid params={props.params}

@@ -9,7 +9,7 @@ export default {
 
   path: '*',
 
-  action(props) {
+  async action(props) {
     return {
       title,
       component: <Layout params={props.params}><NotFound title={title}/></Layout>,

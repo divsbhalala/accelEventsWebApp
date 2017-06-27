@@ -12,7 +12,7 @@ export default {
   children: [
     {
       path: '/',
-      async action(props) {
+      action(props) {
         return {
           title: "Event Page",
           component: <Layout params={props.params}><Event title={title} params={props.params}/></Layout>,
@@ -21,7 +21,7 @@ export default {
     },
     {
       path: '/auction/:ItemCode',
-      action(props) {
+      async action(props) {
         return {
           title: "Auction Page",
           component: <Layout params={props.params}><Auction params={props.params}
@@ -32,7 +32,7 @@ export default {
     },
     {
       path: '/fund/:ItemCode',
-      action(props) {
+      async action(props) {
         return {
           title: "Fund Page",
           component: <Layout params={props.params}><Fund params={props.params}
@@ -42,7 +42,7 @@ export default {
     },
     {
       path: '/raffle/:ItemCode',
-      action(props) {
+      async action(props) {
         return {
           title: "Raffle Page",
           component: <Layout params={props.params}><Raffle params={props.params}
@@ -53,7 +53,7 @@ export default {
     },
     {
       path: '/volunteer',
-      action(props) {
+      async action(props) {
         return {
           title: "Volunteer Page",
           component: <Layout params={props.params}><Volunteer params={props.params} title="Volunteer"/></Layout>,

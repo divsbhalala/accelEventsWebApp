@@ -10,7 +10,7 @@ export default {
 
   path: '/login',
 
-  action() {
+  async action() {
     return {
       title,
       component: <LoginLayout><Login title={title} showFeedBack={showFeedBack}/></LoginLayout>,
