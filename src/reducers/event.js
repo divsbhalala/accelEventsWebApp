@@ -7,6 +7,7 @@ import {
   STORE_EVENT_AUCTION,
   STORE_ACTIVE_TAB,
   STORE_ORDER_DATA,
+  IS_VOLUNTEER,
 } from '../constants';
 export default function event(state = {}, action) {
   switch (action.type) {
@@ -26,6 +27,8 @@ export default function event(state = {}, action) {
       return {...state, active_tab_data: action.data};
     case STORE_ORDER_DATA:
       return {...state, order_data: action.data};
+    case IS_VOLUNTEER:
+      return {...state, is_volunteer: action.data};
     default:
       return state;
   }

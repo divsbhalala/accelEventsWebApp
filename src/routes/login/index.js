@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import AdminLayout from '../../components/AdminLayout';
+import LoginLayout from '../../components/LoginLayout';
 import Login from './Login';
 
 const title = 'Log In';
@@ -21,7 +21,7 @@ export default {
   action() {
     return {
       title,
-      component: <AdminLayout><Login title={title} showFeedBack={showFeedBack}/></AdminLayout>,
+      component: <LoginLayout><Login title={title} showFeedBack={showFeedBack}/></LoginLayout>,
     };
   },
 
