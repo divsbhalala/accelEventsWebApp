@@ -9,19 +9,23 @@ import  history from './../../../history';
 import {Button} from 'react-bootstrap';
 import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
+import Moment from 'react-moment';
+import moment from 'moment';
 
 import  {
-	getItemStatusByCode,
-	getUserByEmail,
-	getAuctionItemStatusByCode,
-	getAttendees,
-	setAttendees,
-	submitBids,
-	submitPledge,
-	sellTickets,
-	submitTickets,
+  getItemStatusByCode,
+  getUserByEmail,
+  getAuctionItemStatusByCode,
+  getAttendees,
+  setAttendees,
+  submitBids,
+  submitPledge,
+  sellTickets,
+  submitTickets,
+  submitDonate,
 	isVolunteer,
-	submitDonate
+  doOrderTicket,
+  doGetSettings,
 } from './../action/index';
 
 class Volunteer extends React.Component {
@@ -92,17 +96,20 @@ class Volunteer extends React.Component {
 			errorMsgAvailTickets: null,
 			errorMsgRaffleTicket: null,
 
-			auctionItemCode: null,
-			userData: null,
-			attendees: null,
-			itemBarcodeCode: null,
-			attendeesFilter: null,
-			showPopup: false,
-			popupHeader: null,
-		}
-		this.setActiveView = this.setActiveView.bind(this);
-		this.getAttendeesList = this.getAttendeesList.bind(this);
-	}
+      auctionItemCode:null,
+      userData:null,
+      attendees:null,
+      itemBarcodeCode:null,
+      attendeesFilter:null,
+      showPopup: false,
+      popupHeader:null,
+      totalTickets:[],
+    }
+    this.setActiveView = this.setActiveView.bind(this);
+    this.getAttendeesList = this.getAttendeesList.bind(this);
+    this.doOrderTicket = this.doOrderTicket.bind(this);
+    this.selectHandle = this.selectHandle.bind(this);
+  }
 
 	componentDidMount() {
 		if (this.props.params && this.props.params.params) {
@@ -120,17 +127,17 @@ class Volunteer extends React.Component {
 	}
 
 	setActiveView = (view) => {
-		if (view == "event-ticketing" && this.state.attendees == null) {
-			this.getAttendeesList();
-		}
-		this.setState({
-			activeViews: view,
-			isValidData: false,
-			error: null,
-			isLogin: false,
-			itemCode: null,
-			itemStatusMsg: null,
-			itemData: null,
+    if(view == "event-ticketing" && this.state.attendees == null){
+      this.getAttendeesList();
+    }
+    this.setState({
+      activeViews: view,
+      isValidData: false,
+      error: null,
+      isLogin: false,
+      itemCode:null,
+      itemStatusMsg:null,
+      itemData:null,
 
 			firstName: null,
 			lastName: null,
@@ -474,270 +481,328 @@ class Volunteer extends React.Component {
 			});
 		}
 
-	};
-	raffleTicketValidateHandler = (e) => {
-		this.setState({
-			raffleTicketFeedBack: true,
-			raffleTicketValue: this.raffleTicket.value,
-		});
-		if (this.raffleTicket.value == '') {
-			this.setState({
-				raffleTicket: false,
-				errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
-			});
-		} else {
-			this.setState({
-				raffleTicket: true
-			});
-		}
-	};
-
-	componentWillMount() {
-		Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
-	}
-
-	showPopup = () => {
-		this.setState({
-			showPopup: true
-		})
-	};
-	hidePopup = () => {
-		this.setState({
-			showPopup: false
-		})
-		if (this.state.popupHeader == "Success") {
-			window.location.reload();
-		}
-	};
-	submiteSilentAuctionBid = (e) => {
-		e.preventDefault();
-		console.log(this.state)
-		var self = this;
-		this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-		if (this.state.isValidBidData) {
-			const card = {
-				number: this.cardNumber.value,
-				cvc: this.cvv.value,
-				exp_month: this.expMonth.value,
-				exp_year: this.expYear.value,
-			}
-			Stripe.createToken(card, function (status, response) {
-				if (response.error) {
-					self.setState({
-						showPopup: true,
-						errorMsgCard: response.error.message
-					});
-				} else {
-					const user = {
-						email: self.state.emailValue,
-						countryCode: "IN",
-						cellNumber: self.state.phoneNumberValue,
-						firstname: self.state.firstNameValue,
-						lastname: self.state.lastNameValue,
-						paymenttype: 'CC',
-						itemCode: self.state.itemCodeValue,
-						amount: self.state.amountValue,
-						stripeToken: response.id,
-					}
-					self.props.submitBids(self.props.params && self.props.params.params, user)
-						.then(resp => {
-							if (resp && resp.data) {
-								self.setState({
-									itemStatusMsg: resp.data,
-									popupHeader: "Success"
-								})
-							} else {
-								self.setState({
-									showPopup: true,
-									errorMsgCard: resp.errorMessage,
-									popupHeader: "Failed"
-								});
-							}
-							console.log("------", resp)
-						});
-				}
-			});
-		}
-	};
-	submitPledgeBid = (e) => {
-		e.preventDefault();
-		console.log(this.state)
-		var self = this;
-		this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-		if (this.state.isValidBidData) {
-			const card = {
-				number: this.cardNumber.value,
-				cvc: this.cvv.value,
-				exp_month: this.expMonth.value,
-				exp_year: this.expYear.value,
-			}
-			Stripe.createToken(card, function (status, response) {
-				if (response.error) {
-					self.setState({
-						showPopup: true,
-						errorMsgCard: response.error.message
-					});
-				} else {
-					const user = {
-						amount: self.state.amountValue,
-						cellNumber: self.state.phoneNumberValue,
-						countryCode: "IN",
-						email: self.state.emailValue,
-						firstname: self.state.firstNameValue,
-						lastname: self.state.lastNameValue,
-						paymenttype: 'CC',
-						itemCode: self.state.itemCodeValue,
-						stripeToken: response.id,
-					}
-					self.props.submitPledge(self.props.params && self.props.params.params, user)
-						.then(resp => {
-							if (resp && resp.data) {
-								self.setState({
-									showPopup: true,
-									errorMsgCard: "Pledge Submit Successfully",
-									popupHeader: "Success"
-								});
-							} else {
-								self.setState({
-									showPopup: true,
-									errorMsgCard: resp.errorMessage,
-									popupHeader: "Failed",
-								});
-							}
-						});
-				}
-			});
-		}
-	};
-	sellTicketsBid = (e) => {
-		e.preventDefault();
-		console.log(this.state)
-		var self = this;
-		this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.cvv)});
-		if (this.state.isValidBidData) {
-			const card = {
-				number: this.cardNumber.value,
-				cvc: this.cvv.value,
-				exp_month: this.expMonth.value,
-				exp_year: this.expYear.value,
-			}
-			Stripe.createToken(card, function (status, response) {
-				if (response.error) {
-					self.setState({
-						showPopup: true,
-						errorMsgCard: response.error.message
-					});
-				} else {
-					const user = {
-						email: self.state.emailValue,
-						countryCode: "IN",
-						cellNumber: self.state.phoneNumberValue,
-						firstname: self.state.firstNameValue,
-						lastname: self.state.lastNameValue,
-						paymenttype: 'CC',
-						itemCode: self.state.itemCodeValue,
-						raffleTicketId: self.state.raffleTicketValue,
-						stripeToken: response.id,
-					}
-					self.props.sellTickets(self.props.params && self.props.params.params, user)
-						.then(resp => {
-							if (resp && resp.data) {
-								self.setState({
-									showPopup: true,
-									errorMsgCard: "Ticket Purchased Successfully.",
-									popupHeader: "Success"
-								});
-							} else {
-								self.setState({
-									showPopup: true,
-									errorMsgCard: resp.errorMessage,
-									popupHeader: "Failed"
-								});
-							}
-						});
-				}
-			});
-		}
-	};
-	submitTicketsbid = (e) => {
-		e.preventDefault();
-		var self = this;
-		this.setState({isValidBidData: (this.state.email && this.state.availTickets)});
-		if (this.state.isValidBidData) {
-			const user = {
-				email: self.state.emailValue,
-				countryCode: "IN",
-				cellNumber: self.state.phoneNumberValue,
-				firstname: self.state.firstNameValue,
-				lastname: self.state.lastNameValue,
-				itemCode: self.state.itemCodeValue,
-				submittedTickets: self.state.submittedTickets,
-			}
-			self.props.submitTickets(self.props.params && self.props.params.params, user)
-				.then(resp => {
-					if (resp && resp.message) {
-						self.setState({
-							showPopup: true,
-							errorMsgCard: resp.message,
-							popupHeader: "Success"
-						});
-					} else {
-						self.setState({
-							showPopup: true,
-							errorMsgCard: resp.errorMessage,
-							popupHeader: "Failed"
-						});
-					}
-				});
-		}
-	};
-	submitDonatebid = (e) => {
-		e.preventDefault();
-		var self = this;
-		this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-		if (this.state.isValidBidData) {
-			const user = {
-				email: self.state.emailValue,
-				countryCode: "IN",
-				cellNumber: self.state.phoneNumberValue,
-				firstname: self.state.firstNameValue,
-				lastname: self.state.lastNameValue,
-				itemCode: self.state.itemCodeValue,
-				submittedTickets: self.state.submittedTickets,
-				paymenttype: 'CC',
-				amount: self.state.amountValue,
-			}
-			self.props.submitDonate(self.props.params && self.props.params.params, user)
-				.then(resp => {
-					console.log(resp)
-					if (resp && resp.message) {
-						self.setState({
-							showPopup: true,
-							errorMsgCard: resp.message,
-							popupHeader: "Success"
-						});
-					} else {
-						self.setState({
-							showPopup: true,
-							errorMsgCard: resp.errorMessage,
-							popupHeader: "Failed"
-						});
-					}
-				});
-		}
-	};
-
-	render() {
-		return (
-			<div>
-				{ this.state.isloaded && this.props.is_volunteer &&
-				<views>
-					{ this.state.activeViews === 'select-action' &&
-					<view name="select-action" className={cx(this.state.activeViews === 'select-action' && s.active)}>
-						<h4 className="text-center"><strong>Select an Action</strong></h4>
-						<div className>
-							{/* <button class="btn btn-block btn-info mrg-t-lg mrg-b-lg" data-switch-view="attendees-checkin">Check in attendees</button> */}
-							<button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={() => {
+  };
+  raffleTicketValidateHandler = (e) => {
+    this.setState({
+      raffleTicketFeedBack: true,
+      raffleTicketValue: this.raffleTicket.value,
+    });
+    if (this.raffleTicket.value == '') {
+      this.setState({
+        raffleTicket: false,
+        errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
+      });
+    }  else {
+      this.setState({
+        raffleTicket: true
+      });
+    }
+  };
+  componentWillMount(){
+    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+  }
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false
+    })
+    if (this.state.popupHeader == "Success"){
+      window.location.reload();
+    }
+  };
+  submiteSilentAuctionBid = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message});
+        }else{
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            paymenttype: 'CC',
+            itemCode: self.state.itemCodeValue,
+            amount: self.state.amountValue,
+            stripeToken: response.id,
+          }
+          self.props.submitBids(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  itemStatusMsg: resp.data,
+                  popupHeader:"Success"
+                })
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+            console.log("------",resp)
+          });
+        }
+       });
+     }
+  };
+  submitPledgeBid = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message});
+        }else{
+          const user = {
+            amount: self.state.amountValue,
+            cellNumber: self.state.phoneNumberValue,
+            countryCode: "IN",
+            email: self.state.emailValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            paymenttype: 'CC',
+            itemCode: self.state.itemCodeValue,
+            stripeToken: response.id,
+          }
+          self.props.submitPledge(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: "Pledge Submit Successfully",
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed",
+                });
+              }
+          });
+        }
+       });
+     }
+  };
+  sellTicketsBid = (e) => {
+    e.preventDefault();
+    console.log(this.state)
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
+     if (this.state.isValidBidData) {
+      const card = {
+        number: this.cardNumber.value,
+        cvc: this.cvv.value,
+        exp_month: this.expMonth.value,
+        exp_year: this.expYear.value,
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message});
+        }else{
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            paymenttype: 'CC',
+            itemCode: self.state.itemCodeValue,
+            raffleTicketId: self.state.raffleTicketValue,
+            stripeToken: response.id,
+          }
+          self.props.sellTickets(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.data) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: "Ticket Purchased Successfully.",
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+          });
+        }
+       });
+     }
+  };
+  submitTicketsbid = (e) => {
+    e.preventDefault();
+    var self = this;
+    this.setState({isValidBidData: (this.state.email && this.state.availTickets)});
+     if (this.state.isValidBidData) {
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            itemCode: self.state.itemCodeValue,
+            submittedTickets: self.state.submittedTickets,
+          }
+          self.props.submitTickets(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              if (resp && resp.message) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.message,
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+          });
+        }
+  };
+  submitDonatebid = (e) => {
+    e.preventDefault();
+    var self = this;
+    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+     if (this.state.isValidBidData) {
+          const user = {
+            email: self.state.emailValue,
+            countryCode: "IN",
+            cellNumber: self.state.phoneNumberValue,
+            firstname: self.state.firstNameValue,
+            lastname: self.state.lastNameValue,
+            itemCode: self.state.itemCodeValue,
+            submittedTickets: self.state.submittedTickets,
+            paymenttype: 'CC',
+            amount: self.state.amountValue,
+          }
+          self.props.submitDonate(self.props.params && self.props.params.params, user)
+            .then(resp => {
+              console.log(resp)
+              if (resp && resp.message) {
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.message,
+                  popupHeader:"Success"});
+              }else{
+                self.setState({
+                  showPopup: true,
+                  errorMsgCard: resp.errorMessage,
+                  popupHeader:"Failed"
+                });
+              }
+          });
+        }
+  };
+  doOrderTicket() {
+    let Data = {};
+    Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
+    let ticketings = this.state.totalTickets;
+    ticketings = ticketings.filter(function (n) {
+      return n != null
+    });
+    ticketings = ticketings.map(function (obj) {
+      return {"numberOfTicket": parseInt(obj.numberofticket), "ticketTypeId": parseInt(obj.tickettypeid)};
+    });
+    Data.ticketings = ticketings;
+    this.setState({
+      orderTicket: null
+    });
+    let eventUrl = this.props.params && this.props.params.params;
+    this.props.doOrderTicket(eventUrl, Data)
+      .then(resp => {
+        if (resp && resp.data && resp.data.orderId) {
+          history.push('/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
+        }
+        else {
+          this.setState({
+            formError: "Error while Oraring Tickets",
+            showFormError: true,
+            showBookingTicketPopup: false
+          })
+        }
+      }).catch(error => {
+      this.setState({
+        orderTicket: "Error while Oraring Tickets",
+        showFormError: true,
+        showBookingTicketPopup: false,
+        formError :  (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordaring Tickets"
+      })
+    })
+  };
+  selectHandle(e) {
+    let totalTickets = this.state.totalTickets;
+    totalTickets[e.target.name] = {
+      price: e.target.dataset && e.target.dataset.price,
+      numberofticket: e.target.value,
+      tickettypeid: e.target.name
+    };
+    let totalPrice = 0;
+    totalTickets.map(item => {
+      //console.log(item)
+      totalPrice += item.price * item.numberofticket;
+    });
+    this.setState({
+      totalTickets: totalTickets,
+      totalTicketQty: 0 + parseInt(e.target.value) + this.state.totalTicketQty,
+      totalTicketPrice: totalPrice,
+    });
+  };
+  render() {
+    let makeItem = function (i) {
+      let item = [];
+      for (let j = 0; j <= i; j++) {
+        item.push(<option value={j} key={i + Math.random()}>{j}</option>)
+      }
+      return item;
+    };
+       return (
+      <div>
+	      { this.state.isloaded && this.props.is_volunteer &&
+	      <views>
+          { this.state.activeViews === 'select-action' &&
+            <view name="select-action" className={cx(this.state.activeViews === 'select-action' && s.active)}>
+            <h4 className="text-center"><strong>Select an Action</strong></h4>
+            <div className>
+              {/* <button class="btn btn-block btn-info mrg-t-lg mrg-b-lg" data-switch-view="attendees-checkin">Check in attendees</button> */}
+              <button className="btn btn-block btn-success mrg-t-lg mrg-b-lg" onClick={() => {
                 this.setActiveView('check-item-status')
               }}>Check
 								Item Status
@@ -1400,43 +1465,42 @@ class Volunteer extends React.Component {
 														        ref={ref => {
                                       this.expYear = ref;
                                     }}>
-															<option value="2016">2016</option>
-															<option value="2017">2017</option>
-															<option value="2018">2018</option>
-															<option value="2019">2019</option>
-															<option value="2020">2020</option>
-															<option value="2021">2021</option>
-															<option value="2022">2022</option>
-															<option value="2023">2023</option>
-															<option value="2024">2024</option>
-															<option value="2025">2025</option>
-															<option value="2026">2026</option>
-															<option value="2027">2027</option>
-															<option value="2028">2028</option>
-															<option value="2029">2029</option>
-															<option value="2030">2030</option>
-															<option value="2031">2031</option>
-															<option value="2032">2032</option>
-															<option value="2033">2033</option>
-															<option value="2034">2034</option>
-															<option value="2035">2035</option>
-															<option value="2036">2036</option>
-															<option value="2037">2037</option>
-															<option value="2038">2038</option>
-															<option value="2039">2039</option>
-															<option value="2040">2040</option>
-															<option value="2041">2041</option>
-															<option value="2042">2042</option>
-															<option value="2043">2043</option>
-															<option value="2044">2044</option>
-															<option value="2045">2045</option>
-															<option value="2046">2046</option>
-															<option value="2047">2047</option>
-															<option value="2048">2048</option>
-															<option value="2049">2049</option>
-															<option value="2050">2050</option>
-														</select>
-													</div>
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
+                            </select>
+                          </div>
 
 
 												</div>
@@ -1963,75 +2027,89 @@ class Volunteer extends React.Component {
 							<button className="btn btn-white" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
-							</button>
-						</div>
-					</view> }
-					{ this.state.activeViews === 'purchase-event-tickets' &&
-					<view name="purchase-event-tickets"
-					      className={cx(this.state.activeViews === 'purchase-event-tickets' && s.active)}>
-						<h4 className="text-center"><strong>Sell Event Tickets</strong></h4>
-						<div className="order-form">
-							<form className="ajax-form validated fv-form fv-form-bootstrap" method="POST"
-							      action="/AccelEventsWebApp/events/jkazarian8/volunteer/orderTicket"
-							      data-content-type="application/json; charset=UTF-8" data-prepare-data="prepareEventCheckoutData"
-							      data-validation-fields="getEventCheckoutValidationFields"
-							      data-onsuccess="handleEventCheckoutSuccess" data-validate-function="validateForm"
-							      data-switch-view="select-action" data-view-name="purchase-event-tickets" noValidate="novalidate">
-								<button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
-								<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
-									className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-								<div id="buy-event-tickets">
-									<div className="select-event-tickets">
-										<label className="center-block text-center mrg-t-lg">Select payment option</label>
-										<div className="form-group text-center has-feedback">
-											<input type="radio" name="paymenttype" autoComplete="off" defaultValue="card"
-											       data-fv-field="paymentType"/> Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
-											<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"
-											       data-fv-field="paymentType"/><i className="form-control-feedback"
-											                                       data-fv-icon-for="paymentType" style={{display: 'none'}}/>
-											Cash
-											<small className="help-block" data-fv-validator="notEmpty" data-fv-for="paymentType"
-											       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Payment type is required
-											</small>
-										</div>
-										<div className="ticket-type-container">
-											<input type="hidden" defaultValue={44} name="tickettypeid"/>
-											<div className="sale-card">
-												<div className="flex-row">
-													<div className="flex-col">
-														<div className="type-name"><strong>First ticket type</strong> (<span
-															className="type-cost txt-sm gray">
-                                $100.00
-                              </span>)
-															<div className="pull-right">
-																SOLD OUT
-															</div>
-														</div>
-														<div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div className="status-bar clearfix mrg-t-lg">
-											<div className="pull-left">
-                        <span>
-                          QTY:<span className="qty">0</span>
-                        </span>
-												<span className="total-price">FREE</span>
-											</div>
-											<div className="pull-right">
-												<button type="submit" className="btn btn-success">Proceed to checkout</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</form>
-							<div className="order-info" style={{display: 'none'}}>
-								<div className="content"/>
-							</div>
-						</div>
-						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+              </button>
+            </div>
+          </view> }
+          { this.state.activeViews === 'purchase-event-tickets' &&
+            <view name="purchase-event-tickets"
+                className={cx(this.state.activeViews === 'purchase-event-tickets' && s.active)}>
+            <h4 className="text-center"><strong>Sell Event Tickets</strong></h4>
+            <div className="order-form">
+              <form method="POST">
+                <div className="ticket-type-container">
+                  {
+                    this.state.settings && this.state.settings.tickeTypes && (this.state.settings.tickeTypes).map(item =>
+                      <div className="sale-card" key={item.typeId.toString()}>
+                        <div className="flex-row">
+                          <div className="flex-col">
+                            <div className="type-name"><strong>{item.name}</strong>
+                              (<span className="type-cost txt-sm gray"> ${item.price}</span>)
+                              <div className="pull-right">
+                                <div className="col-md-7">No Of Tickets</div>
+                                { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
+                                  <select className="form-control" name={item.typeId} data-price={item.price}
+                                          disabled = {moment(item.endDate).diff(moment()) <= 0}
+                                          onChange={this.selectHandle}
+                                          value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
+                                    {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
+                                  </select>
+                                </div> : ''}
+                                {
+                                  !item.remaniningTickets && <div className="col-md-5"> SOLD OUT </div>
+                                }
+                              </div>
+                            </div>
+                            <div
+                              className="sale-text txt-sm text-uppercase"> {moment(item.endDate).diff(moment()) > 0 ? "Available until " : "Sale Ended on "}
+                              <Moment format="MMMM D YYYY">{item.endDate}</Moment></div>
+                            {item.ticketsPerTable && item.ticketsPerTable > 0 ?
+                              <div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable}
+                                tickets</div> : ''}
+                            {/*<div className="txt-sm gray type-desc">
+                             sadfw
+                             </div>*/}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  }
+
+
+                  {/*<div className="sale-card">
+                   <div className="flex-row">
+                   <div className="flex-col">
+                   <div className="type-name">
+                   <strong>First ticket type</strong>
+                   (<span className="type-cost txt-sm gray"> $100.00 </span>)
+                   <div className="pull-right">
+                   <div className="col-md-7">No Of Tickets</div>
+                   <div className="col-md-5"> SOLD OUT </div>
+                   </div>
+                   </div>
+                   <div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
+                   </div>
+                   </div>
+                   </div>*/}
+                  <div className="status-bar clearfix mrg-t-lg">
+                    <div className="pull-left">
+                      <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
+                      <span
+                        className="total-price">{this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
+                    </div>
+                    <div className="pull-right">
+                      <button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
+                        checkout
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <div className="order-info" style={{display: 'none'}}>
+                <div className="content"/>
+              </div>
+            </div>
+            <div className="form-group text-center">
+              <button className="btn btn-white" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2324,43 +2402,43 @@ class Volunteer extends React.Component {
 														        ref={ref => {
                                       this.expYear = ref;
                                     }}>
-															<option value="2016">2016</option>
-															<option value="2017">2017</option>
-															<option value="2018">2018</option>
-															<option value="2019">2019</option>
-															<option value="2020">2020</option>
-															<option value="2021">2021</option>
-															<option value="2022">2022</option>
-															<option value="2023">2023</option>
-															<option value="2024">2024</option>
-															<option value="2025">2025</option>
-															<option value="2026">2026</option>
-															<option value="2027">2027</option>
-															<option value="2028">2028</option>
-															<option value="2029">2029</option>
-															<option value="2030">2030</option>
-															<option value="2031">2031</option>
-															<option value="2032">2032</option>
-															<option value="2033">2033</option>
-															<option value="2034">2034</option>
-															<option value="2035">2035</option>
-															<option value="2036">2036</option>
-															<option value="2037">2037</option>
-															<option value="2038">2038</option>
-															<option value="2039">2039</option>
-															<option value="2040">2040</option>
-															<option value="2041">2041</option>
-															<option value="2042">2042</option>
-															<option value="2043">2043</option>
-															<option value="2044">2044</option>
-															<option value="2045">2045</option>
-															<option value="2046">2046</option>
-															<option value="2047">2047</option>
-															<option value="2048">2048</option>
-															<option value="2049">2049</option>
-															<option value="2050">2050</option>
-														</select>
-													</div>
+
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
+                            </select>
+                          </div>
 
 
 												</div>
@@ -2441,17 +2519,19 @@ class AttendeesList extends React.Component {
 	}
 }
 const mapDispatchToProps = {
-	getItemStatusByCode: (eventUrl, itemCode) => getItemStatusByCode(eventUrl, itemCode),
-	getAttendees: (eventUrl) => getAttendees(eventUrl),
-	getUserByEmail: (eventUrl, itemCode, modeltype) => getUserByEmail(eventUrl, itemCode, modeltype),
-	setAttendees: (eventUrl, barcode, status) => setAttendees(eventUrl, barcode, status),
-	getAuctionItemStatusByCode: (eventUrl, itemCode) => getAuctionItemStatusByCode(eventUrl, itemCode),
-	submitBids: (eventUrl, userData) => submitBids(eventUrl, userData),
-	submitPledge: (eventUrl, userData) => submitPledge(eventUrl, userData),
-	sellTickets: (eventUrl, userData) => sellTickets(eventUrl, userData),
-	submitTickets: (eventUrl, userData) => submitTickets(eventUrl, userData),
-	submitDonate: (eventUrl, userData) => submitDonate(eventUrl, userData),
+  getItemStatusByCode: (eventUrl, itemCode) => getItemStatusByCode(eventUrl, itemCode),
+  getAttendees: (eventUrl) => getAttendees(eventUrl),
+  getUserByEmail: (eventUrl, itemCode,modeltype) => getUserByEmail(eventUrl, itemCode,modeltype),
+  setAttendees: (eventUrl, barcode,status) => setAttendees(eventUrl, barcode,status),
+  getAuctionItemStatusByCode: (eventUrl, itemCode) => getAuctionItemStatusByCode(eventUrl, itemCode),
+  submitBids: (eventUrl, userData) => submitBids(eventUrl, userData),
+  submitPledge: (eventUrl, userData) => submitPledge(eventUrl, userData),
+  sellTickets: (eventUrl, userData) => sellTickets(eventUrl, userData),
+  submitTickets: (eventUrl, userData) => submitTickets(eventUrl, userData),
+  submitDonate: (eventUrl, userData) => submitDonate(eventUrl, userData),
 	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
+	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+  doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
 };
 const mapStateToProps = (state) => ({
 	is_volunteer : state.event && state.event.is_volunteer,
