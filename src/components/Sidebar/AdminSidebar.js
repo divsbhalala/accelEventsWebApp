@@ -122,7 +122,7 @@ class AdminSiderbar extends React.Component {
 										</ul>
 									</li>
 									<li className>
-										<Link to="#" className="dropdown-toggle">
+										<Link to="#" className="dropdown-toggle" >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
 										</Link>
