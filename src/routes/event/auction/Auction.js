@@ -193,10 +193,10 @@ class Auction extends React.Component {
   }
   signupForm = (e) => {
     e.preventDefault();
-    this.setState({
-      loading:true,
-    })
-    //if (this.state.isValidData) {
+    if (this.state.emailValue && this.state.passwordValue && this.state.phone) {
+      this.setState({
+        loading:true,
+      })
       let userData={
         "countryCode": parse(this.state.phone).country,
         "email": this.state.emailValue,
@@ -204,24 +204,25 @@ class Auction extends React.Component {
         "phoneNumber": parse(this.state.phone).phone,
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
-          if(!resp.errorMessage){
+        if (resp && !resp.errors) {
             this.setState({
               showPopup: true,
               errorMsgCard: "Thank you for Registration!",
               popupHeader:"Successfully",
               loading:false,
             })
+          this.componentReRender();
           }
           else{
             this.setState({
               showPopup: true,
-              errorMsgCard: resp.errorMessage,
+              errorMsgCard: "Please enter Proper Detail",
               popupHeader:"Failed",
               loading:false,
             })
           }
       });
-    //}
+    }
   };
   emailValidateHandler = (e) => {
     this.setState({

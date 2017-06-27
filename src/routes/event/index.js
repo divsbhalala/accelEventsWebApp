@@ -23,7 +23,7 @@ export default {
       path: '/',
       async action(props) {
         return {
-          title,
+          title: "Event Page",
           component: <Layout params={props.params}><Event title={title} params={props.params}/></Layout>,
         };
       }
