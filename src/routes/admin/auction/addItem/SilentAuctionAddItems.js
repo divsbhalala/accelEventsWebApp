@@ -13,8 +13,43 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './SilentAuctionAddItems.css';
 import cx from 'classnames';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
+import Dropzone from 'react-dropzone';
+import request from 'superagent';
 
+const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
 class SilentAuctionAddItems extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			uploadedFileCloudinaryUrl: ''
+		};
+	}
+	onImageDrop(files) {
+		this.setState({
+			uploadedFile: files[0]
+		});
+
+		this.handleImageUpload(files[0]);
+	}
+	handleImageUpload(file) {
+		let upload = request.post(CLOUDINARY_UPLOAD_URL)
+			.field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+			.field('file', file);
+
+		upload.end((err, response) => {
+			if (err) {
+				console.error(err);
+			}
+
+			if (response.body.secure_url !== '') {
+				this.setState({
+					uploadedFileCloudinaryUrl: response.body.secure_url
+				});
+			}
+		});
+	}
   static propTypes = {
     title: PropTypes.string,
   };
@@ -55,6 +90,12 @@ class SilentAuctionAddItems extends React.Component {
                                 item. After their first bid they will be asked to confirm their
                                 bid by replying to the text message with their first and last
                                 name.</p>
+	                            <Dropzone
+		                            multiple={true}
+		                            accept="image/*"
+		                            onDrop={this.onImageDrop.bind(this)}>
+		                            <p>Drop an image or click to select a file to upload.</p>
+	                            </Dropzone>
                               <div className="text-left mrg-t-md">
                                 <button className="btn btn-info add-new-item mrg-t-lg"> &nbsp; Add Item &nbsp; </button>
                               </div>
@@ -121,6 +162,12 @@ class SilentAuctionAddItems extends React.Component {
                                                     <span>Drop files here to upload</span>
                                                   </div>
                                                 </div>
+	                                              <Dropzone
+		                                              multiple={true}
+		                                              accept="image/*"
+		                                              onDrop={this.onImageDrop.bind(this)}>
+		                                              <p>Drop an image or click to select a file to upload.</p>
+	                                              </Dropzone>
                                               </div>
                                             </div>
                                             <div className="col-md-4">
