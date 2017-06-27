@@ -15,6 +15,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
+import Link from '../../../components/Link';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -352,19 +353,15 @@ class Fund extends React.Component {
         cardHolder: true
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
 
   };
   cardNumberValidateHandler = (e) => {
-
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
     });
-
-
     if (this.cardNumber.value == '') {
-
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
@@ -379,7 +376,7 @@ class Fund extends React.Component {
         cardNumber: true
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
 
   };
   amountValidateHandler = (e) => {
@@ -426,7 +423,7 @@ class Fund extends React.Component {
         cvv: true
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
   };
   phoneNumberValidateHandler = (e) => {
 
@@ -523,10 +520,10 @@ class Fund extends React.Component {
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
-                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} dynamicHeight emulateTouch>
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false} dynamicHeight emulateTouch>
                             {this.state.fundData && this.state.fundData.images.length > 0 ?
                               this.state.fundData.images.map((item, index) =>
-                                <ImageList key={index} item={item}/>
+                                <ImageList key={index} item={item} />
                               ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
@@ -740,8 +737,6 @@ class Fund extends React.Component {
                                           <option value="2050">2050</option>
                                         </select>
                                       </div>
-
-
                                     </div>
                                   </div>
                                   <div className="col-md-4">
@@ -854,13 +849,15 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <Button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')}
+                        <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
                                 role="button" type="submit"
-                                loading={this.state.loading}>
+                                loading={this.state.loading} >
                           Submit Pledge
                         </Button>
-                        <a role="button" className="btn btn-success"
-                           href={this.props.params && "/event/" + this.props.params.params }>Go back to All Items</a>
+                        <Link to={this.props.params && "/event/" + this.props.params.params }>
+                          <a role="button" className="btn btn-success"
+                             >Go back to All Items</a>
+                        </Link>
                       </form>
                     </div>
                   </div>

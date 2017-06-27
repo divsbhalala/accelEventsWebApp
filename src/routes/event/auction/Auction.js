@@ -14,6 +14,7 @@ import PopupModel from './../../../components/PopupModal';
 import Phone from 'react-phone-number-input'
 import { parse,isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
+import Link from '../../../components/Link';
 
 class Auction extends React.Component {
   static propTypes = {
@@ -126,6 +127,9 @@ class Auction extends React.Component {
     }}
   };
   placeBid = () => {
+    this.setState({
+      loading:true,
+    })
       const user = {
         email: this.props.user.email,
         countryCode: parse(this.state.phone).country,
@@ -145,12 +149,14 @@ class Auction extends React.Component {
              // errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue.slice( - 4) + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
               errorMsgCard:resp.message,
               popupHeader:"Successfully",
+              loading:false,
             })
           }else{
             this.setState({
               showPopup: true,
               errorMsgCard: resp.errorMessage,
-              popupHeader:"Failed"
+              popupHeader:"Failed",
+              loading:false,
             });
           }
         });
@@ -185,6 +191,11 @@ class Auction extends React.Component {
   }
   signupForm = (e) => {
     e.preventDefault();
+    this.setState({
+      emailFeedBack:true,
+      phoneNumberFeedBack:true,
+      passwordFeedBack:true,
+    })
     if (this.state.emailValue && this.state.passwordValue && this.state.phone) {
       this.setState({
         loading:true,
@@ -409,7 +420,6 @@ class Auction extends React.Component {
     }
    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
-
   componentWillMount() {
     Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -430,7 +440,7 @@ class Auction extends React.Component {
       }).catch(error => {
       console.log(error)
     });
-  }
+  };
   componentReRender = () => {
     Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -451,8 +461,7 @@ class Auction extends React.Component {
       }).catch(error => {
       console.log(error)
     });
-  }
-
+  };
   showPopup = () => {
     this.setState({
       showPopup: true
@@ -466,7 +475,8 @@ class Auction extends React.Component {
   };
   reRender = ()=>{
     window.location.reload();
-  }
+  };
+
   render() {
     let form_login = <div>
       <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
@@ -509,6 +519,9 @@ class Auction extends React.Component {
 
             <label className="control-label">Cell Number</label>
               <div className="input-group">
+                <div className="input-group-addon">
+                  <i className="fa fa-phone" aria-hidden="true"/>
+                </div>
                 <Phone
                   placeholder="Enter phone number"
                   className="form-control"
@@ -552,7 +565,7 @@ class Auction extends React.Component {
           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
         </div>
-        <Button className={cx("btn btn-primary text-uppercase", this.state.isValidData && 'disabled')} role="button"
+        <Button className={cx("btn btn-primary text-uppercase")}  disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
                 loading={this.state.loading}   type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
           SUBMIT
         </Button>
@@ -779,7 +792,7 @@ class Auction extends React.Component {
         </div>
       </div></div> : "" }
 <div className="col-sm-3">
-      <button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')} role="button"
+      <button className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
               type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
         Submit bid
       </button>
@@ -976,8 +989,6 @@ class Auction extends React.Component {
                         <option value="2050">2050</option>
                       </select>
                     </div>
-
-
                   </div>
                 </div>
                 <div className="col-md-4">
@@ -1012,15 +1023,18 @@ class Auction extends React.Component {
           </div></div> : "" }
 
       <div className="col-sm-3">
-        <button className={cx("btn btn-primary text-uppercase", !this.state.isValidBidData && 'disabled')} role="button"
+        <button className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                 type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
           Submit bid
         </button>
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6">
-        <a role="button" className="btn btn-success btn-block" href={this.props.params && "/event/" + this.props.params.params }>
-          Go back to All Items</a></div>
+        <Link to={this.props.params && "/event/" + this.props.params.params }>
+          <a role="button" className="btn btn-success btn-block" >
+            Go back to All Items</a>
+        </Link>
+       </div>
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
       className="current-bid">400</span></div>;
@@ -1044,7 +1058,7 @@ class Auction extends React.Component {
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
-                          <Carousel axis="horizontal" showThumbs={false} showArrows={true}  >
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false} >
                             {this.state.auctionData && this.state.auctionData.images.length > 0 ?
                               this.state.auctionData.images.map((item, index) =>
                                 <ImageList key={index} item={item}/>
@@ -1099,7 +1113,7 @@ class Auction extends React.Component {
             <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
               { this.state && this.state.errorMsgCard }
               <div className="modal-footer">
-                {this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.placeBid} >Confirm</button> : ""}
+                {this.state.popupHeader == "Success" ? <Button className="btn btn-success" onClick={this.placeBid} loading={this.state.loading} >Confirm</Button> : ""}
                 {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount} loading={this.state.loading}>Confirm</Button> : ""}
                 <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
               </div>

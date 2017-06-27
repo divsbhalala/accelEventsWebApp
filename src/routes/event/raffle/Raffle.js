@@ -17,13 +17,12 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import  {Carousel} from 'react-responsive-carousel';
 import PopupModel from './../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
-
+import Link from '../../../components/Link';
 
 class Raffle extends React.Component {
   static propTypes = {
     title: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -326,7 +325,7 @@ class Raffle extends React.Component {
     if (this.tickets.value == '') {
       errorMsgTickets= "Number Of Tickets can't be empty"
       tickets=false
-    }else if ( this.state.raffleData.availableTickets  < this.tickets.value) {
+    }else if ( this.state.raffleData.availableTickets  < this.tickets.value || this.tickets.value <= 0) {
       errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets
       tickets=false
     } else {
@@ -356,7 +355,6 @@ class Raffle extends React.Component {
       });
     }
   };
-
   componentWillMount() {
     Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -641,11 +639,9 @@ class Raffle extends React.Component {
       errorMsgCard : false,
     })
   };
-
   reRender = ()=>{
     //window.location.reload();
   };
-  //submitTickets
   render() {
     let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
                            action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
@@ -726,13 +722,16 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button  className={cx("btn btn-primary text-uppercase",  s.btnFull,!this.state.isValidData && 'disabled')} role="button"
+          <Button  className={cx("btn btn-primary text-uppercase",  s.btnFull)} disabled={!this.state.isValidData } role="button"
                    type="submit"  loading={this.state.loading}> Submit Ticket</Button>
 
         </div>
         <div className="col-md-6 col-lg-5">
-        <a role="button" className="btn btn-success btn-block" href={this.props.params && "/event/" + this.props.params.params }>
-            Go back to All Items</a>
+          <Link to={this.props.params && "/event/" + this.props.params.params }>
+            <a role="button" className="btn btn-success btn-block" >
+              Go back to All Items</a>
+          </Link>
+
         </div>
       </div>
       <div className="row mrg-t-md">
@@ -772,10 +771,10 @@ class Raffle extends React.Component {
                     <div className="col-md-6">
                       <div className="pad-l-md pad-r-md">
                         <div className="item-image">
-                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} >
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false} >
                             {this.state.raffleData && this.state.raffleData.images.length > 0 ?
                               this.state.raffleData.images.map((item, index) =>
-                                <ImageList key={index} item={item}/>
+                                <ImageList key={index} item={item} />
                               ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
