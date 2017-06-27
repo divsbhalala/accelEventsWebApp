@@ -1,6 +1,6 @@
 {
-  "name": "LoginLayout",
+  "name": "AdminLayout",
   "version": "0.0.0",
   "private": true,
-  "main": "./LoginLayout.js"
+  "main": "./AdminLayout.js"
 }
