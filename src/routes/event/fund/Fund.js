@@ -10,6 +10,7 @@ import {doGetEventData, doGetSettings,doSignUp,fundaNeed} from './../action/inde
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
+import LoginModal from '../../../components/LoginModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
 import  {doGetFundANeedItemByCode} from './../action/index';
@@ -18,6 +19,8 @@ import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
 import Phone from 'react-phone-number-input'
 import { parse,isValidNumber} from 'libphonenumber-js'
+
+
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -26,6 +29,7 @@ class Fund extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isShowLoginModal:false,
       settings: null,
       showBookingTicketPopup: false,
       showMapPopup: false,
@@ -305,270 +309,6 @@ class Fund extends React.Component {
 
   };
 
- //
- //  amountValidateHandler = (e) => {
- //    let amount=true
- //    let errorMsgAmount=""
- //    if (this.amount.value == '') {
- //      errorMsgAmount= "Bid Amount can't be empty"
- //      amount=false
- //    }else if (this.state.fundData.pledgePrice  > this.amount.value) {
- //      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)
- //      //errorMsgAmount= " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.fundData.name ,
- //      amount=false
- //    } else {
- //      amount=true
- //    }
- //    this.setState({
- //      isValidBidData: ( this.amount.value && amount),
- //      amount:amount,
- //      amountFeedBack: true,
- //      errorMsgAmount:errorMsgAmount,
- //      amountValue:this.amount.value
- //    });
- //   // console.log(this.state.isValidBidData,this.amount.value , this.state.amount)
- //  };
- //  cvvValidateHandler = (e) => {
- //
- //    this.setState({
- //      cvvFeedBack: true
- //    });
- //
- //    if (this.cvv.value == '') {
- //
- //      this.setState({
- //        cvv: false,
- //        errorMsgcvv: "The CVV is required and can't be empty",
- //      });
- //    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
- //      this.setState({
- //        cvv: false,
- //        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
- //      });
- //    } else {
- //      this.setState({
- //        cvv: true
- //      });
- //    }
- // //   this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
- //  };
- //  phoneNumberValidateHandler = (e) => {
- //
- //    this.setState({
- //      phoneNumberFeedBack: true,
- //      phoneNumberValue:this.phoneNumber.value,
- //    });
- //
- //    if (this.phoneNumber.value == '') {
- //
- //      this.setState({
- //        phoneNumber: false,
- //        errorMsgPhoneNumber: "phoneNumber is Require",
- //      });
- //    }  else {
- //      this.setState({
- //        phoneNumber: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //  expMonthValidateHandler = (e) => {
- //    this.setState({
- //      expMonthFeedBack: true,
- //      expMonthValue:this.expMonth.value,
- //    });
- //    if (this.expMonth.value == '') {
- //      this.setState({
- //        expMonth: false,
- //        errorMsgExpMonth: "Expire Month is Require",
- //      });
- //    }  else {
- //      this.setState({
- //        expMonth: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //  expYearValidateHandler = (e) => {
- //    this.setState({
- //      expYearFeedBack: true,
- //      expYearValue:this.expYear.value,
- //    });
- //    if (this.expYear.value == '') {
- //      this.setState({
- //        expYear: false,
- //        errorMsgexpYear: "Expire Year is Require",
- //      });
- //    }  else {
- //      this.setState({
- //        expYear: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //
- //  firstNameValidateHandler = (e) => {
- //    this.setState({
- //      firstNameFeedBack: true,
- //      firstNameValue:this.firstName.value
- //    });
- //    if (this.firstName.value == '') {
- //      this.setState({
- //        firstName: false
- //      });
- //    } else {
- //      this.setState({
- //        firstName: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
- //
- //  };
- //  lastNameValidateHandler = (e) => {
- //    this.setState({
- //      lastNameFeedBack: true,
- //      lastNameValue: this.lastName.value,
- //    });
- //
- //    if (this.lastName.value == '') {
- //
- //      this.setState({
- //        lastName: false
- //      });
- //    } else {
- //      this.setState({
- //        lastName: true
- //      });
- //    }
- //    //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //
- //  };
- //  cardHolderValidateHandler = (e) => {
- //
- //    this.setState({
- //      cardHolderFeedBack: true,
- //      cardHolderValue:this.cardHolder.value,
- //    });
- //
- //    if (this.cardHolder.value == '') {
- //
- //      this.setState({
- //        cardHolder: false,
- //        errorMsgcardHolder: "The card holder name is required and can't be empty",
- //      });
- //    } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
- //      this.setState({
- //        cardHolder: false,
- //        errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
- //      });
- //    } else {
- //      this.setState({
- //        cardHolder: true
- //      });
- //    }
- //    //this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //
- //  };
- //  cardNumberValidateHandler = (e) => {
- //    this.setState({
- //      cardNumberFeedBack: true,
- //      cardNumberValue:this.cardNumber.value,
- //    });
- //    if (this.cardNumber.value == '') {
- //      this.setState({
- //        cardNumber: false,
- //        errorMsgcardNumber: "Enter Card Number ",
- //      });
- //    } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
- //      this.setState({
- //        cardNumber: false,
- //        errorMsgcardNumber: " Please enter a Valid Card Number ",
- //      });
- //    } else {
- //      this.setState({
- //        cardNumber: true
- //      });
- //    }
- //    //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //  cvvValidateHandler = (e) => {
- //
- //    this.setState({
- //      cvvFeedBack: true,
- //      ccvValue:this.cvv.value,
- //    });
- //
- //    if (this.cvv.value == '') {
- //
- //      this.setState({
- //        cvv: false,
- //        errorMsgcvv: "The CVV is required and can't be empty",
- //      });
- //    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
- //      this.setState({
- //        cvv: false,
- //        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
- //      });
- //    } else {
- //      this.setState({
- //        cvv: true
- //      });
- //    }
- //    //this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //  phoneNumberValidateHandler = (e) => {
- //    this.setState({
- //      phoneNumberFeedBack: true,
- //      phoneNumberValue:this.phoneNumber.value,
- //    });
- //    if (this.phoneNumber.value == '') {
- //      this.setState({
- //        phoneNumber: false,
- //        errorMsgPhoneNumber: "phoneNumber is Require",
- //      });
- //    }  else {
- //      this.setState({
- //        phoneNumber: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //  expMonthValidateHandler = (e) => {
- //    this.setState({
- //      expMonthFeedBack: true,
- //      expMonthValue:this.expMonth.value,
- //    });
- //    if (this.expMonth.value == '') {
- //      this.setState({
- //        expMonth: false,
- //        errorMsgExpMonth: "Expire Month is Require",
- //      });
- //    }  else {
- //      this.setState({
- //        expMonth: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
- //  expYearValidateHandler = (e) => {
- //    this.setState({
- //      expYearFeedBack: true,
- //      expYearValue:this.expYear.value,
- //    });
- //    if (this.expYear.value == '') {
- //      this.setState({
- //        expYear: false,
- //        errorMsgexpYear: "Expire Year is Require",
- //      });
- //    }  else {
- //      this.setState({
- //        expYear: true
- //      });
- //    }
- //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
- //  };
-
-
   firstNameValidateHandler = (e) => {
     this.setState({
       firstNameFeedBack: true,
@@ -809,7 +549,6 @@ class Fund extends React.Component {
   };
 
   checkIsValidBidData = () =>{
-    console.log(" this.state.lastName ", this.state.lastName )
     let valid1=true;
     let valid2=true;
     let flag=true;
@@ -888,6 +627,16 @@ class Fund extends React.Component {
       showMapPopup: false
     })
    this.componentRernder();
+  };
+  hideLoginModal  = () => {
+    this.setState({
+      isShowLoginModal:false,
+    })
+  };
+  showLoginModal = () => {
+    this.setState({
+      isShowLoginModal:true,
+    })
   };
   render() {
     return (
@@ -990,7 +739,7 @@ class Fund extends React.Component {
 
                         { !this.props.authenticated &&
                         <div>
-                          <h4><a role="button" href="#login-user" data-toggle="modal" data-form="login">Log in</a> or Sign
+                          <h4><a role="button" href="#login-user" onClick={this.showLoginModal} data-toggle="modal" data-form="login">Log in</a> or Sign
                             up below</h4>
                           <div
                             className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
@@ -1273,6 +1022,7 @@ class Fund extends React.Component {
             </div>
           </div>
         </PopupModel>
+        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params}/>
       </div>
     );
   }
