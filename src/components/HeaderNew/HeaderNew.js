@@ -27,7 +27,7 @@ import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import s from './../../routes/login/Login.css';
 import _ from 'lodash';
-import {onFormSubmit, doLogin, storeLoginData, storeToken, doSignUp} from './../../routes/event/action/index';
+import {onFormSubmit, doLogin, storeLoginData, storeToken, doSignUp, isVolunteer} from './../../routes/event/action/index';
 
 const logo = require('./logo.png');
 
@@ -54,6 +54,10 @@ class HeaderNew extends React.Component {
 		this.logout = this.logout.bind(this);
 		this.showContactPopup = this.showContactPopup.bind(this);
 		this.hideContactPopup = this.hideContactPopup.bind(this);
+	}
+
+	componentWillReceiveProps(){
+		console.log("componentWillReceiveProps", this.props.authenticated)
 	}
 
 	onFormClick = (e) => {
@@ -109,6 +113,9 @@ class HeaderNew extends React.Component {
 			this.props.doLogin(this.email.value, this.password.value).then((resp) => {
 				if (!resp.errorMessage) {
 					this.setState({error: "Log In SuccessFully"});
+					this.setState({
+						showLoginPopup: false
+					})
 					//window.location.reload();
 				}
 				else {
@@ -245,7 +252,7 @@ class HeaderNew extends React.Component {
 						<MenuItem eventKey="1" onClick={this.showContactPopup}>
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
 						</MenuItem>
-						{ event && this.props.isVolunteer && <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
+						{ event && this.props.is_volunteer && <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
 							Volunteer
 						</MenuItem>}
 						{ event &&
@@ -552,12 +559,13 @@ function toggleMenu() {
 
 //export default HeaderNew;
 const mapDispatchToProps = {
+	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
 	doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
 	doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
 };
 
 const mapStateToProps = (state) => ({
-	isVolunteer : state.event && state.event.is_volunteer,
+	is_volunteer : state.event && state.event.is_volunteer,
 	user : state.session && state.session.user,
 	authenticated : state.session && state.session.authenticated,
 });
