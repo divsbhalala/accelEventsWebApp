@@ -535,7 +535,6 @@ class Event extends React.Component {
 			})
 		})
 	}
-
 	selectHandle(e) {
 		let totalTickets = this.state.totalTickets;
 		totalTickets[e.target.name] = {
@@ -554,7 +553,6 @@ class Event extends React.Component {
 			totalTicketPrice: totalPrice,
 		});
 	}
-
 	setFilterCategory = (category)=> {
 		if (this.props.active_tab_data && this.props.active_tab_data.tab) {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
@@ -625,7 +623,6 @@ class Event extends React.Component {
 			}
 		}
 	};
-
 	handleScroll(event) {
 		/*if(this.props.title && this.props.title=='Event Page'){
 		 var body  = document.querySelector('body');
@@ -637,7 +634,6 @@ class Event extends React.Component {
 		 }*/
 
 	}
-
 	doOrderTicket() {
 		let Data = {};
 		Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
