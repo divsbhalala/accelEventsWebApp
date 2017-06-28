@@ -420,7 +420,7 @@ class Raffle extends React.Component {
     //   });
     // }
   };
-  byTicket = () => {
+  buyTicket = () => {
     this.setState({
       loading:true,
       emailFeedBack: true,
@@ -448,7 +448,7 @@ class Raffle extends React.Component {
             popupHeader:"Confirm",
             loading:false,
           })
-          //this.submiteByTicket();
+          //this.submiteBuyTicket();
         }
         else{
           this.setState({
@@ -483,10 +483,10 @@ class Raffle extends React.Component {
           loading:false,
         })
       }
-      //this.submiteByTicket();
+      //this.submiteBuyTicket();
     }
   };
-  submiteByTicket = (e) => {
+  submiteBuyTicket = (e) => {
     e.preventDefault();
     this.setState({
       loading:true,
@@ -678,7 +678,7 @@ class Raffle extends React.Component {
                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
-                           onSubmit={this.submiteByTicket}>
+                           onSubmit={this.submiteBuyTicket}>
       <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
         { this.state.errorMsg }</div>
 
@@ -779,8 +779,8 @@ class Raffle extends React.Component {
       <a role="button" className="btn btn-success btn-block" href="#login-user" data-toggle="modal" data-form="login">Login</a>
       <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
          onClick={this.showDonatePopup} >Get Tickets</a>
-      <a role="button" className="btn btn-success btn-block"
-         href={this.props.params && "/event" + this.props.params.params } >Go back to All Items</a>
+      <Link role="button" className="btn btn-success btn-block"
+         to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
     </div>;
 
     return (
@@ -1133,7 +1133,7 @@ class Raffle extends React.Component {
                         htmlFor="uptodate">Stay up to date with Accelevents</label>
                       </div>
                     </div></div> : "" }
-                {this.state.popupTicketHeader == "Pay Now" ? <Button className="btn btn-success"  role="button" type="submit"  loading={this.state.loading} onClick={this.byTicket} >Pay Now</Button>
+                {this.state.popupTicketHeader == "Pay Now" ? <Button className="btn btn-success"  role="button" type="submit"  loading={this.state.loading} onClick={this.buyTicket} >Pay Now</Button>
                : <button className="btn badge-danger" onClick={this.hideTicketsPopup}>Close</button> }
               </form>
             </div>
@@ -1148,7 +1148,7 @@ class Raffle extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state.errorMsg }
             <div className="modal-footer">
-              {/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}*/}
+              {/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.buyTicket} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <Button loading={this.state.loading} className="btn btn-success" onClick={this.purchaseTicket} >Confirm</Button> : ""}
               <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>

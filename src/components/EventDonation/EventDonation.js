@@ -21,14 +21,16 @@ class EventDonation extends React.Component {
     linkTarget: PropTypes.string,
     actionTitle: PropTypes.string,
     actionClassName: PropTypes.string,
+	  defaultSelectAmount: PropTypes.number,
     imageUrl: PropTypes.string,
     data: PropTypes.array,
+    donations: PropTypes.array,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      donationRate: 15,
+      donationRate: 0,
       cardUser:{},
       showDonationPopup: false,
       isValidData: false,
@@ -320,11 +322,18 @@ class EventDonation extends React.Component {
   };
 
   componentDidMount(){
-    console.log("this.props.stripeKey", this.props.stripeKey);
     if(this.props.stripeKey){
       Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     }
   }
+	componentWillReceiveProps(){
+		console.log("this.props.defaultSelectAmount", this.props.defaultSelectAmount)
+		if(this.props.defaultSelectAmount){
+			this.setState({
+				donationRate : this.props.defaultSelectAmount
+			})
+		}
+	}
   showDonationPopup = () => {
 
     this.setState({
@@ -375,7 +384,6 @@ class EventDonation extends React.Component {
       this.showDonationConfirmationPopup();
     }
   }
-
   doGetStripeToken = ()=>{
     let self = this;
     const card = {
@@ -439,40 +447,21 @@ class EventDonation extends React.Component {
       <div id="donationfrom" className={cx("col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10")}>
         { this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-danger">{this.state.errorMsg}</p> }
         { !this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-success">{this.state.errorMsg}</p> }
-
         <div className={cx("form-group")}>
           <div className={cx("btn-group")} data-toggle="buttons">
-
-            <label className={cx("btn", this.state.donationRate == 5 ? 'active' : '')}>
-              <input type="radio" autoComplete="off" name="donate5" className={cx("default-amount")} defaultValue="5"
-                     onChange={this.handleRadioChange}/>
-              <span className={cx("fa fa-usd")}></span>
-              5
-            </label>
-
-            <label className={cx("btn", this.state.donationRate == 15 ? 'active' : '')}>
-              <input type="radio" autoComplete="off" name="donate15" className={cx("default-amount")} defaultValue="15"
-                     onChange={this.handleRadioChange}/>
-              <span className={cx("fa fa-usd")}></span>
-              15
-            </label>
-
-            <label className={cx("btn", this.state.donationRate == 30 ? 'active' : '')}>
-              <input type="radio" autoComplete="off" name="donate30" className={cx("default-amount")} defaultValue="30"
-                     onChange={this.handleRadioChange}/>
-              <span className={cx("fa fa-usd")}></span>
-              30
-            </label>
-
-            <label className={cx("btn", this.state.donationRate == 50 ? 'active' : '')}>
-              <input type="radio" autoComplete="off" name="donate50" className={cx("default-amount")} defaultValue="50"
-                     onChange={this.handleRadioChange}/>
-              <span className={cx("fa fa-usd")}></span>
-              50
-            </label>
+            {
+              this.props.donations ? this.props.donations.map(item=>
+                <label key={Math.random()} className={cx("btn", this.state.donationRate == item ? 'active' : '')}>
+                  <input type="radio" autoComplete="off" name="donate5" className={cx("default-amount")} defaultValue={item}
+                         onChange={this.handleRadioChange}/>
+                  <span className={cx("fa fa-usd")}></span>
+                  {item}
+                </label>
+              ) : ""
+            }
           </div>
         </div>
-        <div className={cx("form-group")}>
+	      { this.props.donations && <div className={cx("form-group")}>
           <div className={cx("input-group")}>
             <div className={cx("input-group-addon")}>
               $
@@ -480,13 +469,13 @@ class EventDonation extends React.Component {
             <input type="number" className={cx("form-control")} name="amount" value={this.state.donationRate}
                    onChange={this.handleRadioChange}/>
           </div>
-        </div>
+        </div>}
         <input type="hidden" name="" value=""/>
         {/*Do NOT use name="submit" or id="submit" for the Submit button*/ }
-        <a role="button" className={cx("btn open-donate-modal")} onClick={this.showDonationPopup}>
+	      {this.props.donations && <a role="button" className={cx("btn open-donate-modal")} onClick={this.showDonationPopup}>
           <img src="/images/hand.svg"/>
           Donate
-        </a>
+        </a>}
         <PopupModel
           id="mapPopup"
           showModal={this.state.showDonationPopup}

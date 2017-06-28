@@ -843,7 +843,7 @@ class Event extends React.Component {
 											</div>
 										</Tab>
 										<Tab label="Donation" disabled={!this.state.activeDonation}>
-											<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params}/>
+											<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
 											</div>
 										</Tab>
 									</Tabs>
