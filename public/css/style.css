@@ -2277,3 +2277,15 @@ span.navbar-brand:hover a
 .min-h-300{
   min-height:300px;
 }
+.m-r-5{
+  margin-right: 5px !important;
+}
+.m-l-5{
+  margin-left: 5px !important;
+}
+.m-t-5{
+  margin-top: 5px !important;
+}
+.m-b-5{
+  margin-bottom: 5px !important;
+}
