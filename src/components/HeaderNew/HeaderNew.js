@@ -298,8 +298,8 @@ class HeaderNew extends React.Component {
 			let contactData={};
 			if(!this.props.authenticated){
 				contactData = {
-					name : this.email.value,
-					email : this.name.value,
+					email : this.email.value,
+					name : this.name.value,
 				}
 			}
 			contactData.message=this.message.value;
