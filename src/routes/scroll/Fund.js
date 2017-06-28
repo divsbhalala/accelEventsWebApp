@@ -84,13 +84,13 @@ class Fund extends React.Component {
                     <div className={cx("main-box-body clearfix")}>
                       <div className={cx("project-box-header gray-bg")}>
                         <div className={cx("name")}>
-                          <a href="#">Total Proceeds</a>
+                         <a href="#">Total Proceeds</a>
                         </div>
                       </div>
                       <div className={cx("project-box-content")}>
                         <div className={cx("value text-center")}>
                           <div className={cx("ticker big")}>
-                            <span className="total-funds-raised">{this.state.settings.totalFundRaised}</span>
+                            <span className="total-funds-raised">${this.state.settings.totalFundRaised}</span>
                           </div>
                         </div>
                       </div>

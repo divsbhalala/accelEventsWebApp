@@ -29,17 +29,12 @@ class Raffle extends React.Component {
       tab: 'The Event',
       showBookingTicketPopup: false,
       showMapPopup: true,
-
-
       firstNameFeedBack: false,
       ticketsFeedBack: false,
       lastNameFeedBack: false,
       showAlertPopup : false,
-      showDonationPopup : false,
-
+      showTicketsPopup : false,
       errorMsgCard:null,
-
-
       isValidData: false,
       email: null,
       password: null,
@@ -47,9 +42,7 @@ class Raffle extends React.Component {
       emailFeedBack: false,
       passwordFeedBack: false,
       auctionData: null,
-
       isValidBidData: false,
-
       firstName: null,
       lastName: null,
       cardNumber: null,
@@ -62,7 +55,6 @@ class Raffle extends React.Component {
       expYear: null,
       phoneNumber: null,
       popupHeader:null,
-
       firstNameValue: null,
       lastNameValue: null,
       cardNumberValue: null,
@@ -77,13 +69,13 @@ class Raffle extends React.Component {
       passwordValue:null,
       phoneNumberValue:null,
       tickets:null,
-
       cardNumberFeedBack: false,
       cardHolderFeedBack: false,
+      expYearFeedBack: false,
+      expMonthFeedBack: false,
       amountFeedBack: false,
       cvvFeedBack: false,
       phoneNumberFeedBack: false,
-
       errorReg: null,
       errorMsgfirstName: null,
       errorMsglastName: null,
@@ -96,11 +88,10 @@ class Raffle extends React.Component {
       errorMsgPhoneNumber: null,
       errorMsg: null,
       errorMsgTickets:null,
-
       showPopup: false,
       stripeToken:null,
       submittedTickets:null,
-      showDonationPopup:false,
+      showTicketsPopup:false,
       raffleTicketValue:null,
       popupTicketHeader: "Pay Now",
       loading:false,
@@ -115,6 +106,7 @@ class Raffle extends React.Component {
     }
 
   };
+
   emailValidateHandler = (e) => {
 
     this.setState({
@@ -313,7 +305,7 @@ class Raffle extends React.Component {
       });
     }  else {
       this.setState({
-        phoneNumber: true
+        expYear: true
       });
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
@@ -355,6 +347,7 @@ class Raffle extends React.Component {
       });
     }
   };
+
   componentWillMount() {
     Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -399,39 +392,46 @@ class Raffle extends React.Component {
   };
   buyRaffleTicket = (e) => {
     e.preventDefault();
-
-    var self = this;
-    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
-    if (this.state.cardNumber && this.state.cardHolder  && this.state.cvv) {
-      const card = {
-        number: this.cardNumber.value,
-        cvc: this.cvv.value,
-        exp_month: this.expMonth.value,
-        exp_year: this.expYear.value,
-      }
-      Stripe.createToken(card, function (status, response) {
-        if (response.error) {
-          self.setState({
-            showAlertPopup: true,
-            errorMsgCard: response.error.message,
-            popupAlertHeader:"Failed"
-          });
-        } else {
-          self.setState({
-            showAlertPopup: true,
-            errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  ",//for  " +  self.state.raffleData.name ,
-            popupAlertHeader:"Success",
-            stripeToken: response.id,
-          })
-        }
-      });
-    }
+    // var self = this;
+    // this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
+    // //console.log("this.state.cardNumber && this.state.cardHolder  && this.state.cvv",this.state.cardNumber && this.state.cardHolder  && this.state.cvv)
+    // if (this.state.cardNumber && this.state.cardHolder  && this.state.cvv) {
+    //   const card = {
+    //     number: this.cardNumber.value,
+    //     cvc: this.cvv.value,
+    //     exp_month: this.expMonth.value,
+    //     exp_year: this.expYear.value,
+    //   }
+    //   Stripe.createToken(card, function (status, response) {
+    //     if (response.error) {
+    //       self.setState({
+    //         showAlertPopup: true,
+    //         errorMsgCard: response.error.message,
+    //         popupAlertHeader:"Failed"
+    //       });
+    //     } else {
+    //       self.setState({
+    //         showAlertPopup: true,
+    //         errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  ",//for  " +  self.state.raffleData.name ,
+    //         popupAlertHeader:"Success",
+    //         stripeToken: response.id,
+    //       })
+    //     }
+    //   });
+    // }
   };
   byTicket = () => {
     this.setState({
       loading:true,
+      emailFeedBack: true,
+      passwordFeedBack:true,
+      cardHolderFeedBack:true,
+      cardNumberFeedBack:true,
+      firstNameFeedBack:true,
+      lastNameFeedBack:true,
+      expMonthFeedBack:true,
+      expYearFeedBack:true,
     })
-    console.log("this.state",this.props.authenticated , this.state.emailValue ,  this.state.passwordValue , this.state.phoneNumberValue ,  this.state.cardHolderValue ,  this.state.cardNumberValue , this.state.expYearValue , this.state.expMonthValue , this.state.ccvValue )
     if (!this.props.authenticated && this.state.emailValue &&  this.state.passwordValue && this.state.phoneNumberValue &&  this.state.cardHolderValue &&  this.state.cardNumberValue && this.state.expYearValue && this.state.expMonthValue && this.state.ccvValue ) {
       let userData={
         "countryCode": "IN",
@@ -443,8 +443,8 @@ class Raffle extends React.Component {
         if(!resp.error){
           this.setState({
             showAlertPopup:true,
-            showDonationPopup:false,
-            errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.raffleData.name ,
+            showTicketsPopup:false,
+            errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  this.state.raffleData.name ,
             popupHeader:"Confirm",
             loading:false,
           })
@@ -462,13 +462,20 @@ class Raffle extends React.Component {
       });
     }else{
       if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ){
-        this.setState({
-          showAlertPopup:true,
-          showDonationPopup:false,
-          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.raffleData.name ,
-          popupHeader:"Confirm",
-          loading:false,
-        })
+       if(this.state.cvv && this.state.cardHolder && this.state.cardNumber && this.state.expMonth && this.state.expYear){
+         this.setState({
+           showAlertPopup:true,
+           showTicketsPopup:false,
+           errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  this.state.raffleData.name ,
+           popupHeader:"Confirm",
+           popupAlertHeader:"Confirm",
+           loading:false,
+         })
+       }else {
+         this.setState({
+           loading:false,
+         })
+       }
       }else if(this.props.authenticated){
           this.purchaseTicket();
       }else{
@@ -515,7 +522,6 @@ class Raffle extends React.Component {
     this.setState({
       loading:true,
     })
-    console.log("d",this.state)
     if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
       const user = {
         compTicketCode: this.state.raffleData.code,
@@ -524,7 +530,7 @@ class Raffle extends React.Component {
       this.props.purchaseTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
           // let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          if (resp ) {
+          if (resp && !resp.errorMessage) {
             this.setState({
               showPopup: true,
               errorMsg: resp.message,
@@ -538,7 +544,8 @@ class Raffle extends React.Component {
               showPopup: true,
               errorMsg: resp.errorMessage,
               loading:false,
-             // popupHeader:"Failed"
+              popupHeader:'Failed',
+              popupTicketHeader:"Close",
             });
           }
         });
@@ -617,16 +624,16 @@ class Raffle extends React.Component {
     })
    // this.reRender();
   };
-  hideDonationPopup = () => {
+  hideTicketsPopup = () => {
     this.setState({
-      showDonationPopup: false,
+      showTicketsPopup: false,
       popupTicketHeader: "Pay Now",
     })
     this.componentReRender();
   };
   showDonatePopup = () => {
     this.setState({
-      showDonationPopup: true,
+      showTicketsPopup: true,
       errorMsg:"",
       cardNumberFeedBack: false,
       cardHolderFeedBack: false,
@@ -641,6 +648,29 @@ class Raffle extends React.Component {
   };
   reRender = ()=>{
     //window.location.reload();
+  };
+  checkIsValidBidData = () =>{
+    console.log(" this.state.lastName ", this.state.lastName )
+    let valid1=true;
+    let valid2=true;
+    let flag=true;
+    if(this.props.authenticated){
+      if( this.props.user.firstName == null ){
+        valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
+        flag=false;
+      }
+      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 &&  this.props.eventData.ccRequiredForBidConfirm )
+      {
+        valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
+        flag=false;
+      }
+      if(flag) {
+        valid1=!!(this.state.amount);
+        valid2=!!(this.state.amount);
+      }
+    } else {
+    }
+    this.setState({isValidBidData: (valid1 && valid2)});
   };
   render() {
     let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -799,9 +829,9 @@ class Raffle extends React.Component {
         </div>
         <PopupModel
           id="mapPopup"
-          showModal={this.state.showDonationPopup}
+          showModal={this.state.showTicketsPopup}
           headerText="Buy Raffle Ticket"
-          onCloseFunc={this.hideDonationPopup} >
+          onCloseFunc={this.hideTicketsPopup} >
           <div className="main-box-body clearfix">
             <div className="payment-area collapse in">
               <form className="ajax-form validated fv-form fv-form-bootstrap" data-has-cc-info="true"
@@ -992,7 +1022,7 @@ class Raffle extends React.Component {
                           <div className="input-group">
                             <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
                             </div>
-                            <input type="number" className="form-control field-card_number" id="cardnumber"
+                          <input type="number" className="form-control field-card_number" id="cardnumber"
                                    placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
                                    required="required" data-fv-field="cardnumber"
                                    ref={ref => {
@@ -1009,7 +1039,8 @@ class Raffle extends React.Component {
                         </div>
                         <div className="row">
                           <div className="col-md-8">
-                            <div className="form-group expiration-date has-feedback">
+                            <div
+                              className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
                               <label className="control-label">Expiration Date</label>
                               <div className="input-group">
                                 <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
@@ -1103,7 +1134,7 @@ class Raffle extends React.Component {
                       </div>
                     </div></div> : "" }
                 {this.state.popupTicketHeader == "Pay Now" ? <Button className="btn btn-success"  role="button" type="submit"  loading={this.state.loading} onClick={this.byTicket} >Pay Now</Button>
-               : <button className="btn badge-danger" onClick={this.hideDonationPopup}>Close</button> }
+               : <button className="btn badge-danger" onClick={this.hideTicketsPopup}>Close</button> }
               </form>
             </div>
           </div>
@@ -1117,7 +1148,7 @@ class Raffle extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state.errorMsg }
             <div className="modal-footer">
-              {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}*/}
+              {/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.byTicket} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <Button loading={this.state.loading} className="btn btn-success" onClick={this.purchaseTicket} >Confirm</Button> : ""}
               <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>

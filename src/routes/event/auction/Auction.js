@@ -5,7 +5,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Auction.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings,doGetAuctionItemByCode,doSignUp,submitAuctionBid} from './../action/index';
+import {doGetEventData, doGetSettings,doGetAuctionItemByCode,doSignUp,submitAuctionBid,changeUserData} from './../action/index';
 import  history from './../../../history';
 import  EventAside from './../../../components/EventAside/EventAside';
 import {sessionService, loadSession} from 'redux-react-session';
@@ -90,10 +90,9 @@ class Auction extends React.Component {
       loading:false,
     };
   }
-
   onBidFormClick = (e) => {
     e.preventDefault();
-    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+    if( this.props.authenticated  && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ||  !this.props.eventData.ccRequiredForBidConfirm ) ){
       this.setState({
         showPopup: true,
         errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for " + this.state.auctionData.name ,
@@ -151,6 +150,7 @@ class Auction extends React.Component {
               popupHeader:"Successfully",
               loading:false,
             })
+            this.props.changeUserData(this.props.user,user)
           }else{
             this.setState({
               showPopup: true,
@@ -160,7 +160,7 @@ class Auction extends React.Component {
             });
           }
         });
-  }
+  };
   placeBidByAmount = () => {
     this.setState({
       loading:true,
@@ -168,6 +168,8 @@ class Auction extends React.Component {
     const user = {
       itemCode: this.state.auctionData.code,
       amount: this.state.amountValue,
+      firstname: this.state.firstNameValue,
+      lastname: this.state.lastNameValue,
     }
     this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
       .then(resp => {
@@ -177,6 +179,7 @@ class Auction extends React.Component {
             errorMsgCard:resp.message,
             popupHeader:"Successfully",
           })
+          this.props.changeUserData(this.props.user,user)
         }else{
           this.setState({
             showPopup: true,
@@ -187,8 +190,8 @@ class Auction extends React.Component {
         this.setState({
           loading:false,
         })
-      });
-  }
+       });
+  };
   signupForm = (e) => {
     e.preventDefault();
     this.setState({
@@ -227,6 +230,7 @@ class Auction extends React.Component {
       });
     }
   };
+
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -269,41 +273,54 @@ class Auction extends React.Component {
     this.setState({
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
     if (this.firstName.value == '') {
       this.setState({
         firstName: false
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         firstName: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
+  //  this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
   };
   lastNameValidateHandler = (e) => {
     this.setState({
       lastNameFeedBack: true,
       lastNameValue: this.lastName.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
     if (this.lastName.value == '') {
 
       this.setState({
         lastName: false
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         lastName: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
-
+   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   cardHolderValidateHandler = (e) => {
 
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue:this.cardHolder.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
 
     if (this.cardHolder.value == '') {
@@ -311,18 +328,24 @@ class Auction extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cardHolder: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
   };
   cardNumberValidateHandler = (e) => {
@@ -330,6 +353,8 @@ class Auction extends React.Component {
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
 
 
@@ -338,18 +363,22 @@ class Auction extends React.Component {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cardNumber: true
       });
-    }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    } this.checkIsValidBidData();
+ //   this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
   };
   amountValidateHandler = (e) => {
@@ -365,17 +394,22 @@ class Auction extends React.Component {
       amount=true
     }
     this.setState({
-      isValidBidData: ( this.amount.value && amount),
+      //isValidBidData: ( this.amount.value && amount),
       amount:amount,
       amountFeedBack: true,
       errorMsgAmount:errorMsgAmount,
       amountValue:this.amount.value
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
+    //this.checkIsValidBidData();
   };
   cvvValidateHandler = (e) => {
 
     this.setState({
       cvvFeedBack: true
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
 
     if (this.cvv.value == '') {
@@ -383,43 +417,97 @@ class Auction extends React.Component {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cvv: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    this.checkIsValidBidData();
+   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   phoneNumberValidateHandler = (e) => {
     console.log(parse(this.state.phone).country)
     this.setState({
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :""
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
     if (this.state.phone == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } if (!isValidNumber(this.state.phone)) {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "Invalid phone number",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
     else {
       this.setState({
         phoneNumber: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
+  expMonthValidateHandler = (e) => {
+    this.setState({
+      expMonthFeedBack: true,
+      expMonthValue:this.expMonth.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
+    });
+    if (this.expMonth.value == '') {
+      this.setState({
+        expMonth: false,
+        errorMsgExpMonth: "Expire Month is Require",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
+      });
+    }  else {
+      this.setState({
+        expMonth: true
+      });
+    } this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+  expYearValidateHandler = (e) => {
+    this.setState({
+      expYearFeedBack: true,
+      expYearValue:this.expYear.value,
+    });
+    if (this.expYear.value == '') {
+      this.setState({
+        expYear: false,
+        errorMsgexpYear: "Expire Year is Require",
+      });
+    }  else {
+      this.setState({
+        expYear: true
+      });
+    } this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+
   componentWillMount() {
     Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -475,6 +563,29 @@ class Auction extends React.Component {
   };
   reRender = ()=>{
     window.location.reload();
+  };
+  checkIsValidBidData = () =>{
+    console.log(" this.state.lastName ", this.state.lastName )
+    let valid1=true;
+    let valid2=true;
+    let flag=true;
+   if(this.props.authenticated){
+     if( this.props.user.firstName == null ){
+       valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
+       flag=false;
+      }
+      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 &&  this.props.eventData.ccRequiredForBidConfirm )
+      {
+        valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
+        flag=false;
+      }
+      if(flag) {
+         valid1=!!(this.state.amount);
+         valid2=!!(this.state.amount);
+      }
+   } else {
+   }
+    this.setState({isValidBidData: (valid1 && valid2)});
   };
 
   render() {
@@ -647,7 +758,7 @@ class Auction extends React.Component {
           </div>
         </div>
       </div>
-      { !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 )) ?
+      { !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 &&  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
        <div>
          <style
         dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
@@ -696,14 +807,15 @@ class Auction extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-8">
-              <div className="form-group expiration-date has-feedback">
+              <div
+                className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
                 <label className="control-label">Expiration Date</label>
                 <div className="input-group">
                   <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
                                                                         aria-hidden="true"/></div>
                   <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                     this.expMonth = ref;
-                  }}>
+                  }}  onChange={this.expMonthValidateHandler} >
                     <option selected value="10">Jan (01)</option>
                     <option value="02">Feb (02)</option>
                     <option value="03">Mar (03)</option>
@@ -720,7 +832,7 @@ class Auction extends React.Component {
                   <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
                           ref={ref => {
                             this.expYear = ref;
-                          }}>
+                          }} onChange={this.expYearValidateHandler} >
                     <option value="2017">2017</option>
                     <option value="2018">2018</option>
                     <option value="2019">2019</option>
@@ -757,8 +869,6 @@ class Auction extends React.Component {
                     <option value="2050">2050</option>
                   </select>
                 </div>
-
-
               </div>
             </div>
             <div className="col-md-4">
@@ -878,7 +988,7 @@ class Auction extends React.Component {
           </div>
         </div>
       </div>
-      { !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 )) ?
+      { !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 &&  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
         <div>
           <style
             dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
@@ -934,7 +1044,7 @@ class Auction extends React.Component {
                                                                             aria-hidden="true"/></div>
                       <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                         this.expMonth = ref;
-                      }}>
+                      }}  onChange={this.expMonthValidateHandler} >
                         <option selected value="10">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
@@ -951,8 +1061,7 @@ class Auction extends React.Component {
                       <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
                               ref={ref => {
                                 this.expYear = ref;
-                              }}>
-                        <option value="2016">2016</option>
+                              }} onChange={this.expYearValidateHandler} >
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                         <option value="2019">2019</option>
@@ -1130,7 +1239,6 @@ class ImageList extends React.Component {
         <img className="item-image-inner"
              src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
       </div>
-
     );
   }
 }
@@ -1141,6 +1249,7 @@ const mapDispatchToProps = {
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
   submitAuctionBid: (eventUrl, userData) => submitAuctionBid(eventUrl, userData),
+  changeUserData: (data, userData) => changeUserData(data, userData),
 };
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,

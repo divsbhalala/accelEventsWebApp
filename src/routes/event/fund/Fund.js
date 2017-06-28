@@ -16,7 +16,8 @@ import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-
+import Phone from 'react-phone-number-input'
+import { parse,isValidNumber} from 'libphonenumber-js'
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -253,6 +254,8 @@ class Fund extends React.Component {
     this.setState({
       emailFeedBack: true,
       emailValue:this.email.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -260,12 +263,16 @@ class Fund extends React.Component {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
     else {
       this.setState({
         email: re.test(this.email.value),
         errorMsgEmail: "Invalid Email.",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
     this.setState({isValidData: !!(this.email.value && this.password.value)});
@@ -276,65 +283,344 @@ class Fund extends React.Component {
     this.setState({
       passwordFeedBack: true,
       passwordValue:this.password.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
 
     if (this.password.value == '') {
 
       this.setState({
         password: false
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         password: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
     this.setState({isValidData: !!(this.email.value && this.password.value)});
 
   };
-  firstNameValidateHandler = (e) => {
 
+ //
+ //  amountValidateHandler = (e) => {
+ //    let amount=true
+ //    let errorMsgAmount=""
+ //    if (this.amount.value == '') {
+ //      errorMsgAmount= "Bid Amount can't be empty"
+ //      amount=false
+ //    }else if (this.state.fundData.pledgePrice  > this.amount.value) {
+ //      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)
+ //      //errorMsgAmount= " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.fundData.name ,
+ //      amount=false
+ //    } else {
+ //      amount=true
+ //    }
+ //    this.setState({
+ //      isValidBidData: ( this.amount.value && amount),
+ //      amount:amount,
+ //      amountFeedBack: true,
+ //      errorMsgAmount:errorMsgAmount,
+ //      amountValue:this.amount.value
+ //    });
+ //   // console.log(this.state.isValidBidData,this.amount.value , this.state.amount)
+ //  };
+ //  cvvValidateHandler = (e) => {
+ //
+ //    this.setState({
+ //      cvvFeedBack: true
+ //    });
+ //
+ //    if (this.cvv.value == '') {
+ //
+ //      this.setState({
+ //        cvv: false,
+ //        errorMsgcvv: "The CVV is required and can't be empty",
+ //      });
+ //    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+ //      this.setState({
+ //        cvv: false,
+ //        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+ //      });
+ //    } else {
+ //      this.setState({
+ //        cvv: true
+ //      });
+ //    }
+ // //   this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
+ //  };
+ //  phoneNumberValidateHandler = (e) => {
+ //
+ //    this.setState({
+ //      phoneNumberFeedBack: true,
+ //      phoneNumberValue:this.phoneNumber.value,
+ //    });
+ //
+ //    if (this.phoneNumber.value == '') {
+ //
+ //      this.setState({
+ //        phoneNumber: false,
+ //        errorMsgPhoneNumber: "phoneNumber is Require",
+ //      });
+ //    }  else {
+ //      this.setState({
+ //        phoneNumber: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //  expMonthValidateHandler = (e) => {
+ //    this.setState({
+ //      expMonthFeedBack: true,
+ //      expMonthValue:this.expMonth.value,
+ //    });
+ //    if (this.expMonth.value == '') {
+ //      this.setState({
+ //        expMonth: false,
+ //        errorMsgExpMonth: "Expire Month is Require",
+ //      });
+ //    }  else {
+ //      this.setState({
+ //        expMonth: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //  expYearValidateHandler = (e) => {
+ //    this.setState({
+ //      expYearFeedBack: true,
+ //      expYearValue:this.expYear.value,
+ //    });
+ //    if (this.expYear.value == '') {
+ //      this.setState({
+ //        expYear: false,
+ //        errorMsgexpYear: "Expire Year is Require",
+ //      });
+ //    }  else {
+ //      this.setState({
+ //        expYear: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //
+ //  firstNameValidateHandler = (e) => {
+ //    this.setState({
+ //      firstNameFeedBack: true,
+ //      firstNameValue:this.firstName.value
+ //    });
+ //    if (this.firstName.value == '') {
+ //      this.setState({
+ //        firstName: false
+ //      });
+ //    } else {
+ //      this.setState({
+ //        firstName: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
+ //
+ //  };
+ //  lastNameValidateHandler = (e) => {
+ //    this.setState({
+ //      lastNameFeedBack: true,
+ //      lastNameValue: this.lastName.value,
+ //    });
+ //
+ //    if (this.lastName.value == '') {
+ //
+ //      this.setState({
+ //        lastName: false
+ //      });
+ //    } else {
+ //      this.setState({
+ //        lastName: true
+ //      });
+ //    }
+ //    //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //
+ //  };
+ //  cardHolderValidateHandler = (e) => {
+ //
+ //    this.setState({
+ //      cardHolderFeedBack: true,
+ //      cardHolderValue:this.cardHolder.value,
+ //    });
+ //
+ //    if (this.cardHolder.value == '') {
+ //
+ //      this.setState({
+ //        cardHolder: false,
+ //        errorMsgcardHolder: "The card holder name is required and can't be empty",
+ //      });
+ //    } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+ //      this.setState({
+ //        cardHolder: false,
+ //        errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+ //      });
+ //    } else {
+ //      this.setState({
+ //        cardHolder: true
+ //      });
+ //    }
+ //    //this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //
+ //  };
+ //  cardNumberValidateHandler = (e) => {
+ //    this.setState({
+ //      cardNumberFeedBack: true,
+ //      cardNumberValue:this.cardNumber.value,
+ //    });
+ //    if (this.cardNumber.value == '') {
+ //      this.setState({
+ //        cardNumber: false,
+ //        errorMsgcardNumber: "Enter Card Number ",
+ //      });
+ //    } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
+ //      this.setState({
+ //        cardNumber: false,
+ //        errorMsgcardNumber: " Please enter a Valid Card Number ",
+ //      });
+ //    } else {
+ //      this.setState({
+ //        cardNumber: true
+ //      });
+ //    }
+ //    //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //  cvvValidateHandler = (e) => {
+ //
+ //    this.setState({
+ //      cvvFeedBack: true,
+ //      ccvValue:this.cvv.value,
+ //    });
+ //
+ //    if (this.cvv.value == '') {
+ //
+ //      this.setState({
+ //        cvv: false,
+ //        errorMsgcvv: "The CVV is required and can't be empty",
+ //      });
+ //    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+ //      this.setState({
+ //        cvv: false,
+ //        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+ //      });
+ //    } else {
+ //      this.setState({
+ //        cvv: true
+ //      });
+ //    }
+ //    //this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //  phoneNumberValidateHandler = (e) => {
+ //    this.setState({
+ //      phoneNumberFeedBack: true,
+ //      phoneNumberValue:this.phoneNumber.value,
+ //    });
+ //    if (this.phoneNumber.value == '') {
+ //      this.setState({
+ //        phoneNumber: false,
+ //        errorMsgPhoneNumber: "phoneNumber is Require",
+ //      });
+ //    }  else {
+ //      this.setState({
+ //        phoneNumber: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //  expMonthValidateHandler = (e) => {
+ //    this.setState({
+ //      expMonthFeedBack: true,
+ //      expMonthValue:this.expMonth.value,
+ //    });
+ //    if (this.expMonth.value == '') {
+ //      this.setState({
+ //        expMonth: false,
+ //        errorMsgExpMonth: "Expire Month is Require",
+ //      });
+ //    }  else {
+ //      this.setState({
+ //        expMonth: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+ //  expYearValidateHandler = (e) => {
+ //    this.setState({
+ //      expYearFeedBack: true,
+ //      expYearValue:this.expYear.value,
+ //    });
+ //    if (this.expYear.value == '') {
+ //      this.setState({
+ //        expYear: false,
+ //        errorMsgexpYear: "Expire Year is Require",
+ //      });
+ //    }  else {
+ //      this.setState({
+ //        expYear: true
+ //      });
+ //    }
+ //    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //  };
+
+
+  firstNameValidateHandler = (e) => {
     this.setState({
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
-
     if (this.firstName.value == '') {
-
       this.setState({
         firstName: false
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         firstName: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
-
+    //  this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
   };
   lastNameValidateHandler = (e) => {
     this.setState({
       lastNameFeedBack: true,
       lastNameValue: this.lastName.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
-
     if (this.lastName.value == '') {
 
       this.setState({
         lastName: false
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         lastName: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
-
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   cardHolderValidateHandler = (e) => {
 
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue:this.cardHolder.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
 
     if (this.cardHolder.value == '') {
@@ -342,41 +628,57 @@ class Fund extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cardHolder: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
+    //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
   };
   cardNumberValidateHandler = (e) => {
+
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
+
+
     if (this.cardNumber.value == '') {
+
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cardNumber: true
       });
-    }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
+    } this.checkIsValidBidData();
+    //   this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
   };
   amountValidateHandler = (e) => {
@@ -387,24 +689,27 @@ class Fund extends React.Component {
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value) {
       errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)
-      //errorMsgAmount= " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged  for  " +  self.state.fundData.name ,
       amount=false
     } else {
       amount=true
     }
     this.setState({
-      isValidBidData: ( this.amount.value && amount),
+      //isValidBidData: ( this.amount.value && amount),
       amount:amount,
       amountFeedBack: true,
       errorMsgAmount:errorMsgAmount,
       amountValue:this.amount.value
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
-   // console.log(this.state.isValidBidData,this.amount.value , this.state.amount)
+    //this.checkIsValidBidData();
   };
   cvvValidateHandler = (e) => {
 
     this.setState({
       cvvFeedBack: true
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
 
     if (this.cvv.value == '') {
@@ -412,39 +717,122 @@ class Fund extends React.Component {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cvv: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
-    this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value && this.state.firstName && this.state.lastName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv )});
+    this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   phoneNumberValidateHandler = (e) => {
-
+    console.log(parse(this.state.phone).country)
     this.setState({
       phoneNumberFeedBack: true,
-      phoneNumberValue:this.phoneNumber.value,
+      errorMsgPhoneNumber :""
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
     });
-
-    if (this.phoneNumber.value == '') {
-
+    if (this.state.phone == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
-    }  else {
+    } if (!isValidNumber(this.state.phone)) {
+      this.setState({
+        phoneNumber: false,
+        errorMsgPhoneNumber: "Invalid phone number",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
+      });
+    }
+    else {
       this.setState({
         phoneNumber: true
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
       });
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
+  expMonthValidateHandler = (e) => {
+    this.setState({
+      expMonthFeedBack: true,
+      expMonthValue:this.expMonth.value,
+    },function afterTitleChange () {
+      this.checkIsValidBidData()
+    });
+    if (this.expMonth.value == '') {
+      this.setState({
+        expMonth: false,
+        errorMsgExpMonth: "Expire Month is Require",
+      },function afterTitleChange () {
+        this.checkIsValidBidData()
+      });
+    }  else {
+      this.setState({
+        expMonth: true
+      });
+    } this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+  expYearValidateHandler = (e) => {
+    this.setState({
+      expYearFeedBack: true,
+      expYearValue:this.expYear.value,
+    });
+    if (this.expYear.value == '') {
+      this.setState({
+        expYear: false,
+        errorMsgexpYear: "Expire Year is Require",
+      });
+    }  else {
+      this.setState({
+        expYear: true
+      });
+    } this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+
+  checkIsValidBidData = () =>{
+    console.log(" this.state.lastName ", this.state.lastName )
+    let valid1=true;
+    let valid2=true;
+    let flag=true;
+    if(this.props.authenticated){
+      if( this.props.user.firstName == null ){
+        valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
+        flag=false;
+      }
+      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 )
+      {
+        valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
+        flag=false;
+      }
+      if(flag) {
+        valid1=!!(this.state.amount);
+        valid2=!!(this.state.amount);
+      }
+    } else {
+      valid2=!!(this.state.phoneNumber && this.state.password && this.state.email && this.state.firstName && this.state.lastName && this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
+    }
+    this.setState({isValidBidData: (valid1 && valid2)});
+  };
+
   componentWillMount() {
     Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -627,6 +1015,60 @@ class Fund extends React.Component {
                                    data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                           </div>
                         </div> }
+                        { !this.props.authenticated && <div className="row">
+                          <div className="col-md-8">
+                            <div
+                              className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+
+                              <label className="control-label">Cell Number</label>
+                              <div className="input-group">
+                                <div className="input-group-addon">
+                                  <i className="fa fa-phone" aria-hidden="true"/>
+                                </div>
+                                <Phone
+                                  placeholder="Enter phone number"
+                                  className="form-control"
+                                  value={ this.state.phone }
+                                  onChange={ phone => this.setState({ phone }) }
+                                  onKeyUp={this.phoneNumberValidateHandler}
+                                  country="US"/>
+                                { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                              </div>
+                              { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                              <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                            </div>
+                          </div>
+                        </div> }
+                        { !this.props.authenticated && <div
+                          className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
+                          <label className="control-label login-password">Enter or Create
+                            Password</label>
+                          <div className="input-group">
+                            <div className="input-group-addon">
+                              <i className="fa fa-key" aria-hidden="true"/>
+                            </div>
+                            <input type="password" className="form-control zindex" name="password"
+                                   autoComplete="new-password"
+                                   placeholder="Enter or create a password"
+                                   data-fv-field="paswd"
+                                   ref={ref => {
+                                     this.password = ref;
+                                   }}
+                                   onKeyUp={this.passwordValidateHandler}
+                            />
+                            { this.state.passwordFeedBack && this.state.password &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                            { this.state.passwordFeedBack && !this.state.password &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+
+                          </div>
+                          { this.state.passwordFeedBack && !this.state.password &&
+                          <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
+
+                        </div> }
                         { !this.props.authenticated || ( this.props.authenticated && this.props.user.linkedCard.stripeCards.length == 0 ) ?
                           <div>
                             <style
@@ -676,14 +1118,15 @@ class Fund extends React.Component {
                                 </div>
                                 <div className="row">
                                   <div className="col-md-8">
-                                    <div className="form-group expiration-date has-feedback">
+                                    <div
+                                      className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
                                       <label className="control-label">Expiration Date</label>
                                       <div className="input-group">
                                         <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
                                                                                               aria-hidden="true"/></div>
                                         <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                           this.expMonth = ref;
-                                        }}>
+                                        }}  onChange={this.expMonthValidateHandler} >
                                           <option selected value="10">Jan (01)</option>
                                           <option value="02">Feb (02)</option>
                                           <option value="03">Mar (03)</option>
@@ -700,7 +1143,7 @@ class Fund extends React.Component {
                                         <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
                                                 ref={ref => {
                                                   this.expYear = ref;
-                                                }}>
+                                                }} onChange={this.expYearValidateHandler} >
                                           <option value="2017">2017</option>
                                           <option value="2018">2018</option>
                                           <option value="2019">2019</option>
@@ -763,60 +1206,8 @@ class Fund extends React.Component {
                                 </div>
                               </div>
                             </div>
-                            <div className="form-group">
-                              <div className="checkbox-nice">
-                                <input type="checkbox" id="uptodate" name="uptodate" defaultChecked/> <label
-                                htmlFor="uptodate">Stay up to date with Accelevents</label>
-                              </div>
-                            </div></div> : "" }
-                        { !this.props.authenticated && <div className="row">
-                          <div className="col-md-8">
-                            <div className="form-group expiration-date has-feedback">
-                              <label className="control-label">Cell Number</label>
-                              <div className="input-group">
-                                <div className="input-group-addon">
-                                  <i className="fa fa-phone" aria-hidden="true"/></div>
-                                <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
-                                  <option selected value="10">+1 USA</option>
-                                  <option value="02">+91 IND</option>
-                                </select>
-                                <input type="tel" className="int-tel-field "
-                                       data-country="CA" autoComplete="off"
-                                       data-fv-field="intTelField"
-                                       placeholder="204-234-5678"
-                                       ref={ref => {this.phoneNumber = ref}} onKeyUp={this.phoneNumberValidateHandler} />
-                              </div>
-                            </div>
-                          </div>
+                           </div> : "" }
 
-                        </div> }
-                        { !this.props.authenticated && <div
-                          className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
-                          <label className="control-label login-password">Enter or Create
-                            Password</label>
-                          <div className="input-group">
-                            <div className="input-group-addon">
-                              <i className="fa fa-key" aria-hidden="true"/>
-                            </div>
-                            <input type="password" className="form-control" name="password"
-                                   autoComplete="new-password"
-                                   placeholder="Enter or create a password"
-                                   data-fv-field="paswd"
-                                   ref={ref => {
-                                     this.password = ref;
-                                   }}
-                                   onKeyUp={this.passwordValidateHandler}
-                            />
-                            { this.state.passwordFeedBack && this.state.password &&
-                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                            { this.state.passwordFeedBack && !this.state.password &&
-                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-
-                          </div>
-                          { this.state.passwordFeedBack && !this.state.password &&
-                          <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
-
-                        </div> }
 
                         <div
                           className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>

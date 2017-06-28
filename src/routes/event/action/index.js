@@ -463,11 +463,24 @@ export function doSignUp(eventUrl,userData) {
     });
   }
 }
-
+export  function changeUserData(data,userData) {
+  return (dispatch) => {
+    data.firstName=userData.firstname;
+    data.lastName=userData.lastname;
+    localStorage.setItem('user', JSON.stringify(data));
+    dispatch(changeLoginData(data))
+  }
+}
 export function storeLoginData(data) {
   return {
     type: 'STORE_LOGIN_DATA',
     data
+  }
+}
+export function changeLoginData(data) {
+  return {
+    type: 'CHANGE_LOGIN_DATA',
+    data:data
   }
 }
 export function storeToken(data) {
