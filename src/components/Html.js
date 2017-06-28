@@ -70,6 +70,7 @@ class Html extends React.Component {
       </head>
       <body>
       <div id="app" dangerouslySetInnerHTML={{__html: children}}/>
+      <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDtLyd6ZZn_g4NaPstiJ8QgOLeWnPu0zas"></script>
       <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
       <script dangerouslySetInnerHTML={{__html: `window.App=${serialize(app)}`}}/>
       {scripts.map(script => <script key={script} src={script}/>)}

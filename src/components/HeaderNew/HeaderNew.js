@@ -26,11 +26,15 @@ import PopupModel from './../PopupModal';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import s from './../../routes/login/Login.css';
-import _ from 'lodash';
-import {onFormSubmit, doLogin, storeLoginData, storeToken, doSignUp} from './../../routes/event/action/index';
+import {
+	doLogin,
+	doSignUp,
+	doContactSupport,
+	isVolunteer
+} from './../../routes/event/action/index';
 
 const logo = require('./logo.png');
-
+let eventUrl= "";
 
 class HeaderNew extends React.Component {
 
@@ -40,20 +44,37 @@ class HeaderNew extends React.Component {
 			showContactPopup: false,
 			showLoginPopup: false,
 			isValidData: false,
+			name: null,
+			message: null,
 			email: null,
 			password: null,
 			error: null,
+			nameFeedBack: false,
+			messageFeedBack: false,
 			emailFeedBack: false,
 			passwordFeedBack: false,
 			phoneNumberFeedBack: false,
 			errorMsgNumber: null,
 			phoneNumber: false,
-			togale: true,
+			toggle: true,
 			emailValue: null,
+			nameValue: null,
+			messageValue: null,
+			showFormMessagePopup: false
 		};
 		this.logout = this.logout.bind(this);
 		this.showContactPopup = this.showContactPopup.bind(this);
 		this.hideContactPopup = this.hideContactPopup.bind(this);
+		this.hideFormMessagePopup = this.hideFormMessagePopup.bind(this);
+		this.doContactRequest = this.doContactRequest.bind(this);
+	}
+
+	componentWillReceiveProps() {
+		eventUrl = this.props.params && this.props.params.params;
+		console.log("even", eventUrl);
+		if (this.props.authenticated) {
+			this.props.isVolunteer(this.props.params && this.props.params.params);
+		}
 	}
 
 	onFormClick = (e) => {
@@ -109,6 +130,9 @@ class HeaderNew extends React.Component {
 			this.props.doLogin(this.email.value, this.password.value).then((resp) => {
 				if (!resp.errorMessage) {
 					this.setState({error: "Log In SuccessFully"});
+					this.setState({
+						showLoginPopup: false
+					})
 					//window.location.reload();
 				}
 				else {
@@ -124,7 +148,7 @@ class HeaderNew extends React.Component {
 			phoneNumberFeedBack: true,
 			phoneNumberValue: this.phoneNumber.value,
 		});
-		if (this.phoneNumber.value == '') {
+		if (this.phoneNumber.value.trim() == '') {
 			this.setState({
 				phoneNumber: false,
 				errorMsgPhoneNumber: "phoneNumber is Require",
@@ -143,7 +167,7 @@ class HeaderNew extends React.Component {
 		});
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value == '') {
+		if (this.email.value.trim() == '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -155,8 +179,45 @@ class HeaderNew extends React.Component {
 				errorMsgEmail: "Invalid Email.",
 			});
 		}
-		this.setState({isValidData: !!(this.email.value && this.password.value)});
-
+	};
+	nameValidateHandler = (e) => {
+		this.setState({
+			nameFeedBack: true,
+			nameValue: this.name.value,
+		});
+		if (this.name.value.trim() == '' || !this.name.value) {
+			this.setState({
+				name: false,
+				errorMsgName: "Name is required.",
+			});
+		}
+		else {
+			this.setState({
+				name: this.name.value,
+				errorMsgName: null,
+			});
+		}
+	};
+	messageValidateHandler = (e) => {
+		this.setState({
+			messageFeedBack: true,
+			messageValue: this.message.value,
+		});
+		if(this.message.value == ''){
+			this.message.value = '';
+		}
+		if (this.message.value.trim() == '') {
+			this.setState({
+				message: false,
+				errorMsgMessage: "Message is required.",
+			});
+		}
+		else {
+			this.setState({
+				message: this.message.value,
+				errorMsgMessage: null,
+			});
+		}
 	};
 	passwordValidateHandler = (e) => {
 
@@ -174,23 +235,35 @@ class HeaderNew extends React.Component {
 				password: true
 			});
 		}
-		this.setState({isValidData: !!(this.email.value && this.password.value)});
-
 	};
 	logout = () => {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
 		history.push('/login');
-	}
+	};
 	showContactPopup = () => {
 		this.setState({
+			name: null,
+			message: null,
+			email: null,
+			emailValue: null,
+			nameValue: null,
+			messageValue: null,
+			nameFeedBack: false,
+			messageFeedBack: false,
+			emailFeedBack: false,
 			showContactPopup: true
 		})
 	};
 	hideContactPopup = () => {
 		this.setState({
 			showContactPopup: false
+		})
+	};
+	hideFormMessagePopup = () => {
+		this.setState({
+			showFormMessagePopup: false
 		})
 	};
 	showLoginPopup = () => {
@@ -205,19 +278,80 @@ class HeaderNew extends React.Component {
 	};
 	showLogin = () => {
 		this.setState({
-			togale: true
+			toggle: true
 		})
 	};
 	showRegister = () => {
 		this.setState({
-			togale: false
+			toggle: false
 		})
 	};
 	hideRegisterPopup = () => {
 		this.setState({
 			showLoginPopup: false,
 		})
-	}
+	};
+
+	doContactRequest = ()=>{
+		console.log("here", "this.props.authenticated",this.props.authenticated  , (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)) ,this.message && this.message.value, !this.message.value);
+		if( (this.props.authenticated || (this.email && this.name && this.email.value.trim() !='' && this.name.value.trim() !='')) && this.message && this.message.value.trim() !='' ){
+			let contactData={};
+			if(!this.props.authenticated){
+				contactData = {
+					name : this.email.value,
+					email : this.name.value,
+				}
+			}
+			contactData.message=this.message.value;
+			if(eventUrl){
+				this.props.doContactSupport(eventUrl, contactData).then(resp=>{
+					console.log("resp", resp);
+					if(resp && resp.status == 200){
+						this.setState({
+							formMessage: resp.data && resp.data.message || "Thank you for writing to us, we will get back to you soon!",
+							showFormMessagePopup : true,
+							showContactPopup : false,
+						})
+					}
+					else{
+						this.setState({
+							formMessage: "Opps! Error while processing your request. Please try after sometime",
+							showFormMessagePopup : true,
+							showContactPopup : false,
+						})
+					}
+				}).catch(error=>{
+					this.setState({
+						formMessage: "Opps! Error while processing your request. Please try after sometime",
+						showFormMessagePopup : true,
+						showContactPopup : false,
+					})
+					console.log("error", error);
+				})
+			}
+			else{
+				this.setState({
+					formMessage: "No EventFound",
+					showFormMessagePopup : true,
+					showContactPopup : false,
+				})
+			}
+
+		}
+		else {
+			this.setState({
+				name: false,
+				errorMsgName: "Name is required.",
+				email: false,
+				errorMsgEmail: "Email is required.",
+				message: false,
+				errorMsgMessage: "Message is required.",
+				nameFeedBack : true,
+				emailFeedBack : true,
+				messageFeedBack : true,
+			});
+		}
+	};
 
 	render() {
 		let event = this.props.params && this.props.params.params;
@@ -228,11 +362,11 @@ class HeaderNew extends React.Component {
 					<Brand>
             <span>
               { this.props.params && this.props.params.params &&
-              <Link to={"/event/" + this.props.params.params} title={this.props.params.params}
-                 rel="home">{this.props.params.params}</Link>}
-              <button type="button" className="navbar-toggle" onClick={() => {
-                toggleMenu();
-              }} style={{position: 'absolute', right: 0, top: 0}}>
+							<Link to={"/event/" + this.props.params.params} title={this.props.params.params}
+										rel="home">{this.props.params.params}</Link>}
+							<button type="button" className="navbar-toggle" onClick={() => {
+								toggleMenu();
+							}} style={{position: 'absolute', right: 0, top: 0}}>
                   <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
@@ -245,7 +379,7 @@ class HeaderNew extends React.Component {
 						<MenuItem eventKey="1" onClick={this.showContactPopup}>
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
 						</MenuItem>
-						{ event && this.props.isVolunteer && <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
+						{ event && this.props.is_volunteer && <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
 							Volunteer
 						</MenuItem>}
 						{ event &&
@@ -288,8 +422,8 @@ class HeaderNew extends React.Component {
 						</MenuItem>}
 
 						{ !this.props.authenticated && <MenuItem eventKey="9" onClick={(event) => {
-              history.push('/signup');
-            }}>
+							history.push('/signup');
+						}}>
 							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
 						</MenuItem>}
 
@@ -322,35 +456,101 @@ class HeaderNew extends React.Component {
 						<div id="alertmessage" className="hide"/>
 						<p>Let us know if you have any query. We'll respond as quick as possible.</p>
 						<form className="ajax-form validated fv-form fv-form-bootstrap" id="contactForm" method="post"
-						      action="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian0/contact"
-						      data-onsuccess="contactFormSuccess" noValidate="novalidate">
+									action="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian0/contact"
+									data-onsuccess="contactFormSuccess" noValidate="novalidate">
 							<button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
 							<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
 								className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-							<div className="form-group">
+							{!this.props.authenticated &&
+							<div className={cx("form-group", this.state.nameFeedBack && 'has-feedback', this.state.nameFeedBack && this.state.name && 'has-success', this.state.nameFeedBack && (!this.state.name) && 'has-error')}>
+							<label className="control-label">Name</label>
+								<div className="input-group">
+									<div className="input-group-addon">
+										<i className="fa fa-user" aria-hidden="true"/>
+									</div>
+									<input type="text" className="form-control" id="name" name="name" data-fv-notempty="true" placeholder="Name"
+												 data-fv-notempty-message="Name is required." required="required" data-fv-field="name"
+												 ref={ref => {
+													 this.name = ref;
+												 }}
+												 onKeyUp={this.nameValidateHandler}
+									/>
+								</div>
+								{ this.state.nameFeedBack && this.state.name &&
+								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+								{ this.state.nameFeedBack && !this.state.name &&
+								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+								{ this.state.nameFeedBack && !this.state.name &&
+								<small className="help-block">This value is not valid</small> }
+							</div>}
+							{!this.props.authenticated &&
+							<div className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
+								<label className="control-label">Email Address</label>
+								<div className="input-group">
+									<div className="input-group-addon">
+										<i className="fa fa-envelope" aria-hidden="true"/>
+									</div>
+									<input type="email" className="form-control" id="email" name="email" required="required" placeholder="Email"
+												 ref={ref => {
+													 this.email = ref;
+												 }}
+												 onKeyUp={this.emailValidateHandler}
+									/>
+								</div>
+								{ this.state.emailFeedBack && this.state.email &&
+								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+								{ this.state.emailFeedBack && !this.state.email &&
+								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+								{ this.state.emailFeedBack && !this.state.email &&
+								<small className="help-block">This value is not valid</small> }
+							</div>}
+
+
+							<div className={cx("form-group", this.state.messageFeedBack && 'has-feedback', this.state.messageFeedBack && this.state.message && 'has-success', this.state.messageFeedBack && (!this.state.message) && 'has-error')}>
 								<label className="control-label">Message to Event Host</label>
 								<div className="input-group">
 									<div className="input-group-addon">
 										<i className="fa fa-comment-o" aria-hidden="true"/>
 									</div>
-                  <textarea rows={10} className="form-control" id="message" name="message"
-                            style={{
-                              zIndex: 3,
-                              position: 'relative',
-                              fontSize: 13,
-                              transition: 'none',
-                              background: 'transparent !important'
-                            }}
-                            defaultValue={" "}/>
+									<textarea rows={10} className="form-control" id="message" name="message"
+														style={{
+															zIndex: 3,
+															position: 'relative',
+															fontSize: 13,
+															transition: 'none',
+															background: 'transparent !important'
+														}}
+														ref={ref => {
+															this.message = ref;
+														}}
+														onKeyUp={this.messageValidateHandler}
+
+														defaultValue={" "}/>
 
 								</div>
+								{ this.state.messageFeedBack && this.state.message &&
+								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+								{ this.state.messageFeedBack && !this.state.message &&
+								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+								{ this.state.messageFeedBack && !this.state.message &&
+								<small className="help-block">This value is not valid</small> }
 							</div>
-							<button type="button" className="btn btn-primary">Send Message</button>
+							<button type="button" className="btn btn-primary m-r-5" onClick={this.doContactRequest}>Send Message</button>
 							<button type="button" className="btn btn-danger" onClick={this.hideContactPopup}>Cancel</button>
 						</form>
 					</div>
 
 				</PopupModel>
+				{ this.state.showFormMessagePopup &&
+				<PopupModel
+					id="mapPopup"
+					showModal={this.state.showFormMessagePopup}
+					headerText=""
+					onCloseFunc={this.hideFormMessagePopup}
+					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormMessagePopup()}}>Close</button>}
+				>
+					<center>{ this.state.formMessage }</center>
+				</PopupModel> }
 				<PopupModel
 					id="contactPopup"
 					showModal={this.state.showLoginPopup}
@@ -360,7 +560,7 @@ class HeaderNew extends React.Component {
 					<div className="modal-body">
 						<div id="alertmessage" className="hide"/>
 						<p>{this.state.error}</p>
-						{ this.state.togale ?
+						{ this.state.toggle ?
 							<div className="login-signup-container login  has-cell-number ">
 								<div className="login-form" id="LoginAttempt">
 									<h1 className="text-center">Log in</h1>
@@ -381,17 +581,17 @@ class HeaderNew extends React.Component {
 											className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 											<label className="sr-only" htmlFor="login-email">Email</label>
 											<input name="username"
-											       id="login-email"
-											       autoComplete="off"
-											       placeholder="Email"
-											       type="text"
-											       required="required"
-											       className="form-control input-lg"
-											       autoFocus
-											       ref={ref => {
-                             this.email = ref;
-                           }}
-											       onKeyUp={this.emailValidateHandler}
+														 id="login-email"
+														 autoComplete="off"
+														 placeholder="Email"
+														 type="text"
+														 required="required"
+														 className="form-control input-lg"
+														 autoFocus
+														 ref={ref => {
+															 this.email = ref;
+														 }}
+														 onKeyUp={this.emailValidateHandler}
 											/>
 											{ this.state.emailFeedBack && this.state.email &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -404,16 +604,16 @@ class HeaderNew extends React.Component {
 											className={cx("mrg-t-sm form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
 											<label className="sr-only" htmlFor="login-password">Password</label>
 											<input name="password"
-											       placeholder="Password"
-											       id="login-password"
-											       type="password"
-											       autoComplete="off"
-											       required="required"
-											       className="form-control input-lg"
-											       ref={ref => {
-                             this.password = ref;
-                           }}
-											       onKeyUp={this.passwordValidateHandler}
+														 placeholder="Password"
+														 id="login-password"
+														 type="password"
+														 autoComplete="off"
+														 required="required"
+														 className="form-control input-lg"
+														 ref={ref => {
+															 this.password = ref;
+														 }}
+														 onKeyUp={this.passwordValidateHandler}
 											/>
 											{ this.state.passwordFeedBack && this.state.password &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -456,17 +656,17 @@ class HeaderNew extends React.Component {
 											className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 											<label className="sr-only" htmlFor="login-email">Email</label>
 											<input name="username"
-											       id="login-email"
-											       autoComplete="off"
-											       placeholder="Email"
-											       type="text"
-											       required="required"
-											       className="form-control input-lg"
-											       autoFocus
-											       ref={ref => {
-              this.email = ref;
-            }}
-											       onKeyUp={this.emailValidateHandler}
+														 id="login-email"
+														 autoComplete="off"
+														 placeholder="Email"
+														 type="text"
+														 required="required"
+														 className="form-control input-lg"
+														 autoFocus
+														 ref={ref => {
+															 this.email = ref;
+														 }}
+														 onKeyUp={this.emailValidateHandler}
 											/>
 											{ this.state.emailFeedBack && this.state.email &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -490,31 +690,33 @@ class HeaderNew extends React.Component {
 														</div>
 													</div>
 													<input type="tel" className="int-tel-field form-control" data-country="US" maxLength={10}
-													       autoComplete="off" data-fv-field="intTelField" placeholder="201-555-0123"
-													       ref={ref => {this.phoneNumber = ref}} onKeyUp={this.phoneNumberValidateHandler}/>
+																 autoComplete="off" data-fv-field="intTelField" placeholder="201-555-0123"
+																 ref={ref => {
+																	 this.phoneNumber = ref
+																 }} onKeyUp={this.phoneNumberValidateHandler}/>
 												</div>
 												<input type="hidden" name="countryCode" defaultValue="US"/><input type="hidden"
-												                                                                  name="phoneNumber"
-												                                                                  defaultValue/>
+																																													name="phoneNumber"
+																																													defaultValue/>
 											</div>
 											<i className="form-control-feedback fv-bootstrap-icon-input-group" data-fv-icon-for="intTelField"
-											   style={{display: 'none'}}/>
+												 style={{display: 'none'}}/>
 
 										</div>
 										<div
 											className={cx("mrg-t-sm form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
 											<label className="sr-only" htmlFor="login-password">Password</label>
 											<input name="password"
-											       placeholder="Password"
-											       id="login-password"
-											       type="password"
-											       autoComplete="off"
-											       required="required"
-											       className="form-control input-lg"
-											       ref={ref => {
-              this.password = ref;
-            }}
-											       onKeyUp={this.passwordValidateHandler}
+														 placeholder="Password"
+														 id="login-password"
+														 type="password"
+														 autoComplete="off"
+														 required="required"
+														 className="form-control input-lg"
+														 ref={ref => {
+															 this.password = ref;
+														 }}
+														 onKeyUp={this.passwordValidateHandler}
 											/>
 											{ this.state.passwordFeedBack && this.state.password &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -552,14 +754,16 @@ function toggleMenu() {
 
 //export default HeaderNew;
 const mapDispatchToProps = {
+	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
+	doContactSupport: (eventUrl, contact) => doContactSupport(eventUrl, contact),
 	doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
 	doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
 };
 
 const mapStateToProps = (state) => ({
-	isVolunteer : state.event && state.event.is_volunteer,
-	user : state.session && state.session.user,
-	authenticated : state.session && state.session.authenticated,
+	is_volunteer: state.event && state.event.is_volunteer,
+	user: state.session && state.session.user,
+	authenticated: state.session && state.session.authenticated,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(HeaderNew));

@@ -728,3 +728,14 @@ export function isVolunteer(eventUrl) {
     });
   }
 }
+
+export function doContactSupport(eventUrl, contact) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'events/' + eventUrl +'/contact' ,
+      data: contact,
+     headers: {Authorization: localStorage.getItem('token')}
+    });
+  }
+}

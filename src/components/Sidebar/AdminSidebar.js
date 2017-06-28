@@ -6,15 +6,15 @@ class AdminSiderbar extends React.Component {
 		super(props);
 		this.state = {
 			activeState:'',
-      togale:false,
+      toggle:false,
 		};
 		this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
-		this.togaleUl = this.togaleUl.bind(this);
+		this.toggleUl = this.toggleUl.bind(this);
 	//	this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
 	}
-  togaleUl = () =>{
+  toggleUl = () =>{
 	  this.setState({
-      togale:!this.state.togale
+      toggle:!this.state.toggle
     })
     console.log('test',this.state)
   }
@@ -103,12 +103,12 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li>
-									<li className={cx(this.state.togale ? "open":'')} onClick={this.togaleUl}>
+									<li className={cx(this.state.toggle ? "open":'')} onClick={this.toggleUl}>
 										<Link to="#" className="dropdown-toggle" >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
 										</Link>
-										<ul className="submenu" style={{display: this.state.togale ? 'none' : 'block'}}>
+										<ul className="submenu" style={{display: this.state.toggle ? 'none' : 'block'}}>
 											<li className>
 												<Link to="/admin/silent-auction-add-items">
 													Add Items

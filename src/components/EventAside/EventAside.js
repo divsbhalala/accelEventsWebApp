@@ -120,16 +120,16 @@ class EventAside extends React.Component {
 										<div className={cx("row timer")}>
 											<div className={cx("col-xs-4")}><span className={cx("days")}>{
 												moment(this.props.settings.endDate).diff(moment(), 'days') > 0
-												&& moment(this.props.settings.endDate).diff(moment(), 'days') || '00'
+												&& ( '0' + moment(this.props.settings.endDate).diff(moment(), 'days')).slice(-2) || '00'
 											}</span></div>
 											<div className={cx("col-xs-4")}><span className={cx("hours")}>{
 												moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
 												&& moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-												&& moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
+												&& ('0' + moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours')).slice(-2) || '00'
 											}</span></div>
 											<div className={cx("col-xs-4")}><span className={cx("minutes")}>{
 												moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-												&& moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
+												&& ( "0" + moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')).slice(-2)
 												|| '00'}</span></div>
 											<div className={cx("col-xs-4")} style={{display: "none"}}><span
 												className={cx("seconds")}>00</span></div>
@@ -185,7 +185,7 @@ class EventAside extends React.Component {
 							<h4 className={cx("")}>Categories</h4>
 							<ul className={cx("nav nav-pills nav-stacked category-list ")}>
 								<li className={cx("all-items",this.props.selectedCategoty == '' && "active")}>
-									<a href="#" className={cx("category-switcher all-items")} data-category="" data-module="#raffle">
+									<a href="#" className={cx("category-switcher all-items")}onClick={()=>{this.props.setFilterCategory("")}} data-module="#raffle">
 										<i className={cx("fa fa-ticket")}></i>
 										<span className={cx("cat-name")}>All Items</span>
 										<span className={cx("badge badge-primary pull-right cat-count")}></span>

@@ -8,7 +8,7 @@ import Link from '../Link';
 import {connect} from 'react-redux';
 import cx from 'classnames';
 import {doSignUp,submitAuctionBid,giveDonate} from './../../routes/event/action/index';
-var svgTag = '<svg fill-rule="evenodd" style={{width: "auto !important"}} xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="32px" height="32px" viewBox="0 0 24 24"> <defs> </defs> <g id="Document" fill="none" stroke="black" font-family="Times New Roman" font-size="16" transform="scale(1 -1)"> <g id="Spread" transform="translate(0 -24)"> <g id="Layer 1"> <g id="Group" stroke="none" fill="#FFFFFF"> <path d="M 7.106,12.949 C 6.985,12.949 6.696,13.063 6.55,13.204 L 1.926,18.216 C 0.551,19.548 0.689,23.031 4.017,23.031 C 5.471,23.031 6.39,21.459 7.106,20.557 C 7.82,21.459 8.74,23.031 10.195,23.031 C 13.522,23.031 13.66,19.548 12.285,18.216 L 7.661,13.204 C 7.515,13.063 7.227,12.949 7.106,12.949 Z" marker-start="none" marker-end="none"></path> <path d="M 7.598,3.304 L 1.894,9.436 C 1.088,10.614 2.41,11.789 3.5,10.762 L 5.872,8.504 C 5.456,6.881 7.115,5.385 8.371,5.385 L 10.462,5.385 C 12.135,5.385 14.181,7.579 15.136,7.579 C 13.446,7.579 12.033,6.728 11.027,6.728 L 8.43,6.728 C 7.056,6.728 6.931,8.787 8.43,8.787 L 11.019,8.787 C 13.544,8.787 13.746,10.848 15.888,10.848 C 17.104,10.848 19.406,8.723 20.846,7.673 C 21.026,7.541 21.218,7.306 21.062,7.03 L 19.213,3.723 C 19.122,3.58 18.806,3.467 18.551,3.662 L 16.99,4.76 C 16.791,4.896 16.56,4.897 16.22,4.784 L 10.651,2.848 C 9.711,2.596 8.446,2.333 7.598,3.304 Z M 6.661,1.912 C 6.658,1.915 6.65,1.922 6.648,1.925 L 6.442,2.134 L 0.738,8.264 C 0.663,8.338 0.595,8.419 0.536,8.507 C -0.297,9.723 -0.148,11.268 0.917,12.177 C 1.994,13.096 3.552,12.974 4.632,11.956 L 6.761,9.93 L 6.84,9.991 C 6.849,9.997 6.859,10.004 6.868,10.01 C 7.309,10.282 7.844,10.433 8.43,10.433 L 11.019,10.433 C 11.7,10.433 12.01,10.648 12.559,11.094 C 13.124,11.554 14.137,12.494 15.888,12.494 C 17.082,12.494 18.316,11.703 18.976,11.263 C 19.879,10.662 22.374,8.597 23.29,7.958 C 24.117,7.354 24.138,7.041 23.775,6.332 L 21.389,1.9 C 20.586,0.63 19.452,0.963 18.622,1.589 L 16.64,2.968 C 16.495,3.069 16.28,3.087 16.114,3.029 L 11.2,1.297 C 11.164,1.284 11.115,1.268 11.077,1.258 C 10.597,1.129 9.831,0.937 9.016,0.973 C 8.251,1.007 7.393,1.247 6.661,1.912 Z" marker-start="none" marker-end="none"></path> </g> </g> </g> </g> </svg>';
+let svgTag = '<svg fill-rule="evenodd" style={{width: "auto !important"}} xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" overflow="visible" width="32px" height="32px" viewBox="0 0 24 24"> <defs> </defs> <g id="Document" fill="none" stroke="black" font-family="Times New Roman" font-size="16" transform="scale(1 -1)"> <g id="Spread" transform="translate(0 -24)"> <g id="Layer 1"> <g id="Group" stroke="none" fill="#FFFFFF"> <path d="M 7.106,12.949 C 6.985,12.949 6.696,13.063 6.55,13.204 L 1.926,18.216 C 0.551,19.548 0.689,23.031 4.017,23.031 C 5.471,23.031 6.39,21.459 7.106,20.557 C 7.82,21.459 8.74,23.031 10.195,23.031 C 13.522,23.031 13.66,19.548 12.285,18.216 L 7.661,13.204 C 7.515,13.063 7.227,12.949 7.106,12.949 Z" marker-start="none" marker-end="none"></path> <path d="M 7.598,3.304 L 1.894,9.436 C 1.088,10.614 2.41,11.789 3.5,10.762 L 5.872,8.504 C 5.456,6.881 7.115,5.385 8.371,5.385 L 10.462,5.385 C 12.135,5.385 14.181,7.579 15.136,7.579 C 13.446,7.579 12.033,6.728 11.027,6.728 L 8.43,6.728 C 7.056,6.728 6.931,8.787 8.43,8.787 L 11.019,8.787 C 13.544,8.787 13.746,10.848 15.888,10.848 C 17.104,10.848 19.406,8.723 20.846,7.673 C 21.026,7.541 21.218,7.306 21.062,7.03 L 19.213,3.723 C 19.122,3.58 18.806,3.467 18.551,3.662 L 16.99,4.76 C 16.791,4.896 16.56,4.897 16.22,4.784 L 10.651,2.848 C 9.711,2.596 8.446,2.333 7.598,3.304 Z M 6.661,1.912 C 6.658,1.915 6.65,1.922 6.648,1.925 L 6.442,2.134 L 0.738,8.264 C 0.663,8.338 0.595,8.419 0.536,8.507 C -0.297,9.723 -0.148,11.268 0.917,12.177 C 1.994,13.096 3.552,12.974 4.632,11.956 L 6.761,9.93 L 6.84,9.991 C 6.849,9.997 6.859,10.004 6.868,10.01 C 7.309,10.282 7.844,10.433 8.43,10.433 L 11.019,10.433 C 11.7,10.433 12.01,10.648 12.559,11.094 C 13.124,11.554 14.137,12.494 15.888,12.494 C 17.082,12.494 18.316,11.703 18.976,11.263 C 19.879,10.662 22.374,8.597 23.29,7.958 C 24.117,7.354 24.138,7.041 23.775,6.332 L 21.389,1.9 C 20.586,0.63 19.452,0.963 18.622,1.589 L 16.64,2.968 C 16.495,3.069 16.28,3.087 16.114,3.029 L 11.2,1.297 C 11.164,1.284 11.115,1.268 11.077,1.258 C 10.597,1.129 9.831,0.937 9.016,0.973 C 8.251,1.007 7.393,1.247 6.661,1.912 Z" marker-start="none" marker-end="none"></path> </g> </g> </g> </g> </svg>';
 
 class EventDonation extends React.Component {
   static propTypes = {
@@ -29,8 +29,8 @@ class EventDonation extends React.Component {
     super(props);
     this.state = {
       donationRate: 15,
+      cardUser:{},
       showDonationPopup: false,
-
       isValidData: false,
       isError: false,
       email: null,
@@ -39,9 +39,7 @@ class EventDonation extends React.Component {
       emailFeedBack: false,
       passwordFeedBack: false,
       auctionData: null,
-
       isValidBidData: false,
-
       firstName: null,
       lastName: null,
       cardNumber: null,
@@ -54,7 +52,6 @@ class EventDonation extends React.Component {
       expYear: null,
       phoneNumber: null,
       popupHeader:null,
-
       firstNameValue: null,
       lastNameValue: null,
       cardNumberValue: null,
@@ -69,7 +66,6 @@ class EventDonation extends React.Component {
       passwordValue:null,
       phoneNumberValue:null,
       errorMsgCard:null,
-
       firstNameFeedBack: false,
       lastNameFeedBack: false,
       cardNumberFeedBack: false,
@@ -77,7 +73,6 @@ class EventDonation extends React.Component {
       amountFeedBack: false,
       cvvFeedBack: false,
       phoneNumberFeedBack: false,
-
       errorReg: null,
       errorMsg: null,
       errorMsgfirstName: null,
@@ -90,17 +85,24 @@ class EventDonation extends React.Component {
       errorMsgEmail: null,
       errorMsgPhoneNumber: null,
       showPopup: false,
+      showDonationConfirmation: false,
+      donationConfirmationMsg: '',
       stripeToken:null,
     }
     this.showDonationPopup = this.showDonationPopup.bind(this);
     this.hideDonationPopup = this.hideDonationPopup.bind(this);
+    this.hideDonationConfirmationPopup = this.hideDonationConfirmationPopup.bind(this);
+    this.showDonationConfirmationPopup = this.showDonationConfirmationPopup.bind(this);
+    this.doDonationConfirmation = this.doDonationConfirmation.bind(this);
+    this.giveDonation = this.giveDonation.bind(this);
+    this.doGetStripeToken = this.doGetStripeToken.bind(this);
   }
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
       emailValue:this.email.value,
     });
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (this.email.value == '') {
       this.setState({
@@ -284,7 +286,7 @@ class EventDonation extends React.Component {
   onBidFormClick = (e) => {
     e.preventDefault();
     console.log(this.state)
-    var self = this;
+    let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
     if (this.state.isValidBidData) {
       const card = {
@@ -316,8 +318,12 @@ class EventDonation extends React.Component {
       donationRate: event.currentTarget.value
     })
   };
-  componentWillMount() {
-    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+
+  componentDidMount(){
+    console.log("this.props.stripeKey", this.props.stripeKey);
+    if(this.props.stripeKey){
+      Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    }
   }
   showDonationPopup = () => {
 
@@ -331,9 +337,14 @@ class EventDonation extends React.Component {
       showDonationPopup: false
     })
   };
+  hideDonationConfirmationPopup = () => {
+    this.setState({
+      showDonationConfirmation: false
+    })
+  };
   submitDonatebid = (e) => {
     e.preventDefault();
-    var self = this
+    let self = this;
     if(!this.props.authenticated){
       let userData={
         "countryCode": "IN",
@@ -342,84 +353,17 @@ class EventDonation extends React.Component {
         "phoneNumber": this.state.phoneNumberValue
       }
       this.props.doSignUp(this.props.eventUrl,userData ).then((resp)=>{
-        var self = this;
+        let self = this;
+        this.hideDonationPopup();
         if(!resp.error){
-              const card = {
-                number: this.cardNumber.value,
-                cvc: this.cvv.value,
-                exp_month: this.expMonth.value,
-                exp_year: this.expYear.value,
-              }
-              Stripe.createToken(card, function (status, response) {
-                if (response.error) {
-                  self.setState({
-                    errorMsg: response.error.message,
-                    isError:true,
-                  });
-                } else {
-                  const user = {
-                    stripeToken : response.id,
-                    amount: self.state.amountValue,
-                  }
-                  self.props.giveDonate(self.props.eventUrl, user)
-                    .then(resp => {
-                      console.log(resp)
-                      if (resp && resp.message) {
-                        self.setState({
-                          errorMsg: resp.message,
-                          isError:false,
-                        });
-                      }else{
-                        self.setState({
-                          errorMsg: resp.errorMessage,
-                          isError:true,
-                        });
-                      }
-                    });
-                }
-              });
+          this.doGetStripeToken();
         } else{
           this.setState({error:"Invalid Email or password"});
         }
       });
     }
    else if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ){
-      const card = {
-        number: this.cardNumber.value,
-        cvc: this.cvv.value,
-        exp_month: this.expMonth.value,
-        exp_year: this.expYear.value,
-      }
-      Stripe.createToken(card, function (status, response) {
-        if (response.error) {
-          self.setState({
-            errorMsg: response.error.message,
-            isError:true,
-          });
-        } else {
-          const user = {
-            stripeToken : response.id,
-            amount: self.state.amountValue,
-            email:self.props.user.email,
-            paymenttype:"CC",
-          }
-          self.props.giveDonate(self.props.eventUrl, user)
-            .then(resp => {
-              console.log(resp)
-              if (resp && resp.message) {
-                self.setState({
-                  errorMsg: resp.message,
-                  isError:false,
-                });
-              }else{
-                self.setState({
-                  errorMsg: resp.errorMessage,
-                  isError:true,
-                });
-              }
-            });
-        }
-      });
+     this.doGetStripeToken();
     }
    else{
       const user = {
@@ -427,24 +371,66 @@ class EventDonation extends React.Component {
         email:self.props.user.email,
         paymenttype:"CC",
       }
-      this.props.giveDonate(this.props.eventUrl, user)
-        .then(resp => {
-          console.log(resp)
-          if (resp && resp.message) {
-            this.setState({
-              errorMsg: resp.message,
-              isError:false,
-            });
-          }else{
-            this.setState({
-              errorMsg: resp.errorMessage,
-              isError:true,
-            });
-          }
-        });
+      this.hideDonationPopup();
+      this.showDonationConfirmationPopup();
     }
+  }
+
+  doGetStripeToken = ()=>{
+    let self = this;
+    const card = {
+      number: this.cardNumber.value,
+      cvc: this.cvv.value,
+      exp_month: this.expMonth.value,
+      exp_year: this.expYear.value,
+    }
+    Stripe.createToken(card, function (status, response) {
+      self.hideDonationPopup();
+      if (response.error) {
+        self.setState({
+          errorMsg: response.error.message,
+          isError:true,
+        });
+      } else {
+        self.setState({
+          user: {
+            stripeToken : response.id,
+            amount: self.state.amountValue,
+            email:self.props.user.email,
+            paymenttype:"CC",
+          },
+          contimationMsg : " Your card ending in " + response.card.last4 + " will be charged $ "+  self.state.amountValue  + " towards donation." ,
+        })
+        self.showDonationConfirmationPopup();
+      }
+    });
+  }
+  doDonationConfirmation = ()=>{
+    this.hideDonationPopup();
+    this.giveDonation();
+  }
+  giveDonation=()=>{
+    this.props.giveDonate(this.props.eventUrl, this.state.user)
+      .then(resp => {
+        console.log(resp)
+        this.hideDonationConfirmationPopup();
+        if (resp && resp.message) {
+          this.setState({
+            errorMsg: resp.message,
+            isError:false,
+          });
+        }else{
+          this.setState({
+            errorMsg: resp.errorMessage,
+            isError:true,
+          });
+        }
+      });
+  }
+  showDonationConfirmationPopup = ()=>{
+    this.hideDonationPopup();
     this.setState({
-      showDonationPopup:false
+      showDonationConfirmation: true
     })
   }
 
@@ -519,26 +505,6 @@ class EventDonation extends React.Component {
                 <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                   className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/>
                 </div>
-                { this.props.authenticated && <div>
-                  <div className="form-group" >
-                  <label className="control-label">Email Address</label>
-                  <div className="input-group">
-                    <div className="input-group-addon">
-                      <i className="fa fa-envelope" aria-hidden="true"/>
-                    </div>
-                    <input type="text" className="form-control" name="lastname" value={this.props.user.email} data-fv-field="lastName" disabled={true} />
-                  </div>
-                  </div>
-
-                  <div className="form-group" >
-                  <label className="control-label">Cell Number</label>
-                  <div className="input-group">
-                    <div className="input-group-addon">
-                      <i className="fa fa-phone" aria-hidden="true"/>
-                    </div>
-                    <input type="text" className="form-control" name="lastname" value={this.props.user.phonenumber} data-fv-field="lastName" disabled={true} />
-                  </div>
-                  </div> </div>}
                 { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
                   className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                   <label className="control-label">First Name</label>
@@ -546,18 +512,18 @@ class EventDonation extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="firstName"
                            ref={ref => {
                              this.firstName = ref;
                            }}
                            onKeyUp={this.firstNameValidateHandler}/>
-                    { this.state.firstNameFeedBack && this.state.email &&
+                    { this.state.firstNameFeedBack && this.state.firstName &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                    { this.state.firstNameFeedBack && !this.state.email &&
+                    { this.state.firstNameFeedBack && !this.state.firstName &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                  <small className="help-block">Firstname is required.</small>}
                 </div> :""}
                 { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -566,7 +532,7 @@ class EventDonation extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="lastName"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -577,9 +543,9 @@ class EventDonation extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                  <small className="help-block">Lastname is required.</small>}
                 </div> :''}
-                { !this.props.authenticated &&
+                { 1 &&
                   <div
                  className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                  <label className="control-label">Email Address</label>
@@ -592,6 +558,7 @@ class EventDonation extends React.Component {
                           ref={ref => {
                             this.email = ref;
                           }}
+                          value={this.props.user.email} disabled={this.props.authenticated}
                           onKeyUp={this.emailValidateHandler}
                    />
                    { this.state.emailFeedBack && this.state.email &&
@@ -602,21 +569,22 @@ class EventDonation extends React.Component {
                  { this.state.emailFeedBack && !this.state.email &&
                  <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                </div> }
-                { !this.props.authenticated && <div className="row">
+                { 1 && <div className="row">
                   <div className="col-md-8">
                     <div className="form-group expiration-date has-feedback">
                       <label className="control-label">Cell Number</label>
                       <div className="input-group">
                         <div className="input-group-addon">
                           <i className="fa fa-phone" aria-hidden="true"/></div>
-                        <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
+                        { !this.props.authenticated && <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
                           <option selected value="10">+1 USA</option>
                           <option value="02">+91 IND</option>
-                        </select>
-                        <input type="tel" className="int-tel-field "
+                        </select>}
+                        <input type="tel" className="int-tel-field form-control "
                                data-country="CA" autoComplete="off"
                                data-fv-field="intTelField"
                                placeholder="204-234-5678"
+                               value={this.props.user.phonenumber} disabled={this.props.authenticated}
                                ref={ref => {this.phoneNumber = ref}} onKeyUp={this.phoneNumberValidateHandler} />
                       </div>
                     </div>
@@ -655,6 +623,7 @@ class EventDonation extends React.Component {
                   className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
                   <div className="row">
                     <div className="col-md-6">
+                      <label className="control-label login-password">Donation Amount</label>
                       <div className="input-group">
                         <div className="input-group-addon">$</div>
 
@@ -820,6 +789,18 @@ class EventDonation extends React.Component {
             </div>
           </div>
         </PopupModel>
+        <PopupModel
+          id="mapPopup"
+          showModal={this.state.showDonationConfirmation}
+          headerText="Confirm"
+          onCloseFunc={this.hideDonationConfirmationPopup}
+          modelFooter = {<div>
+          <button className="btn btn-success" onClick={()=>{this.doDonationConfirmation()}}>Confirm</button>
+          <button className="btn btn-green" onClick={()=>{this.hideDonationConfirmationPopup()}}>Close</button></div>}
+        >
+          <center>{"Your card ending in 4444 will be charged $5 towards donation"}.</center>
+        </PopupModel>
+
       </div>
     );
   }
@@ -830,6 +811,7 @@ const mapDispatchToProps = {
   giveDonate: (eventUrl, userData) => giveDonate(eventUrl, userData),
 };
 const mapStateToProps = (state) => ({
+  stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   user: state.session.user,
   authenticated: state.session.authenticated,
 });

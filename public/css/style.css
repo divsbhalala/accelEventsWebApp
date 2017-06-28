@@ -2242,3 +2242,50 @@ input:-webkit-autofill {
 }
 .control-dots{ visibility: hidden; }
 .zindex{z-index: 0 !important;}
+span.navbar-brand a,
+span.navbar-brand:hover a
+{
+  font-family: 'Titillium Web', Geneva, sans-serif;
+  font-weight: 700;
+  margin-left: -8px;
+  padding: 10px 15px;
+  color: #fff;
+}
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand a:hover{
+  color: #fff;
+  text-decoration: none;
+}
+.relative{
+  position: relative;
+}
+.GMap {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+.GMap-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.UpdatedText {
+  color: red;
+  display: none;
+}
+.min-h-300{
+  min-height:300px;
+}
+.m-r-5{
+  margin-right: 5px !important;
+}
+.m-l-5{
+  margin-left: 5px !important;
+}
+.m-t-5{
+  margin-top: 5px !important;
+}
+.m-b-5{
+  margin-bottom: 5px !important;
+}

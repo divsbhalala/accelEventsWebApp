@@ -15,7 +15,6 @@ import EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox'
 import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
-import SweetAlert from 'react-bootstrap-sweetalert';
 
 import {
 	doGetEventData,
@@ -39,10 +38,10 @@ class Event extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isLoaded : false,
+			isLoaded: false,
 			tab: 'The Event',
 			formError: '',
-			showFormError:false,
+			showFormError: false,
 			totalAuction: ar,
 			showBookingTicketPopup: false,
 			showMapPopup: false,
@@ -71,11 +70,13 @@ class Event extends React.Component {
 			totalTicketPrice: 0,
 			selectedCategoty: '',
 			lastScrollPos: 0,
-			activeEventTickets :true,
-			activeFund :true,
-			activeAuction :true,
-			activeRaffle :true,
-			activeDonation :true,
+			activeEventTickets: true,
+			activeFund: true,
+			activeAuction: true,
+			activeRaffle: true,
+			activeDonation: true,
+			center: {lat: 59.95, lng: 30.33},
+			zoom: 11
 		};
 		this.doGetLoadMoreAuctionItem = this.doGetLoadMoreAuctionItem.bind(this);
 		this.showBookingPopup = this.showBookingPopup.bind(this);
@@ -95,151 +96,209 @@ class Event extends React.Component {
 		this.hideFormError = this.hideFormError.bind(this);
 
 	}
-  emailValidateHandler = (e) => {
-    this.setState({
-      emailFeedBack: true,
-      emailValue:this.email.value,
-    });
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value == '') {
-      this.setState({
-        email: false,
-        errorMsgEmail: "Email is required.",
-      });
-    }
-    else {
-      this.setState({
-        email: re.test(this.email.value),
-        errorMsgEmail: "Invalid Email.",
-      });
-    }
-    this.setState({isValidData: !!(this.email.value)});
-  };
-  firstNameValidateHandler = (e) => {
-    this.setState({
-      firstNameFeedBack: true,
-      firstNameValue: this.firstName.value,
-    });
-    if (this.firstName.value == '') {
+	componentWillReceiveProps() {
+		console.log("componentWillReceiveProps in event", this.props.authenticated)
+		if (this.props.authenticated) {
+			this.props.isVolunteer(this.props.params && this.props.params.params);
+		}
+	}
 
-      this.setState({
-        firstName: false
-      });
-    } else {
-      this.setState({
-        firstName: true
-      });
-    }
-  };
-  lastNameValidateHandler = (e) => {
-    this.setState({
-      lastNameFeedBack: true,
-      lastNameValue: this.lastName.value,
-    });
-    if (this.lastName.value == '') {
-      this.setState({
-        lastName: false
-      });
-    } else {
-      this.setState({
-        lastName: true
-      });
-    }
-  };
-  cardHolderValidateHandler = (e) => {
+	componentWillMount() {
+		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=> {
+			this.setState({
+				activeEventTickets: this.props.eventData && this.props.eventData.ticketingEnabled,
+				activeAuction: this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
+				activeFund: true,
+				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
+			})
+			if (this.state.activeEventTickets) {
+				this.setState({
+					tab: 'The Event'
+				})
+			} else if (this.state.activeAuction) {
+				this.setState({
+					tab: 'Auction'
+				})
+			} else if (this.state.activeRaffle) {
+				this.setState({
+					tab: 'Raffle'
+				})
+			} else if (this.state.activeFund) {
+				this.setState({
+					tab: 'Fund a Need'
+				})
+			} else {
+				this.setState({
+					tab: 'Donation'
+				})
+			}
+			this.setActiveTabState(this.state.tab)
+		});
+		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
+		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
+			this.setState({
+				settings: resp && resp.data
+			});
+		}).catch(error => {
+			history.push('/404');
+		});
+		this.props.isVolunteer(this.props.params && this.props.params.params);
+	}
 
-    this.setState({
-      cardHolderFeedBack: true
-    });
+	componentDidMount() {
+		this.setState({
+			isLoaded: true
+		})
+		window.addEventListener('scroll', this.handleScroll);
+	}
 
-    if (this.cardHolder.value == '') {
+	emailValidateHandler = (e) => {
+		this.setState({
+			emailFeedBack: true,
+			emailValue: this.email.value,
+		});
+		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-      this.setState({
-        cardHolder: false,
-        errorMsgcardHolder: "The card holder name is required and can't be empty",
-      });
-    } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
-      this.setState({
-        cardHolder: false,
-        errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
-      });
-    } else {
-      this.setState({
-        cardHolder: true
-      });
-    }
+		if (this.email.value == '') {
+			this.setState({
+				email: false,
+				errorMsgEmail: "Email is required.",
+			});
+		}
+		else {
+			this.setState({
+				email: re.test(this.email.value),
+				errorMsgEmail: "Invalid Email.",
+			});
+		}
+		this.setState({isValidData: !!(this.email.value)});
+	};
+	firstNameValidateHandler = (e) => {
+		this.setState({
+			firstNameFeedBack: true,
+			firstNameValue: this.firstName.value,
+		});
+		if (this.firstName.value == '') {
+
+			this.setState({
+				firstName: false
+			});
+		} else {
+			this.setState({
+				firstName: true
+			});
+		}
+	};
+	lastNameValidateHandler = (e) => {
+		this.setState({
+			lastNameFeedBack: true,
+			lastNameValue: this.lastName.value,
+		});
+		if (this.lastName.value == '') {
+			this.setState({
+				lastName: false
+			});
+		} else {
+			this.setState({
+				lastName: true
+			});
+		}
+	};
+	cardHolderValidateHandler = (e) => {
+
+		this.setState({
+			cardHolderFeedBack: true
+		});
+
+		if (this.cardHolder.value == '') {
+
+			this.setState({
+				cardHolder: false,
+				errorMsgcardHolder: "The card holder name is required and can't be empty",
+			});
+		} else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+			this.setState({
+				cardHolder: false,
+				errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+			});
+		} else {
+			this.setState({
+				cardHolder: true
+			});
+		}
 
 
-  };
-  cardNumberValidateHandler = (e) => {
-    this.setState({
-      cardNumberFeedBack: true
-    });
-    if (this.cardNumber.value == '') {
-      this.setState({
-        cardNumber: false,
-        errorMsgcardNumber: "Enter Card Number ",
-      });
-    } else if (this.cardNumber.value.length !== 15 && this.cardNumber.value.length !== 16) {
-      this.setState({
-        cardNumber: false,
-        errorMsgcardNumber: " Please enter a Valid Card Number ",
-      });
-    } else {
-      this.setState({
-        cardNumber: true
-      });
-    }
-  };
-  amountValidateHandler = (e) => {
-    this.setState({
-      amountFeedBack: true,
-      amountValue:this.amount.value
-    });
-    let bid = 0;
-    bid = this.state.itemData && this.state.itemData.currentBid + 20 ;
+	};
+	cardNumberValidateHandler = (e) => {
+		this.setState({
+			cardNumberFeedBack: true
+		});
+		if (this.cardNumber.value == '') {
+			this.setState({
+				cardNumber: false,
+				errorMsgcardNumber: "Enter Card Number ",
+			});
+		} else if (this.cardNumber.value.length !== 15 && this.cardNumber.value.length !== 16) {
+			this.setState({
+				cardNumber: false,
+				errorMsgcardNumber: " Please enter a Valid Card Number ",
+			});
+		} else {
+			this.setState({
+				cardNumber: true
+			});
+		}
+	};
+	amountValidateHandler = (e) => {
+		this.setState({
+			amountFeedBack: true,
+			amountValue: this.amount.value
+		});
+		let bid = 0;
+		bid = this.state.itemData && this.state.itemData.currentBid + 20;
 
-    if (this.amount.value == '') {
-      this.setState({
-        amount: false,
-        errorMsgAmount: "Bid Amount can't be empty",
-      });
-    } else if (bid > this.amount.value) {
-      this.setState({
-        amount: false,
-        errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $"+bid+" increments. " + "   Bids for this item must be placed in increments of at least $20",
-      });
-    } else {
-      this.setState({
-        amount: true
-      });
-    }
-  };
-  cvvValidateHandler = (e) => {
+		if (this.amount.value == '') {
+			this.setState({
+				amount: false,
+				errorMsgAmount: "Bid Amount can't be empty",
+			});
+		} else if (bid > this.amount.value) {
+			this.setState({
+				amount: false,
+				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $" + bid + " increments. " + "   Bids for this item must be placed in increments of at least $20",
+			});
+		} else {
+			this.setState({
+				amount: true
+			});
+		}
+	};
+	cvvValidateHandler = (e) => {
 
-    this.setState({
-      cvvFeedBack: true
-    });
+		this.setState({
+			cvvFeedBack: true
+		});
 
-    if (this.cvv.value == '') {
+		if (this.cvv.value == '') {
 
-      this.setState({
-        cvv: false,
-        errorMsgcvv: "The CVV is required and can't be empty",
-      });
-    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
-      this.setState({
-        cvv: false,
-        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
-      });
-    } else {
-      this.setState({
-        cvv: true
-      });
-    }
+			this.setState({
+				cvv: false,
+				errorMsgcvv: "The CVV is required and can't be empty",
+			});
+		} else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+			this.setState({
+				cvv: false,
+				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+			});
+		} else {
+			this.setState({
+				cvv: true
+			});
+		}
 
-  };
+	};
 	doGetLoadMoreAuctionItem = () => {
 		this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 		setTimeout(() => {
@@ -294,54 +353,6 @@ class Event extends React.Component {
 			showFormError: false
 		})
 	};
-	componentWillMount() {
-		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=>{
-			this.setState({
-				activeEventTickets :this.props.eventData && this.props.eventData.ticketingEnabled,
-				activeAuction :this.props.eventData && this.props.eventData.causeAuctionEnabled,
-				activeRaffle :this.props.eventData && this.props.eventData.raffleEnabled,
-				activeFund :true,
-				activeDonation :this.props.eventData && this.props.eventData.donationEnabled,
-			})
-			if(this.state.activeEventTickets) {
-					this.setState({
-						tab: 'The Event'
-					})
-			}else if(this.state.activeAuction) {
-				this.setState({
-					tab: 'Auction'
-				})
-			}else  if(this.state.activeRaffle) {
-				this.setState({
-					tab: 'Raffle'
-				})
-			} else  if(this.state.activeFund) {
-				this.setState({
-					tab: 'Fund a Need'
-				})
-			}else {
-				this.setState({
-					tab: 'Donation'
-				})
-			}
-			this.setActiveTabState(this.state.tab)
-		});
-		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
-		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
-			this.setState({
-				settings: resp && resp.data
-			});
-		}).catch(error => {
-			history.push('/404');
-		});
-		this.props.isVolunteer(this.props.params && this.props.params.params);
-	}
-	componentDidMount() {
-		this.setState({
-			isLoaded: true
-		})
-		window.addEventListener('scroll', this.handleScroll);
-	}
 	setActiveTabState = (label) => {
 		this.setState({tab: label});
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
@@ -375,8 +386,9 @@ class Event extends React.Component {
 				});
 		}
 	};
+
 	doGetAuctionItemByLimit(eventUrl) {
-   	this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory,this.state.auctionPageSearchString).then(resp => {
+		this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
 					this.setState({
@@ -399,8 +411,9 @@ class Event extends React.Component {
 			})
 		})
 	}
+
 	doGetAuctionItemBySearch(eventUrl) {
-   	this.props.doGetAuctionItemByLimit(eventUrl, 0, this.state.auctionPageLimit, this.state.auctionPageCategory,this.state.auctionPageSearchString).then(resp => {
+		this.props.doGetAuctionItemByLimit(eventUrl, 0, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
 					this.setState({
@@ -422,6 +435,7 @@ class Event extends React.Component {
 			})
 		})
 	}
+
 	doGetRaffleItemByLimit(eventUrl) {
 		this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
@@ -447,8 +461,9 @@ class Event extends React.Component {
 			})
 		})
 	}
+
 	doGetRaffleItemBySearch(eventUrl) {
-		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory,this.state.rafflePageSearchString).then(resp => {
+		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory, this.state.rafflePageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
 					this.setState({
@@ -470,6 +485,7 @@ class Event extends React.Component {
 			})
 		})
 	}
+
 	doGetFundANeedItemByLimit(eventUrl) {
 		this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
@@ -495,8 +511,9 @@ class Event extends React.Component {
 			})
 		})
 	}
+
 	doGetFundANeedItemBySearch(eventUrl) {
-	  this.props.doGetFundANeedItemByLimit(eventUrl,0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory,this.state.fundANeedPageSearchString).then(resp => {
+		this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory, this.state.fundANeedPageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
 					this.setState({
@@ -504,7 +521,7 @@ class Event extends React.Component {
 					})
 				}
 				this.setState({
-					fundANeedPageItems:resp.data.items,
+					fundANeedPageItems: resp.data.items,
 				})
 			}
 			else {
@@ -583,7 +600,7 @@ class Event extends React.Component {
 			if (label == 'Auction') {
 				this.setState({
 					auctionPageSearchString: searchString,
-					});
+				});
 				setTimeout(() => {
 					this.doGetAuctionItemBySearch(this.props.params && this.props.params.params);
 				}, 500);
@@ -592,18 +609,18 @@ class Event extends React.Component {
 				this.setState({
 					rafflePageSearchString: searchString,
 				});
-        setTimeout(() => {
-          this.doGetRaffleItemBySearch(this.props.params && this.props.params.params);
-        },500);
+				setTimeout(() => {
+					this.doGetRaffleItemBySearch(this.props.params && this.props.params.params);
+				}, 500);
 			} else if (label == 'Fund a Need') {
 				this.setState({
 					fundANeedPageSearchString: searchString,
 				});
-        setTimeout(() => {
-				this.doGetFundANeedItemBySearch(this.props.params && this.props.params.params);
-        }, 500);
+				setTimeout(() => {
+					this.doGetFundANeedItemBySearch(this.props.params && this.props.params.params);
+				}, 500);
 
-      }
+			}
 		}
 	};
 	handleScroll(event) {
@@ -649,7 +666,7 @@ class Event extends React.Component {
 				orderTicket: "Error while Oraring Tickets",
 				showFormError: true,
 				showBookingTicketPopup: false,
-				formError :  (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordaring Tickets"
+				formError: (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordaring Tickets"
 			})
 		})
 	}
@@ -685,7 +702,7 @@ class Event extends React.Component {
 								            authenticated={this.props.authenticated}
 								            setFilterCategory={this.setFilterCategory}
 								            selectedCategoty={this.state.selectedCategoty}
-                            setSearchString={this.setSearchString}
+								            setSearchString={this.setSearchString}
 								/>
 							</div>
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
@@ -696,20 +713,20 @@ class Event extends React.Component {
 
 										<Tab label="The Event" disabled={!this.state.activeEventTickets}>
 											<div className={cx("row item-canvas")}>
-												<div
-													className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
+												<div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
 											</div>
 											<div className={cx("row text-center")}>
 												<div className={cx("col-md-offset-3 col-md-6")}>
 													<a onClick={this.showBookingPopup}
-														 className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
+													   className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
 														Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
 												</div>
 											</div>
 										</Tab>
 										<Tab label="Auction" disabled={!this.state.activeAuction}>
 											<div className="row" id="auction">
-												{ !this.state.auctionPageItems.length && !this.state.auctionPageLoading && <div className="no-items-container text-center">
+												{ !this.state.auctionPageItems.length && !this.state.auctionPageLoading &&
+												<div className="no-items-container text-center">
 													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
 												</div>}
 
@@ -717,14 +734,14 @@ class Event extends React.Component {
 													next={this.doGetLoadMoreAuctionItem}
 													hasMore={this.state.auctionPageLoading}
 													loader={<div className="text-center"><span
-                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>{console.log(this.state.settings, this.state.settings && this.state.settings.socialSharingEnabled)}
 													{
 														this.state.auctionPageItems.map((item) =>
 															<EventTabCommonBox key={item.id + Math.random().toString()}
 															                   type="auction"
 															                   headerText={item.name}
 															                   itemCode={item.code}
-															                   isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
+															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
 															                   data={
                                                    [
                                                      {
@@ -752,13 +769,14 @@ class Event extends React.Component {
 										</Tab>
 										<Tab label="Raffle" disabled={!this.state.activeRaffle}>
 											<div className="row" id="raffle">
-												{ !this.state.rafflePageItems.length && !this.state.rafflePageLoading && <div className="no-items-container text-center">
+												{ !this.state.rafflePageItems.length && !this.state.rafflePageLoading &&
+												<div className="no-items-container text-center">
 													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
 												</div>}
 												<InfiniteScroll
 													next={this.doGetLoadMoreRaffleItem}
 													hasMore={this.state.rafflePageLoading}
-                          loader={<div className="text-center"><span
+													loader={<div className="text-center"><span
                             className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
 													{
 														this.state.rafflePageItems.map((item) =>
@@ -766,7 +784,7 @@ class Event extends React.Component {
 															                   type="raffle"
 															                   headerText={item.name}
 															                   itemCode={item.code}
-															                   isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
+															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
 															                   data={
                                                    [
                                                      {
@@ -788,13 +806,14 @@ class Event extends React.Component {
 										</Tab>
 										<Tab label="Fund a Need" disabled={!this.state.activeFund}>
 											<div className="row" id="causeauction">
-												{ !this.state.fundANeedPageItems.length && !this.state.fundANeedPageLoading && <div className="no-items-container text-center">
+												{ !this.state.fundANeedPageItems.length && !this.state.fundANeedPageLoading &&
+												<div className="no-items-container text-center">
 													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
 												</div>}
 												<InfiniteScroll
 													next={this.doGetLoadMoreFundANeedItem}
 													hasMore={this.state.fundANeedPageLoading}
-                          loader={<div className="text-center"><span
+													loader={<div className="text-center"><span
                             className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
 													{
 														this.state.fundANeedPageItems.map((item) =>
@@ -802,7 +821,7 @@ class Event extends React.Component {
 															                   type="fund"
 															                   headerText={item.name}
 															                   itemCode={item.code}
-															                   isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
+															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
 															                   data={
                                                    [
                                                      {
@@ -824,7 +843,8 @@ class Event extends React.Component {
 											</div>
 										</Tab>
 										<Tab label="Donation" disabled={!this.state.activeDonation}>
-											<div className="row"><EventDonation  eventUrl={this.props.params && this.props.params.params} /></div>
+											<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params}/>
+											</div>
 										</Tab>
 									</Tabs>
 								</div>}
@@ -842,7 +862,7 @@ class Event extends React.Component {
 					modelBody=''
 					onCloseFunc={this.hideBookingPopup}
 				>
-					<form method="POST">
+					<form method="POST" id="buy-event-tickets">
 						<div className="ticket-type-container">
 							{
 								this.state.settings && this.state.settings.tickeTypes && (this.state.settings.tickeTypes).map(item =>
@@ -855,7 +875,7 @@ class Event extends React.Component {
 														<div className="col-md-7">No Of Tickets</div>
 														{ item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
 															<select className="form-control" name={item.typeId} data-price={item.price}
-															        disabled = {moment(item.endDate).diff(moment()) <= 0}
+															        disabled={moment(item.endDate).diff(moment()) <= 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
 																{makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
@@ -921,27 +941,38 @@ class Event extends React.Component {
 				>
 					<div><h1>Location</h1></div>
 				</PopupModel>
-				{ this.state.showFormError && <SweetAlert
-					warning
-					confirmBtnText="Continue"
-					confirmBtnBsStyle="danger"
-					title={ this.state.formError || "Invalid Data"}
-					onConfirm={this.hideFormError}
+				{ this.state.showFormError &&
+				<PopupModel
+					id="mapPopup"
+					showModal={this.state.showFormError}
+					headerText="No Ticket Selected"
+					onCloseFunc={this.hideFormError}
+					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormError()}}>Close</button>}
 				>
-				</SweetAlert> }
+					<center>{ "At least one ticket is to be selected."}</center>
+				</PopupModel> }
+				<PopupModel
+					id="mapPopup"
+					showModal={false}
+					headerText="No Ticket Selected"
+					onCloseFunc={this.hideFormError}
+					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormError()}}>Close</button>}
+				>
+					<div className="relative min-h-300"><GMap initialCenter={initialCenter}/></div>
+				</PopupModel>
 			</div>
 		);
 	}
 }
-
+const AnyReactComponent = ({text}) => <div>{text}</div>;
 const mapDispatchToProps = {
 	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
 	doGetEventTicketSetting: (eventUrl) => doGetEventTicketSetting(eventUrl),
 	doGeItemByCode: (eventUrl, itemCode, type) => doGeItemByCode(eventUrl, itemCode, type),
 	doGetItemByLimit: (eventUrl, page, size, type) => doGetItemByLimit(eventUrl, page, size, type),
-	doGetAuctionItemByLimit: (eventUrl, page, size, type,searchString) => doGetAuctionItemByLimit(eventUrl, page, size, type,searchString),
-	doGetRaffleItemByLimit: (eventUrl, page, size, type,searchString) => doGetRaffleItemByLimit(eventUrl, page, size, type,searchString),
-	doGetFundANeedItemByLimit: (eventUrl, page, size, type,searchString) => doGetFundANeedItemByLimit(eventUrl, page, size, type,searchString),
+	doGetAuctionItemByLimit: (eventUrl, page, size, type, searchString) => doGetAuctionItemByLimit(eventUrl, page, size, type, searchString),
+	doGetRaffleItemByLimit: (eventUrl, page, size, type, searchString) => doGetRaffleItemByLimit(eventUrl, page, size, type, searchString),
+	doGetFundANeedItemByLimit: (eventUrl, page, size, type, searchString) => doGetFundANeedItemByLimit(eventUrl, page, size, type, searchString),
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	storeActiveTabData: (tab) => storeActiveTabData(tab),
 	doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
@@ -960,3 +991,205 @@ const mapStateToProps = (state) => ({
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Event));
 //export default (withStyles(s)(Event));
+
+var directionsDisplay = null;
+var directionsService = null;
+var map = null;
+var marker = null;
+var infowindow = null;
+
+class GMap extends React.Component {
+	state = {zoom: 10};
+
+	static propTypes() {
+		initialCenter: React.PropTypes.objectOf(React.PropTypes.number).isRequired
+	}
+
+	render() {
+		return <div className="GMap">
+			<div className='UpdatedText'>
+				<p>Current Zoom: { this.state.zoom }</p>
+			</div>
+			<div className='GMap-canvas min-h-300' ref="mapCanvas">
+			</div>
+		</div>
+	}
+
+	componentDidMount() {
+		// create the map, marker and infoWindow after the component has
+		// been rendered because we need to manipulate the DOM for Google =(
+		this.map = this.createMap();
+		this.marker = this.createMarker();
+		this.infoWindow = this.createInfoWindow();
+		this.initMap();
+
+		// have to define google maps event listeners here too
+		// because we can't add listeners on the map until its created
+		google.maps.event.addListener(this.map, 'zoom_changed', ()=> this.handleZoomChange());
+		directionsDisplay = new google.maps.DirectionsRenderer();
+		directionsService = new google.maps.DirectionsService();
+		map = null;
+		marker = null;
+		infowindow = new google.maps.InfoWindow({
+			size: new google.maps.Size(300, 50)
+		});
+	}
+
+	// clean up event listeners when component unmounts
+	componentDidUnMount() {
+		google.maps.event.clearListeners(map, 'zoom_changed')
+	}
+
+	createMap() {
+		var geocoder = new google.maps.Geocoder;
+		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				console.log("here", results)
+			}
+		})
+		let mapOptions = {
+			zoom: this.state.zoom,
+			center: this.mapCenter()
+		}
+		return new google.maps.Map(this.refs.mapCanvas, mapOptions)
+	}
+
+	mapCenter() {
+		return new google.maps.LatLng(
+			this.props.initialCenter.lat,
+			this.props.initialCenter.lng
+		)
+	}
+
+	createMarker() {
+		return new google.maps.Marker({
+			position: this.mapCenter(),
+			map: this.map
+		})
+	}
+
+	createInfoWindow() {
+		var html = '<div class="directions-container">' +
+			'  <form action="javascript:getDirections()">' +
+			'    <h4>Directions:</h4>' +
+			'    <div class="form-group">' +
+			'       <label>Start address:</label>' +
+			'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
+			'    </div>' +
+			'    <div class="form-group">' +
+			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick="getDirections()">' +
+			'    </div>' +
+			'    <div class="form-group">' +
+			'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +
+			'      <input type="checkbox" name="highways" id="highways"> <label for="highways">Avoid Highways</label>' +
+			'    </div>' +
+			'  </form>' +
+			'</div>';
+
+		let contentString = html;
+		return new google.maps.InfoWindow({
+			map: this.map,
+			anchor: this.marker,
+			content: contentString
+		})
+	}
+
+	handleZoomChange() {
+		this.setState({
+			zoom: this.map.getZoom()
+		})
+	}
+
+	getDirections() {
+		// ==== Set up the walk and avoid highways options ====
+		var request = {};
+		if (document.getElementById("walk").checked) {
+			request.travelMode = google.maps.DirectionsTravelMode.WALKING;
+		} else {
+			request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
+		}
+
+		if (document.getElementById("highways").checked) {
+			request.avoidHighways = true;
+		}
+		// ==== set the start and end locations ====
+		var saddr = document.getElementById("saddr").value;
+		var daddr = document.getElementById("daddr").value;
+
+		request.origin = saddr;
+		request.destination = daddr;
+		directionsService.route(request, function (response, status) {
+			if (status == google.maps.DirectionsStatus.OK) {
+				directionsDisplay.setDirections(response);
+			} else alert("Directions not found:" + status);
+		});
+	}
+
+	myclick() {
+		google.maps.event.trigger(markers, "click");
+	}
+
+
+	// functions that open the directions forms
+	tohere() {
+		infowindow.setContent(to_htmls);
+		infowindow.open(map, markers);
+	}
+
+	fromhere() {
+		infowindow.setContent(from_htmls);
+		infowindow.open(map, markers);
+	}
+
+	initMap() {
+		var geocoder = new google.maps.Geocoder;
+		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
+			if (status == google.maps.GeocoderStatus.OK) {
+				var uluru = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
+				map = new google.maps.Map(document.getElementById('location-map'), {
+					zoom: 17,
+					center: uluru
+				});
+				marker = new google.maps.Marker({
+					position: uluru,
+					map: map,
+					animation: google.maps.Animation.DROP,
+					title: 'Event Location'
+				});
+				directionsDisplay.setMap(map);
+				directionsDisplay.setPanel(document.getElementById("directionsPanel"));
+				google.maps.event.addListener(map, 'click', function () {
+					infowindow.close();
+				});
+
+				var html = '<div class="directions-container">' +
+					'  <form action="javascript:getDirections()">' +
+					'    <h4>Directions:</h4>' +
+					'    <div class="form-group">' +
+					'       <label>Start address:</label>' +
+					'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
+					'    </div>' +
+					'    <div class="form-group">' +
+					'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick={()=>{this.getDirections()}}>' +
+					'    </div>' +
+					'    <div class="form-group">' +
+					'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +
+					'      <input type="checkbox" name="highways" id="highways"> <label for="highways">Avoid Highways</label>' +
+					'    </div>' +
+					'    <input type="hidden" id="daddr" value="' + uluru.lat + ',' + uluru.lng + '">' +
+					'  </form>' +
+					'</div>';
+				var contentString = html;
+				google.maps.event.addListener(marker, 'click', function () {
+					map.setZoom(15);
+					map.setCenter(marker.getPosition());
+					infowindow.setContent(contentString);
+					infowindow.open(map, marker);
+				});
+			}
+		});
+	}
+
+}
+
+var initialCenter = {lng: -90.1056957, lat: 29.9717272}

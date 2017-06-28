@@ -609,6 +609,7 @@ class Auction extends React.Component {
               <i className="fa fa-envelope" aria-hidden="true"/>
             </div>
             <input type="email" className="form-control login-email"
+                   placeholder="Email"
                    name="email" data-fv-field="email"
                    ref={ref => {
                      this.email = ref;
