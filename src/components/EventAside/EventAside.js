@@ -185,7 +185,7 @@ class EventAside extends React.Component {
 							<h4 className={cx("")}>Categories</h4>
 							<ul className={cx("nav nav-pills nav-stacked category-list ")}>
 								<li className={cx("all-items",this.props.selectedCategoty == '' && "active")}>
-									<a href="#" className={cx("category-switcher all-items")} data-category="" data-module="#raffle">
+									<a href="#" className={cx("category-switcher all-items")}onClick={()=>{this.props.setFilterCategory("")}} data-module="#raffle">
 										<i className={cx("fa fa-ticket")}></i>
 										<span className={cx("cat-name")}>All Items</span>
 										<span className={cx("badge badge-primary pull-right cat-count")}></span>

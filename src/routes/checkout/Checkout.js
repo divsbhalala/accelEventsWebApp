@@ -426,7 +426,6 @@ class Checkout extends React.Component {
 			this.cardExpMonth.value &&
 			this.cardCVV.value) {
 			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp => {
-				console.log('resp', resp);
 				if (resp && resp.data && resp.data.id) {
 					let request = {
 						"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
@@ -493,9 +492,7 @@ class Checkout extends React.Component {
 					}
 					let eventUrl = this.props.params && this.props.params.params;
 					let orderId = this.props.params && this.props.params.orderId;
-					console.log(JSON.stringify(request));
 					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
-						console.log('res of request', resp);
 						if (resp && resp.data && resp.data.message == 'Success') {
 							this.showTicketPurchaseSuccessPopup();
 						}
@@ -524,14 +521,29 @@ class Checkout extends React.Component {
 
 				}
 
-			}).catch((error) => {
-				this.setState({
-					cardExpYear: false
-				});
-				console.log('error', error && error.response && error.response.data && error.response.data.error && error.response.data.error.message );
+			}).catch((error, status, msg) => {
+				console.log(error.response.data.error)
+				let respError = error && error.response && error.response.data && error.response.data.error && error.response.data.error;
+				if(respError){
+					if(respError.param == 'exp_year'){
+						this.setState({
+							cardExpYear: false,
+						});
+					}
+					if(respError.param == 'exp_month'){
+						this.setState({
+							cardExpMonth: false,
+						});
+					}
+					if(respError.param == 'number'){
+						this.setState({
+							cardNumber: false,
+						});
+					}
+				}
 				this.setState({
 					showFormError : true,
-					formError : (error && error.response && error.response.data && error.response.data.error && error.response.data.error.message) || "Invalid Data"
+					formError : (respError && respError.message) || "Invalid Data"
 				});
 				// alert('Opps! Error while getting card token ');
 			})
@@ -760,7 +772,7 @@ class Checkout extends React.Component {
 														onSubmit={this.ticketCheckout}>
 												<div className="row">
 													<div className="col-md-10 col-md-offset-1">
-														<h3 className="type-name">second ticket type with longer name test</h3>
+														<h3 className="type-name">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData  && this.props.orderData.ticketAttribute.orderData.length  && this.props.orderData.ticketAttribute.orderData[0].ticketTypeName}</h3>
 														{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData &&
 														<div className="project-box gray-box card">
 															<div className="project-box-header gray-bg">
