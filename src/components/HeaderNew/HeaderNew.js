@@ -60,15 +60,18 @@ class HeaderNew extends React.Component {
 			emailValue: null,
 			nameValue: null,
 			messageValue: null,
+			showFormMessagePopup: false
 		};
 		this.logout = this.logout.bind(this);
 		this.showContactPopup = this.showContactPopup.bind(this);
 		this.hideContactPopup = this.hideContactPopup.bind(this);
+		this.hideFormMessagePopup = this.hideFormMessagePopup.bind(this);
 		this.doContactRequest = this.doContactRequest.bind(this);
 	}
 
 	componentWillReceiveProps() {
-		console.log("componentWillReceiveProps", this.props.authenticated);
+		eventUrl = this.props.params && this.props.params.params;
+		console.log("even", eventUrl);
 		if (this.props.authenticated) {
 			this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
@@ -176,8 +179,6 @@ class HeaderNew extends React.Component {
 				errorMsgEmail: "Invalid Email.",
 			});
 		}
-		this.setState({isValidData: !!(this.email.value && this.password.value)});
-
 	};
 	nameValidateHandler = (e) => {
 		this.setState({
@@ -234,8 +235,6 @@ class HeaderNew extends React.Component {
 				password: true
 			});
 		}
-		this.setState({isValidData: !!(this.email.value && this.password.value)});
-
 	};
 	logout = () => {
 		localStorage.clear();
@@ -245,12 +244,26 @@ class HeaderNew extends React.Component {
 	};
 	showContactPopup = () => {
 		this.setState({
+			name: null,
+			message: null,
+			email: null,
+			emailValue: null,
+			nameValue: null,
+			messageValue: null,
+			nameFeedBack: false,
+			messageFeedBack: false,
+			emailFeedBack: false,
 			showContactPopup: true
 		})
 	};
 	hideContactPopup = () => {
 		this.setState({
 			showContactPopup: false
+		})
+	};
+	hideFormMessagePopup = () => {
+		this.setState({
+			showFormMessagePopup: false
 		})
 	};
 	showLoginPopup = () => {
@@ -280,13 +293,50 @@ class HeaderNew extends React.Component {
 	};
 
 	doContactRequest = ()=>{
-		console.log("here", (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)) && this.message && this.message.value);
-		if( (this.props.authenticated || (this.email.value && this.name.value)) && this.message.value ){
-			this.doContactSupport().then(resp=>{
+		console.log("here", "this.props.authenticated",this.props.authenticated  , (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)) ,this.message && this.message.value, !this.message.value);
+		if( (this.props.authenticated || (this.email && this.name && this.email.value.trim() !='' && this.name.value.trim() !='')) && this.message && this.message.value.trim() !='' ){
+			let contactData={};
+			if(!this.props.authenticated){
+				contactData = {
+					name : this.email.value,
+					email : this.name.value,
+				}
+			}
+			contactData.message=this.message.value;
+			if(eventUrl){
+				this.props.doContactSupport(eventUrl, contactData).then(resp=>{
+					console.log("resp", resp);
+					if(resp && resp.status == 200){
+						this.setState({
+							formMessage: resp.data && resp.data.message || "Thank you for writing to us, we will get back to you soon!",
+							showFormMessagePopup : true,
+							showContactPopup : false,
+						})
+					}
+					else{
+						this.setState({
+							formMessage: "Opps! Error while processing your request. Please try after sometime",
+							showFormMessagePopup : true,
+							showContactPopup : false,
+						})
+					}
+				}).catch(error=>{
+					this.setState({
+						formMessage: "Opps! Error while processing your request. Please try after sometime",
+						showFormMessagePopup : true,
+						showContactPopup : false,
+					})
+					console.log("error", error);
+				})
+			}
+			else{
+				this.setState({
+					formMessage: "No EventFound",
+					showFormMessagePopup : true,
+					showContactPopup : false,
+				})
+			}
 
-			}).catch(error=>{
-
-			})
 		}
 		else {
 			this.setState({
@@ -491,6 +541,16 @@ class HeaderNew extends React.Component {
 					</div>
 
 				</PopupModel>
+				{ this.state.showFormMessagePopup &&
+				<PopupModel
+					id="mapPopup"
+					showModal={this.state.showFormMessagePopup}
+					headerText=""
+					onCloseFunc={this.hideFormMessagePopup}
+					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormMessagePopup()}}>Close</button>}
+				>
+					<center>{ this.state.formMessage }</center>
+				</PopupModel> }
 				<PopupModel
 					id="contactPopup"
 					showModal={this.state.showLoginPopup}
