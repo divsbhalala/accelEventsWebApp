@@ -739,14 +739,14 @@ class Event extends React.Component {
 													next={this.doGetLoadMoreAuctionItem}
 													hasMore={this.state.auctionPageLoading}
 													loader={<div className="text-center"><span
-                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>{console.log(this.state.settings, this.state.settings && this.state.settings.socialSharingEnabled)}
 													{
 														this.state.auctionPageItems.map((item) =>
 															<EventTabCommonBox key={item.id + Math.random().toString()}
 															                   type="auction"
 															                   headerText={item.name}
 															                   itemCode={item.code}
-															                   isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
+															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
 															                   data={
                                                    [
                                                      {
@@ -789,7 +789,7 @@ class Event extends React.Component {
 															                   type="raffle"
 															                   headerText={item.name}
 															                   itemCode={item.code}
-															                   isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
+															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
 															                   data={
                                                    [
                                                      {
@@ -826,7 +826,7 @@ class Event extends React.Component {
 															                   type="fund"
 															                   headerText={item.name}
 															                   itemCode={item.code}
-															                   isSharable={this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.socialSharingEnabled}
+															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
 															                   data={
                                                    [
                                                      {
@@ -958,7 +958,7 @@ class Event extends React.Component {
 				</PopupModel> }
 				<PopupModel
 					id="mapPopup"
-					showModal={true}
+					showModal={false}
 					headerText="No Ticket Selected"
 					onCloseFunc={this.hideFormError}
 					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormError()}}>Close</button>}
@@ -1049,7 +1049,7 @@ class GMap extends React.Component {
 		var geocoder = new google.maps.Geocoder;
 		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
-
+				console.log("here", results)
 			}
 		})
 		let mapOptions = {

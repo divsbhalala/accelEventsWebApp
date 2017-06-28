@@ -83,18 +83,18 @@ class EventTabCommonBox extends React.Component {
             </div>
 
 
-            { this.props.isSharable && this.props.isSharable == 'true' &&
+            { this.props.isSharable  &&
             <ul className={cx("social-network social-circle")}>
               <li>
                 <a
-                  href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.stagingaccel.com%3A8080%2FAccelEventsWebApp%2Fevents%2Fjkazarian8%2FR%2FRAF"
+                  href={"https://www.facebook.com/sharer/sharer.php?u=" + location.href}
                   title="Facebook" target="_blank">
                   <i className={cx("fa fa-facebook")}></i>
                 </a>
               </li>
               <li>
                 <a
-                  href="http://twitter.com/home?status=http%3A%2F%2Fwww.stagingaccel.com%3A8080%2FAccelEventsWebApp%2Fevents%2Fjkazarian8%2FR%2FRAF"
+                  href={"http://twitter.com/home?status=" + location.href}
                   title="Twitter" target="_blank">
                   <i className={cx("fa fa-twitter")}></i>
                 </a>
