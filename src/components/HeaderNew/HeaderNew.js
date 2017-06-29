@@ -288,11 +288,6 @@ class HeaderNew extends React.Component {
 			toggle: false
 		})
 	};
-	hideRegisterPopup = () => {
-		this.setState({
-			showLoginPopup: false,
-		})
-	};
 
 	doContactRequest = ()=>{
 		console.log("here", "this.props.authenticated",this.props.authenticated  , (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)) ,this.message && this.message.value, !this.message.value);
@@ -556,9 +551,9 @@ class HeaderNew extends React.Component {
 				<LoginModal
 					showModal={this.state.showLoginPopup}
 					headerText=""
-					onCloseFunc={this.hideRegisterPopup}
+					onCloseFunc={this.hideLoginPopup}
           params={this.props.params }
-					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideRegisterPopup()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginPopup()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
 				/>
 
 			</div>

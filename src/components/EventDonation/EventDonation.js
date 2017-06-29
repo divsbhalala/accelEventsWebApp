@@ -326,12 +326,14 @@ class EventDonation extends React.Component {
     }
   }
 	componentWillReceiveProps(){
-		console.log("this.props.defaultSelectAmount", this.props.defaultSelectAmount)
-		if(this.props.defaultSelectAmount){
-			this.setState({
-				donationRate : this.props.defaultSelectAmount
-			})
-		}
+		setTimeout(()=>{
+      if(this.props.defaultSelectAmount){
+        this.setState({
+          donationRate : this.props.defaultSelectAmount
+        })
+      }
+    },100);
+
 	}
   showDonationPopup = () => {
 
