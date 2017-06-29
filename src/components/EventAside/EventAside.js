@@ -8,6 +8,7 @@ import cx from 'classnames';
 import Moment from 'react-moment';
 import moment from 'moment';
 import PopupModel from './../PopupModal';
+import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 
 
 class EventAside extends React.Component {
@@ -30,7 +31,9 @@ class EventAside extends React.Component {
 		this.state = {
 			showBuyRaffelTicketPopup: false,
 			filterCategory: '',
-			serachSring: ''
+			serachSring: '',
+      isshowBuyRaffleTicketsModal:false,
+
 		};
 		this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
 		this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
@@ -49,10 +52,25 @@ class EventAside extends React.Component {
 	serachString = (e) => {
 		this.props.setSearchString(this.serachKey.value);
 	}
+  showBuyRaffleTicketsModal = () => {
+    this.setState({
+      isshowBuyRaffleTicketsModal: true
+    })
+  };
+  hideBuyRaffleTicketsModal = () => {
+    this.setState({
+      isshowBuyRaffleTicketsModal: false
+    })
+  };
 
 	render() {
 		return (
 			<div>
+				<BuyRaffleTicketsModal
+          showModal={this.state.isshowBuyRaffleTicketsModal}
+          headerText=""
+          onCloseFunc={this.hideBuyRaffleTicketsModal}
+          params={this.props.params}  />
 				<script type="text/javascript"
 				        src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>
@@ -164,7 +182,7 @@ class EventAside extends React.Component {
 						<a role="button"
 						   className={cx("btn btn-primary btn-block buy-raffle-tickets", ((moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded)&& 'disabled')}
 						   disabled={(moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded}
-						   onClick={this.showBuyRaffelTicketPopup}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
+						   onClick={this.showBuyRaffleTicketsModal}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
 						{ this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.activeCategory &&
 						<div className={cx("search-bar card")}>
 							<input type="text" className={cx("form-control")} placeholder="Search Items..."

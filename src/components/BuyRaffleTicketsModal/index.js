@@ -91,30 +91,82 @@ class BuyRaffleTicketsModal extends React.Component {
   //  this.purchaseTicket=this.purchaseTicket.bind(this);
    }
   componentWillMount() {
-
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+    Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
   }
   componentWillReceiveProps(){
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
-    this.setState({
-      showContactPopup: false,
-      showLoginPopup: false,
+
+       this.setState({
+      showBookingTicketPopup: false,
+      showMapPopup: true,
+      firstNameFeedBack: false,
+      ticketsFeedBack: false,
+      lastNameFeedBack: false,
+      showAlertPopup : false,
+      showTicketsPopup : false,
+      errorMsgCard:null,
       isValidData: false,
       email: null,
       password: null,
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
-      phoneNumberFeedBack: false,
-      errorMsgNumber: null,
-      phoneNumber: false,
-      phone: null,
-      toggle: true,
+      auctionData: null,
+      isValidBidData: false,
+      firstName: null,
+      lastName: null,
+      cardNumber: null,
+      cardHolder: null,
+      amount: null,
+      cvv: null,
+      month: null,
+      year: null,
+      expMonth: null,
+      expYear: null,
+      phoneNumber: null,
+      popupHeader:null,
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue: null,
+      expYearValue: null,
       emailValue: null,
-      countryPhone:null,
+      passwordValue:null,
+      phoneNumberValue:null,
+      tickets:null,
+      cardNumberFeedBack: false,
+      cardHolderFeedBack: false,
+      expYearFeedBack: false,
+      expMonthFeedBack: false,
+      amountFeedBack: false,
+      cvvFeedBack: false,
+      phoneNumberFeedBack: false,
+      errorReg: null,
+      errorMsgfirstName: null,
+      errorMsglastName: null,
+      errorMsgcardNumber: null,
+      errorMsgcardHolder: null,
+      errorMsgamount: null,
+      errorMsgNumber: null,
+      errorMsgcvv: null,
+      errorMsgEmail: null,
+      errorMsgPhoneNumber: null,
+      errorMsg: null,
+      errorMsgTickets:null,
+      showPopup: false,
+      stripeToken:null,
+      submittedTickets:null,
+      raffleTicketValue:null,
+      popupTicketHeader: "Pay Now",
       loading:false,
+      countryPhone:null,
+      phone:null,
+      isError:false,
     })
   }
 
@@ -418,9 +470,7 @@ showLoginPopup = () => {
     e.preventDefault();
   };
   componentReRender() {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }}
+ }
   buyTicket = () => {
     this.setState({
       loading:true,
@@ -527,7 +577,7 @@ showLoginPopup = () => {
         });
     } else {
       let self = this;
-      this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+      //this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
       if ( this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
         const card = {
           number: this.state.cardNumberValue,
@@ -659,17 +709,23 @@ showLoginPopup = () => {
       showTicketsPopup: false,
     })
   };
+  close() {
+    this.setState({showModal: false});
+  }
+
+  open() {
+    this.setState({showModal: true});
+  }
   render() {
     let event = this.props.params && this.props.params.params;
     return (
       <div >
-        <PopupModel
-          id="mapPopup"
-          showModal={true}
-          headerText={
-            <h4 className="modal-title"><a role="button" onClick={this.showLoginModal} data-form="login">Log in</a> or Signup below</h4>
-          }
-          onCloseFunc={this.hideTicketsPopup} >
+        <Modal  show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} >
+          <Modal.Body>
+            <Modal.Header closeButton>
+              <h4 className="modal-title"><a role="button" onClick={this.showLoginModal} data-form="login">Log in</a> or Signup below</h4>
+            </Modal.Header>
+
           <div className="main-box-body clearfix">
             <div className="payment-area collapse in">
               <form className="ajax-form validated fv-form fv-form-bootstrap" data-has-cc-info="true"
@@ -973,7 +1029,8 @@ showLoginPopup = () => {
               </form>
             </div>
           </div>
-        </PopupModel>
+          </Modal.Body>
+        </Modal>
         <PopupModel
           id="alertPopup"
           showModal={this.state.showAlertPopup}
@@ -1011,6 +1068,7 @@ const mapStateToProps = (state) => ({
   isVolunteer : state.event && state.event.is_volunteer,
   user : state.session && state.session.user,
   authenticated : state.session && state.session.authenticated,
+  stripeKey: state.event && state.event.data && state.event.data.stripeKey,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(BuyRaffleTicketsModal));
