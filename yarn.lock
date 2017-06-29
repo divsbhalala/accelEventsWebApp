@@ -6150,6 +6150,14 @@ react-infinite-scroll-component@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-2.3.0.tgz#f31a58b599f25e91a05297fdda1671e6e7d8cbae"
 
+react-intl-tel-input@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/react-intl-tel-input/-/react-intl-tel-input-4.1.3.tgz#bf191f2222e9c18dee295d1c04feffc1d545057f"
+  dependencies:
+    classnames "^2.2.5"
+    react-style-proptype "^3.0.0"
+    underscore.deferred "^0.4.0"
+
 react-loader@^2.4.0:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/react-loader/-/react-loader-2.4.2.tgz#14e2b9139fc5693da5cdbdc928032d5b1aeb94c2"
@@ -6273,6 +6281,12 @@ react-sidenav@^2.1.1:
   dependencies:
     prop-types "^15.5.8"
     styled-components "*"
+
+react-style-proptype@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-style-proptype/-/react-style-proptype-3.0.0.tgz#89e0b646f266c656abb0f0dd8202dbd5036c31e6"
+  dependencies:
+    prop-types "^15.5.4"
 
 react-styling@^1.6.1:
   version "1.6.2"
@@ -7618,6 +7632,10 @@ uncontrollable@^4.0.1:
   resolved "https://registry.yarnpkg.com/uncontrollable/-/uncontrollable-4.1.0.tgz#e0358291252e1865222d90939b19f2f49f81c1a9"
   dependencies:
     invariant "^2.1.0"
+
+underscore.deferred@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/underscore.deferred/-/underscore.deferred-0.4.0.tgz#2753de633b9ff7db601a2f3fa2af92b3dd290e6c"
 
 underscore.string@~2.4.0:
   version "2.4.0"

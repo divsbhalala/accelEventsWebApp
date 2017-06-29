@@ -14,12 +14,12 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import s from './../../routes/login/Login.css';
 import Link from './../Link';
-import {onFormSubmit, doLogin, storeLoginData, storeToken, doSignUp} from './../../routes/event/action/index';
-import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
-
+import { doLogin,doSignUp,doValidateMobileNumber} from './../../routes/event/action/index';
+import {Modal, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
+import Button from 'react-bootstrap-button-loader';
+import IntlTelInput from 'react-intl-tel-input';
 
 class LoginPopup extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -34,100 +34,115 @@ class LoginPopup extends React.Component {
       phoneNumberFeedBack: false,
       errorMsgNumber: null,
       phoneNumber: false,
+      phone: null,
       toggle: true,
       emailValue: null,
+      countryPhone:null,
+      loading:false,
     };
    }
-
+  componentWillMount() {
+    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+  }
+  componentWillReceiveProps(){
+    this.setState({
+      showContactPopup: false,
+      showLoginPopup: false,
+      isValidData: false,
+      email: null,
+      password: null,
+      error: null,
+      emailFeedBack: false,
+      passwordFeedBack: false,
+      phoneNumberFeedBack: false,
+      errorMsgNumber: null,
+      phoneNumber: false,
+      phone: null,
+      toggle: true,
+      emailValue: null,
+      countryPhone:null,
+      loading:false,
+    })
+  }
   onFormClick = (e) => {
     e.preventDefault();
-
-    if (this.email.value == '') {
-      this.setState({
-        email: false
-      });
-    }
-
-    if (this.password.value == '') {
-      this.setState({
-        password: false
-      });
-    }
-    if (this.state.isValidData) {
+    this.setState({
+      emailFeedBack: true,
+      passwordFeedBack: true,
+      phoneNumberFeedBack: true,})
+    if (this.state.phoneNumber && this.state.email && this.state.password) {
+      this.setState({loading:true})
       let user = {
-        countryCode: "IN",
+        countryCode: this.state.countryPhone,
         email: this.email.value,
         password: this.password.value,
-        phoneNumber: this.state.phoneNumberValue
+        phoneNumber: this.state.phone,
       }
       this.props.doSignUp(this.props.params && this.props.params.params, user).then((resp) => {
         if (!resp.errorMessage) {
-          this.setState({error: "Your account has been created",showLoginPopup: false});
-          //window.location.reload();
+          this.setState({error: "Your account has been created",loading:true});
           this.props.onCloseFunc();
         }
         else {
-          this.setState({error: resp.errorMessage});
+          this.setState({error: resp.errorMessage,loading:false});
         }
-
       });
     }
-
   };
   onFormClickLogin = (e) => {
     e.preventDefault();
-
-    if (this.email.value == '') {
-      this.setState({
-        email: false
-      });
-    }
-
-    if (this.password.value == '') {
-      this.setState({
-        password: false
-      });
-    }
-    if (this.state.isValidData) {
+    this.setState({
+      emailFeedBack: true,
+      passwordFeedBack: true,})
+    if (this.state.email && this.state.password) {
+      this.setState({loading:true})
       this.props.doLogin(this.email.value, this.password.value).then((resp) => {
         if (!resp.errorMessage) {
-          this.setState({error: "Log In SuccessFully"});
-          //window.location.reload();
+          this.setState({error: "Log In SuccessFully",loading:false});
           this.props.onCloseFunc();
         }
         else {
-          this.setState({error: "Invalid Email or password"});
+          this.setState({error: "Invalid Email or password",loading:false});
         }
 
       });
     }
 
   };
-  phoneNumberValidateHandler = (e) => {
+  phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+    console.log(isValid, value, countryData, number, ext);
     this.setState({
+      phone: value,
+      countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
-      phoneNumberValue: this.phoneNumber.value,
+      errorMsgPhoneNumber :"",
     });
-    if (this.phoneNumber.value == '') {
+    if (value == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
       });
-    } else {
-      this.setState({
-        phoneNumber: true
-      });
+    }else{
+      this.props.doValidateMobileNumber(number).then(resp => {
+        console.log(resp)
+        this.setState({
+          phoneNumber: !resp,
+          errorMsgPhoneNumber: "Invalid phone number",
+        });
+      })
     }
-    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
-  };
+    this.setState({
+      phone: value,
+    });
+  }
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
-      emailValue: this.email.value,
+      emailValue:this.email.value.trim(),
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -135,12 +150,10 @@ class LoginPopup extends React.Component {
     }
     else {
       this.setState({
-        email: re.test(this.email.value),
+        email: re.test(this.email.value.trim()),
         errorMsgEmail: "Invalid Email.",
       });
     }
-    this.setState({isValidData: !!(this.email.value && this.password.value)});
-
   };
   passwordValidateHandler = (e) => {
 
@@ -209,7 +222,7 @@ class LoginPopup extends React.Component {
                       <div className="login-form" id="LoginAttempt">
                         <h1 className="text-center">Log in</h1>
                         <h4 className="text-center">
-                          Or &nbsp;&nbsp;<a className={s.link} onClick={this.showRegister}>Signup</a>
+                          Or, &nbsp;&nbsp;<a className={s.link} onClick={this.showRegister}>Sign up</a>
                         </h4>
                         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClickLogin}>
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
@@ -229,7 +242,6 @@ class LoginPopup extends React.Component {
                                    autoComplete="off"
                                    placeholder="Email"
                                    type="text"
-                                   required="required"
                                    className="form-control input-lg"
                                    autoFocus
                                    ref={ref => {
@@ -252,7 +264,6 @@ class LoginPopup extends React.Component {
                                    id="login-password"
                                    type="password"
                                    autoComplete="off"
-                                   required="required"
                                    className="form-control input-lg"
                                    ref={ref => {
                                      this.password = ref;
@@ -268,7 +279,7 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            <button type="submit" className="btn btn-square btn-green btn-block btn-lg">Log in</button>
+                            <Button  loading={this.state.loading}  type="submit" className="btn btn-square btn-success btn-block btn-lg">Log in</Button>
                           </div>
                           <div className="mrg-t-sm ">
                             <div className="form-group">
@@ -304,7 +315,7 @@ class LoginPopup extends React.Component {
                                    autoComplete="off"
                                    placeholder="Email"
                                    type="text"
-                                   required="required"
+
                                    className="form-control input-lg"
                                    autoFocus
                                    ref={ref => {
@@ -319,31 +330,27 @@ class LoginPopup extends React.Component {
                             { this.state.emailFeedBack && !this.state.email &&
                             <small className="help-block">This value is not valid</small> }
                           </div>
-                          <div className="form-group has-feedback">
+                          <div
+                            className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                             <label className="control-label">Cell Number</label>
                             <div className="input-group">
                               <div className="input-group-addon">
                                 <i className="fa fa-phone" aria-hidden="true"/>
                               </div>
-                              <div className="intl-tel-input allow-dropdown separate-dial-code iti-sdc-2">
-                                <div className="flag-container">
-                                  <div className="selected-flag" tabIndex={0} title="United States: +1">
-                                    <div className="iti-flag us"/>
-                                    <div className="selected-dial-code">+1</div>
-                                    <div className="iti-arrow"/>
-                                  </div>
-                                </div>
-                                <input type="tel" className="int-tel-field form-control" data-country="US" maxLength={10}
-                                       autoComplete="off" data-fv-field="intTelField" placeholder="201-555-0123"
-                                       ref={ref => {this.phoneNumber = ref}} onKeyUp={this.phoneNumberValidateHandler}/>
-                              </div>
-                              <input type="hidden" name="countryCode" defaultValue="US"/><input type="hidden"
-                                                                                                name="phoneNumber"
-                                                                                                defaultValue/>
+                              <IntlTelInput
+                                css={['intl-tel-input', 'form-control']}
+                                utilsScript="./libphonenumber.js"
+                                separateDialCode={true}
+                                value={ this.state.phone }
+                                onPhoneNumberChange={this.changePhone}
+                              />
+                              { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                              { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                             </div>
-                            <i className="form-control-feedback fv-bootstrap-icon-input-group" data-fv-icon-for="intTelField"
-                               style={{display: 'none'}}/>
-
+                            { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                            <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
                           </div>
                           <div
                             className={cx("mrg-t-sm form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
@@ -353,7 +360,6 @@ class LoginPopup extends React.Component {
                                    id="login-password"
                                    type="password"
                                    autoComplete="off"
-                                   required="required"
                                    className="form-control input-lg"
                                    ref={ref => {
                                      this.password = ref;
@@ -369,7 +375,7 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            <button type="submit" className="btn btn-square btn-green btn-block btn-lg">SIGN UP</button>
+                            <Button  loading={this.state.loading}  type="submit" className="btn btn-square btn-success btn-block btn-lg">SIGN UP</Button>
                           </div>
                           <p className="mrg-t-md small text-center">
                             By signing up, I agree to Accelevent's <a href="/AccelEventsWebApp/tos" target="_blank">terms of
@@ -396,6 +402,7 @@ class LoginPopup extends React.Component {
 const mapDispatchToProps = {
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
   doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 
 const mapStateToProps = (state) => ({

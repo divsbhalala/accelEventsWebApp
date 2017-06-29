@@ -6,7 +6,7 @@ import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings,doSignUp,fundaNeed} from './../action/index';
+import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber} from './../action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
@@ -17,9 +17,7 @@ import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import Phone from 'react-phone-number-input'
-import { parse,isValidNumber} from 'libphonenumber-js'
-
+import IntlTelInput from 'react-intl-tel-input';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -93,6 +91,8 @@ class Fund extends React.Component {
       showPopup: false,
       stripeToken:null,
       loading:false,
+      countryPhone:null,
+      phone:null,
     }
 
   }
@@ -121,10 +121,12 @@ class Fund extends React.Component {
     let self = this
     if(!this.props.authenticated){
       let userData={
-        "countryCode": "IN",
+        "firstname":this.state.firstNameValue,
+        "lastname":this.state.lastNameValue,
+        "countryCode": this.state.countryPhone,
         "email": this.state.emailValue,
         "password": this.state.passwordValue,
-        "phoneNumber": this.state.phoneNumberValue
+        "phoneNumber": this.state.phone
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
         let self = this;
@@ -477,38 +479,38 @@ class Fund extends React.Component {
     this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
-  phoneNumberValidateHandler = (e) => {
-    console.log(parse(this.state.phone).country)
+  phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+    console.log(isValid, value, countryData, number, ext);
     this.setState({
+      phone: value,
+      countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
-      errorMsgPhoneNumber :""
+      errorMsgPhoneNumber :"",
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.state.phone == '') {
+    if (value == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
-    } if (!isValidNumber(this.state.phone)) {
-      this.setState({
-        phoneNumber: false,
-        errorMsgPhoneNumber: "Invalid phone number",
-      },function afterTitleChange () {
-        this.checkIsValidBidData()
-      });
+    }else{
+      this.props.doValidateMobileNumber(number).then(resp => {
+        console.log(resp)
+        this.setState({
+          phoneNumber: !resp,
+          errorMsgPhoneNumber: "Invalid phone number",
+        },function afterTitleChange () {
+          this.checkIsValidBidData()
+        });
+      })
     }
-    else {
-      this.setState({
-        phoneNumber: true
-      },function afterTitleChange () {
-        this.checkIsValidBidData()
-      });
-    }
-    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-  };
+    this.setState({
+      phone: value,
+    });
+  }
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -573,6 +575,7 @@ class Fund extends React.Component {
   };
 
   componentWillMount() {
+    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     if(this.props.stripeKey){
       Stripe.setPublishableKey(this.props.stripeKey);
     }
@@ -772,19 +775,19 @@ class Fund extends React.Component {
                           <div className="col-md-8">
                             <div
                               className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-
                               <label className="control-label">Cell Number</label>
                               <div className="input-group">
                                 <div className="input-group-addon">
                                   <i className="fa fa-phone" aria-hidden="true"/>
                                 </div>
-                                <Phone
-                                  placeholder="Enter phone number"
-                                  className="form-control"
+                                <IntlTelInput
+                                  css={['intl-tel-input', 'form-control intl-tel']}
+                                  utilsScript="./libphonenumber.js"
+                                  separateDialCode={true}
                                   value={ this.state.phone }
-                                  onChange={ phone => this.setState({ phone }) }
-                                  onKeyUp={this.phoneNumberValidateHandler}
-                                  country="US"/>
+                                  maxLength={16} data-stripe="number"
+                                  onPhoneNumberChange={this.changePhone}
+                                />
                                 { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
@@ -960,8 +963,6 @@ class Fund extends React.Component {
                               </div>
                             </div>
                            </div> : "" }
-
-
                         <div
                           className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
                           <div className="row">
@@ -1013,7 +1014,7 @@ class Fund extends React.Component {
         <PopupModel
           id="mapPopup"
           showModal={this.state.showMapPopup}
-          headerText= {this.state.popupHeader}
+          headerText= {<h4>{this.state.popupHeader}</h4>}
           modelBody='<div><h1>Location</h1></div>'
           onCloseFunc={this.hideMapPopup}
         >
@@ -1048,6 +1049,7 @@ const mapDispatchToProps = {
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   fundaNeed: (eventUrl, data) => fundaNeed(eventUrl, data),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 const mapStateToProps = (state) => ({
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,

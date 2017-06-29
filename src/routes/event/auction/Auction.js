@@ -5,16 +5,17 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Auction.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings,doGetAuctionItemByCode,doSignUp,submitAuctionBid,changeUserData} from './../action/index';
+import {doGetEventData, doGetSettings,doGetAuctionItemByCode,doSignUp,submitAuctionBid,changeUserData,doValidateMobileNumber} from './../action/index';
 import  history from './../../../history';
 import  EventAside from './../../../components/EventAside/EventAside';
 import {sessionService, loadSession} from 'redux-react-session';
 import  {Carousel} from 'react-responsive-carousel';
 import PopupModel from './../../../components/PopupModal';
-import Phone from 'react-phone-number-input'
 import { parse,isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
+import IntlTelInput from 'react-intl-tel-input';
+
 
 class Auction extends React.Component {
   static propTypes = {
@@ -87,6 +88,7 @@ class Auction extends React.Component {
       showPopup: false,
       stripeToken:null,
       phone:null,
+      countryPhone:null,
       loading:false,
     };
   }
@@ -204,13 +206,13 @@ class Auction extends React.Component {
         loading:true,
       })
       let userData={
-        "countryCode": parse(this.state.phone).country,
+        "countryCode": this.state.countryPhone,
         "email": this.state.emailValue,
         "password": this.state.passwordValue,
-        "phoneNumber": parse(this.state.phone).phone,
+        "phoneNumber": this.state.phone,
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
-        if (resp && !resp.errors) {
+        if (resp && !resp.errorMessage) {
             this.setState({
               showPopup: true,
               errorMsgCard: "Thank you for Registration!",
@@ -222,7 +224,7 @@ class Auction extends React.Component {
           else{
             this.setState({
               showPopup: true,
-              errorMsgCard: "Please enter Proper Detail",
+              errorMsgCard: resp.errorMessage,
               popupHeader:"Failed",
               loading:false,
             })
@@ -437,38 +439,39 @@ class Auction extends React.Component {
     this.checkIsValidBidData();
    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
-  phoneNumberValidateHandler = (e) => {
-    console.log(parse(this.state.phone).country)
+
+  phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+    console.log(isValid, value, countryData, number, ext);
     this.setState({
+      phone: value,
+      countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
-      errorMsgPhoneNumber :""
+      errorMsgPhoneNumber :"",
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.state.phone == '') {
+    if (value == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
-    } if (!isValidNumber(this.state.phone)) {
+    }else{
+    this.props.doValidateMobileNumber(number).then(resp => {
+      console.log(resp)
       this.setState({
-        phoneNumber: false,
+        phoneNumber: !resp,
         errorMsgPhoneNumber: "Invalid phone number",
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
+    })
     }
-    else {
-      this.setState({
-        phoneNumber: true
-      },function afterTitleChange () {
-        this.checkIsValidBidData()
-      });
-    }
-   // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-  };
+    this.setState({
+      phone: value,
+    });
+  }
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -509,6 +512,8 @@ class Auction extends React.Component {
   };
 
   componentWillMount() {
+    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+
     if(this.props.stripeKey){
       Stripe.setPublishableKey(this.props.stripeKey);
     }
@@ -591,7 +596,6 @@ class Auction extends React.Component {
    }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
-
   render() {
     let form_login = <div>
       <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
@@ -632,19 +636,18 @@ class Auction extends React.Component {
           <div className="col-md-8">
             <div
               className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-
             <label className="control-label">Cell Number</label>
               <div className="input-group">
                 <div className="input-group-addon">
                   <i className="fa fa-phone" aria-hidden="true"/>
                 </div>
-                <Phone
-                  placeholder="Enter phone number"
-                  className="form-control"
+                <IntlTelInput
+                  css={['intl-tel-input', 'form-control']}
+                  utilsScript="./libphonenumber.js"
+                  separateDialCode={true}
                   value={ this.state.phone }
-                  onChange={ phone => this.setState({ phone }) }
-                  onKeyUp={this.phoneNumberValidateHandler}
-                  country="US"/>
+                  onPhoneNumberChange={this.changePhone}
+                />
                 { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
@@ -1221,7 +1224,7 @@ class Auction extends React.Component {
         <PopupModel
           id="bookingPopup"
           showModal={this.state.showPopup}
-          headerText={this.state.popupHeader}
+          headerText={<h4>{this.state.popupHeader}</h4>}
           modelBody=''
           onCloseFunc={this.hidePopup}>
             <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
@@ -1255,6 +1258,7 @@ const mapDispatchToProps = {
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
   submitAuctionBid: (eventUrl, userData) => submitAuctionBid(eventUrl, userData),
   changeUserData: (data, userData) => changeUserData(data, userData),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 const mapStateToProps = (state) => ({
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,

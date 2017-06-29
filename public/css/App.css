@@ -2202,8 +2202,11 @@ a.disabled:hover {
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
 }
-.intl-tel-input.allow-dropdown .flag-container {
-  z-index: 1000
+.intl-tel{
+  z-index:0 !important;
+}
+.intl-tel-input .country-list{
+  z-index:3 !important;
 }
 .input-group-addon + .intl-tel-input {
   float: left;

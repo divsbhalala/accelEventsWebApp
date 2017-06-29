@@ -2189,13 +2189,7 @@ a.disabled:hover {
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
 }
-.intl-tel-input.allow-dropdown .flag-container {
-  z-index: 1000
-}
-.input-group-addon + .intl-tel-input {
-  float: left;
-  width: 100%;
-}
+
 .dropzone .dz-preview .dz-details img, .dropzone-previews .dz-preview .dz-details img {
   height: auto;
 }
