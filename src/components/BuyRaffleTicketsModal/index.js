@@ -5,7 +5,7 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import s from './../../routes/login/Login.css';
 import Link from './../Link';
-import { doLogin,doSignUp,doValidateMobileNumber,purchaseTickets} from './../../routes/event/action/index';
+import { doLogin,doSignUp,doValidateMobileNumber,purchaseTickets,doGetEventData,doGetSettings} from './../../routes/event/action/index';
 import {Modal, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
 import IntlTelInput from 'react-intl-tel-input';
@@ -459,13 +459,6 @@ showLoginPopup = () => {
       showLoginPopup: false,
     })
   }
-  close() {
-    this.setState({showModal: false});
-  }
-
-  open() {
-    this.setState({showModal: true});
-  }
   buyRaffleTicket = (e) => {
     e.preventDefault();
   };
@@ -564,6 +557,7 @@ showLoginPopup = () => {
               isError:false,
               //  raffleData: updateraffleData,
             })
+            this.reRender();
           }else{
             this.setState({
               showPopup: true,
@@ -673,7 +667,14 @@ showLoginPopup = () => {
     })
   };
   reRender = ()=>{
-    //window.location.reload();
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
   };
   checkIsValidBidData = () =>{
     console.log(" this.state.lastName ", this.state.lastName )
@@ -1025,7 +1026,7 @@ showLoginPopup = () => {
                       </div>
                     </div></div> : "" }
                 {this.state.popupTicketHeader == "Pay Now" ? <Button className="btn btn-success"  role="button" type="submit"  loading={this.state.loading} onClick={this.buyTicket} >Pay Now</Button>
-                  : <button className="btn badge-danger" onClick={this.hideTicketsPopup}>Close</button> }
+                  : <button className="btn badge-danger" onClick={this.props.onCloseFunc}>Close</button> }
               </form>
             </div>
           </div>
@@ -1062,6 +1063,9 @@ const mapDispatchToProps = {
   doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
   purchaseTickets: (eventUrl, userData) => purchaseTickets(eventUrl, userData),
+
+  doGetEventData: (eventUrl) => doGetEventData(eventUrl),
+  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 
 const mapStateToProps = (state) => ({
