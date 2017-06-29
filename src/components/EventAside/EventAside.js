@@ -162,30 +162,29 @@ class EventAside extends React.Component {
 						</div> }
 						{ this.props.activeTab && ( this.props.activeTab == 'Raffle' ) && this.props.settings && this.props.settings.endDate &&
 						<a role="button"
-						   className={cx("btn btn-primary btn-block buy-raffle-tickets", moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled && 'disabled')}
-						   data-toggle="modal"
-						   href="#info-modal" data-title="Raffle Drawn"
-						   onClick={this.showBuyRaffelTicketPopup}>{moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
+						   className={cx("btn btn-primary btn-block buy-raffle-tickets", ((moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded)&& 'disabled')}
+						   disabled={(moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded}
+						   onClick={this.showBuyRaffelTicketPopup}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
 						{ this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.activeCategory &&
-						<div className={cx("search-bar card")} data-module="">
+						<div className={cx("search-bar card")}>
 							<input type="text" className={cx("form-control")} placeholder="Search Items..."
 							       onChange={this.serachString} ref={ref => {
                 this.serachKey = ref;
               }}/>
 						</div> }
-						<div className={cx("text-center powered-by-sidebar")}><span>Powered by </span><a
-							href="https://www.accelevents.com" target="_blank">
+						<div className={cx("text-center powered-by-sidebar")}><span>Powered by </span>
+							<Link to="https://www.accelevents.com" target="_blank">
 							<img
 								src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x50/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"
 								className={cx("img-responsive")}/>
-						</a>
+						</Link>
 						</div>
 						{ this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories && this.props.activeCategory &&
 						<div id="divItemCategories" className={cx("item-categories hidden-xs")}>
 							<h4 className={cx("")}>Categories</h4>
 							<ul className={cx("nav nav-pills nav-stacked category-list ")}>
 								<li className={cx("all-items",this.props.selectedCategoty == '' && "active")}>
-									<a href="#" className={cx("category-switcher all-items")}onClick={()=>{this.props.setFilterCategory("")}} data-module="#raffle">
+									<a href="#" className={cx("category-switcher all-items")}onClick={()=>{this.props.setFilterCategory("")}}>
 										<i className={cx("fa fa-ticket")}></i>
 										<span className={cx("cat-name")}>All Items</span>
 										<span className={cx("badge badge-primary pull-right cat-count")}></span>
@@ -223,7 +222,6 @@ class EventAside extends React.Component {
 					<div className="main-box-body clearfix">
 						<div className="payment-area collapse in">
 							<form className="ajax-form validated fv-form fv-form-bootstrap"
-							      data-validate-function="validateRafflePurchaseForm" data-onsuccess="handleRafflePurchaseSubmit"
 							      method="post" action="/AccelEventsWebApp/events/12/R/purchaseticket" noValidate="novalidate">
 								<button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
 								<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
@@ -233,7 +231,7 @@ class EventAside extends React.Component {
 									<div className="input-group">
 										<div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
 										<select className="form-control" name="pkg" id="ticketpkgs" defaultValue={0}>
-											<option value={0} data-ticket data-price disabled>Select Tickets</option>
+											<option value={0}  disabled>Select Tickets</option>
 											{this.props.settings && this.props.settings.ticketPackages ?
 												this.props.settings.ticketPackages.map(item=>
 													<option value={item.id} key={Math.random()} data-ticket={item.numOfTicket}

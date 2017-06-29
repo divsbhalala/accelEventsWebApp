@@ -2290,3 +2290,6 @@ span.navbar-brand:hover a
   border-top:none;
   padding-top:0px;
 }
+.item-description p, .card .card-content p{
+  visibility  :visible !important;
+}
