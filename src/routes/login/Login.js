@@ -33,19 +33,19 @@ class Login extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false
       });
     }
 
-    if (this.password.value == '') {
+    if (this.password.value.trim() == '') {
       this.setState({
         password: false
       });
     }
     if (this.state.isValidData) {
-      this.props.doLogin(this.email.value, this.password.value).then((resp) => {
+      this.props.doLogin(this.email.value.trim(), this.password.value.trim()).then((resp) => {
         ;
         if (!resp.error) {
           history.push('/');
@@ -66,7 +66,7 @@ class Login extends React.Component {
       emailFeedBack: true
     });
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false
       });
@@ -76,7 +76,7 @@ class Login extends React.Component {
         email: true
       });
     }
-    this.setState({isValidData: !!(this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
 
   };
   passwordValidateHandler = (e) => {
@@ -85,7 +85,7 @@ class Login extends React.Component {
       passwordFeedBack: true
     });
 
-    if (this.password.value == '') {
+    if (this.password.value.trim() == '') {
 
       this.setState({
         password: false
@@ -95,7 +95,7 @@ class Login extends React.Component {
         password: true
       });
     }
-    this.setState({isValidData: !!(this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
 
   };
 

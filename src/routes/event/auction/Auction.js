@@ -102,10 +102,10 @@ class Auction extends React.Component {
     let self = this;
     if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
       const card = {
-        number: this.cardNumber.value,
-        cvc: this.cvv.value,
-        exp_month: this.expMonth.value,
-        exp_year: this.expYear.value,
+        number: this.cardNumber.value.trim(),
+        cvc: this.cvv.value.trim(),
+        exp_month: this.expMonth.value.trim(),
+        exp_year: this.expYear.value.trim(),
       }
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
@@ -234,11 +234,11 @@ class Auction extends React.Component {
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
-      emailValue:this.email.value,
+      emailValue:this.email.value.trim(),
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -246,19 +246,19 @@ class Auction extends React.Component {
     }
     else {
       this.setState({
-        email: re.test(this.email.value),
+        email: re.test(this.email.value.trim()),
         errorMsgEmail: "Invalid Email.",
       });
     }
-    //this.setState({isValidData: !!(this.email.value && this.password.value)});
+    //this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
 
   };
   passwordValidateHandler = (e) => {
     this.setState({
       passwordFeedBack: true,
-      passwordValue:this.password.value,
+      passwordValue:this.password.value.trim(),
     });
-    if (this.password.value == '') {
+    if (this.password.value.trim() == '') {
       this.setState({
         password: false
       });
@@ -267,16 +267,16 @@ class Auction extends React.Component {
         password: true
       });
     }
-    //this.setState({isValidData: !!(this.email.value && this.password.value)});
+    //this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
   };
   firstNameValidateHandler = (e) => {
     this.setState({
       firstNameFeedBack: true,
-      firstNameValue:this.firstName.value
+      firstNameValue:this.firstName.value.trim()
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.firstName.value == '') {
+    if (this.firstName.value.trim() == '') {
       this.setState({
         firstName: false
       },function afterTitleChange () {
@@ -294,11 +294,11 @@ class Auction extends React.Component {
   lastNameValidateHandler = (e) => {
     this.setState({
       lastNameFeedBack: true,
-      lastNameValue: this.lastName.value,
+      lastNameValue: this.lastName.value.trim(),
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.lastName.value == '') {
+    if (this.lastName.value.trim() == '') {
 
       this.setState({
         lastName: false
@@ -312,18 +312,18 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }
-   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+   // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   cardHolderValidateHandler = (e) => {
 
     this.setState({
       cardHolderFeedBack: true,
-      cardHolderValue:this.cardHolder.value,
+      cardHolderValue:this.cardHolder.value.trim(),
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
 
-    if (this.cardHolder.value == '') {
+    if (this.cardHolder.value.trim() == '') {
 
       this.setState({
         cardHolder: false,
@@ -331,7 +331,7 @@ class Auction extends React.Component {
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
-    } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+    } else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
@@ -345,20 +345,20 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }
-  //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  //  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 
   };
   cardNumberValidateHandler = (e) => {
 
     this.setState({
       cardNumberFeedBack: true,
-      cardNumberValue:this.cardNumber.value,
+      cardNumberValue:this.cardNumber.value.trim(),
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
 
 
-    if (this.cardNumber.value == '') {
+    if (this.cardNumber.value.trim() == '') {
 
       this.setState({
         cardNumber: false,
@@ -366,7 +366,7 @@ class Auction extends React.Component {
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
-    } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
+    } else if (this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -378,27 +378,27 @@ class Auction extends React.Component {
         cardNumber: true
       });
     } this.checkIsValidBidData();
- //   this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+ //   this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 
   };
   amountValidateHandler = (e) => {
     let amount=true
     let errorMsgAmount=""
-    if (this.amount.value == '') {
+    if (this.amount.value.trim() == '') {
       errorMsgAmount= "Bid Amount can't be empty"
       amount=false
-    } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value) {
+    } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value.trim()) {
       errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.auctionData.bidIncrement+". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
       amount=false
     } else {
       amount=true
     }
     this.setState({
-      //isValidBidData: ( this.amount.value && amount),
+      //isValidBidData: ( this.amount.value.trim() && amount),
       amount:amount,
       amountFeedBack: true,
       errorMsgAmount:errorMsgAmount,
-      amountValue:this.amount.value
+      amountValue:this.amount.value.trim()
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
@@ -412,7 +412,7 @@ class Auction extends React.Component {
       this.checkIsValidBidData()
     });
 
-    if (this.cvv.value == '') {
+    if (this.cvv.value.trim() == '') {
 
       this.setState({
         cvv: false,
@@ -420,7 +420,7 @@ class Auction extends React.Component {
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
-    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+    } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
@@ -435,7 +435,7 @@ class Auction extends React.Component {
       });
     }
     this.checkIsValidBidData();
-   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+   // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler = (e) => {
     console.log(parse(this.state.phone).country)
@@ -467,16 +467,16 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }
-   // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+   // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue:this.expMonth.value,
+      expMonthValue:this.expMonth.value.trim(),
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.expMonth.value == '') {
+    if (this.expMonth.value.trim() == '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
@@ -488,14 +488,14 @@ class Auction extends React.Component {
         expMonth: true
       });
     } this.checkIsValidBidData();
-    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue:this.expYear.value,
+      expYearValue:this.expYear.value.trim(),
     });
-    if (this.expYear.value == '') {
+    if (this.expYear.value.trim() == '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: "Expire Year is Require",
@@ -505,7 +505,7 @@ class Auction extends React.Component {
         expYear: true
       });
     } this.checkIsValidBidData();
-    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
 
   componentWillMount() {

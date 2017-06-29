@@ -156,11 +156,11 @@ class Event extends React.Component {
 	emailValidateHandler = (e) => {
 		this.setState({
 			emailFeedBack: true,
-			emailValue: this.email.value,
+			emailValue: this.email.value.trim(),
 		});
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value == '') {
+		if (this.email.value.trim() == '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -168,18 +168,18 @@ class Event extends React.Component {
 		}
 		else {
 			this.setState({
-				email: re.test(this.email.value),
+				email: re.test(this.email.value.trim()),
 				errorMsgEmail: "Invalid Email.",
 			});
 		}
-		this.setState({isValidData: !!(this.email.value)});
+		this.setState({isValidData: !!(this.email.value.trim())});
 	};
 	firstNameValidateHandler = (e) => {
 		this.setState({
 			firstNameFeedBack: true,
-			firstNameValue: this.firstName.value,
+			firstNameValue: this.firstName.value.trim(),
 		});
-		if (this.firstName.value == '') {
+		if (this.firstName.value.trim() == '') {
 
 			this.setState({
 				firstName: false
@@ -193,9 +193,9 @@ class Event extends React.Component {
 	lastNameValidateHandler = (e) => {
 		this.setState({
 			lastNameFeedBack: true,
-			lastNameValue: this.lastName.value,
+			lastNameValue: this.lastName.value.trim(),
 		});
-		if (this.lastName.value == '') {
+		if (this.lastName.value.trim() == '') {
 			this.setState({
 				lastName: false
 			});
@@ -211,13 +211,13 @@ class Event extends React.Component {
 			cardHolderFeedBack: true
 		});
 
-		if (this.cardHolder.value == '') {
+		if (this.cardHolder.value.trim() == '') {
 
 			this.setState({
 				cardHolder: false,
 				errorMsgcardHolder: "The card holder name is required and can't be empty",
 			});
-		} else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+		} else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
 			this.setState({
 				cardHolder: false,
 				errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
@@ -234,12 +234,12 @@ class Event extends React.Component {
 		this.setState({
 			cardNumberFeedBack: true
 		});
-		if (this.cardNumber.value == '') {
+		if (this.cardNumber.value.trim() == '') {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: "Enter Card Number ",
 			});
-		} else if (this.cardNumber.value.length !== 15 && this.cardNumber.value.length !== 16) {
+		} else if (this.cardNumber.value.trim().length !== 15 && this.cardNumber.value.trim().length !== 16) {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -253,17 +253,17 @@ class Event extends React.Component {
 	amountValidateHandler = (e) => {
 		this.setState({
 			amountFeedBack: true,
-			amountValue: this.amount.value
+			amountValue: this.amount.value.trim()
 		});
 		let bid = 0;
 		bid = this.state.itemData && this.state.itemData.currentBid + 20;
 
-		if (this.amount.value == '') {
+		if (this.amount.value.trim() == '') {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "Bid Amount can't be empty",
 			});
-		} else if (bid > this.amount.value) {
+		} else if (bid > this.amount.value.trim()) {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $" + bid + " increments. " + "   Bids for this item must be placed in increments of at least $20",
@@ -280,13 +280,13 @@ class Event extends React.Component {
 			cvvFeedBack: true
 		});
 
-		if (this.cvv.value == '') {
+		if (this.cvv.value.trim() == '') {
 
 			this.setState({
 				cvv: false,
 				errorMsgcvv: "The CVV is required and can't be empty",
 			});
-		} else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
 				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
@@ -538,7 +538,7 @@ class Event extends React.Component {
 		let totalTickets = this.state.totalTickets;
 		totalTickets[e.target.name] = {
 			price: e.target.dataset && e.target.dataset.price,
-			numberofticket: e.target.value,
+			numberofticket: e.target.value.trim(),
 			tickettypeid: e.target.name
 		};
 		let totalPrice = 0;
@@ -547,7 +547,7 @@ class Event extends React.Component {
 		});
 		this.setState({
 			totalTickets: totalTickets,
-			totalTicketQty: 0 + parseInt(e.target.value) + this.state.totalTicketQty,
+			totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
 			totalTicketPrice: totalPrice,
 		});
 	}
@@ -1111,8 +1111,8 @@ class GMap extends React.Component {
 			request.avoidHighways = true;
 		}
 		// ==== set the start and end locations ====
-		let saddr = document.getElementById("saddr").value;
-		let daddr = document.getElementById("daddr").value;
+		let saddr = document.getElementById("saddr").value.trim();
+		let daddr = document.getElementById("daddr").value.trim();
 
 		request.origin = saddr;
 		request.destination = daddr;

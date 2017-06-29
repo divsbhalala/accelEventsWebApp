@@ -200,10 +200,10 @@ class Volunteer extends React.Component {
 	itemCodeValidateHandler = (e) => {
 		this.setState({
 			itemStatusFeedBack: true,
-			itemCodeValue: this.itemCode.value,
+			itemCodeValue: this.itemCode.value.trim(),
 		});
-		if (this.itemCode.value.length == 3) {
-			this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value)
+		if (this.itemCode.value.trim().length == 3) {
+			this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim())
 				.then(resp => {
 					if (resp && resp.data) {
 						this.setState({
@@ -237,15 +237,15 @@ class Volunteer extends React.Component {
 	};
 	attendeesFilterHandler = (e) => {
 		this.setState({
-			attendeesFilter: this.attendeesFilter.value,
+			attendeesFilter: this.attendeesFilter.value.trim(),
 		})
 	};
 	getAuctionItem = (e) => {
 		this.setState({
-			itemCodeValue: this.itemCode.value,
+			itemCodeValue: this.itemCode.value.trim(),
 		});
-		if (this.itemCode.value.length == 3) {
-			this.props.getAuctionItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value)
+		if (this.itemCode.value.trim().length == 3) {
+			this.props.getAuctionItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim())
 				.then(resp => {
 					if (resp && resp.data) {
 						this.setState({
@@ -287,7 +287,7 @@ class Volunteer extends React.Component {
 			if (this.state.activeViews == 'submit-raffle-tickets') {
 				modeltype = 'raffle'
 			}
-			this.props.getUserByEmail(this.props.params && this.props.params.params, this.email.value, modeltype)
+			this.props.getUserByEmail(this.props.params && this.props.params.params, this.email.value.trim(), modeltype)
 				.then(resp => {
 					if (resp && resp.data) {
 						this.setState({
@@ -311,11 +311,11 @@ class Volunteer extends React.Component {
 	emailValidateHandler = (e) => {
 		this.setState({
 			emailFeedBack: true,
-			emailValue: this.email.value,
+			emailValue: this.email.value.trim(),
 		});
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value == '') {
+		if (this.email.value.trim().() == '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -323,18 +323,18 @@ class Volunteer extends React.Component {
 		}
 		else {
 			this.setState({
-				email: re.test(this.email.value),
+				email: re.test(this.email.value.trim()),
 				errorMsgEmail: "Invalid Email.",
 			});
 		}
-		this.setState({isValidData: !!(this.email.value)});
+		this.setState({isValidData: !!(this.email.value.trim())});
 	};
 	firstNameValidateHandler = (e) => {
 		this.setState({
 			firstNameFeedBack: true,
-			firstNameValue: this.firstName.value,
+			firstNameValue: this.firstName.value.trim(),
 		});
-		if (this.firstName.value == '') {
+		if (this.firstName.value.trim() == '') {
 
 			this.setState({
 				firstName: false
@@ -348,9 +348,9 @@ class Volunteer extends React.Component {
 	lastNameValidateHandler = (e) => {
 		this.setState({
 			lastNameFeedBack: true,
-			lastNameValue: this.lastName.value,
+			lastNameValue: this.lastName.value.trim(),
 		});
-		if (this.lastName.value == '') {
+		if (this.lastName.value.trim() == '') {
 			this.setState({
 				lastName: false
 			});
@@ -366,13 +366,13 @@ class Volunteer extends React.Component {
 			cardHolderFeedBack: true
 		});
 
-		if (this.cardHolder.value == '') {
+		if (this.cardHolder.value.trim() == '') {
 
 			this.setState({
 				cardHolder: false,
 				errorMsgcardHolder: "The card holder name is required and can't be empty",
 			});
-		} else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+		} else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
 			this.setState({
 				cardHolder: false,
 				errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
@@ -389,12 +389,12 @@ class Volunteer extends React.Component {
 		this.setState({
 			cardNumberFeedBack: true
 		});
-		if (this.cardNumber.value == '') {
+		if (this.cardNumber.value.trim() == '') {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: "Enter Card Number ",
 			});
-		} else if (this.cardNumber.value.length !== 15 && this.cardNumber.value.length !== 16) {
+		} else if (this.cardNumber.value.trim().length !== 15 && this.cardNumber.value.trim().length !== 16) {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -410,9 +410,9 @@ class Volunteer extends React.Component {
 		tickets = this.state.userData && this.state.userData.availableTickets;
 		this.setState({
 			availTicketsFeedBack: true,
-			submittedTickets: this.availTickets.value
+			submittedTickets: this.availTickets.value.trim()
 		});
-		if (this.availTickets.value == '') {
+		if (this.availTickets.value.trim() == '') {
 			this.setState({
 				availTickets: false,
 				errorMsgAvailTickets: "Please enter tickets you want to submit.",
@@ -422,7 +422,7 @@ class Volunteer extends React.Component {
 				availTickets: false,
 				errorMsgAvailTickets: "Please enter Bidder email to submit tickets. ",
 			});
-		} else if (this.availTickets.value > tickets) {
+		} else if (this.availTickets.value.trim() > tickets) {
 			this.setState({
 				availTickets: false,
 				errorMsgAvailTickets: " Please enter ticket less than or equal to " + tickets,
@@ -437,17 +437,17 @@ class Volunteer extends React.Component {
 	amountValidateHandler = (e) => {
 		this.setState({
 			amountFeedBack: true,
-			amountValue: this.amount.value
+			amountValue: this.amount.value.trim()
 		});
 		let bid = 0;
 		bid = this.state.itemData && this.state.itemData.currentBid + 20;
 
-		if (this.amount.value == '') {
+		if (this.amount.value.trim() == '') {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "Bid Amount can't be empty",
 			});
-		} else if (bid > this.amount.value) {
+		} else if (bid > this.amount.value.trim()) {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $" + bid + " increments. " + "   Bids for this item must be placed in increments of at least $20",
@@ -464,13 +464,13 @@ class Volunteer extends React.Component {
 			cvvFeedBack: true
 		});
 
-		if (this.cvv.value == '') {
+		if (this.cvv.value.trim() == '') {
 
 			this.setState({
 				cvv: false,
 				errorMsgcvv: "The CVV is required and can't be empty",
 			});
-		} else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
 				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
@@ -485,9 +485,9 @@ class Volunteer extends React.Component {
   raffleTicketValidateHandler = (e) => {
     this.setState({
       raffleTicketFeedBack: true,
-      raffleTicketValue: this.raffleTicket.value,
+      raffleTicketValue: this.raffleTicket.value.trim(),
     });
-    if (this.raffleTicket.value == '') {
+    if (this.raffleTicket.value.trim() == '') {
       this.setState({
         raffleTicket: false,
         errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
@@ -528,10 +528,10 @@ class Volunteer extends React.Component {
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
      if (this.state.isValidBidData) {
       const card = {
-        number: this.cardNumber.value,
-        cvc: this.cvv.value,
-        exp_month: this.expMonth.value,
-        exp_year: this.expYear.value,
+        number: this.cardNumber.value.trim(),
+        cvc: this.cvv.value.trim(),
+        exp_month: this.expMonth.value.trim(),
+        exp_year: this.expYear.value.trim(),
       }
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
@@ -577,10 +577,10 @@ class Volunteer extends React.Component {
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
      if (this.state.isValidBidData) {
       const card = {
-        number: this.cardNumber.value,
-        cvc: this.cvv.value,
-        exp_month: this.expMonth.value,
-        exp_year: this.expYear.value,
+        number: this.cardNumber.value.trim(),
+        cvc: this.cvv.value.trim(),
+        exp_month: this.expMonth.value.trim(),
+        exp_year: this.expYear.value.trim(),
       }
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
@@ -625,10 +625,10 @@ class Volunteer extends React.Component {
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
      if (this.state.isValidBidData) {
       const card = {
-        number: this.cardNumber.value,
-        cvc: this.cvv.value,
-        exp_month: this.expMonth.value,
-        exp_year: this.expYear.value,
+        number: this.cardNumber.value.trim(),
+        cvc: this.cvv.value.trim(),
+        exp_month: this.expMonth.value.trim(),
+        exp_year: this.expYear.value.trim(),
       }
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
@@ -771,7 +771,7 @@ class Volunteer extends React.Component {
     let totalTickets = this.state.totalTickets;
     totalTickets[e.target.name] = {
       price: e.target.dataset && e.target.dataset.price,
-      numberofticket: e.target.value,
+      numberofticket: e.target.value.trim(),
       tickettypeid: e.target.name
     };
     let totalPrice = 0;
@@ -781,7 +781,7 @@ class Volunteer extends React.Component {
     });
     this.setState({
       totalTickets: totalTickets,
-      totalTicketQty: 0 + parseInt(e.target.value) + this.state.totalTicketQty,
+      totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
       totalTicketPrice: totalPrice,
     });
   };

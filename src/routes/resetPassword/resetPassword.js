@@ -33,13 +33,13 @@ class ResetPassword extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false
       });
     }
     if (this.state.isValidData) {
-      this.props.doResetPassword(this.email.value).then((resp) => {
+      this.props.doResetPassword(this.email.value.trim()).then((resp) => {
         ;
         if (!resp.error) {
           history.push('/');
@@ -65,17 +65,17 @@ class ResetPassword extends React.Component {
       emailFeedBack: true
     });
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false
       });
     }
     else {
       this.setState({
-        email: this.validateEmail(this.email.value)
+        email: this.validateEmail(this.email.value.trim())
       });
     }
-    this.setState({isValidData: !!(this.email.value)});
+    this.setState({isValidData: !!(this.email.value.trim())});
 
   };
 

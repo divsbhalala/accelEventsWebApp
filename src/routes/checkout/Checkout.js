@@ -129,11 +129,11 @@ class Checkout extends React.Component {
 		this.setState({
 			emailFeedBack: true
 		});
-		if (this.email.value == ' ') {
+		if (this.email.value.trim() == ' ') {
 			this.email.value = '';
 		}
 
-		if (!this.email.value) {
+		if (!this.email.value.trim()) {
 			this.setState({
 				email: false
 			});
@@ -146,7 +146,7 @@ class Checkout extends React.Component {
 	};
 	couponValidateHandler = (e) => {
 			this.setState({
-				coupon: this.coupon.value
+				coupon: this.coupon.value.trim()
 			});
 	};
 	cardHolderNameValidateHandler = (e) => {
@@ -154,17 +154,17 @@ class Checkout extends React.Component {
 		this.setState({
 			cardHolderNameFeedBack: true
 		});
-		if (this.cardHolderName.value == ' ') {
+		if (this.cardHolderName.value.trim() == ' ') {
 			this.cardHolderName.value = '';
 		}
 
-		if (!this.cardHolderName.value) {
+		if (!this.cardHolderName.value.trim()) {
 			this.setState({
 				cardHolderName: false,
 				cardHolderNameFeedBackMsg: "The card holder name is required and can't be empty"
 			});
 		}
-		else if (this.cardHolderName.value && (this.cardHolderName.value.length <= 6 || this.cardHolderName.value.length > 70)) {
+		else if (this.cardHolderName.value.trim() && (this.cardHolderName.value.trim().length <= 6 || this.cardHolderName.value.trim().length > 70)) {
 			this.setState({
 				cardHolderName: false,
 				cardHolderNameFeedBackMsg: "TThe card holder name must be more than 6 and less than 70 characters long"
@@ -174,7 +174,7 @@ class Checkout extends React.Component {
 			this.setState({
 				cardHolderName: true,
 				cardHolderNameFeedBackMsg: null,
-				// isValidCardData: this.cardHolderName.value && this.cardNumber.value && this.cardCVV.value && this.cardExpMonth.value && this.cardExpYear.value
+				// isValidCardData: this.cardHolderName.value.trim() && this.cardNumber.value.trim() && this.cardCVV.value.trim() && this.cardExpMonth.value.trim() && this.cardExpYear.value.trim()
 			});
 		}
 	};
@@ -184,17 +184,17 @@ class Checkout extends React.Component {
 			cardNumberFeedBack: true
 		});
 
-		if (this.cardNumber.value == ' ') {
+		if (this.cardNumber.value.trim() == ' ') {
 			this.cardNumber.value = '';
 		}
 
-		if (!this.cardNumber.value) {
+		if (!this.cardNumber.value.trim()) {
 			this.setState({
 				cardNumber: false,
 				cardNumberFeedBackMsg: "The credit card number is required and can't be empty",
 			});
 		}
-		else if (this.cardNumber.value && this.cardNumber.value.length != 16) {
+		else if (this.cardNumber.value.trim() && this.cardNumber.value.trim().length != 16) {
 			this.setState({
 				cardNumber: false,
 				cardNumberFeedBackMsg: "Invalid credit card number",
@@ -204,7 +204,7 @@ class Checkout extends React.Component {
 			this.setState({
 				cardNumber: true,
 				cardNumberFeedBackMsg: null,
-				// isValidCardData: this.cardHolderName.value && this.cardNumber.value && this.cardCVV.value && this.cardExpMonth.value && this.cardExpYear.value
+				// isValidCardData: this.cardHolderName.value.trim() && this.cardNumber.value.trim() && this.cardCVV.value.trim() && this.cardExpMonth.value.trim() && this.cardExpYear.value.trim()
 
 			});
 		}
@@ -215,17 +215,17 @@ class Checkout extends React.Component {
 			cardCVVFeedBack: true
 		});
 
-		if (this.cardCVV.value == ' ') {
+		if (this.cardCVV.value.trim() == ' ') {
 			this.cardCVV.value = '';
 		}
 
-		if (!this.cardCVV.value) {
+		if (!this.cardCVV.value.trim()) {
 			this.setState({
 				cardCVV: false,
 				cardCVVFeedBackMsg: "The CVV is required and can't be empty",
 			});
 		}
-		else if (this.cardCVV.value && !(this.cardCVV.value.length >= 3 && this.cardCVV.value.length <= 4)) {
+		else if (this.cardCVV.value.trim() && !(this.cardCVV.value.trim().length >= 3 && this.cardCVV.value.trim().length <= 4)) {
 			this.setState({
 				cardCVV: false,
 				cardCVVFeedBackMsg: "The CVV must be more than 4 and less than 3 characters long",
@@ -235,7 +235,7 @@ class Checkout extends React.Component {
 			this.setState({
 				cardCVV: true,
 				cardCVVFeedBackMsg: null,
-				// isValidCardData: this.cardHolderName.value && this.cardNumber.value && this.cardCVV.value && this.cardExpMonth.value && this.cardExpYear.value
+				// isValidCardData: this.cardHolderName.value.trim() && this.cardNumber.value.trim() && this.cardCVV.value.trim() && this.cardExpMonth.value.trim() && this.cardExpYear.value.trim()
 
 			});
 		}
@@ -244,7 +244,7 @@ class Checkout extends React.Component {
 	cardExpMonthValidateHandler = (e) => {
 
 
-		if (!this.cardExpMonth.value) {
+		if (!this.cardExpMonth.value.trim()) {
 			this.setState({
 				cardExpMonth: false
 			});
@@ -252,7 +252,7 @@ class Checkout extends React.Component {
 		else {
 			this.setState({
 				cardExpMonth: true,
-				// isValidCardData: this.cardHolderName.value && this.cardNumber.value && this.cardCVV.value && this.cardExpMonth.value && this.cardExpYear.value
+				// isValidCardData: this.cardHolderName.value.trim() && this.cardNumber.value.trim() && this.cardCVV.value.trim() && this.cardExpMonth.value.trim() && this.cardExpYear.value.trim()
 
 			});
 		}
@@ -268,7 +268,7 @@ class Checkout extends React.Component {
 		else {
 			this.setState({
 				cardExpYear: true,
-				// isValidCardData: this.cardHolderName.value && this.cardNumber.value && this.cardCVV.value && this.cardExpMonth.value && this.cardExpYear.value
+				// isValidCardData: this.cardHolderName.value.trim() && this.cardNumber.value.trim() && this.cardCVV.value.trim() && this.cardExpMonth.value.trim() && this.cardExpYear.value.trim()
 
 			});
 		}
@@ -279,7 +279,7 @@ class Checkout extends React.Component {
 			passwordFeedBack: true
 		});
 
-		if (!this.password.value) {
+		if (!this.password.value.trim()) {
 
 			this.setState({
 				password: false
@@ -310,7 +310,7 @@ class Checkout extends React.Component {
 				if (!buyerInformationFields[index][item.name]) {
 					buyerInformationFields[index][item.name] = {};
 				}
-				if (item.mandatory && !buyerInformationFields[index][item.name].value) {
+				if (item.mandatory && !buyerInformationFields[index][item.name].value.trim()) {
 					buyerInformationFields[index][item.name]['error'] = true;
 				}
 			});
@@ -333,7 +333,7 @@ class Checkout extends React.Component {
 							if (!attendee[index][key][field.name]) {
 								attendee[index][key][field.name] = {};
 							}
-							if (field.mandatory && !attendee[index][key][field.name].value) {
+							if (field.mandatory && !attendee[index][key][field.name].value.trim()) {
 								attendee[index][key][field.name]['error'] = true;
 							}
 							console.log(attendee[index][key], field)
@@ -347,7 +347,7 @@ class Checkout extends React.Component {
 							if (!questions[index][key][field.name]) {
 								questions[index][key][field.name] = {};
 							}
-							if (field.mandatory && !questions[index][key][field.name].value) {
+							if (field.mandatory && !questions[index][key][field.name].value.trim()) {
 								questions[index][key][field.name]['error'] = true;
 							}
 							console.log(questions[index][key], field)
@@ -374,8 +374,8 @@ class Checkout extends React.Component {
 					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error == false) {
 						let Email = buyerInformationFields[emailIndex]['Email'];
 						requestData = {
-							email: buyerInformationFields[emailIndex]['Email'].value,
-							password: this.password && this.password.value
+							email: buyerInformationFields[emailIndex]['Email'].value.trim(),
+							password: this.password && this.password.value.trim()
 						};
 						this.props.doSignUp(eventUrl, requestData).then(resp => {
 						if (resp && !resp.errorCode) {
@@ -420,12 +420,12 @@ class Checkout extends React.Component {
 	};
 
 	doCheckout = (ticketAttribute, orderData) => {
-		if (this.cardNumber.value &&
-			this.cardExpMonth.value &&
-			this.cardExpYear.value &&
-			this.cardExpMonth.value &&
-			this.cardCVV.value) {
-			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp => {
+		if (this.cardNumber.value.trim() &&
+			this.cardExpMonth.value.trim() &&
+			this.cardExpYear.value.trim() &&
+			this.cardExpMonth.value.trim() &&
+			this.cardCVV.value.trim()) {
+			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value.trim(), this.cardExpMonth.value.trim(), this.cardExpYear.value.trim(), this.cardCVV.value.trim()).then(resp => {
 				if (resp && resp.data && resp.data.id) {
 					let request = {
 						"clientDate": moment().format('DD/MM/YYYY hh:mm:ss'),
@@ -444,7 +444,7 @@ class Checkout extends React.Component {
 									if (item[keyItem].key) {
 										holder.push({
 											key: item[keyItem].key,
-											value: item[keyItem].value,
+											value: item[keyItem].value.trim(),
 										})
 									}
 								})
@@ -457,7 +457,7 @@ class Checkout extends React.Component {
 									if (item[keyItem].key) {
 										holderQuestions.push({
 											key: item[keyItem].key,
-											value: item[keyItem].value,
+											value: item[keyItem].value.trim(),
 										})
 									}
 								})
@@ -559,10 +559,10 @@ class Checkout extends React.Component {
 
 	setAttendeesValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
-		//this component, we could use this.refs.[FIELD].value
+		//this component, we could use this.refs.[FIELD].value.trim()
 		//Instead, we want to save the data for when the form is submitted
 		let object = attendee || {};
-		let value = event.target.value;
+		let value = event.target.value.trim();
 		if (!object[key]) {
 			object[key] = [];
 		}
@@ -577,7 +577,7 @@ class Checkout extends React.Component {
 			"value": value
 		};
 		if (field.mandatory) {
-			if (!event.target.value) {
+			if (!event.target.value.trim()) {
 				object[key][itemKey][field.name]['error'] = true;
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
@@ -606,10 +606,10 @@ class Checkout extends React.Component {
 	};
 	setQuestionsValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
-		//this component, we could use this.refs.[FIELD].value
+		//this component, we could use this.refs.[FIELD].value.trim()
 		//Instead, we want to save the data for when the form is submitted
 		let object = questions || {};
-		let value = event.target.value;
+		let value = event.target.value.trim();
 		if (!object[key]) {
 			object[key] = [];
 		}
@@ -624,7 +624,7 @@ class Checkout extends React.Component {
 			"value": value
 		};
 		if (field.mandatory) {
-			if (!event.target.value) {
+			if (!event.target.value.trim()) {
 				object[key][itemKey][field.name]['error'] = true;
 				event.target.parentElement.classList.add('has-error');
 				event.target.parentElement.classList.remove('has-success');
@@ -659,7 +659,7 @@ class Checkout extends React.Component {
 		if (!object[key][field.name]) {
 			object[key][field.name] = {};
 		}
-		let value = event.target.value;
+		let value = event.target.value.trim();
 		object[key][field.name] = {
 			key: field.name,
 			value: value
@@ -865,7 +865,7 @@ class Checkout extends React.Component {
 																							<div className={cx("form-group ",
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && 'has-feedback',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
-																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value && 'has-success'
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value.trim() && 'has-success'
 																							)}>
 																								<input
 																									type={item.type}
@@ -874,12 +874,12 @@ class Checkout extends React.Component {
 																									placeholder={item.name}
 																									onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
 																									required={item.mandatory}
-																									defaultValue={item.value ||
+																									defaultValue={item.value.trim() ||
 																									(
 																										this.state.errorBuyer &&
 																										this.state.errorBuyer[key] &&
 																										this.state.errorBuyer[key][item.name] &&
-																										this.state.errorBuyer[key][item.name].value
+																										this.state.errorBuyer[key][item.name].value.trim()
 																									)
 																									}
 																								/>
@@ -1362,19 +1362,19 @@ class Checkout extends React.Component {
 																										<div className={cx("form-group",
 																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
 																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
-																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value && 'has-success',
+																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value.trim() && 'has-success',
 																										)}>
 																											<input type="text"
 																														 placeholder={attrib.name}
 																														 className="form-control"
 																														 name={attrib.name}
 																														 required={ attrib.mandatory}
-																														 defaultValue={attrib.value ||
+																														 defaultValue={attrib.value.trim() ||
 																														 (this.state.attendee &&
 																														 this.state.attendee[itemKey] &&
 																														 this.state.attendee[itemKey][key] &&
 																														 this.state.attendee[itemKey][key][attrib.name]) || (
-																															 this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
+																															 this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value.trim()
 																														 )
 																														 }
 																														 onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
@@ -1412,19 +1412,19 @@ class Checkout extends React.Component {
 																											<div className={cx("form-group",
 																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && (this.state.errorQuestions[itemKey][key][attrib.name].key || this.state.errorQuestions[itemKey][key][attrib.name].error) && 'has-feedback',
 																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].error && 'has-error',
-																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value && 'has-success',
+																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value.trim() && 'has-success',
 																											)}>
 																												<input type="text"
 																															 placeholder={attrib.name}
 																															 className="form-control"
 																															 name={attrib.name}
 																															 required={ attrib.mandatory}
-																															 defaultValue={attrib.value ||
+																															 defaultValue={attrib.value.trim() ||
 																															 (this.state.questions &&
 																															 this.state.questions[itemKey] &&
 																															 this.state.questions[itemKey][key] &&
 																															 this.state.questions[itemKey][key][attrib.name]) || (
-																																 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value
+																																 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value.trim()
 																															 )
 																															 }
 																															 onChange={this.setQuestionsValue.bind(this, attrib, itemKey, key)}

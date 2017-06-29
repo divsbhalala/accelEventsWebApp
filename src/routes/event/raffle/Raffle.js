@@ -111,11 +111,11 @@ class Raffle extends React.Component {
 
     this.setState({
       emailFeedBack: true,
-      emailValue:this.email.value,
+      emailValue:this.email.value.trim(),
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value == '') {
+    if (this.email.value.trim() == '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -123,21 +123,21 @@ class Raffle extends React.Component {
     }
     else {
       this.setState({
-        email: re.test(this.email.value),
+        email: re.test(this.email.value.trim()),
         errorMsgEmail: "Invalid Email.",
       });
     }
-    this.setState({isValidData: !!(this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
 
   };
   passwordValidateHandler = (e) => {
 
     this.setState({
       passwordFeedBack: true,
-      passwordValue:this.password.value,
+      passwordValue:this.password.value.trim(),
     });
 
-    if (this.password.value == '') {
+    if (this.password.value.trim() == '') {
 
       this.setState({
         password: false
@@ -147,15 +147,15 @@ class Raffle extends React.Component {
         password: true
       });
     }
-    this.setState({isValidData: !!(this.email.value && this.password.value)});
+    this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
 
   };
   firstNameValidateHandler = (e) => {
     this.setState({
       firstNameFeedBack: true,
-      firstNameValue:this.firstName.value
+      firstNameValue:this.firstName.value.trim()
     });
-    if (this.firstName.value == '') {
+    if (this.firstName.value.trim() == '') {
       this.setState({
         firstName: false
       });
@@ -170,10 +170,10 @@ class Raffle extends React.Component {
   lastNameValidateHandler = (e) => {
     this.setState({
       lastNameFeedBack: true,
-      lastNameValue: this.lastName.value,
+      lastNameValue: this.lastName.value.trim(),
     });
 
-    if (this.lastName.value == '') {
+    if (this.lastName.value.trim() == '') {
 
       this.setState({
         lastName: false
@@ -193,13 +193,13 @@ class Raffle extends React.Component {
       cardHolderValue:this.cardHolder.value,
     });
 
-    if (this.cardHolder.value == '') {
+    if (this.cardHolder.value.trim() == '') {
 
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
       });
-    } else if (!( this.cardHolder.value.length >= 6 && this.cardHolder.value.length <= 70 )) {
+    } else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
@@ -217,12 +217,12 @@ class Raffle extends React.Component {
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
     });
-    if (this.cardNumber.value == '') {
+    if (this.cardNumber.value.trim() == '') {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
       });
-    } else if (this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
+    } else if (this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -232,22 +232,22 @@ class Raffle extends React.Component {
         cardNumber: true
       });
     }
-  //  this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  //  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   cvvValidateHandler = (e) => {
 
     this.setState({
       cvvFeedBack: true,
-      ccvValue:this.cvv.value,
+      ccvValue:this.cvv.value.trim(),
     });
 
-    if (this.cvv.value == '') {
+    if (this.cvv.value.trim() == '') {
 
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
       });
-    } else if (!( 3 <= this.cvv.value.length && 4 >= this.cvv.value.length )) {
+    } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
@@ -257,14 +257,14 @@ class Raffle extends React.Component {
         cvv: true
       });
     }
-    //this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    //this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler = (e) => {
     this.setState({
       phoneNumberFeedBack: true,
-      phoneNumberValue:this.phoneNumber.value,
+      phoneNumberValue:this.phoneNumber.value.trim(),
     });
-    if (this.phoneNumber.value == '') {
+    if (this.phoneNumber.value.trim() == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
@@ -274,14 +274,14 @@ class Raffle extends React.Component {
         phoneNumber: true
       });
     }
-    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue:this.expMonth.value,
+      expMonthValue:this.expMonth.value.trim(),
     });
-    if (this.expMonth.value == '') {
+    if (this.expMonth.value.trim() == '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
@@ -296,9 +296,9 @@ class Raffle extends React.Component {
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue:this.expYear.value,
+      expYearValue:this.expYear.value.trim(),
     });
-    if (this.expYear.value == '') {
+    if (this.expYear.value.trim() == '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: "Expire Year is Require",
@@ -314,29 +314,29 @@ class Raffle extends React.Component {
 
     let tickets=true
     let errorMsgTickets=""
-    if (this.tickets.value == '') {
+    if (this.tickets.value.trim() == '') {
       errorMsgTickets= "Number Of Tickets can't be empty"
       tickets=false
-    }else if ( this.state.raffleData.availableTickets  < this.tickets.value || this.tickets.value <= 0) {
+    }else if ( this.state.raffleData.availableTickets  < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
       errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets
       tickets=false
     } else {
       tickets=true
     }
     this.setState({
-      isValidData: ( this.tickets.value && tickets),
+      isValidData: ( this.tickets.value.trim() && tickets),
       tickets:tickets,
       ticketsFeedBack: true,
       errorMsgTickets:errorMsgTickets,
-      raffleTicketValue:this.tickets.value
+      raffleTicketValue:this.tickets.value.trim()
     });
    };
   raffleTicketValidateHandler = (e) => {
     this.setState({
       raffleTicketFeedBack: true,
-      raffleTicketValue: this.raffleTicket.value,
+      raffleTicketValue: this.raffleTicket.value.trim(),
     });
-    if (this.raffleTicket.value == '') {
+    if (this.raffleTicket.value.trim() == '') {
       this.setState({
         raffleTicket: false,
         errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
