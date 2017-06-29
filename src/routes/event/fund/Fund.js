@@ -573,7 +573,9 @@ class Fund extends React.Component {
   };
 
   componentWillMount() {
-    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    if(this.props.stripeKey){
+      Stripe.setPublishableKey(this.props.stripeKey);
+    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
@@ -594,7 +596,9 @@ class Fund extends React.Component {
     });
   }
   componentRernder() {
-    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+    if(this.props.stripeKey){
+      Stripe.setPublishableKey(this.props.stripeKey);
+    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
@@ -1046,6 +1050,7 @@ const mapDispatchToProps = {
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
 };
 const mapStateToProps = (state) => ({
+  stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   eventData: state.event && state.event.data,
   eventTicketData: state.event && state.event.ticket_data,
   fundData: state.event && state.event.auction_data,

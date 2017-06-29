@@ -558,6 +558,7 @@ class HeaderNew extends React.Component {
 					headerText=""
 					onCloseFunc={this.hideRegisterPopup}
           params={this.props.params }
+					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideRegisterPopup()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
 				/>
 
 			</div>

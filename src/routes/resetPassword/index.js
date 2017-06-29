@@ -1,8 +1,8 @@
 import React from 'react';
-import AdminLayout from '../../components/AdminLayout';
+import LoginLayout from '../../components/LoginLayout';
 import ResetPassword from './resetPassword';
 
-const title = 'Reset Password';
+const title = 'AccelEvents | Reset Password';
 const showFeedBack = false;
 
 export default {
@@ -12,7 +12,7 @@ export default {
   action() {
     return {
       title,
-      component: <AdminLayout><ResetPassword title={title} showFeedBack={showFeedBack}/></AdminLayout>,
+      component: <LoginLayout><ResetPassword title={title} showFeedBack={showFeedBack}/></LoginLayout>,
     };
   },
 

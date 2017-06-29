@@ -13,6 +13,7 @@ import Navbar, {Brand} from 'react-bootstrap/lib/Navbar';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import s from './../../routes/login/Login.css';
+import Link from './../Link';
 import {onFormSubmit, doLogin, storeLoginData, storeToken, doSignUp} from './../../routes/event/action/index';
 import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 
@@ -198,12 +199,11 @@ class LoginPopup extends React.Component {
     return (
       <div >
         <div className="static-modal" id={this.props.id + '-containter'}>
-          <div>
-            <Modal show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="my-modal" >
+          <div id="login-user">
+            <Modal id="login-user" show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="my-modal" >
               <Modal.Body>
-                <div className="modal-body">
-                  <div id="alertmessage" className="hide"/>
-                  <p>{this.state.error}</p>
+                <div className="login-signup-wrap">
+                  {this.state.error && <div id="alertmessage" className="alert alert-danger">{this.state.error}</div>}
                   { this.state.toggle ?
                     <div className="login-signup-container login  has-cell-number ">
                       <div className="login-form" id="LoginAttempt">
@@ -274,7 +274,7 @@ class LoginPopup extends React.Component {
                             <div className="form-group">
                               <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox"/>
                               <label htmlFor="remember-me" className="text-small">Remember me</label>
-                              <a className="pull-right small" to="/password-reset">Forgot password?</a>
+                              <Link className="pull-right small" to="/password-reset">Forgot password?</Link>
                             </div>
                           </div>
                         </form>

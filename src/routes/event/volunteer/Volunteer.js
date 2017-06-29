@@ -315,7 +315,7 @@ class Volunteer extends React.Component {
 		});
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value.trim().() == '') {
+		if (this.email.value.trim() == '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -499,7 +499,9 @@ class Volunteer extends React.Component {
     }
   };
   componentWillMount(){
-    Stripe.setPublishableKey('pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+	  if(this.props.stripeKey){
+		  Stripe.setPublishableKey(this.props.stripeKey);
+	  }
     this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
       this.setState({
         settings: resp && resp.data
@@ -2535,6 +2537,7 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = (state) => ({
 	is_volunteer : state.event && state.event.is_volunteer,
+	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Volunteer));
