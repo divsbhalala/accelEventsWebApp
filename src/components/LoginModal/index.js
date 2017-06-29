@@ -203,7 +203,7 @@ class LoginPopup extends React.Component {
             <Modal id="login-user" show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="my-modal" >
               <Modal.Body>
                 <div className="login-signup-wrap">
-                  {this.state.error && <div id="alertmessage" className="alert alert-danger">{this.state.error}</div>}
+                  {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
                   { this.state.toggle ?
                     <div className="login-signup-container login  has-cell-number ">
                       <div className="login-form" id="LoginAttempt">

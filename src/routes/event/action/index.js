@@ -739,3 +739,13 @@ export function doContactSupport(eventUrl, contact) {
     });
   }
 }
+export function doValidateMobileNumber(mobileNumber) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: 'https://lookups.twilio.com/v1/PhoneNumbers/'+mobileNumber+'?Type=carrier&Type=caller-name&_=1498707522630',
+      data: contact,
+     headers: {Authorization: "Basic QUMzYzk4NDBiZDE2OTgxOGQzZGU1MDUwNWI2Mzc4OWVlNDplYjU4NmE4Y2JkNzk4ZmE3OGM5ZGViNmY4ZTdkM2Q5NA=="}
+    });
+  }
+}
