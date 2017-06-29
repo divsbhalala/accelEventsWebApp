@@ -423,10 +423,11 @@ class HeaderNew extends React.Component {
 							<i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
 						</MenuItem>}
 
-						{ !this.props.authenticated && <MenuItem eventKey="9" onClick={(event) => {
-							history.push('/signup');
-						}}>
-							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
+						{ !this.props.authenticated && <MenuItem eventKey="9"
+             // onClick={this.showLoginPopup}
+						  onClick={(event) => { history.push('/signup');}}
+						>
+							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs" > Sign up</span>
 						</MenuItem>}
 
 						<MenuItem eventKey="10">
@@ -451,7 +452,7 @@ class HeaderNew extends React.Component {
 				<PopupModel
 					id="contactPopup"
 					showModal={this.state.showContactPopup}
-					headerText="Contact"
+					headerText={<h4>Contact</h4>}
 					onCloseFunc={this.hideContactPopup}
 				>
 					<div className="modal-body">
@@ -547,7 +548,6 @@ class HeaderNew extends React.Component {
 				<PopupModel
 					id="mapPopup"
 					showModal={this.state.showFormMessagePopup}
-					headerText=""
 					onCloseFunc={this.hideFormMessagePopup}
 					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormMessagePopup()}}>Close</button>}
 				>

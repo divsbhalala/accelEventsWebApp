@@ -6,7 +6,7 @@ import cx from 'classnames';
 class PopupModal extends Component { // eslint-disable-line
   static propTypes = {
     id: PropTypes.string,
-    headerText: PropTypes.string,
+    headerText: PropTypes.object,
     modelBody: PropTypes.string,
     modelFooter: PropTypes.object,
     showModal: PropTypes.bool,
