@@ -277,7 +277,7 @@ class Volunteer extends React.Component {
 
 	checkAuctionUser = (e) => {
 		if (this.state.isValidData) {
-			var modeltype = 'auction';
+			let modeltype = 'auction';
 			if (this.state.activeViews == 'select-action') {
 				modeltype = 'auction'
 			}
@@ -313,7 +313,7 @@ class Volunteer extends React.Component {
 			emailFeedBack: true,
 			emailValue: this.email.value,
 		});
-		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 		if (this.email.value == '') {
 			this.setState({
@@ -524,7 +524,7 @@ class Volunteer extends React.Component {
   submiteSilentAuctionBid = (e) => {
     e.preventDefault();
     console.log(this.state)
-    var self = this;
+    let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
      if (this.state.isValidBidData) {
       const card = {
@@ -573,7 +573,7 @@ class Volunteer extends React.Component {
   submitPledgeBid = (e) => {
     e.preventDefault();
     console.log(this.state)
-    var self = this;
+    let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
      if (this.state.isValidBidData) {
       const card = {
@@ -621,7 +621,7 @@ class Volunteer extends React.Component {
   sellTicketsBid = (e) => {
     e.preventDefault();
     console.log(this.state)
-    var self = this;
+    let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
      if (this.state.isValidBidData) {
       const card = {
@@ -668,7 +668,7 @@ class Volunteer extends React.Component {
   };
   submitTicketsbid = (e) => {
     e.preventDefault();
-    var self = this;
+    let self = this;
     this.setState({isValidBidData: (this.state.email && this.state.availTickets)});
      if (this.state.isValidBidData) {
           const user = {
@@ -699,7 +699,7 @@ class Volunteer extends React.Component {
   };
   submitDonatebid = (e) => {
     e.preventDefault();
-    var self = this;
+    let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
      if (this.state.isValidBidData) {
           const user = {

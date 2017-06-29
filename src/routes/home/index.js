@@ -9,7 +9,7 @@ export default {
 
   async action({fetch}) {
     return {
-      title: 'React Starter Kit',
+      title: 'AccelEvents',
       component: <Layout><Home news={<h1>Home Page</h1>}/></Layout>,
     };
 

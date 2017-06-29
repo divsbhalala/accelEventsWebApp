@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-var API_URL = 'http://35.161.147.220:3333/api/';
+let API_URL = 'http://35.161.147.220:3333/api/';
 export const STORE_LOGIN_DATA = 'STORE_LOGIN_DATA';
 export function onFormSubmit(e) {
   alert('hello');

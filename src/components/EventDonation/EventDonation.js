@@ -287,7 +287,6 @@ class EventDonation extends React.Component {
   };
   onBidFormClick = (e) => {
     e.preventDefault();
-    console.log(this.state)
     let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
     if (this.state.isValidBidData) {

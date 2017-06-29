@@ -3,7 +3,7 @@ import React from 'react';
 import LoginLayout from '../../components/LoginLayout';
 import Login from './Login';
 
-const title = 'Log In';
+const title = 'AccelEvents | Log In';
 const showFeedBack = false;
 
 export default {

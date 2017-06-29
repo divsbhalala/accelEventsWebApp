@@ -99,7 +99,7 @@ class Auction extends React.Component {
         popupHeader:"Confirm",
       })
     } else {
-    var self = this;
+    let self = this;
     if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
       const card = {
         number: this.cardNumber.value,
@@ -236,7 +236,7 @@ class Auction extends React.Component {
       emailFeedBack: true,
       emailValue:this.email.value,
     });
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (this.email.value == '') {
       this.setState({

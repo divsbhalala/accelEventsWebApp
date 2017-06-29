@@ -98,7 +98,6 @@ class Event extends React.Component {
 	}
 
 	componentWillReceiveProps() {
-		console.log("componentWillReceiveProps in event", this.props.authenticated)
 		if (this.props.authenticated) {
 			this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
@@ -159,7 +158,7 @@ class Event extends React.Component {
 			emailFeedBack: true,
 			emailValue: this.email.value,
 		});
-		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 		if (this.email.value == '') {
 			this.setState({
@@ -544,7 +543,6 @@ class Event extends React.Component {
 		};
 		let totalPrice = 0;
 		totalTickets.map(item => {
-			//console.log(item)
 			totalPrice += item.price * item.numberofticket;
 		});
 		this.setState({
@@ -625,7 +623,7 @@ class Event extends React.Component {
 	};
 	handleScroll(event) {
 		/*if(this.props.title && this.props.title=='Event Page'){
-		 var body  = document.querySelector('body');
+		 let body  = document.querySelector('body');
 		 this.setState({
 		 lastScrollPos:body.scrollTop,
 		 });
@@ -734,7 +732,7 @@ class Event extends React.Component {
 													next={this.doGetLoadMoreAuctionItem}
 													hasMore={this.state.auctionPageLoading}
 													loader={<div className="text-center"><span
-                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>{console.log(this.state.settings, this.state.settings && this.state.settings.socialSharingEnabled)}
+                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
 													{
 														this.state.auctionPageItems.map((item) =>
 															<EventTabCommonBox key={item.id + Math.random().toString()}
@@ -992,11 +990,11 @@ const mapStateToProps = (state) => ({
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Event));
 //export default (withStyles(s)(Event));
 
-var directionsDisplay = null;
-var directionsService = null;
-var map = null;
-var marker = null;
-var infowindow = null;
+let directionsDisplay = null;
+let directionsService = null;
+let map = null;
+let marker = null;
+let infowindow = null;
 
 class GMap extends React.Component {
 	state = {zoom: 10};
@@ -1041,7 +1039,7 @@ class GMap extends React.Component {
 	}
 
 	createMap() {
-		var geocoder = new google.maps.Geocoder;
+		let geocoder = new google.maps.Geocoder;
 		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
 				console.log("here", results)
@@ -1069,7 +1067,7 @@ class GMap extends React.Component {
 	}
 
 	createInfoWindow() {
-		var html = '<div class="directions-container">' +
+		let html = '<div class="directions-container">' +
 			'  <form action="javascript:getDirections()">' +
 			'    <h4>Directions:</h4>' +
 			'    <div class="form-group">' +
@@ -1102,7 +1100,7 @@ class GMap extends React.Component {
 
 	getDirections() {
 		// ==== Set up the walk and avoid highways options ====
-		var request = {};
+		let request = {};
 		if (document.getElementById("walk").checked) {
 			request.travelMode = google.maps.DirectionsTravelMode.WALKING;
 		} else {
@@ -1113,8 +1111,8 @@ class GMap extends React.Component {
 			request.avoidHighways = true;
 		}
 		// ==== set the start and end locations ====
-		var saddr = document.getElementById("saddr").value;
-		var daddr = document.getElementById("daddr").value;
+		let saddr = document.getElementById("saddr").value;
+		let daddr = document.getElementById("daddr").value;
 
 		request.origin = saddr;
 		request.destination = daddr;
@@ -1142,10 +1140,10 @@ class GMap extends React.Component {
 	}
 
 	initMap() {
-		var geocoder = new google.maps.Geocoder;
+		let geocoder = new google.maps.Geocoder;
 		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
 			if (status == google.maps.GeocoderStatus.OK) {
-				var uluru = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
+				let uluru = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
 				map = new google.maps.Map(document.getElementById('location-map'), {
 					zoom: 17,
 					center: uluru
@@ -1162,7 +1160,7 @@ class GMap extends React.Component {
 					infowindow.close();
 				});
 
-				var html = '<div class="directions-container">' +
+				let html = '<div class="directions-container">' +
 					'  <form action="javascript:getDirections()">' +
 					'    <h4>Directions:</h4>' +
 					'    <div class="form-group">' +
@@ -1179,7 +1177,7 @@ class GMap extends React.Component {
 					'    <input type="hidden" id="daddr" value="' + uluru.lat + ',' + uluru.lng + '">' +
 					'  </form>' +
 					'</div>';
-				var contentString = html;
+				let contentString = html;
 				google.maps.event.addListener(marker, 'click', function () {
 					map.setZoom(15);
 					map.setCenter(marker.getPosition());
@@ -1192,4 +1190,4 @@ class GMap extends React.Component {
 
 }
 
-var initialCenter = {lng: -90.1056957, lat: 29.9717272}
+let initialCenter = {lng: -90.1056957, lat: 29.9717272}

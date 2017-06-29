@@ -5,7 +5,7 @@ import Fund from './Fund';
 import Raffle from './Raffle';
 import Auction from './Auction';
 
-const title = 'Event Page';
+const title = 'AccelEvents | Event Page';
 export default {
   path: '/goal/:params',
   children: [
@@ -22,7 +22,7 @@ export default {
       path: '/auction',
       async action(props) {
         return {
-          title: "Auction Page",
+          title: "AccelEvents | Auction Page",
           component: <Layout params={props.params}><Auction params={props.params}
                                                             itemCode={props.params && props.params.ItemCode}
                                                             title={title}/></Layout>,
@@ -33,7 +33,7 @@ export default {
       path: '/fund',
       async action(props) {
         return {
-          title: "Fund Page",
+          title: "AccelEvents | Fund Page",
           component: <Layout params={props.params}><Fund params={props.params}
                                                          itemCode={props.params && props.params.ItemCode}
                                                          title={title}/></Layout>,
@@ -44,7 +44,7 @@ export default {
       path: '/raffle',
       async action(props) {
         return {
-          title: "Raffle Page",
+          title: "AccelEvents | Raffle Page",
           component: <Layout params={props.params}><Raffle params={props.params}
                                                            itemCode={props.params && props.params.ItemCode}
                                                            title={title}/></Layout>,

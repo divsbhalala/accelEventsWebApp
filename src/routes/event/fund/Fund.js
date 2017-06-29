@@ -98,7 +98,7 @@ class Fund extends React.Component {
   }
   onFormClick = (e) => {
     e.preventDefault();
-     var self = this
+     let self = this
     if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
       this.setState({
         showMapPopup: true,
@@ -118,7 +118,7 @@ class Fund extends React.Component {
     this.setState({
       loading: true,
     })
-    var self = this
+    let self = this
     if(!this.props.authenticated){
       let userData={
         "countryCode": "IN",
@@ -127,7 +127,7 @@ class Fund extends React.Component {
         "phoneNumber": this.state.phoneNumberValue
       }
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
-        var self = this;
+        let self = this;
         if(!resp.error){
           const card = {
             number: this.cardNumber.value,
@@ -261,7 +261,7 @@ class Fund extends React.Component {
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (this.email.value == '') {
       this.setState({

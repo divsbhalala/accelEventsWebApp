@@ -6,7 +6,7 @@ import AdminSiderbar from '../../../components/Sidebar/AdminSidebar';
 
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import CKEditor from 'react-ckeditor-wrapper';
-//var CKEditor = require('react-ckeditor-wrapper');
+//let CKEditor = require('react-ckeditor-wrapper');
 class Account extends React.Component {
 	constructor(props) {
 		super(props);
@@ -25,7 +25,7 @@ class Account extends React.Component {
 
   render() {
 	  //http://allenfang.github.io/react-bootstrap-table/example.html
-	  var products = [{
+	  let products = [{
 		  id: 1,
 		  name: "Product1",
 		  price: 120

@@ -3,7 +3,7 @@ import Layout from '../../components/Layout';
 import Checkout from './Checkout';
 import ConfirmBid from './confirmBid/ConfirmBid';
 
-const title = 'Checkout Page';
+const title = 'AccelEvents | Checkout Page';
 export default {
   path: '/checkout/:params',
   children: [

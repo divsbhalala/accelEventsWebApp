@@ -113,7 +113,7 @@ class Raffle extends React.Component {
       emailFeedBack: true,
       emailValue:this.email.value,
     });
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (this.email.value == '') {
       this.setState({
@@ -392,7 +392,7 @@ class Raffle extends React.Component {
   };
   buyRaffleTicket = (e) => {
     e.preventDefault();
-    // var self = this;
+    // let self = this;
     // this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
     // //console.log("this.state.cardNumber && this.state.cardHolder  && this.state.cvv",this.state.cardNumber && this.state.cardHolder  && this.state.cvv)
     // if (this.state.cardNumber && this.state.cardHolder  && this.state.cvv) {
