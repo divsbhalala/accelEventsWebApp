@@ -574,7 +574,7 @@ class EventDonation extends React.Component {
                           <i className="fa fa-phone" aria-hidden="true"/>
                         </div>
                         <IntlTelInput
-                          css={['intl-tel-input', 'form-control']}
+                          css={['intl-tel-input', 'form-control intl-tel']}
                           utilsScript="./libphonenumber.js"
                           separateDialCode={true}
                           value={ this.state.phone }

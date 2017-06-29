@@ -338,7 +338,7 @@ class LoginPopup extends React.Component {
                                 <i className="fa fa-phone" aria-hidden="true"/>
                               </div>
                               <IntlTelInput
-                                css={['intl-tel-input', 'form-control']}
+                                css={['intl-tel-input', 'form-control intl-tel']}
                                 utilsScript="./libphonenumber.js"
                                 separateDialCode={true}
                                 value={ this.state.phone }
@@ -409,6 +409,7 @@ const mapStateToProps = (state) => ({
   isVolunteer : state.event && state.event.is_volunteer,
   user : state.session && state.session.user,
   authenticated : state.session && state.session.authenticated,
+  stripeKey: state.event && state.event.data && state.event.data.stripeKey,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(LoginPopup));

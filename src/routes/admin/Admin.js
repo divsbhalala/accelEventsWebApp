@@ -28,7 +28,7 @@ class Admin extends React.Component {
           <div className="row">
            <div className="col-lg-offset-2 col-sm-10">
               <PageHeader>Dashboard</PageHeader>
-          <div className="row form-group flexrow">
+          <div className="row form-group flexrow dashboard">
 
             <div className="col-lg-6 col-sm-6 col-xs-12">
               <BoxWidget

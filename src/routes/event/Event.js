@@ -16,6 +16,8 @@ import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabComm
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
 
+import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
+
 import {
 	doGetEventData,
 	doGetEventTicketSetting,
@@ -679,6 +681,7 @@ class Event extends React.Component {
 		};
 		return (
 			<div className="row">
+				<BuyRaffleTicketsModal params={this.props.params} />
 				<div className="col-lg-12">
 					{this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.is_banner_image_enabled &&
 					<div className="row">
