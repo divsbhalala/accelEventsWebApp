@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetAuctionItemByLimit, doGetSettings} from './../event/action/index';
+import {doGetAuctionItemByLimit, doGetSettings, getScrollData} from './../event/action/index';
 import s from './scroll.css';
 import moment from 'moment';
+import EventEndUntil from '../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../components/Widget/TotalProceeds';
 // import  history from './../../../history';
 
 class Auction extends React.Component {
@@ -20,26 +22,33 @@ class Auction extends React.Component {
       isLogin: false,
       settings: null,
       itemList: null,
+      auctionData:null,
     }
-
   }
-
   componentWillMount() {
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-      this.setState({
-        settings: resp && resp.data
+    let totalFundRaised=0
+    this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
+           this.setState({
+        settings: resp
+
       });
     })
 
     this.props.doGetAuctionItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp => {
-      if (resp && resp.data) {
+           if (resp && resp.data) {
         this.setState({
           itemList: resp && resp.data && resp.data.items
         });
       }
     })
+    /*this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
+      totalFundRaised=resp.totalRised
+      this.setState({
+        auctionData: resp,
+        settings:resp
+      });
+    })*/
   }
-
   render() {
     return (
       <div>
@@ -48,57 +57,11 @@ class Auction extends React.Component {
             <div id="content-wrapper">
               <div className="row">
                 <div className="col-md-5 col-md-offset-1">
-                  {this.state.settings &&
-                  <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-                    <div className={cx("main-box-body clearfix")}>
-                      <div className={cx("project-box-header gray-bg")}>
-                        <div className={cx("name")}>
-                          <a href="#">Time Until Event Ends</a>
-                        </div>
-                      </div>
-                      <div className={cx("project-box-content")}>
-                        <div className={cx("ticker big")}>
-                          <div className={cx("row timer")}>
-
-                            <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                              moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
-                            }</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                              moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-                              && moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.eventEnd).add(-moment(this.state.settings.eventEnd).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
-                              || '00'}</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("seconds")}>00</span></div>
-                          </div>
-                          <div className={cx("row tiny text-center")}>
-                            <div className={cx("col-xs-4")}><span className={cx("hours")}>HOURS</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("minutes")}>MINUTES</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("seconds")}>SECONDS</span></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> }
+                  {this.state.settings && <EventEndUntil settings={this.state.settings} headerText="Time Until Event Ends" className="emerald-bg" />}
                 </div>
                 <div className="col-md-5">
-                  {this.state.settings &&
-                  <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-                    <div className={cx("main-box-body clearfix")}>
-                      <div className={cx("project-box-header gray-bg")}>
-                        <div className={cx("name")}>
-                          <a href="#">Total Proceeds</a>
-                        </div>
-                      </div>
-                      <div className={cx("project-box-content")}>
-                        <div className={cx("value text-center")}>
-                          <div className={cx("ticker big")}>
-                            <span className="total-funds-raised">${this.state.settings.totalFundRaised || 0}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> }
+                  {this.state.settings && <TotalProceeds totalRised={ this.state.settings.totalFundRised } headerText="Total Proceeds" className="gray-bg"/>
+                  }
                 </div>
               </div>
               <div className="row">
@@ -137,7 +100,6 @@ class Auction extends React.Component {
             </div>
           </div>
         </div>
-
       </div>
     );
   }
@@ -156,7 +118,7 @@ class ItemList extends React.Component {
 }
 
 const mapDispatchToProps = {
-  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+  getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
   doGetAuctionItemByLimit: (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
 };
 const mapStateToProps = (state) => ({});

@@ -78,6 +78,7 @@ class EventAside extends React.Component {
 						<h2>jkazarian8</h2>
 					</header>
 					<div className={cx("main-box-body", "clearfix")}>
+						{}
 						{ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.logoEnabled &&
 						<img
 							src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/" + this.props.eventData.eventDesignDetail.logoImage}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -6,13 +5,15 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import {doGetEventData, doGetAuctionItemByLimit, doGetSettings} from './../event/action/index';
 import s from './table.css';
+import EventEndUntil from '../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../components/Widget/TotalProceeds';
+// import  history from './../../../history';
 
 import  EventAside from './../../components/EventAside/EventAside';
 class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +22,6 @@ class Auction extends React.Component {
       itemList: null,
     }
   }
-
   componentWillMount() {
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
@@ -29,7 +29,6 @@ class Auction extends React.Component {
         settings: resp && resp.data
       });
     })
-
     this.props.doGetAuctionItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp => {
       if (resp && resp.data) {
         this.setState({
@@ -38,7 +37,6 @@ class Auction extends React.Component {
       }
     })
   }
-
   render() {
     return (
       <div>
@@ -47,13 +45,10 @@ class Auction extends React.Component {
             <div id="content-wrapper">
               <div className="row">
                 <div className="col-lg-3 col-md-4 col-sm-4">
-
                   <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings}
                               eventTicketData={this.props.eventTicketData}
                               showMapPopup={this.showMapPopup} activeCategory={false}/>
                 </div>
-
-
                 <div className="col-lg-9 col-md-8 col-sm-8">
                   <div className="table white-bg scrollingpage">
                     <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center", s.helptext)}>
@@ -85,10 +80,8 @@ class Auction extends React.Component {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     );
   }
@@ -105,7 +98,6 @@ class ItemList extends React.Component {
     );
   }
 }
-
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
