@@ -42,25 +42,24 @@ class Raffle extends React.Component {
   render() {
     return (
       <div>
-        <div className="row">
+        <div className="row scrollingpage">
           <div className="col-lg-12">
             <div id="content-wrapper">
               <div className="row">
                 <div className="col-md-5 col-md-offset-1">
-                  {this.state.settings && <EventEndUntil settings={this.state.settings} headerText="Time Until Event Ends" className="emerald-bg" />}
+                  {this.state.settings && <EventEndUntil isBig={true} settings={this.state.settings} headerText="Time Until Event Ends" className="gray-bg" />}
                 </div>
                 <div className="col-md-5">
-                  {this.state.settings && <TotalProceeds totalRised={ this.state.settings.totalFundRised } headerText="Total Proceeds" className="gray-bg"/>
+                  {this.state.settings && <TotalProceeds totalRised={ this.state.settings.totalFundRised } headerText="Total Tickets Submitted" className="gray-bg"/>
                   }
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-10 col-md-offset-1">
                   <div className="table white-bg scrollingpage">
-                    <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center", s.helptextt)}>
-                      Text Your Pledge To: (410) 927-5356 with the item's three letter code and your desired pledge
-                      amount. Example: ABC$300
-                    </p>
+                    { this.state.settings && this.state.settings.displayText && <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center", s.helptext)}>
+                      {this.state.settings.displayText}
+                    </p>}
                     <table className="turquoise-bg white table table-striped datatables mrg-b-xs">
                       <thead>
                       <tr>

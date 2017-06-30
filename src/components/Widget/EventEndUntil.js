@@ -5,6 +5,7 @@ import moment from 'moment';
 class EventEndUntil extends Component { // eslint-disable-line
 	static propTypes = {
 		className: PropTypes.string,
+		isBig: PropTypes.bool,
 		headerText: PropTypes.string,
 		settings: PropTypes.object,
 	}
@@ -20,9 +21,9 @@ class EventEndUntil extends Component { // eslint-disable-line
 							<a href="#">{ this.props.headerText || "Time Until Event Ends"}</a>
 						</div>
 					</div>
-					<div className={cx("project-box-content")}>
-						<div className={cx("ticker")}>
-							<div className={cx("row timer")}>
+					<div className={cx("project-box-content ticker-box")}>
+						<div className={cx("ticker", this.props.isBig && "big")}>
+							<div className={cx("flex-row timer")}>
 
 								<div className={cx("col-xs-4")}><span className={cx("days")}>{
 									moment(this.props.settings.moduleEndDate).diff(moment(), 'days') > 0
