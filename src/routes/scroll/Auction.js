@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetAuctionItemByLimit, doGetSettings} from './../event/action/index';
+import {doGetAuctionItemByLimit, doGetSettings, getScrollData} from './../event/action/index';
 import s from './scroll.css';
 import moment from 'moment';
 // import  history from './../../../history';
@@ -20,11 +20,13 @@ class Auction extends React.Component {
       isLogin: false,
       settings: null,
       itemList: null,
+      auctionData:null,
     }
 
   }
 
   componentWillMount() {
+    let totalFundRaised=0
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
         settings: resp && resp.data
@@ -38,6 +40,13 @@ class Auction extends React.Component {
         });
       }
     })
+    /*this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
+      totalFundRaised=resp.totalRised
+      this.setState({
+        auctionData: resp,
+        settings:resp
+      });
+    })*/
   }
 
   render() {
@@ -158,6 +167,7 @@ class ItemList extends React.Component {
 const mapDispatchToProps = {
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   doGetAuctionItemByLimit: (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
+  getScrollData: (eventUrl,type) => getScrollData(eventUrl,type),
 };
 const mapStateToProps = (state) => ({});
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

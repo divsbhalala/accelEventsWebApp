@@ -6,8 +6,9 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import s from './goal.css';
 import {doGetSettings,getGoalData} from './../event/action/index';
+import EventEndUntil from '../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../components/Widget/TotalProceeds';
 
-import moment from 'moment';
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -60,22 +61,8 @@ class Fund extends React.Component {
               <div className="row">
                 <div className="col-md-3">
                   {this.state.settings &&
-                  <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-                    <div className={cx("main-box-body clearfix")}>
-                      <div className={cx("project-box-header emerald-bg")}>
-                        <div className={cx("name")}>
-                          <a href="#">Total Proceeds</a>
-                        </div>
-                      </div>
-                      <div className={cx("project-box-content")}>
-                        <div className={cx("value text-center")}>
-                          <div className={cx("ticker big")}>
-                            <span className="total-funds-raised">{this.state.settings.totalRised}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> }
+                  <TotalProceeds settings={this.state.settings} headerText="Total Proceeds" className="gray-bg"/>
+                  }
                 </div>
                 <style dangerouslySetInnerHTML={{__html: ".liquid:before{width:"+this.state.goalPer+"% !important;}"}} />
                 <div className="col-md-6">
@@ -147,38 +134,7 @@ class Fund extends React.Component {
 
                 </div>
                 <div className="col-md-3">
-                  {this.state.settings &&
-                  <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-                    <div className={cx("main-box-body clearfix")}>
-                      <div className={cx("project-box-header gray-bg")}>
-                        <div className={cx("name")}>
-                          <a href="#">Time Until Event Ends</a>
-                        </div>
-                      </div>
-                      <div className={cx("project-box-content")}>
-                        <div className={cx("ticker big")}>
-                          <div className={cx("row timer")}>
-
-                            <div className={cx("col-xs-4")}><span className={cx("hours")}>{
-                              moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-                              && moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') || '00'
-                            }</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("minutes")}>{
-                              moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-                              && moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.state.settings.moduleEndDate).add(-moment(this.state.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')
-                              || '00'}</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("seconds")}>00</span></div>
-                          </div>
-                          <div className={cx("row tiny text-center")}>
-                            <div className={cx("col-xs-4")}><span className={cx("hours")}>HOURS</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("minutes")}>MINUTES</span></div>
-                            <div className={cx("col-xs-4")}><span className={cx("seconds")}>SECONDS</span></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> }
+                  {this.state.settings && <EventEndUntil settings={this.state.settings} />}
                 </div>
               </div>
 

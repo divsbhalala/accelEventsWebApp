@@ -713,6 +713,22 @@ export function getGoalData(eventUrl,type) {
     });
   }
 }
+export function getScrollData(eventUrl,type) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/'+type+'/scroll' ,
+     headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 
 export function isVolunteer(eventUrl) {
   return (dispatch) => {
