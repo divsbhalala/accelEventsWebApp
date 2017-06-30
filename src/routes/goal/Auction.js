@@ -7,7 +7,7 @@ import {doGetSettings, getGoalData} from './../event/action/index';
 import s from './goal.css';
 import EventEndUntil from '../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../components/Widget/TotalProceeds';
-
+import Thermometer from '../../components/Widget/Thermometer';
 
 class Auction extends React.Component {
 	static propTypes = {
@@ -20,7 +20,7 @@ class Auction extends React.Component {
 			isLogin: false,
 			settings: null,
 			itemList: null,
-			goaldata: null,
+			goalData: null,
 			goalPer: 0,
 		}
 	}
@@ -35,7 +35,7 @@ class Auction extends React.Component {
 		this.props.getGoalData(this.props.params && this.props.params.params, 'auction').then(resp => {
 			totalFundRaised = resp.totalRised
 			this.setState({
-				goaldata: resp,
+				goalData: resp,
 				goalPer: totalFundRaised * 100 / resp.fundRaisingGoal,
 				settings: resp
 			});
@@ -53,7 +53,7 @@ class Auction extends React.Component {
 							<div className="row">
 								<h1 className="text-center" style={{marginTop: 120}}>Auction Goal</h1>
 								<h4 className="text-center" style={{marginTop: 5, marginBottom: 50}}>
-									{this.state.goaldata && this.state.goaldata.bidInstructions} </h4>
+									{this.state.goalData && this.state.goalData.bidInstructions} </h4>
 							</div>
 							<div className="row">
 								<div className="col-md-3">
@@ -65,77 +65,7 @@ class Auction extends React.Component {
 								<div className="col-md-6">
 									<div className="col-md-6">
 										<div className="goalcontainer">
-											<div className>
-												<div
-													className={this.state.goalPer<=20 ?'thermometer--very-low' : this.state.goalPer<=40 ? 'thermometer--low' : this.state.goalPer<=60 ? 'thermometer--moderate' :  this.state.goalPer <= 80  ? 'thermometer--high' : 'thermometer--very-high'}>
-													<div className="glass">
-														<div id="tooltip" style={{left: this.state.goalPer+'%'}}>
-															<span>${this.state.settings && this.state.settings.totalRised}</span>
-														</div>
-														<div className="liquid"/>
-														<svg className="ruler">
-															<rect x="0px" y={0} width="20%" height="100%" fill="url(#ticks--very-low)" rx={2}/>
-															<rect x="20%" y={0} width="20%" height="100%" fill="url(#ticks--low)" rx={2}/>
-															<rect x="40%" y={0} width="20%" height="100%" fill="url(#ticks--moderate)" rx={2}/>
-															<rect x="60%" y={0} width="20%" height="100%" fill="url(#ticks--high)" rx={2}/>
-															<rect x="80%" y={0} width="20%" height="10k%" fill="url(#ticks--very-high)" rx={2}/>
-															<defs>
-																<pattern id="ticks--very-low" className="ticks--very-low" width="60px" height="100%"
-																         patternUnits="userSpaceOnUse" x={0}>
-																	<line x1="1px" x2="1px" y2="6px"/>
-																	<line x1="12px" x2="12px" y2="6px"/>
-																	<line x1="24px" x2="24px" y2="6px"/>
-																	<line x1="36px" x2="36px" y2="6px"/>
-																	<line x1="48px" x2="48px" y2="10px"/>
-																</pattern>
-																<pattern id="ticks--low" className="ticks--low" width="60px" height="100%"
-																         patternUnits="userSpaceOnUse" x={0}>
-																	<line x1="1px" x2="1px" y2="6px"/>
-																	<line x1="12px" x2="12px" y2="6px"/>
-																	<line x1="24px" x2="24px" y2="6px"/>
-																	<line x1="36px" x2="36px" y2="6px"/>
-																	<line x1="48px" x2="48px" y2="10px"/>
-																</pattern>
-																<pattern id="ticks--moderate" className="ticks--moderate" width="60px" height="100%"
-																         patternUnits="userSpaceOnUse" x={0}>
-																	<line x1="1px" x2="1px" y2="6px"/>
-																	<line x1="12px" x2="12px" y2="6px"/>
-																	<line x1="24px" x2="24px" y2="6px"/>
-																	<line x1="36px" x2="36px" y2="6px"/>
-																	<line x1="48px" x2="48px" y2="10px"/>
-																</pattern>
-																<pattern id="ticks--high" className="ticks--high" width="60px" height="100%"
-																         patternUnits="userSpaceOnUse" x={0}>
-																	<line x1="1px" x2="1px" y2="6px"/>
-																	<line x1="12px" x2="12px" y2="6px"/>
-																	<line x1="24px" x2="24px" y2="6px"/>
-																	<line x1="36px" x2="36px" y2="6px"/>
-																	<line x1="48px" x2="48px" y2="10px"/>
-																</pattern>
-																<pattern id="ticks--very-high" className="ticks--very-high" width="60px" height="100%"
-																         patternUnits="userSpaceOnUse" x={0}>
-																	<line x1="1px" x2="1px" y2="6px"/>
-																	<line x1="12px" x2="12px" y2="6px"/>
-																	<line x1="24px" x2="24px" y2="6px"/>
-																	<line x1="36px" x2="36px" y2="6px"/>
-																	<line x1="48px" x2="48px" y2="10px"/>
-																</pattern>
-															</defs>
-														</svg>
-														<svg className="markers">
-															<text x="8px" y="15px" style={{writingMode: 'tb'}} fill="#249AA7">$0</text>
-															<text x="108px" y="15px" style={{writingMode: 'tb'}} fill="#B8E1F2">
-																${ this.state.goaldata && Math.round(this.state.goaldata.fundRaisingGoal / 4)}</text>
-															<text x="228px" y="15px" style={{writingMode: 'tb'}} fill="#ABD25E">
-																${ this.state.goaldata && Math.round(this.state.goaldata.fundRaisingGoal / 2)}</text>
-															<text x="348px" y="15px" style={{writingMode: 'tb'}} fill="#F8C830">
-																${ this.state.goaldata && Math.round((this.state.goaldata.fundRaisingGoal / 4) * 3)}</text>
-															<text x="468px" y="15px" style={{writingMode: 'tb'}} fill="#F1594A">
-																${ this.state.goaldata && Math.round(this.state.goaldata.fundRaisingGoal)} </text>
-														</svg>
-													</div>
-												</div>
-											</div>
+											{ this.state.settings && this.state.goalData && <Thermometer goalPer={this.state.goalPer} settings={this.state.settings} goalData={this.state.goalData} />}
 										</div>
 									</div>
 
