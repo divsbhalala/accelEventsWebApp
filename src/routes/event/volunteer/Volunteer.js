@@ -114,7 +114,6 @@ class Volunteer extends React.Component {
     this.doOrderTicket = this.doOrderTicket.bind(this);
     this.selectHandle = this.selectHandle.bind(this);
   }
-
 	componentDidMount() {
     //if(this.props.stripeKey){
     Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
@@ -133,6 +132,23 @@ class Volunteer extends React.Component {
 
 	}
 
+	validateField = () => {
+	  this.setState({
+      emailFeedBack: true,
+      firstNameFeedBack: true,
+      lastNameFeedBack: true,
+      cardNumberFeedBack: true,
+      cardHolderFeedBack: true,
+      amountFeedBack: true,
+      cvvFeedBack: true,
+      availTicketsFeedBack: true,
+      itemStatusFeedBack: true,
+      raffleTicketFeedBack: true,
+      phoneNumberFeedBack: true,
+      expMonthFeedBack: true,
+      errorMsgEmail:"Bidder email can't be empty",
+    })
+  }
 	setActiveView = (view) => {
     if(view == "event-ticketing" && this.state.attendees == null){
       this.getAttendeesList();
@@ -175,6 +191,7 @@ class Volunteer extends React.Component {
 			phoneNumberValue: null,
 			raffleTicketValue: null,
 
+      emailFeedBack:false,
 			firstNameFeedBack: false,
 			lastNameFeedBack: false,
 			cardNumberFeedBack: false,
@@ -183,6 +200,8 @@ class Volunteer extends React.Component {
 			cvvFeedBack: false,
 			availTicketsFeedBack: false,
 			itemStatusFeedBack: false,
+      phoneNumberFeedBack:false,
+      expMonthFeedBack: false,
 
 			errorMsgfirstName: null,
 			errorMsglastName: null,
@@ -203,6 +222,9 @@ class Volunteer extends React.Component {
 			showPopup: false,
 			popupHeader: null,
       countryPhone:null,
+      phone: null,
+      phoneNumber:false,
+      errorMsgEmailCheck:null,
 		})
 	};
 	itemCodeValidateHandler = (e) => {
@@ -251,6 +273,7 @@ class Volunteer extends React.Component {
 	getAuctionItem = (e) => {
 		this.setState({
 			itemCodeValue: this.itemCode.value.trim(),
+      itemCode:false,
 		});
 		if (this.itemCode.value.trim().length == 3) {
 			this.props.getAuctionItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim())
@@ -259,17 +282,18 @@ class Volunteer extends React.Component {
 						this.setState({
 							itemData: resp.data,
 							itemStatusMsg: null,
+              itemCode:true,
 						})
 					}
 				}).catch(error => {
 				this.setState({
-					itemStatusMsg: 0
+					itemStatusMsg: 0,
+          itemCode:false,
 				})
 				console.log(error)
 			});
 		}
 	};
-
 	getAttendeesList() {
 		this.props.getAttendees(this.props.params && this.props.params.params)
 			.then(resp => {
@@ -282,9 +306,8 @@ class Volunteer extends React.Component {
 			console.log(error)
 		});
 	};
-
 	checkAuctionUser = (e) => {
-		if (this.state.isValidData) {
+		if (this.state.email) {
 			let modeltype = 'auction';
 			if (this.state.activeViews == 'select-action') {
 				modeltype = 'auction'
@@ -297,26 +320,33 @@ class Volunteer extends React.Component {
 			}
 			this.props.getUserByEmail(this.props.params && this.props.params.params, this.email.value.trim(), modeltype)
 				.then(resp => {
-					if (resp && resp.data) {
+					if (resp && !resp.errorMessage) {
 						this.setState({
-							userData: resp.data,
+							userData: resp,
 							errorMsgEmail: null,
-							firstNameValue: resp.data.firstName,
-							lastNameValue: resp.data.lastName,
-              phone: resp.data.phonenumber,
-              countryPhone: resp.data.countryCode,
+							firstNameValue: resp.firstName,
+							lastNameValue: resp.lastName,
+              phone: resp.phonenumber,
+              countryPhone: resp.countryCode,
+              errorMsgEmailCheck:"",
 						})
-					}
+					}else{
+            this.setState({
+              userData: null,
+              phone:null,
+              errorMsgEmailCheck: "User Does Not Exists. Account Will be created."
+            })
+           }
 				}).catch(error => {
 				this.setState({
 					userData: null,
-					email: false,
-					errorMsgEmail: "User Does Not Exists. Account Will be created."
+					errorMsgEmailCheck: "User Does Not Exists. Account Will be created."
 				})
 				console.log(error);
 			});
 		}
 	};
+
 	emailValidateHandler = (e) => {
 		this.setState({
 			emailFeedBack: true,
@@ -533,6 +563,41 @@ class Volunteer extends React.Component {
       });
     }
   };
+  expMonthValidateHandler = (e) => {
+    this.setState({
+      expMonthFeedBack: true,
+      expMonthValue:this.expMonth.value.trim(),
+    });
+    if (this.expMonth.value.trim() == '') {
+      this.setState({
+        expMonth: false,
+        errorMsgExpMonth: "Expire Month is Require",
+      });
+    }  else {
+      this.setState({
+        expMonth: true
+      });
+    }
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+  expYearValidateHandler = (e) => {
+    this.setState({
+      expYearFeedBack: true,
+      expYearValue:this.expYear.value.trim(),
+    });
+    if (this.expYear.value.trim() == '') {
+      this.setState({
+        expYear: false,
+        errorMsgexpYear: "Expire Year is Require",
+      });
+    }  else {
+      this.setState({
+        expYear: true
+      });
+    }
+    // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
+  };
+
   componentWillMount(){
 	 //if(this.props.stripeKey){
 		  Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
@@ -560,9 +625,10 @@ class Volunteer extends React.Component {
    //   window.location.reload();
     }
   };
+
   submiteSilentAuctionBid = (e) => {
     e.preventDefault();
-    console.log(this.state)
+    this.validateField();
     let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
 
@@ -600,6 +666,7 @@ class Volunteer extends React.Component {
          cellNumber: self.state.phone,
          firstname: self.state.firstNameValue,
          lastname: self.state.lastNameValue,
+         paymenttype: 'CC',
          itemCode: self.state.itemCodeValue,
          amount: self.state.amountValue,
        }
@@ -623,16 +690,14 @@ class Volunteer extends React.Component {
             popupHeader:"Failed"
           });
         }
-        console.log("------",resp)
       });
   }
-
   submitPledgeBid = (e) => {
     e.preventDefault();
-    console.log(this.state)
+    this.validateField();
     let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if (this.state.isValidBidData) {
+     if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -647,7 +712,7 @@ class Volunteer extends React.Component {
         }else{
           const user = {
             amount: self.state.amountValue,
-            cellNumber: self.state.phoneNumberValue,
+            cellNumber: self.state.phone,
             countryCode: self.state.countryPhone,
             email: self.state.emailValue,
             firstname: self.state.firstNameValue,
@@ -675,12 +740,13 @@ class Volunteer extends React.Component {
        });
      }
   };
+
   sellTicketsBid = (e) => {
     e.preventDefault();
-    console.log(this.state)
+    this.validateField();
     let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
-     if (this.state.isValidBidData) {
+     if (this.state.cardNumber && this.state.cardHolder  && this.state.cvv) {
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -696,7 +762,7 @@ class Volunteer extends React.Component {
           const user = {
             email: self.state.emailValue,
             countryCode: self.state.countryPhone,
-            cellNumber: self.state.phoneNumberValue,
+            cellNumber: self.state.phone,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
             paymenttype: 'CC',
@@ -725,6 +791,7 @@ class Volunteer extends React.Component {
   };
   submitTicketsbid = (e) => {
     e.preventDefault();
+    this.validateField();
     let self = this;
     this.setState({isValidBidData: (this.state.email && this.state.availTickets)});
      if (this.state.isValidBidData) {
@@ -756,13 +823,14 @@ class Volunteer extends React.Component {
   };
   submitDonatebid = (e) => {
     e.preventDefault();
+    this.validateField();
     let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if (this.state.isValidBidData) {
+     if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
           const user = {
             email: self.state.emailValue,
             countryCode: self.state.countryPhone,
-            cellNumber: self.state.phoneNumberValue,
+            cellNumber: self.state.phone,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
             itemCode: self.state.itemCodeValue,
@@ -936,7 +1004,8 @@ class Volunteer extends React.Component {
 							<button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
 							<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
 								className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-							<div className="form-group has-feedback">
+							<div
+                className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 								<input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
 								       className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
                   this.email = ref;
@@ -951,6 +1020,7 @@ class Volunteer extends React.Component {
 
 								{ this.state.emailFeedBack && !this.state.email &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
 							{ !this.state.userData &&
@@ -1149,7 +1219,7 @@ class Volunteer extends React.Component {
 									</div>
 								</div>
 							</div>
-							<div className="cc-info">
+              {  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  && <div className="cc-info">
 								<style
 									dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
 								<div className="stripe-form">
@@ -1198,102 +1268,97 @@ class Volunteer extends React.Component {
 											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
 										</div>
 
-										<div className="row">
-											<div className="col-md-8">
-												<div className="form-group expiration-date has-feedback">
-													<label className="control-label">Expiration Date</label>
-													<div className="input-group">
-														<div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-														                                                      aria-hidden="true"/></div>
-														<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                    <div className="row">
+                      <div className="col-md-8">
+                        <div
+                          className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
+                          <label className="control-label">Expiration Date</label>
+                          <div className="input-group">
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
-                            }}>
-															<option selected value="10">Jan (01)</option>
-															<option value="02">Feb (02)</option>
-															<option value="03">Mar (03)</option>
-															<option value="04">Apr (04)</option>
-															<option value="05">May (05)</option>
-															<option value="06">Jun (06)</option>
-															<option value="07">Jul (07)</option>
-															<option value="08">Aug (08)</option>
-															<option value="09">Sep (09)</option>
-															<option value="10">Oct (10)</option>
-															<option value="11">Nov (11)</option>
-															<option value="12">Dec (12)</option>
-														</select>
-														<select className data-stripe="exp_year field-exp_year" id="exp-year"
-														        data-fv-field="expYear"
-														        ref={ref => {
+                            }}  onChange={this.expMonthValidateHandler} >
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
+                            </select>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
                                       this.expYear = ref;
-                                    }}>
-															<option value="2016">2016</option>
-															<option value="2017">2017</option>
-															<option value="2018">2018</option>
-															<option value="2019">2019</option>
-															<option value="2020">2020</option>
-															<option value="2021">2021</option>
-															<option value="2022">2022</option>
-															<option value="2023">2023</option>
-															<option value="2024">2024</option>
-															<option value="2025">2025</option>
-															<option value="2026">2026</option>
-															<option value="2027">2027</option>
-															<option value="2028">2028</option>
-															<option value="2029">2029</option>
-															<option value="2030">2030</option>
-															<option value="2031">2031</option>
-															<option value="2032">2032</option>
-															<option value="2033">2033</option>
-															<option value="2034">2034</option>
-															<option value="2035">2035</option>
-															<option value="2036">2036</option>
-															<option value="2037">2037</option>
-															<option value="2038">2038</option>
-															<option value="2039">2039</option>
-															<option value="2040">2040</option>
-															<option value="2041">2041</option>
-															<option value="2042">2042</option>
-															<option value="2043">2043</option>
-															<option value="2044">2044</option>
-															<option value="2045">2045</option>
-															<option value="2046">2046</option>
-															<option value="2047">2047</option>
-															<option value="2048">2048</option>
-															<option value="2049">2049</option>
-															<option value="2050">2050</option>
-														</select>
-													</div>
-
-
-												</div>
-											</div>
-											<div className="col-md-4">
-												<div
-													className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-													<label className="control-label">CVV Number</label>
-													<div className="input-group">
-														<input type="number" className="form-control field-cvv" maxLength={4} size={4}
-														       data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-														       ref={ref => {
+                                    }} onChange={this.expYearValidateHandler} >
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div
+                          className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                          <label className="control-label">CVV Number</label>
+                          <div className="input-group">
+                            <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                                   data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                                   ref={ref => {
                                      this.cvv = ref;
                                    }}
-														       onKeyUp={this.cvvValidateHandler}/>
-														{ this.state.cvvFeedBack && this.state.cvv &&
-														<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-														{ this.state.cvvFeedBack && !this.state.cvv &&
-														<i
-															className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-													</div>
-													{ this.state.cvvFeedBack && !this.state.cvv &&
-													<small className="help-block"
-													       data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+                                   onKeyUp={this.cvvValidateHandler}/>
+                            { this.state.cvvFeedBack && this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                            { this.state.cvvFeedBack && !this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                          </div>
+                          { this.state.cvvFeedBack && !this.state.cvv &&
+                          <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
 
-												</div>
-											</div>
-										</div>
+                        </div>
+                      </div>
+                    </div>
 									</div>
 								</div>
-							</div>
+							</div> }
 							<div className="form-group">
 								<button className="btn btn-block btn-success submit">Submit</button>
 							</div>
@@ -1314,7 +1379,8 @@ class Volunteer extends React.Component {
 						      data-validate-function="validateForm" data-switch-view="select-action" data-view-name="submit-pledge"
 						      noValidate="novalidate"
 						      onSubmit={this.submitPledgeBid}>
-							<div className="form-group has-feedback">
+							<div
+                className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 								<input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
 								       className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
                   this.email = ref;
@@ -1329,6 +1395,7 @@ class Volunteer extends React.Component {
 
 								{ this.state.emailFeedBack && !this.state.email &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
               { !this.state.userData &&
@@ -1567,34 +1634,34 @@ class Volunteer extends React.Component {
 											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
 										</div>
 
-										<div className="row">
-											<div className="col-md-8">
-												<div className="form-group expiration-date has-feedback">
-													<label className="control-label">Expiration Date</label>
-													<div className="input-group">
-														<div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-														                                                      aria-hidden="true"/></div>
-														<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                    <div className="row">
+                      <div className="col-md-8">
+                        <div
+                          className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
+                          <label className="control-label">Expiration Date</label>
+                          <div className="input-group">
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
-                            }}>
-															<option selected value="10">Jan (01)</option>
-															<option value="02">Feb (02)</option>
-															<option value="03">Mar (03)</option>
-															<option value="04">Apr (04)</option>
-															<option value="05">May (05)</option>
-															<option value="06">Jun (06)</option>
-															<option value="07">Jul (07)</option>
-															<option value="08">Aug (08)</option>
-															<option value="09">Sep (09)</option>
-															<option value="10">Oct (10)</option>
-															<option value="11">Nov (11)</option>
-															<option value="12">Dec (12)</option>
-														</select>
-														<select className data-stripe="exp_year field-exp_year" id="exp-year"
-														        data-fv-field="expYear"
-														        ref={ref => {
+                            }}  onChange={this.expMonthValidateHandler} >
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
+                            </select>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
                                       this.expYear = ref;
-                                    }}>
+                                    }} onChange={this.expYearValidateHandler} >
                               <option value="2017">2017</option>
                               <option value="2018">2018</option>
                               <option value="2019">2019</option>
@@ -1631,34 +1698,30 @@ class Volunteer extends React.Component {
                               <option value="2050">2050</option>
                             </select>
                           </div>
-
-
-												</div>
-											</div>
-											<div className="col-md-4">
-												<div
-													className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-													<label className="control-label">CVV Number</label>
-													<div className="input-group">
-														<input type="number" className="form-control field-cvv" maxLength={4} size={4}
-														       data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-														       ref={ref => {
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div
+                          className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                          <label className="control-label">CVV Number</label>
+                          <div className="input-group">
+                            <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                                   data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                                   ref={ref => {
                                      this.cvv = ref;
                                    }}
-														       onKeyUp={this.cvvValidateHandler}/>
-														{ this.state.cvvFeedBack && this.state.cvv &&
-														<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-														{ this.state.cvvFeedBack && !this.state.cvv &&
-														<i
-															className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-													</div>
-													{ this.state.cvvFeedBack && !this.state.cvv &&
-													<small className="help-block"
-													       data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+                                   onKeyUp={this.cvvValidateHandler}/>
+                            { this.state.cvvFeedBack && this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                            { this.state.cvvFeedBack && !this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                          </div>
+                          { this.state.cvvFeedBack && !this.state.cvv &&
+                          <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
 
-												</div>
-											</div>
-										</div>
+                        </div>
+                      </div>
+                    </div>
 									</div>
 								</div>
 							</div>
@@ -1683,7 +1746,8 @@ class Volunteer extends React.Component {
 						      data-view-name="sell-raffle-tickets" noValidate="novalidate"
 						      onSubmit={this.sellTicketsBid}>
 							<button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
-							<div className="form-group has-feedback">
+							<div
+                className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 								<input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
 								       className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
                   this.email = ref;
@@ -1698,6 +1762,7 @@ class Volunteer extends React.Component {
 
 								{ this.state.emailFeedBack && !this.state.email &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
               { !this.state.userData &&
@@ -1928,99 +1993,94 @@ class Volunteer extends React.Component {
 											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
 										</div>
 
-										<div className="row">
-											<div className="col-md-8">
-												<div className="form-group expiration-date has-feedback">
-													<label className="control-label">Expiration Date</label>
-													<div className="input-group">
-														<div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-														                                                      aria-hidden="true"/></div>
-														<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                    <div className="row">
+                      <div className="col-md-8">
+                        <div
+                          className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
+                          <label className="control-label">Expiration Date</label>
+                          <div className="input-group">
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
-                            }}>
-															<option selected value="10">Jan (01)</option>
-															<option value="02">Feb (02)</option>
-															<option value="03">Mar (03)</option>
-															<option value="04">Apr (04)</option>
-															<option value="05">May (05)</option>
-															<option value="06">Jun (06)</option>
-															<option value="07">Jul (07)</option>
-															<option value="08">Aug (08)</option>
-															<option value="09">Sep (09)</option>
-															<option value="10">Oct (10)</option>
-															<option value="11">Nov (11)</option>
-															<option value="12">Dec (12)</option>
-														</select>
-														<select className data-stripe="exp_year field-exp_year" id="exp-year"
-														        data-fv-field="expYear"
-														        ref={ref => {
+                            }}  onChange={this.expMonthValidateHandler} >
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
+                            </select>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
                                       this.expYear = ref;
-                                    }}>
-															<option value="2016">2016</option>
-															<option value="2017">2017</option>
-															<option value="2018">2018</option>
-															<option value="2019">2019</option>
-															<option value="2020">2020</option>
-															<option value="2021">2021</option>
-															<option value="2022">2022</option>
-															<option value="2023">2023</option>
-															<option value="2024">2024</option>
-															<option value="2025">2025</option>
-															<option value="2026">2026</option>
-															<option value="2027">2027</option>
-															<option value="2028">2028</option>
-															<option value="2029">2029</option>
-															<option value="2030">2030</option>
-															<option value="2031">2031</option>
-															<option value="2032">2032</option>
-															<option value="2033">2033</option>
-															<option value="2034">2034</option>
-															<option value="2035">2035</option>
-															<option value="2036">2036</option>
-															<option value="2037">2037</option>
-															<option value="2038">2038</option>
-															<option value="2039">2039</option>
-															<option value="2040">2040</option>
-															<option value="2041">2041</option>
-															<option value="2042">2042</option>
-															<option value="2043">2043</option>
-															<option value="2044">2044</option>
-															<option value="2045">2045</option>
-															<option value="2046">2046</option>
-															<option value="2047">2047</option>
-															<option value="2048">2048</option>
-															<option value="2049">2049</option>
-															<option value="2050">2050</option>
-														</select>
-													</div>
-
-
-												</div>
-											</div>
-											<div className="col-md-4">
-												<div
-													className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-													<label className="control-label">CVV Number</label>
-													<div className="input-group">
-														<input type="number" className="form-control field-cvv" maxLength={4} size={4}
-														       data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-														       ref={ref => {
+                                    }} onChange={this.expYearValidateHandler} >
+                              <option value="2017">2017</option>
+                              <option value="2018">2018</option>
+                              <option value="2019">2019</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                              <option value="2027">2027</option>
+                              <option value="2028">2028</option>
+                              <option value="2029">2029</option>
+                              <option value="2030">2030</option>
+                              <option value="2031">2031</option>
+                              <option value="2032">2032</option>
+                              <option value="2033">2033</option>
+                              <option value="2034">2034</option>
+                              <option value="2035">2035</option>
+                              <option value="2036">2036</option>
+                              <option value="2037">2037</option>
+                              <option value="2038">2038</option>
+                              <option value="2039">2039</option>
+                              <option value="2040">2040</option>
+                              <option value="2041">2041</option>
+                              <option value="2042">2042</option>
+                              <option value="2043">2043</option>
+                              <option value="2044">2044</option>
+                              <option value="2045">2045</option>
+                              <option value="2046">2046</option>
+                              <option value="2047">2047</option>
+                              <option value="2048">2048</option>
+                              <option value="2049">2049</option>
+                              <option value="2050">2050</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div
+                          className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                          <label className="control-label">CVV Number</label>
+                          <div className="input-group">
+                            <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                                   data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                                   ref={ref => {
                                      this.cvv = ref;
                                    }}
-														       onKeyUp={this.cvvValidateHandler}/>
-														{ this.state.cvvFeedBack && this.state.cvv &&
-														<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-														{ this.state.cvvFeedBack && !this.state.cvv &&
-														<i
-															className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-													</div>
-													{ this.state.cvvFeedBack && !this.state.cvv &&
-													<small className="help-block"
-													       data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+                                   onKeyUp={this.cvvValidateHandler}/>
+                            { this.state.cvvFeedBack && this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                            { this.state.cvvFeedBack && !this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                          </div>
+                          { this.state.cvvFeedBack && !this.state.cvv &&
+                          <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
 
-												</div>
-											</div>
-										</div>
+                        </div>
+                      </div>
+                    </div>
 									</div>
 								</div>
 							</div>
@@ -2045,7 +2105,8 @@ class Volunteer extends React.Component {
 						      data-validate-function="validateForm" data-switch-view="select-action"
 						      data-view-name="submit-raffle-tickets" noValidate="novalidate"
 						      onSubmit={this.submitTicketsbid}>
-							<div className="form-group has-feedback">
+							<div
+                className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 								<input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
 								       className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
                   this.email = ref;
@@ -2378,7 +2439,8 @@ class Volunteer extends React.Component {
 						      data-validate-function="validateForm" data-switch-view="select-action" data-view-name="donate"
 						      noValidate="novalidate"
 						      onSubmit={this.submitDonatebid}>
-							<div className="form-group has-feedback">
+							<div
+                className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 								<input type="text" name="email" placeholder="Bidder Email ID" autoComplete="off"
 								       className="form-control mrg-t-lg bidder-email" data-fv-field="email" ref={ref => {
                   this.email = ref;
@@ -2537,31 +2599,6 @@ class Volunteer extends React.Component {
 								<div className="text-xs" style={{display: 'block'}}>Cell Number : <span
 									className="bidder-cell valueCustom">{this.state.userData.phonenumber}</span></div> }
 							</div>
-							<div className="form-group has-feedback">
-								<div className="intl-tel-input allow-dropdown separate-dial-code iti-sdc-2">
-									<div className="flag-container">
-										<div className="selected-flag" tabIndex={0} title="Canada: +1">
-											<div className="iti-flag ca"/>
-											<div className="selected-dial-code">+1</div>
-											<div className="iti-arrow"/>
-										</div>
-
-									</div>
-									<input type="tel" placeholder="Bidder Cell Number" autoComplete="off"
-									       className="int-tel-field bidder-cell form-control mrg-t-lg" data-country="CA"
-									       data-fv-field="intTelField"/><i className="form-control-feedback"
-									                                       data-fv-icon-for="intTelField" style={{display: 'none'}}/>
-								</div>
-								<input type="hidden" name="countryCode" defaultValue="CA"/><input type="hidden" name="phoneNumber"
-								                                                                  defaultValue/>
-								<span className="message"/>
-								<small className="help-block" data-fv-validator="notEmpty" data-fv-for="intTelField"
-								       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Phone number is required
-								</small>
-								<small className="help-block" data-fv-validator="intlPhoneField" data-fv-for="intTelField"
-								       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Invalid phone number
-								</small>
-							</div>
 							<div id="payment-type-selection" className="form-group text-center">
 								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cc" defaultChecked="checked"/>
 								Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
@@ -2639,35 +2676,34 @@ class Volunteer extends React.Component {
 											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
 										</div>
 
-										<div className="row">
-											<div className="col-md-8">
-												<div className="form-group expiration-date has-feedback">
-													<label className="control-label">Expiration Date</label>
-													<div className="input-group">
-														<div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-														                                                      aria-hidden="true"/></div>
-														<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                    <div className="row">
+                      <div className="col-md-8">
+                        <div
+                          className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
+                          <label className="control-label">Expiration Date</label>
+                          <div className="input-group">
+                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                  aria-hidden="true"/></div>
+                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
-                            }}>
-															<option selected value="10">Jan (01)</option>
-															<option value="02">Feb (02)</option>
-															<option value="03">Mar (03)</option>
-															<option value="04">Apr (04)</option>
-															<option value="05">May (05)</option>
-															<option value="06">Jun (06)</option>
-															<option value="07">Jul (07)</option>
-															<option value="08">Aug (08)</option>
-															<option value="09">Sep (09)</option>
-															<option value="10">Oct (10)</option>
-															<option value="11">Nov (11)</option>
-															<option value="12">Dec (12)</option>
-														</select>
-														<select className data-stripe="exp_year field-exp_year" id="exp-year"
-														        data-fv-field="expYear"
-														        ref={ref => {
+                            }}  onChange={this.expMonthValidateHandler} >
+                              <option selected value="10">Jan (01)</option>
+                              <option value="02">Feb (02)</option>
+                              <option value="03">Mar (03)</option>
+                              <option value="04">Apr (04)</option>
+                              <option value="05">May (05)</option>
+                              <option value="06">Jun (06)</option>
+                              <option value="07">Jul (07)</option>
+                              <option value="08">Aug (08)</option>
+                              <option value="09">Sep (09)</option>
+                              <option value="10">Oct (10)</option>
+                              <option value="11">Nov (11)</option>
+                              <option value="12">Dec (12)</option>
+                            </select>
+                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                    ref={ref => {
                                       this.expYear = ref;
-                                    }}>
-
+                                    }} onChange={this.expYearValidateHandler} >
                               <option value="2017">2017</option>
                               <option value="2018">2018</option>
                               <option value="2019">2019</option>
@@ -2704,34 +2740,30 @@ class Volunteer extends React.Component {
                               <option value="2050">2050</option>
                             </select>
                           </div>
-
-
-												</div>
-											</div>
-											<div className="col-md-4">
-												<div
-													className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-													<label className="control-label">CVV Number</label>
-													<div className="input-group">
-														<input type="number" className="form-control field-cvv" maxLength={4} size={4}
-														       data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-														       ref={ref => {
+                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <div
+                          className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                          <label className="control-label">CVV Number</label>
+                          <div className="input-group">
+                            <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                                   data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                                   ref={ref => {
                                      this.cvv = ref;
                                    }}
-														       onKeyUp={this.cvvValidateHandler}/>
-														{ this.state.cvvFeedBack && this.state.cvv &&
-														<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-														{ this.state.cvvFeedBack && !this.state.cvv &&
-														<i
-															className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-													</div>
-													{ this.state.cvvFeedBack && !this.state.cvv &&
-													<small className="help-block"
-													       data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+                                   onKeyUp={this.cvvValidateHandler}/>
+                            { this.state.cvvFeedBack && this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                            { this.state.cvvFeedBack && !this.state.cvv &&
+                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                          </div>
+                          { this.state.cvvFeedBack && !this.state.cvv &&
+                          <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
 
-												</div>
-											</div>
-										</div>
+                        </div>
+                      </div>
+                    </div>
 									</div>
 								</div>
 							</div>

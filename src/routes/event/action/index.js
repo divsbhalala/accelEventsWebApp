@@ -380,6 +380,13 @@ export function getItemStatusByCode(eventUrl, itemCode) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + encodeURI(email) +'/module/'+modeltype,
       headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
     });
   }
 }
