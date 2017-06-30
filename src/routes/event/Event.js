@@ -668,7 +668,15 @@ class Event extends React.Component {
 			})
 		})
 	}
-
+  successTask = ()=> {
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+  };
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -702,6 +710,7 @@ class Event extends React.Component {
 								            selectedCategoty={this.state.selectedCategoty}
 								            setSearchString={this.setSearchString}
 														params={this.props.params}
+														successTask={this.successTask}
 								/>
 							</div>
 							<div className="col-lg-9 col-md-8 col-sm-8 ">
@@ -899,8 +908,6 @@ class Event extends React.Component {
 									</div>
 								)
 							}
-
-
 							{/*<div className="sale-card">
 							 <div className="flex-row">
 							 <div className="flex-col">

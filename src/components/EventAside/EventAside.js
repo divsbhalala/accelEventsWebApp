@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -68,6 +69,9 @@ class EventAside extends React.Component {
 			isshowBuyRaffleTicketsModal: false
 		})
 	};
+  successTask = ()=> {
+    this.props.successTask();
+  };
 	setCountDown=()=>{
 		let interval = 1000;
 		let self=this;
@@ -101,10 +105,10 @@ class EventAside extends React.Component {
 		return (
 			<div>
 				<BuyRaffleTicketsModal
-					showModal={this.state.isshowBuyRaffleTicketsModal}
-					headerText=""
-					onCloseFunc={this.hideBuyRaffleTicketsModal}
-					params={this.props.params}/>
+          showModal={this.state.isshowBuyRaffleTicketsModal}
+          headerText=""
+          onCloseFunc={this.hideBuyRaffleTicketsModal}
+          successTask={this.successTask}params={this.props.params}  />
 				<script type="text/javascript"
 								src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>
@@ -112,7 +116,6 @@ class EventAside extends React.Component {
 						<h2>jkazarian8</h2>
 					</header>
 					<div className={cx("main-box-body", "clearfix")}>
-						{}
 						{ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.logoEnabled &&
 						<img
 							src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/" + this.props.eventData.eventDesignDetail.logoImage}
@@ -262,8 +265,8 @@ class EventAside extends React.Component {
 				<PopupModel
 					id="buyRaffelTicketPopup"
 					showModal={this.state.showBuyRaffelTicketPopup}
-					headerText="Buy Raffle Ticket"
-					onCloseFunc={this.hideBuyRaffelTicketPopup}
+					headerText={<h4>Buy Raffle Ticket</h4>}
+					onCloseFuncc={this.hideBuyRaffelTicketPopup}
 				>
 					<div className="main-box-body clearfix">
 						<div className="payment-area collapse in">

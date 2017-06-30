@@ -245,7 +245,7 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-		history.push('/login');
+	//	history.push('/login');
 	};
 	showContactPopup = () => {
 		this.setState({

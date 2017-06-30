@@ -275,19 +275,19 @@ class Auction extends React.Component {
     this.setState({
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value.trim()
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
     if (this.firstName.value.trim() == '') {
       this.setState({
         firstName: false
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else {
       this.setState({
         firstName: true
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     }
@@ -297,20 +297,20 @@ class Auction extends React.Component {
     this.setState({
       lastNameFeedBack: true,
       lastNameValue: this.lastName.value.trim(),
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
     if (this.lastName.value.trim() == '') {
 
       this.setState({
         lastName: false
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else {
       this.setState({
         lastName: true
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     }
@@ -321,7 +321,7 @@ class Auction extends React.Component {
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue:this.cardHolder.value.trim(),
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
 
@@ -330,20 +330,20 @@ class Auction extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cardHolder: true
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     }
@@ -355,7 +355,7 @@ class Auction extends React.Component {
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value.trim(),
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
 
@@ -365,14 +365,14 @@ class Auction extends React.Component {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else if (this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else {
@@ -401,7 +401,7 @@ class Auction extends React.Component {
       amountFeedBack: true,
       errorMsgAmount:errorMsgAmount,
       amountValue:this.amount.value.trim()
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
     //this.checkIsValidBidData();
@@ -410,7 +410,7 @@ class Auction extends React.Component {
 
     this.setState({
       cvvFeedBack: true
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
 
@@ -419,20 +419,20 @@ class Auction extends React.Component {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     } else {
       this.setState({
         cvv: true
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     }
@@ -447,14 +447,14 @@ class Auction extends React.Component {
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
     if (value == '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     }else{
@@ -463,7 +463,7 @@ class Auction extends React.Component {
       this.setState({
         phoneNumber: !resp,
         errorMsgPhoneNumber: "Invalid phone number",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     })
@@ -476,14 +476,14 @@ class Auction extends React.Component {
     this.setState({
       expMonthFeedBack: true,
       expMonthValue:this.expMonth.value.trim(),
-    },function afterTitleChange () {
+    },function afterStateChange () {
       this.checkIsValidBidData()
     });
     if (this.expMonth.value.trim() == '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
-      },function afterTitleChange () {
+      },function afterStateChange () {
         this.checkIsValidBidData()
       });
     }  else {
@@ -534,6 +534,7 @@ class Auction extends React.Component {
         }
       }).catch(error => {
       console.log(error)
+      history.push('/404');
     });
   };
   componentReRender = () => {

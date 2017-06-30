@@ -1469,7 +1469,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="alertPopup"
 							showModal={this.state.showMapPopup}
-							headerText={this.state.popupAlertHeader}
+							headerText={<h4>{this.state.popupAlertHeader}</h4>}
 							modelBody=''
 							onCloseFunc={this.hidePopup}>
 							<div className="ticket-type-container">

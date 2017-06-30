@@ -11,6 +11,8 @@ import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 import Moment from 'react-moment';
 import moment from 'moment';
+import IntlTelInput from 'react-intl-tel-input';
+import {doValidateMobileNumber,doGetEventData} from './../action/index';
 
 import  {
   getItemStatusByCode,
@@ -104,6 +106,8 @@ class Volunteer extends React.Component {
       showPopup: false,
       popupHeader:null,
       totalTickets:[],
+      countryPhone: null,
+      phone: null,
     }
     this.setActiveView = this.setActiveView.bind(this);
     this.getAttendeesList = this.getAttendeesList.bind(this);
@@ -112,6 +116,9 @@ class Volunteer extends React.Component {
   }
 
 	componentDidMount() {
+    //if(this.props.stripeKey){
+    Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
+    // }
 		if (this.props.params && this.props.params.params) {
 			this.props.isVolunteer(this.props.params && this.props.params.params).then(resp=> {
 				this.setState({
@@ -195,6 +202,7 @@ class Volunteer extends React.Component {
 			attendeesFilter: null,
 			showPopup: false,
 			popupHeader: null,
+      countryPhone:null,
 		})
 	};
 	itemCodeValidateHandler = (e) => {
@@ -295,7 +303,8 @@ class Volunteer extends React.Component {
 							errorMsgEmail: null,
 							firstNameValue: resp.data.firstName,
 							lastNameValue: resp.data.lastName,
-							phoneNumberValue: resp.data.phonenumber,
+              phone: resp.data.phonenumber,
+              countryPhone: resp.data.countryCode,
 						})
 					}
 				}).catch(error => {
@@ -360,6 +369,32 @@ class Volunteer extends React.Component {
 			});
 		}
 	};
+  phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+    console.log(isValid, value, countryData, number, ext);
+    this.setState({
+      phone: value,
+      countryPhone: countryData.iso2,
+      phoneNumberFeedBack: true,
+      errorMsgPhoneNumber: "",
+    });
+    if (value == '') {
+      this.setState({
+        phoneNumber: false,
+        errorMsgPhoneNumber: "phoneNumber is Require",
+      });
+    } else {
+      this.props.doValidateMobileNumber(number).then(resp => {
+        console.log(resp)
+        this.setState({
+          phoneNumber: !resp,
+          errorMsgPhoneNumber: "Invalid phone number",
+        });
+      })
+    }
+    this.setState({
+      phone: value,
+    });
+  }
 	cardHolderValidateHandler = (e) => {
 
 		this.setState({
@@ -499,9 +534,11 @@ class Volunteer extends React.Component {
     }
   };
   componentWillMount(){
-	  if(this.props.stripeKey){
-		  Stripe.setPublishableKey(this.props.stripeKey);
-	  }
+	 //if(this.props.stripeKey){
+		  Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
+	// }
+    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+    this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
       this.setState({
         settings: resp && resp.data
@@ -520,7 +557,7 @@ class Volunteer extends React.Component {
       showPopup: false
     })
     if (this.state.popupHeader == "Success"){
-      window.location.reload();
+   //   window.location.reload();
     }
   };
   submiteSilentAuctionBid = (e) => {
@@ -528,7 +565,8 @@ class Volunteer extends React.Component {
     console.log(this.state)
     let self = this;
     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if (this.state.isValidBidData) {
+
+     if ( this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -543,8 +581,8 @@ class Volunteer extends React.Component {
         }else{
           const user = {
             email: self.state.emailValue,
-            countryCode: "IN",
-            cellNumber: self.state.phoneNumberValue,
+            countryCode: self.state.countryPhone,
+            cellNumber: self.state.phone,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
             paymenttype: 'CC',
@@ -552,26 +590,43 @@ class Volunteer extends React.Component {
             amount: self.state.amountValue,
             stripeToken: response.id,
           }
-          self.props.submitBids(self.props.params && self.props.params.params, user)
-            .then(resp => {
-              if (resp && resp.data) {
-                self.setState({
-                  itemStatusMsg: resp.data,
-                  popupHeader:"Success"
-                })
-              }else{
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: resp.errorMessage,
-                  popupHeader:"Failed"
-                });
-              }
-            console.log("------",resp)
-          });
+          self.submitBids(user);
         }
        });
+     } else if( this.state.amount && this.state.itemCode && this.state.itemCodeValue) {
+       const user = {
+         email: self.state.emailValue,
+         countryCode: self.state.countryPhone,
+         cellNumber: self.state.phone,
+         firstname: self.state.firstNameValue,
+         lastname: self.state.lastNameValue,
+         itemCode: self.state.itemCodeValue,
+         amount: self.state.amountValue,
+       }
+       self.submitBids(user);
      }
   };
+  submitBids = (user) => {
+    this.props.submitBids(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && resp.message) {
+          this.setState({
+            itemStatusMsg: resp.message,
+            errorMsgCard: resp.message,
+            showPopup: true,
+            popupHeader:"Success"
+          })
+        }else{
+          this.setState({
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed"
+          });
+        }
+        console.log("------",resp)
+      });
+  }
+
   submitPledgeBid = (e) => {
     e.preventDefault();
     console.log(this.state)
@@ -593,7 +648,7 @@ class Volunteer extends React.Component {
           const user = {
             amount: self.state.amountValue,
             cellNumber: self.state.phoneNumberValue,
-            countryCode: "IN",
+            countryCode: self.state.countryPhone,
             email: self.state.emailValue,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
@@ -640,7 +695,7 @@ class Volunteer extends React.Component {
         }else{
           const user = {
             email: self.state.emailValue,
-            countryCode: "IN",
+            countryCode: self.state.countryPhone,
             cellNumber: self.state.phoneNumberValue,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
@@ -675,7 +730,7 @@ class Volunteer extends React.Component {
      if (this.state.isValidBidData) {
           const user = {
             email: self.state.emailValue,
-            countryCode: "IN",
+            countryCode: self.state.countryPhone,
             cellNumber: self.state.phoneNumberValue,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
@@ -706,7 +761,7 @@ class Volunteer extends React.Component {
      if (this.state.isValidBidData) {
           const user = {
             email: self.state.emailValue,
-            countryCode: "IN",
+            countryCode: self.state.countryPhone,
             cellNumber: self.state.phoneNumberValue,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
@@ -800,7 +855,7 @@ class Volunteer extends React.Component {
 	      { this.state.isloaded && this.props.is_volunteer &&
 	      <views>
           { this.state.activeViews === 'select-action' &&
-            <view name="select-action" className={cx(this.state.activeViews === 'select-action' && s.active)}>
+          <view name="select-action" className={cx(this.state.activeViews === 'select-action' && s.active)}>
             <h4 className="text-center"><strong>Select an Action</strong></h4>
             <div className>
               {/* <button class="btn btn-block btn-info mrg-t-lg mrg-b-lg" data-switch-view="attendees-checkin">Check in attendees</button> */}
@@ -900,6 +955,28 @@ class Volunteer extends React.Component {
 
 							{ !this.state.userData &&
 							<div>
+                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      value={ this.state.phone }
+                      onPhoneNumberChange={this.changePhone}
+                    />
+                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block"
+                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                </div>
 								<div
 									className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
 									<label className="control-label">First Name</label>
@@ -940,7 +1017,30 @@ class Volunteer extends React.Component {
 									{ this.state.lastNameFeedBack && !this.state.lastName &&
 									<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
 								</div>
-							</div> }
+              </div> }
+              { this.state.userData && !this.state.userData.phonenumber &&
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone }
+                    onPhoneNumberChange={this.changePhone}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+              </div>  }
 							{ this.state.userData && !this.state.userData.firstName &&
 							<div
 								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -1230,109 +1330,137 @@ class Volunteer extends React.Component {
 								{ this.state.emailFeedBack && !this.state.email &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
 							</div>
-							<div className="form-group has-feedback">
-								<div className="intl-tel-input allow-dropdown separate-dial-code iti-sdc-2">
 
-									<input type="tel" placeholder="Bidder Cell Number" autoComplete="off"
-									       className="int-tel-field bidder-cell form-control mrg-t-lg" data-country="CA"
-									       data-fv-field="intTelField"/><i className="form-control-feedback"
-									                                       data-fv-icon-for="intTelField" style={{display: 'none'}}/>
-								</div>
-								<input type="hidden" name="countryCode" defaultValue="CA"/><input type="hidden" name="phoneNumber"
-								                                                                  defaultValue/>
-								<span className="message"/>
-								<small className="help-block" data-fv-validator="notEmpty" data-fv-for="intTelField"
-								       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Phone number is required
-								</small>
-								<small className="help-block" data-fv-validator="intlPhoneField" data-fv-for="intTelField"
-								       data-fv-result="NOT_VALIDATED" style={{display: 'none'}}>Invalid phone number
-								</small>
-							</div>
-							{ !this.state.userData &&
-							<div>
-								<div
-									className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-									<label className="control-label">First Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-										       ref={ref => {
-                           this.firstName = ref;
-                         }}
-										       onKeyUp={this.firstNameValidateHandler}/>
-										{ this.state.firstNameFeedBack && this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.firstNameFeedBack && !this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.firstNameFeedBack && !this.state.firstName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-								</div>
-								<div
-									className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-									<label className="control-label">Last Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-										       ref={ref => {
+              { !this.state.userData &&
+              <div>
+                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      value={ this.state.phone }
+                      onPhoneNumberChange={this.changePhone}
+                    />
+                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block"
+                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                  <label className="control-label">First Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                           ref={ref => {
+                             this.firstName = ref;
+                           }}
+                           onKeyUp={this.firstNameValidateHandler}/>
+                    { this.state.firstNameFeedBack && this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.firstNameFeedBack && !this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.firstNameFeedBack && !this.state.firstName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                  <label className="control-label">Last Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                           ref={ref => {
                              this.lastName = ref;
                            }}
-										       onKeyUp={this.lastNameValidateHandler}/>
-										{ this.state.lastNameFeedBack && this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.lastNameFeedBack && !this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-								</div>
-							</div> }
-							{ this.state.userData && !this.state.userData.firstName &&
-							<div
-								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-								<label className="control-label">First Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-									       ref={ref => {
+                           onKeyUp={this.lastNameValidateHandler}/>
+                    { this.state.lastNameFeedBack && this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.lastNameFeedBack && !this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                </div>
+              </div> }
+              { this.state.userData && !this.state.userData.phonenumber &&
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone }
+                    onPhoneNumberChange={this.changePhone}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+              </div> }
+              { this.state.userData && !this.state.userData.firstName &&
+              <div
+                className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                <label className="control-label">First Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                         ref={ref => {
                            this.firstName = ref;
                          }}
-									       onKeyUp={this.firstNameValidateHandler}/>
-									{ this.state.firstNameFeedBack && this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.firstNameFeedBack && !this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.firstNameFeedBack && !this.state.firstName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-							</div> }
-							{ this.state.userData && !this.state.userData.lastName &&
-							<div
-								className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-								<label className="control-label">Last Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-									       ref={ref => {
+                         onKeyUp={this.firstNameValidateHandler}/>
+                  { this.state.firstNameFeedBack && this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.firstNameFeedBack && !this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.firstNameFeedBack && !this.state.firstName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+              </div> }
+              { this.state.userData && !this.state.userData.lastName &&
+              <div
+                className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                <label className="control-label">Last Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                         ref={ref => {
                            this.lastName = ref;
                          }}
-									       onKeyUp={this.lastNameValidateHandler}/>
-									{ this.state.lastNameFeedBack && this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.lastNameFeedBack && !this.state.lastName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-							</div>  }
+                         onKeyUp={this.lastNameValidateHandler}/>
+                  { this.state.lastNameFeedBack && this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.lastNameFeedBack && !this.state.lastName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+              </div> }
 
 							<div className="form-group">
 								{this.state.userData && this.state.userData.firstName &&
@@ -1572,91 +1700,136 @@ class Volunteer extends React.Component {
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
 							</div>
 
-							{ !this.state.userData &&
-							<div>
-								<div
-									className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-									<label className="control-label">First Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-										       ref={ref => {
+              { !this.state.userData &&
+              <div>
+                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      value={ this.state.phone }
+                      onPhoneNumberChange={this.changePhone}
+                    />
+                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block"
+                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                  <label className="control-label">First Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                           ref={ref => {
                              this.firstName = ref;
                            }}
-										       onKeyUp={this.firstNameValidateHandler}/>
-										{ this.state.firstNameFeedBack && this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.firstNameFeedBack && !this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.firstNameFeedBack && !this.state.firstName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-								</div>
-								<div
-									className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-									<label className="control-label">Last Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-										       ref={ref => {
+                           onKeyUp={this.firstNameValidateHandler}/>
+                    { this.state.firstNameFeedBack && this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.firstNameFeedBack && !this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.firstNameFeedBack && !this.state.firstName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                  <label className="control-label">Last Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                           ref={ref => {
                              this.lastName = ref;
                            }}
-										       onKeyUp={this.lastNameValidateHandler}/>
-										{ this.state.lastNameFeedBack && this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.lastNameFeedBack && !this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-								</div>
-							</div> }
-							{ this.state.userData && !this.state.userData.firstName &&
-							<div
-								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-								<label className="control-label">First Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-									       ref={ref => {
+                           onKeyUp={this.lastNameValidateHandler}/>
+                    { this.state.lastNameFeedBack && this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.lastNameFeedBack && !this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                </div>
+              </div> }
+              { this.state.userData && !this.state.userData.phonenumber &&
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone }
+                    onPhoneNumberChange={this.changePhone}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+              </div>  }
+              { this.state.userData && !this.state.userData.firstName &&
+              <div
+                className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                <label className="control-label">First Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                         ref={ref => {
                            this.firstName = ref;
                          }}
-									       onKeyUp={this.firstNameValidateHandler}/>
-									{ this.state.firstNameFeedBack && this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.firstNameFeedBack && !this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.firstNameFeedBack && !this.state.firstName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-							</div> }
-							{ this.state.userData && !this.state.userData.lastName &&
-							<div
-								className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-								<label className="control-label">Last Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-									       ref={ref => {
+                         onKeyUp={this.firstNameValidateHandler}/>
+                  { this.state.firstNameFeedBack && this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.firstNameFeedBack && !this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.firstNameFeedBack && !this.state.firstName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+              </div> }
+              { this.state.userData && !this.state.userData.lastName &&
+              <div
+                className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                <label className="control-label">Last Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                         ref={ref => {
                            this.lastName = ref;
                          }}
-									       onKeyUp={this.lastNameValidateHandler}/>
-									{ this.state.lastNameFeedBack && this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.lastNameFeedBack && !this.state.lastName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-							</div>  }
+                         onKeyUp={this.lastNameValidateHandler}/>
+                  { this.state.lastNameFeedBack && this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.lastNameFeedBack && !this.state.lastName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+              </div>  }
 
 							<div className="form-group">
 								{this.state.userData && this.state.userData.firstName &&
@@ -1889,91 +2062,136 @@ class Volunteer extends React.Component {
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
 							</div>
 
-							{ !this.state.userData &&
-							<div>
-								<div
-									className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-									<label className="control-label">First Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-										       ref={ref => {
+              { !this.state.userData &&
+              <div>
+                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      value={ this.state.phone }
+                      onPhoneNumberChange={this.changePhone}
+                    />
+                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block"
+                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                  <label className="control-label">First Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                           ref={ref => {
                              this.firstName = ref;
                            }}
-										       onKeyUp={this.firstNameValidateHandler}/>
-										{ this.state.firstNameFeedBack && this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.firstNameFeedBack && !this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.firstNameFeedBack && !this.state.firstName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-								</div>
-								<div
-									className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-									<label className="control-label">Last Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-										       ref={ref => {
+                           onKeyUp={this.firstNameValidateHandler}/>
+                    { this.state.firstNameFeedBack && this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.firstNameFeedBack && !this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.firstNameFeedBack && !this.state.firstName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                  <label className="control-label">Last Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                           ref={ref => {
                              this.lastName = ref;
                            }}
-										       onKeyUp={this.lastNameValidateHandler}/>
-										{ this.state.lastNameFeedBack && this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.lastNameFeedBack && !this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-								</div>
-							</div> }
-							{ this.state.userData && !this.state.userData.firstName &&
-							<div
-								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-								<label className="control-label">First Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-									       ref={ref => {
+                           onKeyUp={this.lastNameValidateHandler}/>
+                    { this.state.lastNameFeedBack && this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.lastNameFeedBack && !this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                </div>
+              </div> }
+              { this.state.userData && !this.state.userData.phonenumber &&
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone }
+                    onPhoneNumberChange={this.changePhone}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+              </div>  }
+              { this.state.userData && !this.state.userData.firstName &&
+              <div
+                className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                <label className="control-label">First Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                         ref={ref => {
                            this.firstName = ref;
                          }}
-									       onKeyUp={this.firstNameValidateHandler}/>
-									{ this.state.firstNameFeedBack && this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.firstNameFeedBack && !this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.firstNameFeedBack && !this.state.firstName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-							</div> }
-							{ this.state.userData && !this.state.userData.lastName &&
-							<div
-								className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-								<label className="control-label">Last Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-									       ref={ref => {
+                         onKeyUp={this.firstNameValidateHandler}/>
+                  { this.state.firstNameFeedBack && this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.firstNameFeedBack && !this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.firstNameFeedBack && !this.state.firstName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+              </div> }
+              { this.state.userData && !this.state.userData.lastName &&
+              <div
+                className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                <label className="control-label">Last Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                         ref={ref => {
                            this.lastName = ref;
                          }}
-									       onKeyUp={this.lastNameValidateHandler}/>
-									{ this.state.lastNameFeedBack && this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.lastNameFeedBack && !this.state.lastName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-							</div>  }
+                         onKeyUp={this.lastNameValidateHandler}/>
+                  { this.state.lastNameFeedBack && this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.lastNameFeedBack && !this.state.lastName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+              </div>  }
 
 							<div className="form-group">
 								{this.state.userData && this.state.userData.firstName &&
@@ -2033,7 +2251,7 @@ class Volunteer extends React.Component {
             </div>
           </view> }
           { this.state.activeViews === 'purchase-event-tickets' &&
-            <view name="purchase-event-tickets"
+          <view name="purchase-event-tickets"
                 className={cx(this.state.activeViews === 'purchase-event-tickets' && s.active)}>
             <h4 className="text-center"><strong>Sell Event Tickets</strong></h4>
             <div className="order-form">
@@ -2177,91 +2395,136 @@ class Volunteer extends React.Component {
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
 							</div>
 
-							{ !this.state.userData &&
-							<div>
-								<div
-									className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-									<label className="control-label">First Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-										       ref={ref => {
+              { !this.state.userData &&
+              <div>
+                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      value={ this.state.phone }
+                      onPhoneNumberChange={this.changePhone}
+                    />
+                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block"
+                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                  <label className="control-label">First Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                           ref={ref => {
                              this.firstName = ref;
                            }}
-										       onKeyUp={this.firstNameValidateHandler}/>
-										{ this.state.firstNameFeedBack && this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.firstNameFeedBack && !this.state.email &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.firstNameFeedBack && !this.state.firstName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-								</div>
-								<div
-									className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-									<label className="control-label">Last Name</label>
-									<div className="input-group">
-										<div className="input-group-addon">
-											<i className="fa fa-user" aria-hidden="true"/>
-										</div>
-										<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-										       ref={ref => {
+                           onKeyUp={this.firstNameValidateHandler}/>
+                    { this.state.firstNameFeedBack && this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.firstNameFeedBack && !this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.firstNameFeedBack && !this.state.firstName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                </div>
+                <div
+                  className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                  <label className="control-label">Last Name</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-user" aria-hidden="true"/>
+                    </div>
+                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                           ref={ref => {
                              this.lastName = ref;
                            }}
-										       onKeyUp={this.lastNameValidateHandler}/>
-										{ this.state.lastNameFeedBack && this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-										{ this.state.lastNameFeedBack && !this.state.lastName &&
-										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-									</div>
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-								</div>
-							</div> }
-							{ this.state.userData && !this.state.userData.firstName &&
-							<div
-								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-								<label className="control-label">First Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
-									       ref={ref => {
+                           onKeyUp={this.lastNameValidateHandler}/>
+                    { this.state.lastNameFeedBack && this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.lastNameFeedBack && !this.state.lastName &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                </div>
+              </div> }
+              { this.state.userData && !this.state.userData.phonenumber &&
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone }
+                    onPhoneNumberChange={this.changePhone}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+              </div>  }
+              { this.state.userData && !this.state.userData.firstName &&
+              <div
+                className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+                <label className="control-label">First Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                         ref={ref => {
                            this.firstName = ref;
                          }}
-									       onKeyUp={this.firstNameValidateHandler}/>
-									{ this.state.firstNameFeedBack && this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.firstNameFeedBack && !this.state.email &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.firstNameFeedBack && !this.state.firstName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
-							</div> }
-							{ this.state.userData && !this.state.userData.lastName &&
-							<div
-								className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-								<label className="control-label">Last Name</label>
-								<div className="input-group">
-									<div className="input-group-addon">
-										<i className="fa fa-user" aria-hidden="true"/>
-									</div>
-									<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
-									       ref={ref => {
+                         onKeyUp={this.firstNameValidateHandler}/>
+                  { this.state.firstNameFeedBack && this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.firstNameFeedBack && !this.state.email &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.firstNameFeedBack && !this.state.firstName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+              </div> }
+              { this.state.userData && !this.state.userData.lastName &&
+              <div
+                className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+                <label className="control-label">Last Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-user" aria-hidden="true"/>
+                  </div>
+                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                         ref={ref => {
                            this.lastName = ref;
                          }}
-									       onKeyUp={this.lastNameValidateHandler}/>
-									{ this.state.lastNameFeedBack && this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.lastNameFeedBack && !this.state.lastName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-							</div>  }
+                         onKeyUp={this.lastNameValidateHandler}/>
+                  { this.state.lastNameFeedBack && this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.lastNameFeedBack && !this.state.lastName &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.lastNameFeedBack && !this.state.lastName &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+              </div>  }
 
 							<div className="form-group">
 								{this.state.userData && this.state.userData.firstName &&
@@ -2490,7 +2753,7 @@ class Volunteer extends React.Component {
 				<PopupModel
 					id="bookingPopup"
 					showModal={this.state.showPopup}
-					headerText={this.state.popupHeader}
+					headerText={<h4>{this.state.popupHeader}</h4>}
 					modelBody=''
 					onCloseFunc={this.hidePopup}
 				>
@@ -2499,7 +2762,7 @@ class Volunteer extends React.Component {
 						{ this.state && this.state.errorMsgCard }
 						<div className="modal-footer">
 							{/*<button className="btn btn-success">Confirm</button>*/}
-							<button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
+							<button className="btn btn-success" onClick={this.hidePopup}>Close</button>
 						</div>
 					</div>
 
@@ -2521,6 +2784,7 @@ class AttendeesList extends React.Component {
 	}
 }
 const mapDispatchToProps = {
+  doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   getItemStatusByCode: (eventUrl, itemCode) => getItemStatusByCode(eventUrl, itemCode),
   getAttendees: (eventUrl) => getAttendees(eventUrl),
   getUserByEmail: (eventUrl, itemCode,modeltype) => getUserByEmail(eventUrl, itemCode,modeltype),
@@ -2534,10 +2798,12 @@ const mapDispatchToProps = {
 	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 const mapStateToProps = (state) => ({
 	is_volunteer : state.event && state.event.is_volunteer,
 	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
+  eventData: state.event && state.event.data,
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Volunteer));

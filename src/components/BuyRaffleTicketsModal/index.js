@@ -10,8 +10,6 @@ import {
 	doSignUp,
 	doValidateMobileNumber,
 	purchaseTickets,
-	doGetEventData,
-	doGetSettings
 } from './../../routes/event/action/index';
 import {Modal, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
@@ -102,87 +100,20 @@ class BuyRaffleTicketsModal extends React.Component {
 		this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
 		Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
 	}
-
 	componentWillReceiveProps() {
+	  setTimeout(()=>{
+      if (this.props.showModal && !this.state.isshowAlertPopup){
+        this.reRender();
+      }
+    },100);
 
 		this.setState({
-			showBookingTicketPopup: false,
-			showMapPopup: true,
-			firstNameFeedBack: false,
-			ticketsFeedBack: false,
-			lastNameFeedBack: false,
-			showAlertPopup: false,
-			showTicketsPopup: false,
-			errorMsgCard: null,
-			isValidData: false,
-			email: null,
-			password: null,
-			error: null,
-			emailFeedBack: false,
-			passwordFeedBack: false,
-			auctionData: null,
-			isValidBidData: false,
-			firstName: null,
-			lastName: null,
-			cardNumber: null,
-			cardHolder: null,
-			amount: null,
-			cvv: null,
-			month: null,
-			year: null,
-			expMonth: null,
-			expYear: null,
-			phoneNumber: null,
-			popupHeader: null,
-			firstNameValue: null,
-			lastNameValue: null,
-			cardNumberValue: null,
-			cardHolderValue: null,
-			amountValue: null,
-			cvvValue: null,
-			monthValue: null,
-			yearValue: null,
-			expMonthValue: null,
-			expYearValue: null,
-			emailValue: null,
-			passwordValue: null,
-			phoneNumberValue: null,
-			tickets: null,
-			cardNumberFeedBack: false,
-			cardHolderFeedBack: false,
-			expYearFeedBack: false,
-			expMonthFeedBack: false,
-			amountFeedBack: false,
-			cvvFeedBack: false,
-			phoneNumberFeedBack: false,
-			errorReg: null,
-			errorMsgfirstName: null,
-			errorMsglastName: null,
-			errorMsgcardNumber: null,
-			errorMsgcardHolder: null,
-			errorMsgamount: null,
-			errorMsgNumber: null,
-			errorMsgcvv: null,
-			errorMsgEmail: null,
-			errorMsgPhoneNumber: null,
-			errorMsg: null,
-			errorMsgTickets: null,
-			showPopup: false,
-			stripeToken: null,
-			submittedTickets: null,
-			raffleTicketValue: null,
-			popupTicketHeader: "Pay Now",
 			loading: false,
 			countryPhone: null,
 			phone: null,
-			isError: false,
+			//isError: false,
 		})
-	}
-
-	onFormClick = (e) => {
-		e.preventDefault();
 	};
-
 	emailValidateHandler = (e) => {
 
 		this.setState({
@@ -335,7 +266,6 @@ class BuyRaffleTicketsModal extends React.Component {
 		}
 		//this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 	};
-
 	phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
 		console.log(isValid, value, countryData, number, ext);
 		this.setState({
@@ -368,7 +298,6 @@ class BuyRaffleTicketsModal extends React.Component {
 			phone: value,
 		});
 	}
-
 	expMonthValidateHandler = (e) => {
 		this.setState({
 			expMonthFeedBack: true,
@@ -465,14 +394,17 @@ class BuyRaffleTicketsModal extends React.Component {
 		this.setState({
 			showLoginPopup: false,
 		})
-	}
+	};
 	buyRaffleTicket = (e) => {
 		e.preventDefault();
 	};
 
 	componentReRender() {
-	}
+	};
 
+  onFormClick = (e) => {
+    e.preventDefault();
+  };
 	buyTicket = () => {
 		this.setState({
 			loading: true,
@@ -497,14 +429,14 @@ class BuyRaffleTicketsModal extends React.Component {
 			this.props.doSignUp(this.props.params && this.props.params.params, userData).then((resp)=> {
 				if (!resp.errorMessage) {
 					this.setState({
-						showAlertPopup: true,
+						isshowAlertPopup: true,
 						showTicketsPopup: false,
 						errorMsg: " Your card ending in " + this.state.cardNumberValue.slice(-4) + " will be charged  ",
 						popupHeader: "Confirm",
 						loading: false,
 						isError: false,
 					})
-					//this.submiteBuyTicket();
+        this.props.onCloseFunc();
 				}
 				else {
 					this.setState({
@@ -522,13 +454,14 @@ class BuyRaffleTicketsModal extends React.Component {
 			if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0) {
 				if (this.state.cvv && this.state.cardHolder && this.state.cardNumber && this.state.expMonth && this.state.expYear) {
 					this.setState({
-						showAlertPopup: true,
-						showTicketsPopup: false,
+						isshowAlertPopup: true,
+					//	showTicketsPopup: false,
 						errorMsg: " Your card ending in " + this.state.cardNumberValue.slice(-4) + " will be charged  ",
 						popupHeader: "Confirm",
 						popupAlertHeader: "Confirm",
 						loading: false,
 					})
+          this.props.onCloseFunc();
 				} else {
 					this.setState({
 						loading: false,
@@ -559,14 +492,17 @@ class BuyRaffleTicketsModal extends React.Component {
 					if (resp && !resp.errorMessage) {
 						this.setState({
 							showPopup: true,
+              isshowAlertPopup: false,
 							errorMsg: resp.message,
 							popupHeader: "Success",
 							loading: false,
 							popupTicketHeader: "Close",
 							isError: false,
 							//  raffleData: updateraffleData,
-						})
-						this.reRender();
+						},function afterStateChange() {
+              this.props.successTask();
+            })
+        	//	this.reRender();
 					} else {
 						this.setState({
 							showPopup: true,
@@ -598,11 +534,7 @@ class BuyRaffleTicketsModal extends React.Component {
 						});
 					} else {
 						self.setState({
-							showPopup: false,
-							errorMsg: " ",
-							//   popupHeader:"Success",
 							stripeToken: response.id,
-							loading: false,
 						})
 						self.byBid();
 					}
@@ -628,8 +560,10 @@ class BuyRaffleTicketsModal extends React.Component {
 						errorMsg: resp.message,
 						popupHeader: "Success",
 						loading: false,
-					})
-				} else {
+					},function afterStateChange() {
+            this.props.successTask();
+          });
+        } else {
 					this.setState({
 						showPopup: true,
 						errorMsg: resp.errorMessage,
@@ -641,17 +575,16 @@ class BuyRaffleTicketsModal extends React.Component {
 	};
 	showAlertPopup = () => {
 		this.setState({
-			showPopup: true,
-			showAlertPopup: true,
+		//	showPopup: true,
+			isshowAlertPopup: true,
 
 		})
 	};
 	hideAlertPopup = () => {
 		this.setState({
 			//  showPopup: false,
-			showAlertPopup: false,
+			isshowAlertPopup: false,
 		})
-		// this.reRender();
 	};
 	hideTicketsPopup = () => {
 		this.setState({
@@ -675,15 +608,80 @@ class BuyRaffleTicketsModal extends React.Component {
 			errorMsgCard: false,
 		})
 	};
-	reRender = ()=> {
-		this.props.doGetEventData(this.props.params && this.props.params.params);
-		this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-			this.setState({
-				settings: resp && resp.data
-			});
-		}).catch(error => {
-			history.push('/404');
-		});
+	reRender = () => {
+    this.setState({
+      tab: 'The Event',
+      showBookingTicketPopup: false,
+      showMapPopup: true,
+      firstNameFeedBack: false,
+      ticketsFeedBack: false,
+      lastNameFeedBack: false,
+      showAlertPopup: false,
+      showTicketsPopup: false,
+      errorMsgCard: null,
+      isValidData: false,
+      email: null,
+      password: null,
+      error: null,
+      emailFeedBack: false,
+      passwordFeedBack: false,
+      auctionData: null,
+      isValidBidData: false,
+      firstName: null,
+      lastName: null,
+      cardNumber: null,
+      cardHolder: null,
+      amount: null,
+      cvv: null,
+      month: null,
+      year: null,
+      expMonth: null,
+      expYear: null,
+      phoneNumber: null,
+      popupHeader: null,
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue: null,
+      expYearValue: null,
+      emailValue: null,
+      passwordValue: null,
+      phoneNumberValue: null,
+      tickets: null,
+      cardNumberFeedBack: false,
+      cardHolderFeedBack: false,
+      expYearFeedBack: false,
+      expMonthFeedBack: false,
+      amountFeedBack: false,
+      cvvFeedBack: false,
+      phoneNumberFeedBack: false,
+      errorReg: null,
+      errorMsgfirstName: null,
+      errorMsglastName: null,
+      errorMsgcardNumber: null,
+      errorMsgcardHolder: null,
+      errorMsgamount: null,
+      errorMsgNumber: null,
+      errorMsgcvv: null,
+      errorMsgEmail: null,
+      errorMsgPhoneNumber: null,
+      errorMsg: null,
+      errorMsgTickets: null,
+      showPopup: false,
+      stripeToken: null,
+      submittedTickets: null,
+      raffleTicketValue: null,
+      popupTicketHeader: "Pay Now",
+      loading: false,
+      countryPhone: null,
+      phone: null,
+      isError: false,
+    })
 	};
 	checkIsValidBidData = () => {
 		console.log(" this.state.lastName ", this.state.lastName)
@@ -716,13 +714,12 @@ class BuyRaffleTicketsModal extends React.Component {
 		this.setState({
 			isShowLoginModal: true,
 			showTicketsPopup: false,
-		})
+		},function afterStateChange (){this.props.onCloseFunc()})
 	};
 
 	close() {
 		this.setState({showModal: false});
 	}
-
 	open() {
 		this.setState({showModal: true});
 	}
@@ -1059,10 +1056,10 @@ class BuyRaffleTicketsModal extends React.Component {
 				</Modal>
 				<PopupModel
 					id="alertPopup"
-					showModal={this.state.showAlertPopup}
+					showModal={this.state.isshowAlertPopup}
 					headerText={<h4>{this.state.popupHeader}</h4>}
-					modelBody=''
-					onCloseFunc={this.hidePopup}>
+					//onCloseFunc={this.hideAlertPopup}
+					>
 					<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
 						{ this.state.errorMsg }
 						<div className="modal-footer">
@@ -1089,9 +1086,6 @@ const mapDispatchToProps = {
 	doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
 	doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 	purchaseTickets: (eventUrl, userData) => purchaseTickets(eventUrl, userData),
-
-	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
-	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 
 const mapStateToProps = (state) => ({
