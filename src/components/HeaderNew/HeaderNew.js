@@ -376,39 +376,39 @@ class HeaderNew extends React.Component {
 						<MenuItem eventKey="1" onClick={this.showContactPopup}>
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
 						</MenuItem>
-						{ event && this.props.is_volunteer && <MenuItem eventKey="3" href={'/event/' + event + '/volunteer'}>
+						{ event && this.props.is_volunteer && <MenuItem eventKey="3" onClick={()=>{history.push('/event/' + event + '/volunteer')}}>
 							Volunteer
 						</MenuItem>}
 						{ event &&
 						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
 
-							<MenuItem eventKey="5" href={"/scroll/" + event + "/auction"}>
+							<MenuItem eventKey="5" onClick={()=>{history.push("/scroll/" + event + "/auction")}}>
 								<span> Auction Scrolling </span>
 							</MenuItem>
-							<MenuItem eventKey="5" href={"/scroll/" + event + "/raffle"}>
+							<MenuItem eventKey="6" onClick={()=>{history.push("/scroll/" + event + "/raffle")}}>
 								<span> Raffle Scrolling </span>
 							</MenuItem>
-							<MenuItem eventKey="5" href={"/scroll/" + event + "/fund"}>
+							<MenuItem eventKey="7" onClick={()=>{history.push("/scroll/" + event + "/fund")}}>
 								<span> Fund a Need Scrolling </span>
 							</MenuItem>
 							<MenuItem divider/>
-							<MenuItem eventKey="5" href={"/goal/" + event + "/auction"}>
+							<MenuItem eventKey="8" onClick={()=>{history.push("/goal/" + event + "/auction")}}>
 								<span> Auction Goal </span>
 							</MenuItem>
-							<MenuItem eventKey="5" href={"/goal/" + event + "/raffle"}>
+							<MenuItem eventKey="9" onClick={()=>{history.push("/goal/" + event + "/raffle")}}>
 								<span> Raffle Goal </span>
 							</MenuItem>
-							<MenuItem eventKey="5" href={"/goal/" + event + "/fund"}>
+							<MenuItem eventKey="10" onClick={()=>{history.push("/goal/" + event + "/fund")}}>
 								<span> Fund a Need Goal </span>
 							</MenuItem>
 							<MenuItem divider/>
-							<MenuItem eventKey="5" href={"/table/" + event + "/auction"}>
+							<MenuItem eventKey="11" onClick={()=>{history.push("/table/" + event + "/auction")}}>
 								<span> Auction Table </span>
 							</MenuItem>
-							<MenuItem eventKey="5" href={"/table/" + event + "/raffle"}>
+							<MenuItem eventKey="12" onClick={()=>{history.push("/table/" + event + "/raffle")}}>
 								<span> Raffle Table </span>
 							</MenuItem>
-							<MenuItem eventKey="5" href={"/table/" + event + "/fund"}>
+							<MenuItem eventKey="13" onClick={()=>{history.push("/table/" + event + "/fund")}}>
 								<span> Fund a Need Table </span>
 							</MenuItem>
 

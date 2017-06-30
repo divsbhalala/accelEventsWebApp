@@ -76,13 +76,13 @@ class Thermometer extends Component { // eslint-disable-line
 							<svg className="markers">
 								<text x="8px" y="15px" style={{writingMode: 'tb'}} fill="#249AA7">$0</text>
 								<text x="108px" y="15px" style={{writingMode: 'tb'}} fill="#B8E1F2">
-									${ this.props.goaldata && Math.round(this.props.goaldata.fundRaisingGoal / 4)}</text>
+									${ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal / 4)}</text>
 								<text x="228px" y="15px" style={{writingMode: 'tb'}} fill="#ABD25E">
-									${ this.props.goaldata && Math.round(this.props.goaldata.fundRaisingGoal / 2)}</text>
+									${ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal / 2)}</text>
 								<text x="348px" y="15px" style={{writingMode: 'tb'}} fill="#F8C830">
-									${ this.props.goaldata && Math.round((this.props.goaldata.fundRaisingGoal / 4) * 3)}</text>
+									${ this.props.goalData && Math.round((this.props.goalData.fundRaisingGoal / 4) * 3)}</text>
 								<text x="468px" y="15px" style={{writingMode: 'tb'}} fill="#F1594A">
-									${ this.props.goaldata && Math.round(this.props.goaldata.fundRaisingGoal)} </text>
+									${ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal)} </text>
 							</svg>
 						</div>
 					</div>}

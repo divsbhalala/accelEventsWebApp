@@ -7,7 +7,9 @@ import {connect} from 'react-redux';
 import s from './table.css';
 import {doGetEventData, doGetFundANeedItemByLimit, doGetSettings} from './../event/action/index';
 import  EventAside from './../../components/EventAside/EventAside';
-
+import EventEndUntil from '../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../components/Widget/TotalProceeds';
+// import  history from './../../../history';
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -25,7 +27,7 @@ class Fund extends React.Component {
 
   componentWillMount() {
     this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+    this.props.doGetSettings(this.props.params && this.props.params.params, props.Fname).then(resp => {
       this.setState({
         settings: resp && resp.data
       });

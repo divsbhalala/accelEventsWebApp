@@ -58,7 +58,7 @@ class Auction extends React.Component {
 							<div className="row">
 								<div className="col-md-3">
 									{this.state.settings &&
-									<TotalProceeds settings={this.state.settings} headerText="Total Proceeds" className="gray-bg"/>
+									<TotalProceeds totalRised={this.state.settings.totalRised} headerText="Total Proceeds" className="gray-bg"/>
 									}
 								</div>
 								<style dangerouslySetInnerHTML={{__html: ".liquid:before{width:"+this.state.goalPer+"% !important;}"}}/>
