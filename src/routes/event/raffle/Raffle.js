@@ -762,6 +762,7 @@ class Raffle extends React.Component {
                   eventTicketData={this.props.eventTicketData}
                   activeCategory={false}
                   params={this.props.params}
+                  successTask={this.successTasks}
                 />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8">

@@ -6,13 +6,15 @@ import s from './Volunteer.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import  history from './../../../history';
-import {Button} from 'react-bootstrap';
+//import {Button} from 'react-bootstrap';
+import Button from 'react-bootstrap-button-loader';
 import PopupModel from './../../../components/PopupModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 import Moment from 'react-moment';
 import moment from 'moment';
 import IntlTelInput from 'react-intl-tel-input';
 import {doValidateMobileNumber,doGetEventData} from './../action/index';
+import {createCardToken} from './../../checkout/action/index';
 
 import  {
   getItemStatusByCode,
@@ -27,7 +29,7 @@ import  {
   submitDonate,
 	isVolunteer,
   doOrderTicket,
-  doGetSettings,
+  doGetSettings
 } from './../action/index';
 
 class Volunteer extends React.Component {
@@ -77,6 +79,7 @@ class Volunteer extends React.Component {
 			raffleTicketValue: null,
 			submittedTickets: null,
 
+      itemCodeFeedBack:false,
 			firstNameFeedBack: false,
 			lastNameFeedBack: false,
 			cardNumberFeedBack: false,
@@ -97,6 +100,7 @@ class Volunteer extends React.Component {
 			errorMsgEmail: null,
 			errorMsgAvailTickets: null,
 			errorMsgRaffleTicket: null,
+      errorMsgItemCode: null,
 
       auctionItemCode:null,
       userData:null,
@@ -108,6 +112,9 @@ class Volunteer extends React.Component {
       totalTickets:[],
       countryPhone: null,
       phone: null,
+      loading:false,
+      stripeToken:null,
+      paymentType:"CC",
     }
     this.setActiveView = this.setActiveView.bind(this);
     this.getAttendeesList = this.getAttendeesList.bind(this);
@@ -115,9 +122,9 @@ class Volunteer extends React.Component {
     this.selectHandle = this.selectHandle.bind(this);
   }
 	componentDidMount() {
-    //if(this.props.stripeKey){
-    Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
-    // }
+    if(this.props.stripeKey){
+     Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
+    }
 		if (this.props.params && this.props.params.params) {
 			this.props.isVolunteer(this.props.params && this.props.params.params).then(resp=> {
 				this.setState({
@@ -134,6 +141,7 @@ class Volunteer extends React.Component {
 
 	validateField = () => {
 	  this.setState({
+      itemCodeFeedBack:true,
       emailFeedBack: true,
       firstNameFeedBack: true,
       lastNameFeedBack: true,
@@ -146,9 +154,10 @@ class Volunteer extends React.Component {
       raffleTicketFeedBack: true,
       phoneNumberFeedBack: true,
       expMonthFeedBack: true,
-      errorMsgEmail:"Bidder email can't be empty",
+      loading:false,
+      stripeToken:null,
     })
-  }
+  };
 	setActiveView = (view) => {
     if(view == "event-ticketing" && this.state.attendees == null){
       this.getAttendeesList();
@@ -162,6 +171,7 @@ class Volunteer extends React.Component {
       itemStatusMsg:null,
       itemData:null,
 
+      email:null,
 			firstName: null,
 			lastName: null,
 			cardNumber: null,
@@ -203,6 +213,7 @@ class Volunteer extends React.Component {
       phoneNumberFeedBack:false,
       expMonthFeedBack: false,
 
+      itemCodeFeedBack:false,
 			errorMsgfirstName: null,
 			errorMsglastName: null,
 			errorMsgcardNumber: null,
@@ -225,6 +236,9 @@ class Volunteer extends React.Component {
       phone: null,
       phoneNumber:false,
       errorMsgEmailCheck:null,
+      loading:false,
+      stripeToken:null,
+      paymentType:"CC",
 		})
 	};
 	itemCodeValidateHandler = (e) => {
@@ -274,8 +288,15 @@ class Volunteer extends React.Component {
 		this.setState({
 			itemCodeValue: this.itemCode.value.trim(),
       itemCode:false,
+      itemCodeFeedBack:true,
 		});
-		if (this.itemCode.value.trim().length == 3) {
+    if (this.itemCode.value.trim() == '') {
+      this.setState({
+        itemCode: false,
+        itemCodeMsgEmail: "Item is required.",
+      });
+    }
+   	if (this.itemCode.value.trim().length == 3) {
 			this.props.getAuctionItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim())
 				.then(resp => {
 					if (resp && resp.data) {
@@ -330,8 +351,17 @@ class Volunteer extends React.Component {
               countryPhone: resp.countryCode,
               errorMsgEmailCheck:"",
 						})
+            if(resp.firstName){this.setState({firstName: true});}
+            if(resp.lastName){this.setState({lastName: true});}
+            if(resp.phonenumber){this.setState({phoneNumber: true});}
 					}else{
             this.setState({
+              firstName: false,
+              firstNameFeedBack: false,
+              lastName: false,
+              lastNameFeedBack: false,
+              phoneNumber: false,
+              phoneNumberFeedBack: false,
               userData: null,
               phone:null,
               errorMsgEmailCheck: "User Does Not Exists. Account Will be created."
@@ -400,7 +430,6 @@ class Volunteer extends React.Component {
 		}
 	};
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone: countryData.iso2,
@@ -424,7 +453,7 @@ class Volunteer extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
 	cardHolderValidateHandler = (e) => {
 
 		this.setState({
@@ -611,7 +640,7 @@ class Volunteer extends React.Component {
     }).catch(error => {
       history.push('/404');
     });
-  }
+  };
   showPopup = () => {
     this.setState({
       showPopup: true
@@ -622,7 +651,7 @@ class Volunteer extends React.Component {
       showPopup: false
     })
     if (this.state.popupHeader == "Success"){
-   //   window.location.reload();
+      this.setActiveView('select-action');
     }
   };
 
@@ -630,9 +659,9 @@ class Volunteer extends React.Component {
     e.preventDefault();
     this.validateField();
     let self = this;
-    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
+    this.setState({loading:true});
 
-     if ( this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
+     if (this.state.itemCode && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -642,6 +671,7 @@ class Volunteer extends React.Component {
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
           self.setState({
+            loading:false,
             showPopup: true,
             errorMsgCard: response.error.message});
         }else{
@@ -659,7 +689,7 @@ class Volunteer extends React.Component {
           self.submitBids(user);
         }
        });
-     } else if( this.state.amount && this.state.itemCode && this.state.itemCodeValue) {
+     } else if( this.state.itemCode && this.state.amount && this.state.itemCode && this.state.itemCodeValue) {
        const user = {
          email: self.state.emailValue,
          countryCode: self.state.countryPhone,
@@ -671,6 +701,8 @@ class Volunteer extends React.Component {
          amount: self.state.amountValue,
        }
        self.submitBids(user);
+     }else{
+       this.setState({loading:false})
      }
   };
   submitBids = (user) => {
@@ -678,6 +710,7 @@ class Volunteer extends React.Component {
       .then(resp => {
         if (resp && resp.message) {
           this.setState({
+            loading:false,
             itemStatusMsg: resp.message,
             errorMsgCard: resp.message,
             showPopup: true,
@@ -685,19 +718,22 @@ class Volunteer extends React.Component {
           })
         }else{
           this.setState({
+            loading:false,
             showPopup: true,
             errorMsgCard: resp.errorMessage,
             popupHeader:"Failed"
           });
         }
       });
-  }
+  };
+
   submitPledgeBid = (e) => {
     e.preventDefault();
     this.validateField();
     let self = this;
-    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
+    this.setState({loading:true});
+    if(this.state.paymentType =="CC"){
+     if (this.state.itemCode && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.amount && this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -707,6 +743,7 @@ class Volunteer extends React.Component {
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
           self.setState({
+            loading:false,
             showPopup: true,
             errorMsgCard: response.error.message});
         }else{
@@ -717,88 +754,133 @@ class Volunteer extends React.Component {
             email: self.state.emailValue,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
-            paymenttype: 'CC',
+            paymenttype: self.state.paymentType,
             itemCode: self.state.itemCodeValue,
             stripeToken: response.id,
           }
-          self.props.submitPledge(self.props.params && self.props.params.params, user)
-            .then(resp => {
-              if (resp && resp.data) {
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: "Pledge Submit Successfully",
-                  popupHeader:"Success"});
-              }else{
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: resp.errorMessage,
-                  popupHeader:"Failed",
-                });
-              }
-          });
+          self.submitPledge(user);
         }
        });
-     }
+     }else{this.setState({loading:false})}
+    }else if( this.state.itemCode && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName )  {
+      const user = {
+        amount: self.state.amountValue,
+        cellNumber: self.state.phone,
+        countryCode: self.state.countryPhone,
+        email: self.state.emailValue,
+        firstname: self.state.firstNameValue,
+        lastname: self.state.lastNameValue,
+        paymenttype: self.state.paymentType,
+        itemCode: self.state.itemCodeValue,
+        stripeToken: this.state.stripeToken}
+      this.submitPledge(user);
+    }else{
+      this.setState({
+        loading:false,
+      })
+    }
   };
+  submitPledge = (user) => {
+    this.props.submitPledge(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && resp.data) {
+          this.setState({
+            loading:false,
+            showPopup: true,
+            errorMsgCard: "Pledge Submit Successfully",
+            popupHeader:"Success"});
+        }else{
+          this.setState({
+            loading:false,
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed",
+          });
+        }
+      });
+  }
 
   sellTicketsBid = (e) => {
     e.preventDefault();
     this.validateField();
     let self = this;
-    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder  && this.state.cvv)});
-     if (this.state.cardNumber && this.state.cardHolder  && this.state.cvv) {
-      const card = {
-        number: this.cardNumber.value.trim(),
-        cvc: this.cvv.value.trim(),
-        exp_month: this.expMonth.value.trim(),
-        exp_year: this.expYear.value.trim(),
-      }
-      Stripe.createToken(card, function (status, response) {
-        if (response.error) {
-          self.setState({
-            showPopup: true,
-            errorMsgCard: response.error.message});
-        }else{
-          const user = {
-            email: self.state.emailValue,
-            countryCode: self.state.countryPhone,
-            cellNumber: self.state.phone,
-            firstname: self.state.firstNameValue,
-            lastname: self.state.lastNameValue,
-            paymenttype: 'CC',
-            itemCode: self.state.itemCodeValue,
-            raffleTicketId: self.state.raffleTicketValue,
-            stripeToken: response.id,
+    this.setState({loading:true});
+    if(this.state.paymentType =="CC"){
+      if (this.state.raffleTicketValue && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
+        const card = {
+          number: this.cardNumber.value.trim(),
+          cvc: this.cvv.value.trim(),
+          exp_month: this.expMonth.value.trim(),
+          exp_year: this.expYear.value.trim(),
+        }
+        Stripe.createToken(card, function (status, response) {
+          if (response.error) {
+            self.setState({
+              loading:false,
+              showPopup: true,
+              errorMsgCard: response.error.message});
+          }else{
+            const user = {
+              email: self.state.emailValue,
+              countryCode: self.state.countryPhone,
+              cellNumber: self.state.phone,
+              firstname: self.state.firstNameValue,
+              lastname: self.state.lastNameValue,
+              paymenttype: self.state.paymentType,
+              itemCode: self.state.itemCodeValue,
+              raffleTicketId: self.state.raffleTicketValue,
+              stripeToken: response.id,
+            }
+            self.sellTickets(user);
           }
-          self.props.sellTickets(self.props.params && self.props.params.params, user)
-            .then(resp => {
-              if (resp && resp.data) {
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: "Ticket Purchased Successfully.",
-                  popupHeader:"Success"});
-              }else{
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: resp.errorMessage,
-                  popupHeader:"Failed"
-                });
-              }
+        });
+      }else{this.setState({loading:false})}
+    }else if(this.state.raffleTicketValue && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName )  {
+      const user = {
+        email: self.state.emailValue,
+        countryCode: self.state.countryPhone,
+        cellNumber: self.state.phone,
+        firstname: self.state.firstNameValue,
+        lastname: self.state.lastNameValue,
+        paymenttype: self.state.paymentType,
+        itemCode: self.state.itemCodeValue,
+        raffleTicketId: self.state.raffleTicketValue,
+        stripeToken: self.state.stripeToken,
+      }
+      self.sellTickets(user);
+    }else{this.setState({loading:false})}
+
+  };
+  sellTickets = (user) => {
+    this.props.sellTickets(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && resp.message) {
+          this.setState({
+            loading:false,
+            showPopup: true,
+            errorMsgCard: "Ticket Purchased Successfully.",
+            popupHeader:"Success"});
+        }else{
+          this.setState({
+            loading:false,
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed"
           });
         }
-       });
-     }
-  };
+      });
+  }
+
   submitTicketsbid = (e) => {
     e.preventDefault();
     this.validateField();
     let self = this;
-    this.setState({isValidBidData: (this.state.email && this.state.availTickets)});
-     if (this.state.isValidBidData) {
+    this.setState({loading:true});
+     if (this.state.email && this.state.availTickets && this.state.itemCode) {
           const user = {
             email: self.state.emailValue,
             countryCode: self.state.countryPhone,
-            cellNumber: self.state.phoneNumberValue,
+            cellNumber: self.state.phone,
             firstname: self.state.firstNameValue,
             lastname: self.state.lastNameValue,
             itemCode: self.state.itemCodeValue,
@@ -808,54 +890,109 @@ class Volunteer extends React.Component {
             .then(resp => {
               if (resp && resp.message) {
                 self.setState({
+                  loading:false,
                   showPopup: true,
                   errorMsgCard: resp.message,
                   popupHeader:"Success"});
               }else{
                 self.setState({
+                  loading:false,
                   showPopup: true,
                   errorMsgCard: resp.errorMessage,
                   popupHeader:"Failed"
                 });
               }
           });
-        }
+        }else{this.setState({loading:false})}
   };
+
   submitDonatebid = (e) => {
     e.preventDefault();
     this.validateField();
-    let self = this;
-    this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
-          const user = {
-            email: self.state.emailValue,
-            countryCode: self.state.countryPhone,
-            cellNumber: self.state.phone,
-            firstname: self.state.firstNameValue,
-            lastname: self.state.lastNameValue,
-            itemCode: self.state.itemCodeValue,
-            submittedTickets: self.state.submittedTickets,
-            paymenttype: 'CC',
-            amount: self.state.amountValue,
-          }
-          self.props.submitDonate(self.props.params && self.props.params.params, user)
-            .then(resp => {
-              console.log(resp)
-              if (resp && resp.message) {
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: resp.message,
-                  popupHeader:"Success"});
-              }else{
-                self.setState({
-                  showPopup: true,
-                  errorMsgCard: resp.errorMessage,
-                  popupHeader:"Failed"
-                });
-              }
+    this.setState({loading:true});
+    if(this.state.paymentType =="CC"){
+     if( this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
+         this.props.createCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(),  this.cvv.value.trim())
+           .then(resp => {
+           const user = {
+                 email: this.state.emailValue,
+                 countryCode: this.state.countryPhone,
+                 cellNumber: this.state.phone,
+                 firstname: this.state.firstNameValue,
+                 lastname: this.state.lastNameValue,
+                 paymenttype: this.state.paymentType,
+                 amount: this.state.amountValue,
+                 stripeToken:  resp.data.id}
+          this.submiteDonation(user);
+         }).catch((error, status, msg) => {
+         let respError = error && error.response && error.response.data && error.response.data.error && error.response.data.error;
+           if(respError){
+             if(respError.param == 'exp_year'){
+               this.setState({
+                 cardExpYear: false,
+               });
+             }
+             if(respError.param == 'exp_month'){
+               this.setState({
+                 cardExpMonth: false,
+               });
+             }
+             if(respError.param == 'number'){
+               this.setState({
+                 cardNumber: false,
+               });
+             }
+           }
+           this.setState({
+             loading:false,
+             showPopup: true,
+             errorMsgCard: error.response.data.error.message,
+             popupHeader:"Failed"
+           });
+         })
+        }else{
+          this.setState({
+           loading:false,
+          })
+        }
+    }else if( this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.amount )  {
+      const user = {
+        email: this.state.emailValue,
+        countryCode: this.state.countryPhone,
+        cellNumber: this.state.phone,
+        firstname: this.state.firstNameValue,
+        lastname: this.state.lastNameValue,
+        paymenttype: this.state.paymentType,
+        amount: this.state.amountValue,
+        stripeToken: this.state.stripeToken}
+        this.submiteDonation(user);
+    }else{
+      this.setState({
+        loading:false,
+      })
+    }
+  };
+  submiteDonation = (user) =>{
+    this.props.submitDonate(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        console.log(resp)
+        if (resp && resp.message) {
+          this.setState({
+            loading:false,
+            showPopup: true,
+            errorMsgCard: resp.message,
+            popupHeader:"Success"});
+        }else{
+          this.setState({
+            loading:false,
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed"
           });
         }
-  };
+      });
+  }
+
   doOrderTicket() {
     let Data = {};
     Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
@@ -910,6 +1047,20 @@ class Volunteer extends React.Component {
       totalTicketPrice: totalPrice,
     });
   };
+
+  changePaymentType = (event) => {
+    this.setState({
+      paymentType:event.target.value,
+      cardNumber:false,
+      cardHolder:false ,
+      cvv:false,
+      cardNumberFeedBack:false,
+      cardHolderFeedBack:false ,
+      cvvFeedBack:false,
+      expMonthFeedBack:false,
+      expYearFeedBack:false,
+    });
+  }
   render() {
     let makeItem = function (i) {
       let item = [];
@@ -1023,7 +1174,7 @@ class Volunteer extends React.Component {
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
-							{ !this.state.userData &&
+							{ !this.state.userData && this.state.email &&
 							<div>
                 <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                   <label className="control-label">Cell Number</label>
@@ -1110,7 +1261,7 @@ class Volunteer extends React.Component {
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                 <small className="help-block"
                        data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-              </div>  }
+              </div> }
 							{ this.state.userData && !this.state.userData.firstName &&
 							<div
 								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -1152,7 +1303,7 @@ class Volunteer extends React.Component {
 								</div>
 								{ this.state.lastNameFeedBack && !this.state.lastName &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
-							</div>  }
+							</div> }
 							<div className="form-group">
 								{this.state.userData && this.state.userData.firstName &&
 								<div className="text-xs" style={{display: 'block'}}>Name: <span
@@ -1164,19 +1315,19 @@ class Volunteer extends React.Component {
 								<div className="text-xs" style={{display: 'block'}}>Cell Number : <span
 									className="bidder-cell valueCustom">{this.state.userData.phonenumber}</span></div> }
 							</div>
-							<div id="payment-type-selection" className="form-group text-center">
-								<input className="cc-radio" type="radio" name="paymenttype" autoComplete="off" defaultValue="cc"
-								       defaultChecked="checked"/> Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
-                <span className="cash-radio hide"><input type="radio" name="paymenttype" autoComplete="off"
-                                                         defaultValue="cash"/> Cash</span>
-							</div>
-							<div className="form-group has-feedback">
-								<input type="text" maxLength={3} name="itemCodee" placeholder="Item Code" autoComplete="off"
-								       className="form-control mrg-t-lg alpha-only"
+							<div
+                className={cx("form-group ", this.state.itemCodeFeedBack && 'has-feedback', this.state.itemCodeFeedBack && this.state.itemCode && 'has-success', this.state.itemCodeFeedBack && (!this.state.itemCode) && 'has-error')}>
+								<input
+                className="form-control mrg-t-lg alpha-only"
+                  type="text" maxLength={3} name="itemCodee" placeholder="Item Code" autoComplete="off"
 								       ref={ref => {
                          this.itemCode = ref;
                        }}
 								       onKeyUp={this.getAuctionItem}/>
+                { this.state.itemCodeFeedBack && this.state.itemCode &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                { this.state.itemCodeFeedBack && !this.state.itemCode &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 							</div>
 							<h5 id="infoMessage"
 							    className='text-danger'> { this.state.itemStatusMsg == 0 && 'Invalid Item Code' } </h5>
@@ -1199,7 +1350,7 @@ class Volunteer extends React.Component {
 							<div
 								className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-12">
 										<div className="input-group">
 											<div className="input-group-addon">$</div>
 											<input type="number" className="form-control" name="itembid" id="itembid"
@@ -1360,7 +1511,7 @@ class Volunteer extends React.Component {
 								</div>
 							</div> }
 							<div className="form-group">
-								<button className="btn btn-block btn-success submit">Submit</button>
+								<Button  loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
 							</div>
 						</form>
 						<div className="form-group text-center">
@@ -1398,7 +1549,7 @@ class Volunteer extends React.Component {
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
-              { !this.state.userData &&
+              { !this.state.userData && this.state.email &&
               <div>
                 <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                   <label className="control-label">Cell Number</label>
@@ -1540,14 +1691,20 @@ class Volunteer extends React.Component {
 								<div className="text-xs" style={{display: 'block'}}>Cell Number : <span
 									className="bidder-cell valueCustom">{this.state.userData.phonenumber}</span></div> }
 							</div>
-							<div className="form-group has-feedback">
-								<input type="text" maxLength={3} name="itemCodee" placeholder="Item Code" autoComplete="off"
-								       className="form-control mrg-t-lg alpha-only"
-								       ref={ref => {
-                         this.itemCode = ref;
-                       }}
-								       onKeyUp={this.getAuctionItem}/>
-							</div>
+              <div
+                className={cx("form-group ", this.state.itemCodeFeedBack && 'has-feedback', this.state.itemCodeFeedBack && this.state.itemCode && 'has-success', this.state.itemCodeFeedBack && (!this.state.itemCode) && 'has-error')}>
+                <input
+                  className="form-control mrg-t-lg alpha-only"
+                  type="text" maxLength={3} name="itemCodee" placeholder="Item Code" autoComplete="off"
+                  ref={ref => {
+                    this.itemCode = ref;
+                  }}
+                  onKeyUp={this.getAuctionItem}/>
+                { this.state.itemCodeFeedBack && this.state.itemCode &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                { this.state.itemCodeFeedBack && !this.state.itemCode &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+              </div>
 							<h5 id="infoMessage"
 							    className='text-danger'> { this.state.itemStatusMsg == 0 && 'Invalid Item Code' } </h5>
 							{ this.state.itemData &&
@@ -1557,15 +1714,15 @@ class Volunteer extends React.Component {
 									className="currency-symbol">$</span> {this.state.itemData.buyItNow}<span
 									className="buy-it-now"/></div>
 							</div> }
-							<div id="payment-type-selection" className="form-group text-center">
-								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cc" defaultChecked="checked"/>
+							<div onChange={this.changePaymentType} id="payment-type-selection" className="form-group text-center">
+								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="CC" defaultChecked="checked" />
 								Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
-								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"/> Cash
+								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"  /> Cash
 							</div>
 							<div
 								className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-12">
 										<div className="input-group">
 											<div className="input-group-addon">$</div>
 											<input type="number" className="form-control" name="itembid" id="itembid"
@@ -1585,7 +1742,8 @@ class Volunteer extends React.Component {
 									</div>
 								</div>
 							</div>
-							<div className="cc-info">
+              {	this.state.paymentType == "CC" &&
+              <div className="cc-info">
 								<style
 									dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
 								<div className="stripe-form">
@@ -1724,9 +1882,9 @@ class Volunteer extends React.Component {
                     </div>
 									</div>
 								</div>
-							</div>
+							</div> }
 							<div className="form-group">
-								<button className="btn btn-block btn-success submit">Submit</button>
+								<Button loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
 							</div>
 						</form>
 						<div className="form-group text-center">
@@ -1765,7 +1923,7 @@ class Volunteer extends React.Component {
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
-              { !this.state.userData &&
+              { !this.state.userData && this.state.email &&
               <div>
                 <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                   <label className="control-label">Cell Number</label>
@@ -1910,11 +2068,11 @@ class Volunteer extends React.Component {
 								<div className="text-xs" style={{display: 'block'}}>Available Tickets : <span
 									className="bidder-cell valueCustom">{this.state.userData.availableTickets}</span></div> }
 							</div>
-							<div id="payment-type-selection" className="form-group text-center">
-								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cc" defaultChecked="checked"/>
-								Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
-								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"/> Cash
-							</div>
+              <div onChange={this.changePaymentType} id="payment-type-selection" className="form-group text-center">
+                <input type="radio" name="paymenttype" autoComplete="off" defaultValue="CC" defaultChecked="checked" />
+                Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
+                <input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"  /> Cash
+              </div>
 							<div className="form-group has-feedback">
 								<label className="control-label">Number of tickets</label>
 								<select className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs" ref={ref => {
@@ -1944,7 +2102,8 @@ class Volunteer extends React.Component {
 								{ this.state.raffleTicketFeedBack && !this.state.raffleTicket &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED"> Raffle Ticket required.</small>}
 							</div>
-							<div className="cc-info">
+              { this.state.paymentType == "CC" &&
+                <div className="cc-info">
 								<style
 									dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
 								<div className="stripe-form">
@@ -2083,9 +2242,9 @@ class Volunteer extends React.Component {
                     </div>
 									</div>
 								</div>
-							</div>
+							</div> }
 							<div className="form-group">
-								<button className="btn btn-block btn-success submit">Submit</button>
+								<Button loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
 							</div>
 						</form>
 						<div className="form-group text-center">
@@ -2121,9 +2280,10 @@ class Volunteer extends React.Component {
 
 								{ this.state.emailFeedBack && !this.state.email &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
-              { !this.state.userData &&
+              { !this.state.userData && this.state.email &&
               <div>
                 <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                   <label className="control-label">Cell Number</label>
@@ -2268,14 +2428,20 @@ class Volunteer extends React.Component {
 								<div className="text-xs" style={{display: 'block'}}>Available Tickets : <span
 									className="bidder-cell valueCustom">{this.state.userData.availableTickets}</span></div> }
 							</div>
-							<div className="form-group has-feedback">
-								<input type="text" maxLength={3} name="itemCodee" placeholder="Item Code" autoComplete="off"
-								       className="form-control mrg-t-lg alpha-only"
-								       ref={ref => {
-                         this.itemCode = ref;
-                       }}
-								       onKeyUp={this.getAuctionItem}/>
-							</div>
+              <div
+                className={cx("form-group ", this.state.itemCodeFeedBack && 'has-feedback', this.state.itemCodeFeedBack && this.state.itemCode && 'has-success', this.state.itemCodeFeedBack && (!this.state.itemCode) && 'has-error')}>
+                <input
+                  className="form-control mrg-t-lg alpha-only"
+                  type="text" maxLength={3} name="itemCodee" placeholder="Item Code" autoComplete="off"
+                  ref={ref => {
+                    this.itemCode = ref;
+                  }}
+                  onKeyUp={this.getAuctionItem}/>
+                { this.state.itemCodeFeedBack && this.state.itemCode &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                { this.state.itemCodeFeedBack && !this.state.itemCode &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+              </div>
 							<h5 id="infoMessage"
 							    className='text-danger'> { this.state.itemStatusMsg == 0 && 'Invalid Item Code' } </h5>
 							{ this.state.itemData &&
@@ -2301,7 +2467,7 @@ class Volunteer extends React.Component {
 							{ this.state.availTicketsFeedBack && !this.state.lastName &&
 							<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
 							<div className="form-group">
-								<button className="btn btn-block btn-success submit">Submit</button>
+								<Button loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
 							</div>
 						</form>
 						<div className="form-group text-center">
@@ -2455,6 +2621,7 @@ class Volunteer extends React.Component {
 
 								{ this.state.emailFeedBack && !this.state.email &&
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
               { !this.state.userData &&
@@ -2599,15 +2766,15 @@ class Volunteer extends React.Component {
 								<div className="text-xs" style={{display: 'block'}}>Cell Number : <span
 									className="bidder-cell valueCustom">{this.state.userData.phonenumber}</span></div> }
 							</div>
-							<div id="payment-type-selection" className="form-group text-center">
-								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cc" defaultChecked="checked"/>
-								Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
-								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"/> Cash
-							</div>
+              <div onChange={this.changePaymentType} id="payment-type-selection" className="form-group text-center">
+                <input type="radio" name="paymenttype" autoComplete="off" defaultValue="CC" defaultChecked="checked" />
+                Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
+                <input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash"  /> Cash
+              </div>
 							<div
 								className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-12">
 										<div className="input-group">
 											<div className="input-group-addon">$</div>
 											<input type="number" className="form-control" name="itembid" id="itembid"
@@ -2627,148 +2794,149 @@ class Volunteer extends React.Component {
 									</div>
 								</div>
 							</div>
-							<div className="cc-info">
-								<style
-									dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
-								<div className="stripe-form">
-									<div className="stripe-card-info">
-										<div
-											className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
-											<label className="control-label">Card Holder Name</label>
-											<div className="input-group">
-												<div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
-												<input type="text" className="form-control" id="cardname" data-stripe="name"
-												       placeholder="Name on the card" data-fv-field="cardholdername"
-												       ref={ref => {
-                                 this.cardHolder = ref;
-                               }}
-												       onKeyUp={this.cardHolderValidateHandler}/>
-												{ this.state.cardHolderFeedBack && this.state.cardHolder &&
-												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-												{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
-												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-											</div>
-											{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
-											<small className="help-block"
-											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
+              { this.state.paymentType == "CC" &&
+                <div className="cc-info">
+                  <style
+                    dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
+                  <div className="stripe-form">
+                    <div className="stripe-card-info">
+                      <div
+                        className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
+                        <label className="control-label">Card Holder Name</label>
+                        <div className="input-group">
+                          <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
+                          <input type="text" className="form-control" id="cardname" data-stripe="name"
+                                 placeholder="Name on the card" data-fv-field="cardholdername"
+                                 ref={ref => {
+                                   this.cardHolder = ref;
+                                 }}
+                                 onKeyUp={this.cardHolderValidateHandler}/>
+                          { this.state.cardHolderFeedBack && this.state.cardHolder &&
+                          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                          { this.state.cardHolderFeedBack && !this.state.cardHolder &&
+                          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                        </div>
+                        { this.state.cardHolderFeedBack && !this.state.cardHolder &&
+                        <small className="help-block"
+                               data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
 
-										</div>
-										<div
-											className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
-											<label className="control-label">Credit Card Number</label>
-											<div className="input-group">
-												<div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
-												</div>
-												<input type="number" className="form-control field-card_number" id="cardnumber"
-												       placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
-												       required="required" data-fv-field="cardnumber"
-												       ref={ref => {
-                                 this.cardNumber = ref;
-                               }}
-												       onKeyUp={this.cardNumberValidateHandler}/>
-												{ this.state.cardNumberFeedBack && this.state.cardNumber &&
-												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-												{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
-												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-											</div>
-											{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
-											<small className="help-block"
-											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
-										</div>
+                      </div>
+                      <div
+                        className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
+                        <label className="control-label">Credit Card Number</label>
+                        <div className="input-group">
+                          <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
+                          </div>
+                          <input type="number" className="form-control field-card_number" id="cardnumber"
+                                 placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
+                                 required="required" data-fv-field="cardnumber"
+                                 ref={ref => {
+                                   this.cardNumber = ref;
+                                 }}
+                                 onKeyUp={this.cardNumberValidateHandler}/>
+                          { this.state.cardNumberFeedBack && this.state.cardNumber &&
+                          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                          { this.state.cardNumberFeedBack && !this.state.cardNumber &&
+                          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                        </div>
+                        { this.state.cardNumberFeedBack && !this.state.cardNumber &&
+                        <small className="help-block"
+                               data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
+                      </div>
 
-                    <div className="row">
-                      <div className="col-md-8">
-                        <div
-                          className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
-                          <label className="control-label">Expiration Date</label>
-                          <div className="input-group">
-                            <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-                                                                                  aria-hidden="true"/></div>
-                            <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
-                              this.expMonth = ref;
-                            }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="10">Jan (01)</option>
-                              <option value="02">Feb (02)</option>
-                              <option value="03">Mar (03)</option>
-                              <option value="04">Apr (04)</option>
-                              <option value="05">May (05)</option>
-                              <option value="06">Jun (06)</option>
-                              <option value="07">Jul (07)</option>
-                              <option value="08">Aug (08)</option>
-                              <option value="09">Sep (09)</option>
-                              <option value="10">Oct (10)</option>
-                              <option value="11">Nov (11)</option>
-                              <option value="12">Dec (12)</option>
-                            </select>
-                            <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
-                                    ref={ref => {
-                                      this.expYear = ref;
-                                    }} onChange={this.expYearValidateHandler} >
-                              <option value="2017">2017</option>
-                              <option value="2018">2018</option>
-                              <option value="2019">2019</option>
-                              <option value="2020">2020</option>
-                              <option value="2021">2021</option>
-                              <option value="2022">2022</option>
-                              <option value="2023">2023</option>
-                              <option value="2024">2024</option>
-                              <option value="2025">2025</option>
-                              <option value="2026">2026</option>
-                              <option value="2027">2027</option>
-                              <option value="2028">2028</option>
-                              <option value="2029">2029</option>
-                              <option value="2030">2030</option>
-                              <option value="2031">2031</option>
-                              <option value="2032">2032</option>
-                              <option value="2033">2033</option>
-                              <option value="2034">2034</option>
-                              <option value="2035">2035</option>
-                              <option value="2036">2036</option>
-                              <option value="2037">2037</option>
-                              <option value="2038">2038</option>
-                              <option value="2039">2039</option>
-                              <option value="2040">2040</option>
-                              <option value="2041">2041</option>
-                              <option value="2042">2042</option>
-                              <option value="2043">2043</option>
-                              <option value="2044">2044</option>
-                              <option value="2045">2045</option>
-                              <option value="2046">2046</option>
-                              <option value="2047">2047</option>
-                              <option value="2048">2048</option>
-                              <option value="2049">2049</option>
-                              <option value="2050">2050</option>
-                            </select>
+                      <div className="row">
+                        <div className="col-md-8">
+                          <div
+                            className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
+                            <label className="control-label">Expiration Date</label>
+                            <div className="input-group">
+                              <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                                    aria-hidden="true"/></div>
+                              <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                                this.expMonth = ref;
+                              }}  onChange={this.expMonthValidateHandler} >
+                                <option selected value="10">Jan (01)</option>
+                                <option value="02">Feb (02)</option>
+                                <option value="03">Mar (03)</option>
+                                <option value="04">Apr (04)</option>
+                                <option value="05">May (05)</option>
+                                <option value="06">Jun (06)</option>
+                                <option value="07">Jul (07)</option>
+                                <option value="08">Aug (08)</option>
+                                <option value="09">Sep (09)</option>
+                                <option value="10">Oct (10)</option>
+                                <option value="11">Nov (11)</option>
+                                <option value="12">Dec (12)</option>
+                              </select>
+                              <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                                      ref={ref => {
+                                        this.expYear = ref;
+                                      }} onChange={this.expYearValidateHandler} >
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
+                                <option value="2032">2032</option>
+                                <option value="2033">2033</option>
+                                <option value="2034">2034</option>
+                                <option value="2035">2035</option>
+                                <option value="2036">2036</option>
+                                <option value="2037">2037</option>
+                                <option value="2038">2038</option>
+                                <option value="2039">2039</option>
+                                <option value="2040">2040</option>
+                                <option value="2041">2041</option>
+                                <option value="2042">2042</option>
+                                <option value="2043">2043</option>
+                                <option value="2044">2044</option>
+                                <option value="2045">2045</option>
+                                <option value="2046">2046</option>
+                                <option value="2047">2047</option>
+                                <option value="2048">2048</option>
+                                <option value="2049">2049</option>
+                                <option value="2050">2050</option>
+                              </select>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div
-                          className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-                          <label className="control-label">CVV Number</label>
-                          <div className="input-group">
-                            <input type="number" className="form-control field-cvv" maxLength={4} size={4}
-                                   data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-                                   ref={ref => {
-                                     this.cvv = ref;
-                                   }}
-                                   onKeyUp={this.cvvValidateHandler}/>
-                            { this.state.cvvFeedBack && this.state.cvv &&
-                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                        <div className="col-md-4">
+                          <div
+                            className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                            <label className="control-label">CVV Number</label>
+                            <div className="input-group">
+                              <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                                     data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                                     ref={ref => {
+                                       this.cvv = ref;
+                                     }}
+                                     onKeyUp={this.cvvValidateHandler}/>
+                              { this.state.cvvFeedBack && this.state.cvv &&
+                              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                              { this.state.cvvFeedBack && !this.state.cvv &&
+                              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                            </div>
                             { this.state.cvvFeedBack && !this.state.cvv &&
-                            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                          </div>
-                          { this.state.cvvFeedBack && !this.state.cvv &&
-                          <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
+                            <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
 
+                          </div>
                         </div>
                       </div>
                     </div>
-									</div>
-								</div>
-							</div>
+                  </div>
+                </div> }
 							<div className="form-group">
-								<button className="btn btn-block btn-success submit">Submit</button>
+								<Button loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
 							</div>
 						</form>
 						<div className="form-group text-center">
@@ -2831,6 +2999,7 @@ const mapDispatchToProps = {
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  createCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => createCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
 	is_volunteer : state.event && state.event.is_volunteer,
