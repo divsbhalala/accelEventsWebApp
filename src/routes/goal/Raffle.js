@@ -28,34 +28,22 @@ class Raffle extends React.Component {
   }
 
   componentWillMount() {
-    let totalFundRaised=0
-    // this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-    //   totalFundRaised=resp.data.totalFundRaised
-    //   this.setState({
-    //     settings: resp && resp.data
-    //   });
-    //   this.props.getGoalData(this.props.params && this.props.params.params, 'raffle').then(resp => {
-    //     this.setState({
-    //       goalData: resp,
-    //       goalPer:totalFundRaised * 100  / resp.fundRaisingGoal
-    //     });
-    //   })
-    // })
+    let totalFundRaised=0;
     this.props.getGoalData(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      totalFundRaised=resp.totalRised
+      totalFundRaised=resp.totalRised;
       this.setState({
         goalData: resp,
-        goalPer:totalFundRaised * 100  / resp.fundRaisingGoal,
+        goalPer: totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
         settings:resp
       });
     })
   }
   render() {
     return (
-      <div className="container">
+      <div className="container goal-page" style={{"margin-bottom":"120px"}}>
         <div className="row">
           <div className="col-lg-12">
-            <div id="content-wrapper">
+            <div>
               <div className="row">
                 <h1 className="text-center" style={{marginTop: 120}}>Raffle Goal</h1>
                 <h4 className="text-center" style={{marginTop: 5, marginBottom: 50}}>
@@ -71,7 +59,7 @@ class Raffle extends React.Component {
                 <div className="col-md-6">
                   <div className="col-md-6">
                     <div className="goalcontainer">
-                      { this.state.goalPer &&  this.state.settings && this.state.goalData && <Thermometer goalPer={this.state.goalPer} settings={this.state.settings} goalData={this.state.goalData} />}
+                      { this.state.settings && this.state.goalData && <Thermometer goalPer={this.state.goalPer} settings={this.state.settings} goalData={this.state.goalData} />}
                     </div>
                   </div>
 

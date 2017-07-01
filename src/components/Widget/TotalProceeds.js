@@ -7,12 +7,13 @@ class TotalProceeds extends Component { // eslint-disable-line
 		className: PropTypes.string,
 		headerText: PropTypes.string,
 		totalRised: PropTypes.number,
+		submitedTicket: PropTypes.number,
 	}
 
 	render() {
 		return (
 			<div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-							{this.props.totalRised && <div className={cx("main-box-body clearfix")}>
+							{(this.props.totalRised != undefined || this.props.submitedTicket != undefined) && <div className={cx("main-box-body clearfix")}>
 					<div className={cx("project-box-header ", this.props.className || "gray-bg")}>
 						<div className={cx("name")}>
 							<a href="#">{ this.props.headerText || "Total Proceeds"}</a>
@@ -21,7 +22,8 @@ class TotalProceeds extends Component { // eslint-disable-line
 					<div className={cx("project-box-content")}>
 						<div className={cx("value text-center")}>
 							<div className={cx("ticker")}>
-								<span className="total-funds-raised">${this.props.totalRised || 0 }</span>
+								{this.props.totalRised != undefined && <span className="total-funds-raised">${this.props.totalRised || 0 }</span>}
+								{this.props.submitedTicket != undefined && <span className="total-funds-raised">{this.props.submitedTicket || 0 }</span>}
 							</div>
 						</div>
 					</div>

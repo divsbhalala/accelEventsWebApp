@@ -9,6 +9,7 @@ import {doGetRaffleItemByLimit, doGetSettings,getScrollData} from './../event/ac
 import moment from 'moment';
 import EventEndUntil from '../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../components/Widget/TotalProceeds';
+import ItemList from '../../components/Widget/Raffle/ItemList';
 // import  history from './../../../history';
 
 
@@ -30,14 +31,7 @@ class Raffle extends React.Component {
       this.setState({
         settings: resp
       });
-    })
-    this.props.doGetRaffleItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp => {
-      if (resp && resp.data) {
-        this.setState({
-          itemList: resp && resp.data && resp.data.items
-        });
-      }
-    })
+    });
   }
   render() {
     return (
@@ -50,7 +44,7 @@ class Raffle extends React.Component {
                   {this.state.settings && <EventEndUntil isBig={true} settings={this.state.settings} headerText="Time Until Event Ends" className="gray-bg" />}
                 </div>
                 <div className="col-md-5">
-                  {this.state.settings && <TotalProceeds totalRised={ this.state.settings.totalFundRised } headerText="Total Tickets Submitted" className="gray-bg"/>
+                  {this.state.settings && <TotalProceeds submitedTicket={ this.state.settings.totalTicketSubmitted } headerText="Total Tickets Submitted" className="gray-bg"/>
                   }
                 </div>
               </div>
@@ -71,17 +65,26 @@ class Raffle extends React.Component {
                       </thead>
                     </table>
                     <div id="scroller" className="scrollingpage">
-                      {/*<marquee direction="up" height="500px" loop="infinite">*/}
-                      <table className="table datatables scrollingtable">
+											{this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <marquee direction="up" height={ "500px"} loop="infinite">
+                        <table className={("table datatables scrollingtable" , s.inner)}>
+                          <tbody>
+													{this.state.settings && this.state.settings.items &&
+													this.state.settings.items.map((item, index) =>
+                            <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+													)
+													}
+                          </tbody>
+                        </table>
+                      </marquee>}
+											{this.state.settings && this.state.settings.items && this.state.settings.items.length <= 8 && <table className={("table datatables scrollingtable")}>
                         <tbody>
-                        {this.state.itemList &&
-                        this.state.itemList.map((item, index) =>
-                          <ItemList key={index} item={item}/>
-                        )
-                        }
+												{this.state.settings && this.state.settings.items &&
+												this.state.settings.items.map((item, index) =>
+                          <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+												)
+												}
                         </tbody>
-                      </table>
-                      {/*</marquee>*/}
+                      </table>}
                     </div>
                   </div>
                 </div>
@@ -91,18 +94,6 @@ class Raffle extends React.Component {
         </div>
 
       </div>
-    );
-  }
-}
-class ItemList extends React.Component {
-  render() {
-    return (
-      <tr >
-        <td className="item-name">{this.props.item.name}</td>
-        <td className="item-code">{this.props.item.code}</td>
-        <td className="item-startingBid">{this.props.item.tickes_submitted}</td>
-        <td className="total-pledge">-</td>
-      </tr>
     );
   }
 }

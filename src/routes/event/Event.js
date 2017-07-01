@@ -99,7 +99,7 @@ class Event extends React.Component {
 
 	componentWillReceiveProps() {
 		if (this.props.authenticated) {
-			this.props.isVolunteer(this.props.params && this.props.params.params);
+			// this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
 	}
 
@@ -111,7 +111,7 @@ class Event extends React.Component {
 				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
 				activeFund: true,
 				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
-			})
+			});
 			if (this.state.activeEventTickets) {
 				this.setState({
 					tab: 'The Event'
@@ -149,7 +149,7 @@ class Event extends React.Component {
 	componentDidMount() {
 		this.setState({
 			isLoaded: true
-		})
+		});
 		window.addEventListener('scroll', this.handleScroll);
 	}
 
@@ -1191,4 +1191,4 @@ class GMap extends React.Component {
 
 }
 
-let initialCenter = {lng: -90.1056957, lat: 29.9717272}
+let initialCenter = {lng: -90.1056957, lat: 29.9717272};

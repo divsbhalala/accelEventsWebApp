@@ -15,7 +15,7 @@ class Thermometer extends Component { // eslint-disable-line
 		return (
 			<div className>
 				{
-					this.props.settings && this.props.goalPer && this.props.goalData &&
+					this.props.settings  && this.props.goalData &&
 					<div
 						className={this.props.goalPer<=20 ?'thermometer--very-low' : this.props.goalPer<=40 ? 'thermometer--low' : this.props.goalPer<=60 ? 'thermometer--moderate' :  this.props.goalPer <= 80  ? 'thermometer--high' : 'thermometer--very-high'}>
 

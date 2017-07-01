@@ -729,6 +729,22 @@ export function getScrollData(eventUrl,type) {
     });
   }
 }
+export function getTableData(eventUrl,type) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/'+type+'/table' ,
+     headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 
 export function isVolunteer(eventUrl) {
   return (dispatch) => {

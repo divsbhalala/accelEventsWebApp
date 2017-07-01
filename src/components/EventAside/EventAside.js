@@ -24,6 +24,7 @@ class EventAside extends React.Component {
 		settings: PropTypes.object,
 		activeCategory: PropTypes.bool,
 		isClosed: PropTypes.bool,
+		isBidInstructionHidden: PropTypes.bool,
 	};
 
 	constructor(props) {
@@ -115,7 +116,7 @@ class EventAside extends React.Component {
 								</div>
 							</div>
 						</div> }
-						{ this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
+						{ !this.props.isBidInstructionHidden && this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
 						<div className={cx("card bidinfo")}>
 							{this.props.activeTab == 'Raffle' &&
 							<p className={cx("raffle-text")}>Submit your tickets here or text your ticket submission to: (410)
@@ -139,7 +140,7 @@ class EventAside extends React.Component {
 										<div className={cx("row timer")}>
 											<div className={cx("col-xs-4")}><span className={cx("days")}>{
 												moment(this.props.settings.endDate).diff(moment(), 'days') > 0
-												&& ( '0' + moment(this.props.settings.endDate).diff(moment(), 'days')).slice(-2) || '00'
+												&& ( moment(this.props.settings.endDate).diff(moment(), 'days')) || '00'
 											}</span></div>
 											<div className={cx("col-xs-4")}><span className={cx("hours")}>{
 												moment(this.props.settings.endDate).add(-moment(this.props.settings.endDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0

@@ -26,17 +26,17 @@ class Auction extends React.Component {
 	}
 
 	componentWillMount() {
-		let totalFundRaised = 0
+		let totalFundRaised = 0;
 		// this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
 		//   totalFundRaised=resp.data.totalFundRaised
 		//   this.setState({
 		//     settings: resp && resp.data
 		//   });
 		this.props.getGoalData(this.props.params && this.props.params.params, 'auction').then(resp => {
-			totalFundRaised = resp.totalRised
+			totalFundRaised = resp.totalRised;
 			this.setState({
 				goalData: resp,
-				goalPer: totalFundRaised * 100 / resp.fundRaisingGoal,
+				goalPer: totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
 				settings: resp
 			});
 
@@ -46,7 +46,7 @@ class Auction extends React.Component {
 
 	render() {
 		return (
-			<div className="container" style={{"margin-bottom":"120px"}}>
+			<div className="container goal-page" style={{"margin-bottom":"120px"}}>
 				<div className="row">
 					<div className="col-lg-12">
 						<div>

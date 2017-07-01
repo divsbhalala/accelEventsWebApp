@@ -9,6 +9,7 @@ import s from './scroll.css';
 import moment from 'moment';
 import EventEndUntil from '../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../components/Widget/TotalProceeds';
+import ItemList from '../../components/Widget/Auction/ItemList';
 // import  history from './../../../history';
 
 class Auction extends React.Component {
@@ -21,33 +22,17 @@ class Auction extends React.Component {
     this.state = {
       isLogin: false,
       settings: null,
-      itemList: null,
       auctionData:null,
     }
   }
   componentWillMount() {
-    let totalFundRaised=0
+    let totalFundRaised=0;
     this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
            this.setState({
         settings: resp
 
       });
-    })
-
-    this.props.doGetAuctionItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp => {
-           if (resp && resp.data) {
-        this.setState({
-          itemList: resp && resp.data && resp.data.items
-        });
-      }
-    })
-    /*this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
-      totalFundRaised=resp.totalRised
-      this.setState({
-        auctionData: resp,
-        settings:resp
-      });
-    })*/
+    });
   }
   render() {
     return (
@@ -59,8 +44,8 @@ class Auction extends React.Component {
                 <div className="col-md-5 col-md-offset-1">
                   {this.state.settings && <EventEndUntil settings={this.state.settings} isBig={true} headerText="Time Until Event Ends" className="gray-bg" />}
                 </div>
-                <div className="col-md-5">
-                  {this.state.settings && <TotalProceeds totalRised={ this.state.settings.totalFundRised } headerText="Total Funds Contributed" className="gray-bg"/>
+                <div className={("col-md-5")}>
+                  {this.state.settings &&  !this.state.settings.hideTotalFundRaised &&<TotalProceeds totalRised={ this.state.settings.totalFundRised } headerText="Total Funds Contributed" className="gray-bg"/>
                   }
                 </div>
               </div>
@@ -75,23 +60,33 @@ class Auction extends React.Component {
                       <tr>
                         <th>Item</th>
                         <th>Item Code</th>
-                        <th>WINNING BID</th>
-                        <th>WINNING BIDDER</th>
+                        <th>{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
+                        { this.state.settings && !this.state.settings.highestBidderHidden &&
+												!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
                       </tr>
                       </thead>
                     </table>
                     <div id="scroller" className="scrollingpage">
-                      <marquee direction="up" height="500px" loop="infinite">
+                      {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <marquee direction="up" height={ "500px"} loop="infinite">
                         <table className={("table datatables scrollingtable" , s.inner)}>
                           <tbody>
-                          {this.state.itemList &&
-                          this.state.itemList.map((item, index) =>
-                            <ItemList key={index} item={item}/>
+                          {this.state.settings && this.state.settings.items &&
+													this.state.settings.items.map((item, index) =>
+                            <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
                           )
                           }
                           </tbody>
                         </table>
-                      </marquee>
+                      </marquee>}
+                      {this.state.settings && this.state.settings.items && this.state.settings.items.length <= 8 && <table className={("table datatables scrollingtable")}>
+                        <tbody>
+												{this.state.settings && this.state.settings.items &&
+												this.state.settings.items.map((item, index) =>
+                          <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+												)
+												}
+                        </tbody>
+                      </table>}
                     </div>
                   </div>
                 </div>
@@ -103,19 +98,6 @@ class Auction extends React.Component {
     );
   }
 }
-class ItemList extends React.Component {
-  render() {
-    return (
-      <tr >
-        <td className="item-name">{this.props.item.name}</td>
-        <td className="item-code">{this.props.item.code}</td>
-        <td className="item-startingBid">-</td>
-        <td className="total-pledge">-</td>
-      </tr>
-    );
-  }
-}
-
 const mapDispatchToProps = {
   getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
   doGetAuctionItemByLimit: (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),

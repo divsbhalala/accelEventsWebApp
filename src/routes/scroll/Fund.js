@@ -8,6 +8,7 @@ import s from './scroll.css';
 import {doGetFundANeedItemByLimit, doGetSettings, getScrollData} from './../event/action/index';
 import EventEndUntil from '../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../components/Widget/TotalProceeds';
+import ItemList from '../../components/Widget/FundANeed/ItemList';
 // import  history from './../../../history';
 
 import moment from 'moment';
@@ -30,14 +31,7 @@ class Fund extends React.Component {
       this.setState({
         settings: resp
       });
-    })
-    this.props.doGetFundANeedItemByLimit(this.props.params && this.props.params.params, 0, 100).then(resp => {
-      if (resp && resp.data) {
-        this.setState({
-          itemList: resp && resp.data && resp.data.items
-        });
-      }
-    })
+    });
   }
 
   render() {
@@ -48,7 +42,7 @@ class Fund extends React.Component {
             <div id="content-wrapper">
               <div className="row">
                 <div className="col-md-5 col-md-offset-1">
-                  {this.state.settings && <EventEndUntil isBig={true} settings={this.state.settings} headerText="Time Until Event Ends" className="emerald-bg" />}
+                  {this.state.settings && <EventEndUntil isBig={true} settings={this.state.settings} headerText="Time Until Event Ends" className="gray-bg" />}
                 </div>
                 <div className="col-md-5">
                   {this.state.settings && <TotalProceeds totalRised={this.state.settings.totalRised} headerText="Total Proceeds" className="gray-bg"/>}
@@ -71,17 +65,26 @@ class Fund extends React.Component {
                       </thead>
                     </table>
                     <div id="scroller" className="scrollingpage">
-                      {/*<marquee direction="up" height="500px" loop="infinite">*/}
-                      <table className="table datatables scrollingtable">
+											{this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <marquee direction="up" height={ "500px"} loop="infinite">
+                        <table className={("table datatables scrollingtable" , s.inner)}>
+                          <tbody>
+													{this.state.settings && this.state.settings.items &&
+													this.state.settings.items.map((item, index) =>
+                            <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+													)
+													}
+                          </tbody>
+                        </table>
+                      </marquee>}
+											{this.state.settings && this.state.settings.items && this.state.settings.items.length <= 8 && <table className={("table datatables scrollingtable")}>
                         <tbody>
-                        {this.state.itemList &&
-                        this.state.itemList.map((item, index) =>
-                          <ItemList key={index} item={item}/>
-                        )
-                        }
+												{this.state.settings && this.state.settings.items &&
+												this.state.settings.items.map((item, index) =>
+                          <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+												)
+												}
                         </tbody>
-                      </table>
-                      {/*</marquee>*/}
+                      </table>}
                     </div>
                   </div>
                 </div>
@@ -94,18 +97,7 @@ class Fund extends React.Component {
     );
   }
 }
-class ItemList extends React.Component {
-  render() {
-    return (
-      <tr >
-        <td className="item-name">{this.props.item.name}</td>
-        <td className="item-code">{this.props.item.code}</td>
-        <td className="item-startingBid">{this.props.item.pledge_price}</td>
-        <td className="total-pledge">-</td>
-      </tr>
-    );
-  }
-}
+
 const mapDispatchToProps = {
   getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
   doGetFundANeedItemByLimit: (eventUrl, page, size, type) => doGetFundANeedItemByLimit(eventUrl, page, size, type),

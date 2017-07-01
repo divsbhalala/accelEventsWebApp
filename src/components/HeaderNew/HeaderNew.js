@@ -30,7 +30,8 @@ import {
 	doLogin,
 	doSignUp,
 	doContactSupport,
-	isVolunteer
+	doGetEventData,
+	isVolunteer,
 } from './../../routes/event/action/index';
 
 import LoginModal from './../../components/LoginModal/index';
@@ -78,6 +79,9 @@ class HeaderNew extends React.Component {
 			this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
 	}
+	componentDidMount() {
+		this.props.doGetEventData(this.props.params && this.props.params.params);
+	}
 
 	onFormClick = (e) => {
 		e.preventDefault();
@@ -99,9 +103,8 @@ class HeaderNew extends React.Component {
 				email: this.email.value,
 				password: this.password.value,
 				phoneNumber: this.state.phoneNumber
-			}
+			};
 			this.props.doSignUp(this.props.params && this.props.params.params, user).then((resp) => {
-				;
 				if (!resp.errorMessage) {
 					this.setState({error: "Your account has been created"});
 					window.location.reload();
@@ -358,9 +361,9 @@ class HeaderNew extends React.Component {
 				<Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
 					<Brand>
             <span>
-              { this.props.params && this.props.params.params &&
-							<Link to={"/event/" + this.props.params.params} title={this.props.params.params}
-										rel="home">{this.props.params.params}</Link>}
+              { this.props.eventData &&
+							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
+										rel="home">{this.props.eventData.name}</Link>}
 							<button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}} style={{position: 'absolute', right: 0, top: 0}}>
@@ -572,12 +575,14 @@ function toggleMenu() {
 //export default HeaderNew;
 const mapDispatchToProps = {
 	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
+	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
 	doContactSupport: (eventUrl, contact) => doContactSupport(eventUrl, contact),
 	doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
 	doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
 };
 
 const mapStateToProps = (state) => ({
+	eventData: state.event && state.event.data,
 	is_volunteer: state.event && state.event.is_volunteer,
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
