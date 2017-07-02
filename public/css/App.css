@@ -1914,17 +1914,6 @@ a.disabled:hover {
   margin: 0;
 }
 
-.mobile-progress {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  z-index: 9999;
-}
-
 .mobile-progress-indicator {
   position: relative;
   top: 36%;

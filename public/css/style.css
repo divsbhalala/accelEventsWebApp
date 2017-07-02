@@ -1908,7 +1908,7 @@ a.disabled:hover {
     top: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.5);
-    display: none;
+   // display: none;
     z-index: 9999;
 }
 

@@ -9,7 +9,7 @@ import  history from './../../../history';
 //import {Button} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
 import PopupModel from './../../../components/PopupModal/index';
-import  EventAside from './../../../components/EventAside/EventAside';
+import  ProgressIndicator from './../../../components/ProgressIndicator';
 import Moment from 'react-moment';
 import moment from 'moment';
 import IntlTelInput from 'react-intl-tel-input';
@@ -2967,6 +2967,8 @@ class Volunteer extends React.Component {
 					</div>
 
 				</PopupModel>
+
+        <ProgressIndicator showLoader={this.state.loading } />
 			</div>
 		);
 	}
