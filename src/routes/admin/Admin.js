@@ -396,7 +396,7 @@ class Admin extends React.Component {
                         <div className="desc">Specify when the silent auction winners will be selected (East Coast Time).</div>
                       </div>
                       <div className="actions">
-       d                 <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
+                       <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
                           <span className="label label-danger">Set Date &amp; Time</span>
                         </a>
                       </div>
@@ -520,5 +520,4 @@ class Admin extends React.Component {
     );
   }
 }
-
 export default withStyles(s)(Admin);

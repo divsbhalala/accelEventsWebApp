@@ -23,7 +23,6 @@ class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
