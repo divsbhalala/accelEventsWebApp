@@ -220,10 +220,10 @@ class EventAside extends React.Component {
 							</div>
 						</div> }
 						{ this.props.activeTab && ( this.props.activeTab == 'Raffle' ) && this.props.settings && this.props.settings.endDate &&
-						<a role="button"
+						<button role="button"
 							 className={cx("btn btn-primary btn-block buy-raffle-tickets", ((moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded) && 'disabled')}
-							 disabled={(moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded}
-							 onClick={this.showBuyRaffleTicketsModal}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
+							 disabled={ this.state.settings && !this.state.settings.moduleActivated && (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded}
+							 onClick={this.showBuyRaffleTicketsModal}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</button> }
 						{ this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.activeCategory &&
 						<div className={cx("search-bar card")}>
 							<input type="text" className={cx("form-control")} placeholder="Search Items..."

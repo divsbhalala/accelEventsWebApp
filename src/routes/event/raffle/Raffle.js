@@ -98,8 +98,6 @@ class Raffle extends React.Component {
       countryPhone:null,
       phone:null,
   }
-    this.purchaseTicket=this.purchaseTicket.bind(this);
-
   }
   onFormClick = (e) => {
     e.preventDefault();
@@ -370,6 +368,12 @@ class Raffle extends React.Component {
     }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
+      if(!resp.data.moduleActivated){
+        this.setState({
+          errorMsg:"Please activate this module to start accepting pledges.",
+          popupHeader :'Failed',
+        });
+      }
       this.setState({
         settings: resp && resp.data
       });
@@ -445,98 +449,6 @@ class Raffle extends React.Component {
           })
         });
   };
-  purchaseTicket = (e) => {
-    this.setState({
-      loading:true,
-    })
-    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
-      const user = {
-        compTicketCode: this.state.raffleData.code,
-        raffleTicketId: this.state.raffleTicketValue,
-      }
-      this.props.purchaseTickets(this.props.params && this.props.params.params, user)
-        .then(resp => {
-          // let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          if (resp && !resp.errorMessage) {
-            this.setState({
-              showPopup: true,
-              errorMsg: resp.message,
-              popupHeader:"Success",
-              loading:false,
-              popupTicketHeader:"Close",
-            //  raffleData: updateraffleData,
-            })
-          }else{
-            this.setState({
-              showPopup: true,
-              errorMsg: resp.errorMessage,
-              loading:false,
-              popupHeader:'Failed',
-              popupTicketHeader:"Close",
-            });
-          }
-        });
-    } else {
-     let self = this;
-     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if ( this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
-        const card = {
-          number: this.state.cardNumberValue,
-          cvc: this.state.cvvValue,
-          exp_month: this.state.expMonthValue,
-          exp_year: this.state.expYearValue,
-        }
-        Stripe.createToken(card, function (status, response) {
-          if (response.error) {
-            self.setState({
-              showPopup: true,
-              errorMsg: response.error.message,
-              popupHeader:"Failed",
-              loading:false,
-            });
-          } else {
-            self.setState({
-              showPopup: false,
-              errorMsg: " ",
-           //   popupHeader:"Success",
-              stripeToken: response.id,
-              loading:false,
-            })
-            self.byBid();
-          }
-        });
-     }else {
-       self.setState({
-         loading:false,
-       })
-     }
-    }
-  };
-  byBid = () => {
-    const user = {
-      compTicketCode: this.state.raffleData.code,
-      raffleTicketId: this.state.raffleTicketValue,
-      stripeToken:this.state.stripeToken,
-    }
-    this.props.purchaseTickets(this.props.params && this.props.params.params, user)
-      .then(resp => {
-        if (!resp.errorMessage) {
-          this.setState({
-            showPopup: true,
-            errorMsg:  resp.message,
-            popupHeader:"Success",
-            loading:false,
-           })
-        }else{
-          this.setState({
-            showPopup: true,
-            errorMsg: resp.errorMessage,
-            popupHeader:"Failed",
-            loading:false,
-          });
-        }
-      });
-  };
   showAlertPopup = () => {
     this.setState({
       showPopup: true,
@@ -603,19 +515,19 @@ class Raffle extends React.Component {
     this.setState({
       isShowLoginModal:false,
     });
-    setInterval(function() {
-      this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-        .then(resp => {
-          if (resp && resp.data) {
-            this.setState({
-              raffleData: resp.data
-            })
-          }
-        }).catch(error => {
-        console.log(error)
-        history.push('/404');
-      });
-    });
+    // setTimeout(function() {
+    //   this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+    //     .then(resp => {
+    //       if (resp && resp.data) {
+    //         this.setState({
+    //           raffleData: resp.data
+    //         })
+    //       }
+    //     }).catch(error => {
+    //     console.log(error)
+    //     history.push('/404');
+    //   });
+    // },1000);
   };
   showLoginModal = () => {
     this.setState({
@@ -709,11 +621,11 @@ class Raffle extends React.Component {
         <div className="row">
           <div className="col-md-5 col-lg-5">
             <div
-              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? 'aaa' : 'disabled')}>
+              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? '' : 'disabled')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
               <input type="number"  name="itembid"  required="required"
                      className={cx("form-control")}
-                     disabled={(this.state.raffleData && this.state.raffleData.availableTickets > 0) ? '' : 'disabled'}
+                     disabled={(this.state.raffleData && !this.state.raffleData.availableTickets <= 0) ? false : true}
 
                  ref={ref => {
                  this.tickets = ref;
@@ -744,19 +656,15 @@ class Raffle extends React.Component {
       </div>
       <div className="row mrg-t-md">
         <div className="col-md-5 col-lg-10">
-          <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-             onClick={this.showBuyRaffleTicketsModal} >Get Tickets</a>
+          <button role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
+             onClick={this.showBuyRaffleTicketsModal} disabled={this.state.settings && !this.state.settings.moduleActivated}>Get Tickets</button>
         </div>
       </div>
     </form>;
     let form_normal = <div >
-      {this.state.raffleData && this.state.raffleData.active &&
-      <div className="text-danger text-center bold"> Please activate this module to start accepting
-        pledges.
-      </div>}
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
-      <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-         onClick={this.showBuyRaffleTicketsModal}  >Get Tickets</a>
+      <button role="button" className="btn btn-primary btn-block"   disabled={this.state.settings && !this.state.settings.moduleActivated}
+         onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
          to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
     </div>;

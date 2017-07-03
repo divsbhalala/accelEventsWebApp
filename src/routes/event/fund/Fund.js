@@ -98,14 +98,14 @@ class Fund extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
      let self = this
-    if (0){
+    if (!this.state.settings.moduleActivated){
       this.setState({
         showMapPopup: true,
         errorMsg: " Pledges are no longer being accepted for this Need." ,
         popupHeader:"Failed",
       })
     }else{
-      if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+      if(this.props.authenticated &&  this.props.user && !this.props.eventData.ccRequiredForBidConfirm ){
         this.setState({
           showMapPopup: true,
           errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
@@ -520,7 +520,7 @@ class Fund extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
 
-  checkIsValidBidData = () =>{
+  checkIsValidBidData = () => {
     let valid1=true;
     let valid2=true;
     let flag=true;
@@ -529,7 +529,7 @@ class Fund extends React.Component {
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
-      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 )
+      if( this.props.user && this.props.eventData.ccRequiredForBidConfirm )
       {
         valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
         flag=false;
@@ -551,7 +551,7 @@ class Fund extends React.Component {
     }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
-      if(!this.props.eventData.active){
+      if(!resp.data.moduleActivated){
         this.setState({
           errorMsg:"Please activate this module to start accepting pledges.",
           popupHeader :'Failed',
