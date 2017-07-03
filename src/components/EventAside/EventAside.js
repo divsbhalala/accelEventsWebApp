@@ -36,10 +36,10 @@ class EventAside extends React.Component {
 			filterCategory: '',
 			searchString: '',
 			isshowBuyRaffleTicketsModal: false,
-			days: 0,
-			hours: 0,
-			minute: 0,
-			seconds: 0,
+			days: '00',
+			hours: '00',
+			minute: '00',
+			seconds: '00',
 
 		};
 		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
@@ -75,12 +75,13 @@ class EventAside extends React.Component {
     this.props.successTask();
   };
 	setCountDown=()=>{
-		let interval = 1000;
+		let interval = 100;
 		let self=this;
-		countDownInterval = setInterval(function(){
+		if(this.props.settings && this.props.settings.endDate){
+			interval = 60000;
 			let eventTime=moment();
-			if(self.props.settings && self.props.settings.endDate){
-				eventTime = moment(self.props.settings.endDate);
+			if(this.props.settings && this.props.settings.endDate){
+				eventTime = moment(this.props.settings.endDate);
 			}
 			let days =  moment(eventTime).diff(moment(), 'days');
 			let hours = moment(eventTime).add(-days, 'days').diff(moment(), 'hours');
@@ -88,7 +89,7 @@ class EventAside extends React.Component {
 			let seconds = moment(eventTime).add(-days, 'days').add(-hours, 'hours').add(-minute, 'minutes').diff(moment(), 'seconds');
 
 			// let duration = moment.duration(duration - interval, 'milliseconds');
-			self.setState({
+			this.setState({
 				days: days <= 0 ? "00": days,
 				hours: hours <= 0 ? "00": hours <=9 ? ("0" +hours).slice(-2) : hours,
 				minute: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
@@ -96,22 +97,21 @@ class EventAside extends React.Component {
 			});
 
 			if( !days && !hours && !minute && !seconds && !isEventEnd){
-				if(countDownInterval){
-					clearInterval(countDownInterval);
-					isEventEnd = true;
-					this.props.onEnd();
-				}
-				//self.props.onEnd();
+				this.props.onEnd();
+				isEventEnd = true;
 			}
 			else {
 				isEventEnd = false;
 			}
-		}, interval);
+		};
 	};
+	componentDidMount(){
+		countDownInterval = setInterval(()=>{
+			this.setCountDown(countDownInterval);
+		},1000)
+	}
 	componentWillUnmount(){
-		if(countDownInterval){
-			clearInterval(countDownInterval);
-		}
+		clearInterval(countDownInterval);
 	}
 	render() {
 		return (
@@ -184,7 +184,7 @@ class EventAside extends React.Component {
 									</div>
 								</div>
 								{ this.props.settings && this.props.settings.endDate && <div className={cx("project-box-content")}>
-									<div className={cx("ticker")}>{this.setCountDown()}
+									<div className={cx("ticker")}>
 										<div className={cx("row timer")}>
 											{ this.state.days > 0 && <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.days}</span></div>}
 											{ <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.hours}</span></div>}
