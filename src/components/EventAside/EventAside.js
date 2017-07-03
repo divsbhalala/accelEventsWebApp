@@ -9,6 +9,7 @@ import moment from 'moment';
 import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 
+var countDownInterval = null;
 
 class EventAside extends React.Component {
 	static propTypes = {
@@ -16,6 +17,7 @@ class EventAside extends React.Component {
 		buyItNowPrice: PropTypes.string,
 		selectedCategoty: PropTypes.string,
 		showBookingPopup: PropTypes.func,
+		onEnd: PropTypes.func,
 		showMapPopup: PropTypes.func,
 		setFilterCategory: PropTypes.func,
 		eventData: PropTypes.object,
@@ -29,9 +31,9 @@ class EventAside extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showBuyRaffelTicketPopup: false,
+			showBuyRaffleTicketPopup: false,
 			filterCategory: '',
-			serachSring: '',
+			searchString: '',
 			isshowBuyRaffleTicketsModal: false,
 			days: 0,
 			hours: 0,
@@ -39,20 +41,20 @@ class EventAside extends React.Component {
 			seconds: 0,
 
 		};
-		this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
-		this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
+		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
+		this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 		this.setCountDown = this.setCountDown.bind(this);
 
 	}
 
-	showBuyRaffelTicketPopup = () => {
+	showBuyRaffleTicketPopup = () => {
 		this.setState({
-			showBuyRaffelTicketPopup: this.props.authenticated
+			showBuyRaffleTicketPopup: this.props.authenticated
 		})
 	};
-	hideBuyRaffelTicketPopup = () => {
+	hideBuyRaffleTicketPopup = () => {
 		this.setState({
-			showBuyRaffelTicketPopup: false
+			showBuyRaffleTicketPopup: false
 		})
 	};
 	serachString = (e) => {
@@ -71,7 +73,7 @@ class EventAside extends React.Component {
 	setCountDown=()=>{
 		let interval = 1000;
 		let self=this;
-		setInterval(function(){
+		countDownInterval = setInterval(function(){
 			let eventTime=moment();
 			if(self.props.settings && self.props.settings.endDate){
 				eventTime = moment(self.props.settings.endDate);
@@ -84,18 +86,23 @@ class EventAside extends React.Component {
 			// let duration = moment.duration(duration - interval, 'milliseconds');
 			self.setState({
 				days: days <= 0 ? "00": days,
-				hours: hours <= 0 ? "00": hours,
-				minute: minute <= 0 ? "00": minute,
-				seconds: seconds <= 0 ? "00": seconds,
+				hours: hours <= 0 ? "00": hours <=9 ? ("0" +hours).slice(-2) : hours,
+				minute: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
+				seconds: seconds <= 0 ? "00": seconds <=9 ? ("0" +seconds).slice(-2) : seconds,
 			});
 
 			if( !days && !hours && !minute && !seconds){
+				if(countDownInterval){
+					clearInterval(countDownInterval);
+				}
 				//self.props.onEnd();
 			}
 		}, interval);
 	};
-	componentDidMount(){
-
+	componentWillUnmount(){
+		if(countDownInterval){
+			clearInterval(countDownInterval);
+		}
 	}
 	render() {
 		return (
@@ -260,10 +267,10 @@ class EventAside extends React.Component {
 					</div>
 				</div>
 				<PopupModel
-					id="buyRaffelTicketPopup"
-					showModal={this.state.showBuyRaffelTicketPopup}
+					id="buyRaffleTicketPopup"
+					showModal={this.state.showBuyRaffleTicketPopup}
 					headerText="Buy Raffle Ticket"
-					onCloseFunc={this.hideBuyRaffelTicketPopup}
+					onCloseFunc={this.hideBuyRaffleTicketPopup}
 				>
 					<div className="main-box-body clearfix">
 						<div className="payment-area collapse in">

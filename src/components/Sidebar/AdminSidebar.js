@@ -8,19 +8,19 @@ class AdminSiderbar extends React.Component {
 			activeState:'',
       toggle:false,
 		};
-		this.showBuyRaffelTicketPopup = this.showBuyRaffelTicketPopup.bind(this);
+		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
 		this.toggleUl = this.toggleUl.bind(this);
-	//	this.hideBuyRaffelTicketPopup = this.hideBuyRaffelTicketPopup.bind(this);
+	//	this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 	}
   toggleUl = () =>{
 	  this.setState({
       toggle:!this.state.toggle
-    })
+    });
     console.log('test',this.state)
-  }
-	showBuyRaffelTicketPopup = () => {
+  };
+	showBuyRaffleTicketPopup = () => {
 		this.setState({
-			showBuyRaffelTicketPopup: this.props.authenticated
+			showBuyRaffleTicketPopup: this.props.authenticated
 		})
 	};
 
