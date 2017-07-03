@@ -158,13 +158,13 @@ class Checkout extends React.Component {
 			this.cardHolderName.value = '';
 		}
 
-		if (!this.cardHolderName.value) {
+		if (!this.cardHolderName.value.trim()) {
 			this.setState({
 				cardHolderName: false,
 				cardHolderNameFeedBackMsg: "The card holder name is required and can't be empty"
 			});
 		}
-		else if (this.cardHolderName.value&& (this.cardHolderName.value.length <= 6 || this.cardHolderName.value.length > 70)) {
+		else if (this.cardHolderName.value && (this.cardHolderName.value.length <= 6 || this.cardHolderName.value.length > 70)) {
 			this.setState({
 				cardHolderName: false,
 				cardHolderNameFeedBackMsg: "TThe card holder name must be more than 6 and less than 70 characters long"
@@ -188,7 +188,7 @@ class Checkout extends React.Component {
 			this.cardNumber.value = '';
 		}
 
-		if (!this.cardNumber.value) {
+		if (!this.cardNumber.value.trim()) {
 			this.setState({
 				cardNumber: false,
 				cardNumberFeedBackMsg: "The credit card number is required and can't be empty",
@@ -219,13 +219,13 @@ class Checkout extends React.Component {
 			this.cardCVV.value = '';
 		}
 
-		if (!this.cardCVV.value) {
+		if (!this.cardCVV.value.trim()) {
 			this.setState({
 				cardCVV: false,
 				cardCVVFeedBackMsg: "The CVV is required and can't be empty",
 			});
 		}
-		else if (this.cardCVV.value&& !(this.cardCVV.value.length >= 3 && this.cardCVV.value.length <= 4)) {
+		else if (this.cardCVV.value && !(this.cardCVV.value.length >= 3 && this.cardCVV.value.length <= 4)) {
 			this.setState({
 				cardCVV: false,
 				cardCVVFeedBackMsg: "The CVV must be more than 4 and less than 3 characters long",
@@ -259,7 +259,6 @@ class Checkout extends React.Component {
 	};
 	cardExpYearValidateHandler = (e) => {
 
-
 		if (!this.cardExpYear.value) {
 			this.setState({
 				cardExpYear: false
@@ -279,7 +278,7 @@ class Checkout extends React.Component {
 			passwordFeedBack: true
 		});
 
-		if (!this.password.value) {
+		if (!this.password.value.trim()) {
 
 			this.setState({
 				password: false

@@ -2948,7 +2948,7 @@ class Volunteer extends React.Component {
 					</view> }
 				</views>}
 				{this.state.isloaded && !this.props.is_volunteer && <div>
-					<h3>You are not authorize to Access this page</h3>
+					<h3>This tab is only visible to event hosts and event volunteers</h3>
 				</div>}
 				<PopupModel
 					id="bookingPopup"

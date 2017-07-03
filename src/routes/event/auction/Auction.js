@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -82,165 +83,148 @@ class Auction extends React.Component {
 			cvvFeedBack: false,
 			phoneNumberFeedBack: false,
 
-			errorReg: null,
-			errorMsgfirstName: null,
-			errorMsglastName: null,
-			errorMsgcardNumber: null,
-			errorMsgcardHolder: null,
-			errorMsgamount: null,
-			errorMsgNumber: null,
-			errorMsgcvv: null,
-			errorMsgEmail: null,
-			errorMsgPhoneNumber: null,
-			showPopup: false,
-			stripeToken: null,
-			phone: null,
-			countryPhone: null,
-			loading: false,
-		};
-	}
+      errorReg: null,
+      errorMsgfirstName: null,
+      errorMsglastName: null,
+      errorMsgcardNumber: null,
+      errorMsgcardHolder: null,
+      errorMsgamount: null,
+      errorMsgNumber: null,
+      errorMsgcvv: null,
+      errorMsgEmail: null,
+      errorMsgPhoneNumber: null,
+      showPopup: false,
+      stripeToken:null,
+      phone:null,
+      countryPhone:null,
+      loading:false,
+    };
+  }
+  onBidFormClick = (e) => {
+    e.preventDefault();
+    if( this.props.authenticated  &&   !this.props.eventData.ccRequiredForBidConfirm ) {
+      this.setState({
+        showPopup: true,
+        errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for " + this.state.auctionData.name ,
+        popupHeader:"Confirm",
+      })
+    } else {
+    let self = this;
+    if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
+      const card = {
+        number: this.cardNumber.value.trim(),
+        cvc: this.cvv.value.trim(),
+        exp_month: this.expMonth.value.trim(),
+        exp_year: this.expYear.value.trim(),
+      }
+      Stripe.createToken(card, function (status, response) {
+        if (response.error) {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: response.error.message,
+            popupHeader:"Failed"
+          });
+        } else {
+          self.setState({
+            showPopup: true,
+            errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
+            popupHeader:"Success",
+            stripeToken: response.id,})
+          }
+        });
+      }
+    }
+  };
+  placeBid = () => {
+    this.setState({
+      loading:true,
+    })
+      const user = {
+        email: this.props.user.email,
+        countryCode: parse(this.state.phone).country,
+        cellNumber: parse(this.state.phone).phone,
+        firstname: this.state.firstNameValue,
+        lastname: this.state.lastNameValue,
+        paymenttype: 'CC',
+        itemCode: this.state.auctionData.code,
+        amount: this.state.amountValue,
+        stripeToken: this.state.stripeToken,
+      }
+    this.submitAuctionBid( user);
 
-	onBidFormClick = (e) => {
-		e.preventDefault();
-		if (this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 || !this.props.eventData.ccRequiredForBidConfirm )) {
-			this.setState({
-				showPopup: true,
-				errorMsgCard: " You are placing a bid of $" + this.state.amountValue + " for " + this.state.auctionData.name,
-				popupHeader: "Confirm",
-			})
-		} else {
-			let self = this;
-			if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
-				const card = {
-					number: this.cardNumber.value.trim(),
-					cvc: this.cvv.value.trim(),
-					exp_month: this.expMonth.value.trim(),
-					exp_year: this.expYear.value.trim(),
-				}
-				Stripe.createToken(card, function (status, response) {
-					if (response.error) {
-						self.setState({
-							showPopup: true,
-							errorMsgCard: response.error.message,
-							popupHeader: "Failed"
-						});
-					} else {
-						self.setState({
-							showPopup: true,
-							errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice(-4) + " will be charged $ " + self.state.amountValue + " for  " + self.state.auctionData.name,
-							popupHeader: "Success",
-							stripeToken: response.id,
-						})
-					}
-				});
-			}
-		}
-	};
-	placeBid = () => {
-		this.setState({
-			loading: true,
-		})
-		const user = {
-			email: this.props.user.email,
-			countryCode: parse(this.state.phone).country,
-			cellNumber: parse(this.state.phone).phone,
-			firstname: this.state.firstNameValue,
-			lastname: this.state.lastNameValue,
-			paymenttype: 'CC',
-			itemCode: this.state.auctionData.code,
-			amount: this.state.amountValue,
-			stripeToken: this.state.stripeToken,
-		}
-		this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
-			.then(resp => {
-				if (resp && !resp.errorMessage) {
-					this.setState({
-						showPopup: true,
-						// errorMsgCard: "Success , Your card ending in " + this.state.cardNumberValue.slice( - 4) + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
-						errorMsgCard: resp.message,
-						popupHeader: "Successfully",
-						loading: false,
-					})
-					this.props.changeUserData(this.props.user, user)
-				} else {
-					this.setState({
-						showPopup: true,
-						errorMsgCard: resp.errorMessage,
-						popupHeader: "Failed",
-						loading: false,
-					});
-				}
-			});
-	};
-	placeBidByAmount = () => {
-		this.setState({
-			loading: true,
-		})
-		const user = {
-			itemCode: this.state.auctionData.code,
-			amount: this.state.amountValue,
-			firstname: this.state.firstNameValue,
-			lastname: this.state.lastNameValue,
-		}
-		this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
-			.then(resp => {
-				if (resp && !resp.errorMessage) {
-					this.setState({
-						showPopup: true,
-						errorMsgCard: resp.message,
-						popupHeader: "Successfully",
-					})
-					this.props.changeUserData(this.props.user, user)
-				} else {
-					this.setState({
-						showPopup: true,
-						errorMsgCard: resp.errorMessage,
-						popupHeader: "Failed"
-					});
-				}
-				this.setState({
-					loading: false,
-				})
-			});
-	};
-	signupForm = (e) => {
-		e.preventDefault();
-		this.setState({
-			emailFeedBack: true,
-			phoneNumberFeedBack: true,
-			passwordFeedBack: true,
-		})
-		if (this.state.emailValue && this.state.passwordValue && this.state.phone) {
-			this.setState({
-				loading: true,
-			})
-			let userData = {
-				"countryCode": this.state.countryPhone,
-				"email": this.state.emailValue,
-				"password": this.state.passwordValue,
-				"phoneNumber": this.state.phone,
-			}
-			this.props.doSignUp(this.props.params && this.props.params.params, userData).then((resp)=> {
-				if (resp && !resp.errorMessage) {
-					this.setState({
-						showPopup: true,
-						errorMsgCard: "Thank you for Registration!",
-						popupHeader: "Successfully",
-						loading: false,
-					})
-					this.componentReRender();
-				}
-				else {
-					this.setState({
-						showPopup: true,
-						errorMsgCard: resp.errorMessage,
-						popupHeader: "Failed",
-						loading: false,
-					})
-				}
-			});
-		}
-	};
+  };
+  placeBidByAmount = () => {
+    this.setState({
+      loading:true,
+    })
+    const user = {
+      itemCode: this.state.auctionData.code,
+      amount: this.state.amountValue,
+      firstname: this.state.firstNameValue,
+      lastname: this.state.lastNameValue,
+    }
+    this.submitAuctionBid(user);
+  };
+  submitAuctionBid = (user) => {
+    this.props.submitAuctionBid(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && !resp.errorMessage) {
+          this.setState({
+            showPopup: true,
+            errorMsgCard:resp.message,
+            popupHeader:"Successfully",
+          })
+          this.props.changeUserData(this.props.user,user)
+        }else{
+          this.setState({
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed"
+          });
+        }
+        this.setState({
+          loading:false,
+        })
+       });
+  }
+  signupForm = (e) => {
+    e.preventDefault();
+    this.setState({
+      emailFeedBack:true,
+      phoneNumberFeedBack:true,
+      passwordFeedBack:true,
+    })
+    if (this.state.emailValue && this.state.passwordValue && this.state.phone) {
+      this.setState({
+        loading:true,
+      })
+      let userData={
+        "countryCode": this.state.countryPhone,
+        "email": this.state.emailValue,
+        "password": this.state.passwordValue,
+        "phoneNumber": this.state.phone,
+      }
+      this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
+        if (resp && !resp.errorMessage) {
+            this.setState({
+              showPopup: true,
+              errorMsgCard: "Thank you for Registration!",
+              popupHeader:"Successfully",
+              loading:false,
+            })
+          this.componentReRender();
+          }
+          else{
+            this.setState({
+              showPopup: true,
+              errorMsgCard: resp.errorMessage,
+              popupHeader:"Failed",
+              loading:false,
+            })
+          }
+      });
+    }
+  };
 
 	emailValidateHandler = (e) => {
 		this.setState({
@@ -450,187 +434,185 @@ class Auction extends React.Component {
 		// this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 	};
 
-	phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-		console.log(isValid, value, countryData, number, ext);
-		this.setState({
-			phone: value,
-			countryPhone: countryData.iso2,
-			phoneNumberFeedBack: true,
-			errorMsgPhoneNumber: "",
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
-		if (value == '') {
-			this.setState({
-				phoneNumber: false,
-				errorMsgPhoneNumber: "phoneNumber is Require",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.props.doValidateMobileNumber(number).then(resp => {
-				console.log(resp)
-				this.setState({
-					phoneNumber: !resp,
-					errorMsgPhoneNumber: "Invalid phone number",
-				}, function afterStateChange() {
-					this.checkIsValidBidData()
-				});
-			})
-		}
-		this.setState({
-			phone: value,
-		});
-	}
+  phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
 
-	expMonthValidateHandler = (e) => {
-		this.setState({
-			expMonthFeedBack: true,
-			expMonthValue: this.expMonth.value.trim(),
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
-		if (this.expMonth.value.trim() == '') {
-			this.setState({
-				expMonth: false,
-				errorMsgExpMonth: "Expire Month is Require",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.setState({
-				expMonth: true
-			});
-		}
-		this.checkIsValidBidData();
-		// this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-	};
-	expYearValidateHandler = (e) => {
-		this.setState({
-			expYearFeedBack: true,
-			expYearValue: this.expYear.value.trim(),
-		});
-		if (this.expYear.value.trim() == '') {
-			this.setState({
-				expYear: false,
-				errorMsgexpYear: "Expire Year is Require",
-			});
-		} else {
-			this.setState({
-				expYear: true
-			});
-		}
-		this.checkIsValidBidData();
-		// this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-	};
+    this.setState({
+      phone: value,
+      countryPhone:countryData.iso2,
+      phoneNumberFeedBack: true,
+      errorMsgPhoneNumber :"",
+    },function afterStateChange () {
+      this.checkIsValidBidData()
+    });
+    if (value == '') {
+      this.setState({
+        phoneNumber: false,
+        errorMsgPhoneNumber: "phoneNumber is Require",
+      },function afterStateChange () {
+        this.checkIsValidBidData()
+      });
+    }else{
+    this.props.doValidateMobileNumber(number).then(resp => {
 
-	componentWillMount() {
-		this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+      this.setState({
+        phoneNumber: !resp,
+        errorMsgPhoneNumber: "Invalid phone number",
+      },function afterStateChange () {
+        this.checkIsValidBidData()
+      });
+    })
+    }
+    this.setState({
+      phone: value,
+    });
+  }
+  expMonthValidateHandler = (e) => {
+    this.setState({
+      expMonthFeedBack: true,
+      expMonthValue:this.expMonth.value.trim(),
+    },function afterStateChange () {
+      this.checkIsValidBidData()
+    });
+    if (this.expMonth.value.trim() == '') {
+      this.setState({
+        expMonth: false,
+        errorMsgExpMonth: "Expire Month is Require",
+      },function afterStateChange () {
+        this.checkIsValidBidData()
+      });
+    }  else {
+      this.setState({
+        expMonth: true
+      });
+    } this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
+  };
+  expYearValidateHandler = (e) => {
+    this.setState({
+      expYearFeedBack: true,
+      expYearValue:this.expYear.value.trim(),
+    });
+    if (this.expYear.value.trim() == '') {
+      this.setState({
+        expYear: false,
+        errorMsgexpYear: "Expire Year is Require",
+      });
+    }  else {
+      this.setState({
+        expYear: true});
+      }
+     this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
+  };
 
-		if (this.props.stripeKey) {
-			Stripe.setPublishableKey(this.props.stripeKey);
-		}
-		this.props.doGetEventData(this.props.params && this.props.params.params);
-		this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-			this.setState({
-				settings: resp && resp.data
-			});
-		}).catch(error => {
-			history.push('/404');
-		});
-		this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-			.then(resp => {
-				if (resp && resp.data) {
-					this.setState({
-						auctionData: resp.data
-					})
-				}
-			}).catch(error => {
-			console.log(error)
-			history.push('/404');
-		});
-	};
+  componentDidMount(){
 
-	componentReRender = () => {
-		if (this.props.stripeKey) {
-			Stripe.setPublishableKey(this.props.stripeKey);
-		}
-		this.props.doGetEventData(this.props.params && this.props.params.params);
-		this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-			this.setState({
-				settings: resp && resp.data
-			});
-		}).catch(error => {
-			history.push('/404');
-		});
-		this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-			.then(resp => {
-				if (resp && resp.data) {
-					this.setState({
-						auctionData: resp.data
-					})
-				}
-			}).catch(error => {
-			console.log(error)
-		});
-	};
-	showPopup = () => {
-		this.setState({
-			showPopup: true
-		})
-	};
-	hidePopup = () => {
-		this.setState({
-			showPopup: false
-		})
-		this.componentReRender();
-	};
-	reRender = ()=> {
-		window.location.reload();
-	};
-	checkIsValidBidData = () => {
-		let valid1 = true;
-		let valid2 = true;
-		let flag = true;
-		if (this.props.authenticated) {
-			if (this.props.user.firstName == null) {
-				valid1 = !!(this.state.firstName && this.state.lastName && this.state.amount );
-				flag = false;
-			}
-			if (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 && this.props.eventData.ccRequiredForBidConfirm) {
-				valid2 = !!(this.state.amount && this.state.cardNumber && this.state.cardHolder && this.state.cvv && this.expMonth && this.expYear);
-				flag = false;
-			}
-			if (flag) {
-				valid1 = !!(this.state.amount);
-				valid2 = !!(this.state.amount);
-			}
-		} else {
-		}
-		this.setState({isValidBidData: (valid1 && valid2)});
-	};
+    if(this.props.stripeKey){
+      Stripe.setPublishableKey(this.props.stripeKey);
+    }
+    }
+  componentWillMount() {
+    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+    this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+      .then(resp => {
+        if (resp && resp.data) {
+          this.setState({
+            auctionData: resp.data
+          })
+        }
+      }).catch(error => {
+      console.log(error)
+      history.push('/404');
+    });
+  };
+  componentReRender = () => {
+    if(this.props.stripeKey){
+      Stripe.setPublishableKey(this.props.stripeKey);
+    }
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+    this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+      .then(resp => {
+        if (resp && resp.data) {
+          this.setState({
+            auctionData: resp.data
+          })
+        }
+      }).catch(error => {
+      console.log(error)
+    });
+  };
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false
+    })
+    this.componentReRender();
+  };
+  reRender = ()=>{
+    window.location.reload();
+  };
+  checkIsValidBidData = () =>{
 
-	render() {
-		let form_login = <div>
-			<div
-				className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')}>
-				{ this.state.errorMsgCard }</div>
-			<h4>Login or signup below</h4>
-			<form className="ajax-form validated fv-form fv-form-bootstrap"
-			      autoComplete="off" method="POST"
-			      noValidate="novalidate"
-			      onSubmit={this.signupForm}>
-				<div
-					className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
-					<label className="control-label">Email Address</label>
-					<div className="input-group">
-						<div className="input-group-addon">
-							<i className="fa fa-envelope" aria-hidden="true"/>
-						</div>
-						<input type="email" className="form-control login-email"
-						       placeholder="Email"
-						       name="email" data-fv-field="email"
-						       ref={ref => {
+    let valid1=true;
+    let valid2=true;
+    let flag=true;
+   if(this.props.authenticated){
+     if( this.props.user.firstName == null ){
+       valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
+       flag=false;
+      }
+      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 &&  this.props.eventData.ccRequiredForBidConfirm ){
+
+        valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
+        flag=false;
+      }
+      if(flag) {
+         valid1=!!(this.state.amount);
+         valid2=!!(this.state.amount);
+      }
+   } else {
+   }
+    this.setState({isValidBidData: (valid1 && valid2)});
+  };
+  render() {
+    let form_login = <div>
+      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+        { this.state.errorMsgCard }</div>
+      <h4>Login or signup below</h4>
+      <form className="ajax-form validated fv-form fv-form-bootstrap"
+            autoComplete="off" method="POST"
+
+            noValidate="novalidate"
+            onSubmit={this.signupForm}>
+        <div
+          className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
+          <label className="control-label">Email Address</label>
+          <div className="input-group">
+            <div className="input-group-addon">
+              <i className="fa fa-envelope" aria-hidden="true"/>
+            </div>
+            <input type="email" className="form-control login-email"
+                   placeholder="Email"
+                   name="email" data-fv-field="email"
+                   ref={ref => {
                      this.email = ref;
                    }}
 						       onKeyUp={this.emailValidateHandler}
@@ -766,31 +748,31 @@ class Auction extends React.Component {
 							       ref={ref => {
                        this.amount = ref;
                      }}
-							       onKeyUp={this.amountValidateHandler}/>
-							{ this.state.amountFeedBack && this.state.amount &&
-							<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-							{ this.state.amountFeedBack && !this.state.amount &&
-							<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-						</div>
-						{ this.state.amountFeedBack && !this.state.amount &&
-						<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
-					</div>
-				</div>
-			</div>
-			{ !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
-				<div>
-					<style
-						dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
-					<div className="stripe-form">
-						<div className="stripe-card-info">
-							<div
-								className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
-								<label className="control-label">Card Holder Name</label>
-								<div className="input-group">
-									<div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
-									<input type="text" className="form-control" id="cardname" data-stripe="name"
-									       placeholder="Name on the card" data-fv-field="cardholdername"
-									       ref={ref => {
+                     onKeyUp={this.amountValidateHandler}/>
+              { this.state.amountFeedBack && this.state.amount &&
+              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+              { this.state.amountFeedBack && !this.state.amount &&
+              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+            </div>
+            { this.state.amountFeedBack && !this.state.amount &&
+            <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
+          </div>
+        </div>
+      </div>
+      { !this.props.authenticated || ( this.props.authenticated && ( this.props.user &&   this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
+       <div>
+         <style
+        dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
+      <div className="stripe-form">
+        <div className="stripe-card-info">
+          <div
+            className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
+            <label className="control-label">Card Holder Name</label>
+            <div className="input-group">
+              <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
+              <input type="text" className="form-control" id="cardname" data-stripe="name"
+                     placeholder="Name on the card" data-fv-field="cardholdername"
+                     ref={ref => {
                        this.cardHolder = ref;
                      }}
 									       onKeyUp={this.cardHolderValidateHandler}/>
@@ -997,31 +979,31 @@ class Auction extends React.Component {
 							       ref={ref => {
                        this.amount = ref;
                      }}
-							       onKeyUp={this.amountValidateHandler}/>
-							{ this.state.amountFeedBack && this.state.amount &&
-							<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-							{ this.state.amountFeedBack && !this.state.amount &&
-							<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-						</div>
-						{ this.state.amountFeedBack && !this.state.amount &&
-						<small className="help-block">{this.state.errorMsgAmount}</small>}
-					</div>
-				</div>
-			</div>
-			{ !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
-				<div>
-					<style
-						dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
-					<div className="stripe-form">
-						<div className="stripe-card-info">
-							<div
-								className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
-								<label className="control-label">Card Holder Name</label>
-								<div className="input-group">
-									<div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
-									<input type="text" className="form-control" id="cardname" data-stripe="name"
-									       placeholder="Name on the card" data-fv-field="cardholdername"
-									       ref={ref => {
+                     onKeyUp={this.amountValidateHandler}/>
+              { this.state.amountFeedBack && this.state.amount &&
+              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+              { this.state.amountFeedBack && !this.state.amount &&
+              <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+            </div>
+            { this.state.amountFeedBack && !this.state.amount &&
+            <small className="help-block" >{this.state.errorMsgAmount}</small>}
+          </div>
+        </div>
+      </div>
+      { !this.props.authenticated || ( this.props.authenticated && ( this.props.user &&   this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
+        <div>
+          <style
+            dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
+          <div className="stripe-form">
+            <div className="stripe-card-info">
+              <div
+                className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
+                <label className="control-label">Card Holder Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
+                  <input type="text" className="form-control" id="cardname" data-stripe="name"
+                         placeholder="Name on the card" data-fv-field="cardholdername"
+                         ref={ref => {
                            this.cardHolder = ref;
                          }}
 									       onKeyUp={this.cardHolderValidateHandler}/>
@@ -1152,23 +1134,22 @@ class Auction extends React.Component {
 					</div>
 				</div> : "" }
 
-			<div className="col-sm-3">
-				<button className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
-				        type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
-					Submit bid
-				</button>
-				&nbsp;&nbsp;
-			</div>
-			<div className="col-sm-6">
-				<Link to={this.props.params && "/event/" + this.props.params.params }>
-					<a role="button" className="btn btn-success btn-block">
-						Go back to All Items</a>
-				</Link>
-			</div>
-		</form>;
-		let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
-			className="current-bid">400</span></div>;
-		let bid_active = this.state.auctionData && this.state.auctionData.purchased;
+      <div className="col-sm-3">
+        <button className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+                type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+          Submit bid
+        </button>
+        &nbsp;&nbsp;
+      </div>
+      <div className="col-sm-6">
+        <Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success btn-block" >
+            Go back to All Items
+        </Link>
+       </div>
+    </form>;
+    let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
+      className="current-bid">400</span></div>;
+    let bid_active = this.state.auctionData && this.state.auctionData.purchased;
 
 		return (
 			<div className="row">
@@ -1206,7 +1187,7 @@ class Auction extends React.Component {
 
 											</div>
 										</div>
-										<div className="col-md-6" style={{paddingRight: 16}}>
+										<div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
 											<div className="row">
 												<div className="col-sm-4">
 													<div className="curr-bid-number">$<span

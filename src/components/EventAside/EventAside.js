@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -120,7 +121,8 @@ class EventAside extends React.Component {
           showModal={this.state.isshowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
-          successTask={this.successTask}params={this.props.params}  />
+          successTask={this.successTask}params={this.props.params}
+          ccRequiredForBidConfirm={this.props.eventData && this.props.eventData.ccRequiredForBidConfirm} />
 				<script type="text/javascript"
 								src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>

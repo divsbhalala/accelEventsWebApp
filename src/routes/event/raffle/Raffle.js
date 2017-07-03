@@ -426,7 +426,6 @@ class Raffle extends React.Component {
       this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
          let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          console.log(updateraffleData)
           if (!resp.errorMessage) {
             this.setState({
               //showAlertPopup: true,
@@ -603,7 +602,20 @@ class Raffle extends React.Component {
   hideLoginModal  = () => {
     this.setState({
       isShowLoginModal:false,
-    })
+    });
+    setInterval(function() {
+      this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+        .then(resp => {
+          if (resp && resp.data) {
+            this.setState({
+              raffleData: resp.data
+            })
+          }
+        }).catch(error => {
+        console.log(error)
+        history.push('/404');
+      });
+    });
   };
   showLoginModal = () => {
     this.setState({
@@ -649,8 +661,6 @@ class Raffle extends React.Component {
                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
                            onSubmit={this.submiteBuyTicket}>
-      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-        { this.state.errorMsg }</div>
 
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -727,11 +737,9 @@ class Raffle extends React.Component {
 
         </div>
         <div className="col-md-6 col-lg-5">
-          <Link to={this.props.params && "/event/" + this.props.params.params }>
-            <a role="button" className="btn btn-success btn-block" >
-              Go back to All Items</a>
+          <Link to={this.props.params && "/event/" + this.props.params.params } role="button" className="btn btn-success btn-block" >
+              Go back to All Items
           </Link>
-
         </div>
       </div>
       <div className="row mrg-t-md">
@@ -748,7 +756,7 @@ class Raffle extends React.Component {
       </div>}
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
       <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-         onClick={this.showBuyRaffleTicketsModal} >Get Tickets</a>
+         onClick={this.showBuyRaffleTicketsModal}  >Get Tickets</a>
       <Link role="button" className="btn btn-success btn-block"
          to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
     </div>;
@@ -791,6 +799,8 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
+                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsg }</div>
                       { this.props.authenticated ? form_login : form_normal  }
                     </div>
                   </div>
@@ -825,7 +835,9 @@ class Raffle extends React.Component {
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
           successTask={this.successTasks}
-          params={this.props.params}  />
+          params={this.props.params}
+          ccRequiredForBidConfirm={this.props.eventData && this.props.eventData.ccRequiredForBidConfirm }
+        />
       </div>
     );
   }

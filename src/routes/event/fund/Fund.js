@@ -95,25 +95,32 @@ class Fund extends React.Component {
       phone:null,
     }
 
-  }
+  };
   onFormClick = (e) => {
     e.preventDefault();
      let self = this
-    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+    if (0){
       this.setState({
         showMapPopup: true,
-        errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
-        popupHeader:"Confirm",
+        errorMsg: " Pledges are no longer being accepted for this Need." ,
+        popupHeader:"Failed",
       })
     }else{
-      this.setState({
-        showMapPopup: true,
-        errorMsg: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.fundData.name ,
-        popupHeader:"Confirm",
-      })
+      if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+        this.setState({
+          showMapPopup: true,
+          errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
+          popupHeader:"Confirm",
+        })
+      }else{
+        this.setState({
+          showMapPopup: true,
+          errorMsg: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.fundData.name ,
+          popupHeader:"Confirm",
+        })
+      }
     }
-
-  }
+  };
   submiteFundForm = () => {
     this.setState({
       loading: true,
@@ -150,25 +157,7 @@ class Fund extends React.Component {
                 amount: self.state.amountValue,
                 itemCode: self.state.fundData.code,
               }
-              self.props.fundaNeed(self.props.params && self.props.params.params, user)
-                .then(resp => {
-                  console.log(resp)
-                  if (resp && resp.message) {
-                    self.setState({
-                      errorMsg: resp.message,
-                      isError:false,
-                      popupHeader:"Success",
-                      loading:false,
-                    });
-                  }else{
-                    self.setState({
-                      errorMsg: resp.errorMessage,
-                      isError:true,
-                      popupHeader:"Failed",
-                      loading:false,
-                    });
-                  }
-                });
+              self.fundaNeed(user);
             }
           });
         } else{
@@ -176,7 +165,7 @@ class Fund extends React.Component {
         }
       });
     }
-    else if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ){
+    else if(this.props.authenticated &&  this.props.user && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  ){
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -199,25 +188,7 @@ class Fund extends React.Component {
             itemCode: self.state.fundData.code,
             paymenttype:"CC",
           }
-          self.props.fundaNeed(self.props.params && self.props.params.params, user)
-            .then(resp => {
-              console.log(resp)
-              if (resp && resp.message) {
-                self.setState({
-                  errorMsg: resp.message,
-                  isError:false,
-                  popupHeader:"Success",
-                  loading:false,
-                });
-              }else{
-                self.setState({
-                  errorMsg: resp.errorMessage,
-                  isError:true,
-                  popupHeader:"Failed",
-                  loading:false,
-                });
-              }
-            });
+          self.fundaNeed(user);
         }
       });
     }
@@ -228,25 +199,7 @@ class Fund extends React.Component {
         paymenttype:"CC",
         itemCode: self.state.fundData.code,
       }
-      this.props.fundaNeed(this.props.params && this.props.params.params, user)
-        .then(resp => {
-          console.log(resp)
-          if (resp && resp.message) {
-            this.setState({
-              errorMsg: resp.message,
-              isError:false,
-              popupHeader:"Success",
-              loading:false,
-            });
-          }else{
-            this.setState({
-              errorMsg: resp.errorMessage,
-              isError:true,
-              popupHeader:"Failed",
-              loading:false,
-            });
-          }
-        });
+      self.fundaNeed(user);
     }else {
       this.setState({
         loading:false,
@@ -255,6 +208,26 @@ class Fund extends React.Component {
     this.setState({
       showDonationPopup:false,
     })
+  };
+  fundaNeed = (user) => {
+    this.props.fundaNeed(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && resp.message) {
+          this.setState({
+            errorMsg: resp.message,
+            isError:false,
+            popupHeader:"Success",
+            loading:false,
+          });
+        }else{
+          this.setState({
+            errorMsg: resp.errorMessage,
+            isError:true,
+            popupHeader:"Failed",
+            loading:false,
+          });
+        }
+      });
   }
   emailValidateHandler = (e) => {
     this.setState({
@@ -480,7 +453,6 @@ class Fund extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone:countryData.iso2,
@@ -498,7 +470,6 @@ class Fund extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-        console.log(resp)
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
@@ -510,7 +481,7 @@ class Fund extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -580,9 +551,15 @@ class Fund extends React.Component {
       Stripe.setPublishableKey(this.props.stripeKey);
     }
     this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+      if(!this.props.eventData.active){
+        this.setState({
+          errorMsg:"Please activate this module to start accepting pledges.",
+          popupHeader :'Failed',
+        })
+      }
       this.setState({
-        settings: resp && resp.data
+        settings: resp && resp.data,
       });
     }).catch(error => {
       history.push('/404');
@@ -597,7 +574,7 @@ class Fund extends React.Component {
       }).catch(error => {
       console.log(error)
     });
-  }
+  };
   componentRernder() {
     if(this.props.stripeKey){
       Stripe.setPublishableKey(this.props.stripeKey);
@@ -620,10 +597,10 @@ class Fund extends React.Component {
       }).catch(error => {
       console.log(error)
     });
-  }
+  };
   reRender = ()=>{
     // window.location.reload();
-  }
+  };
   showPopup = () => {
     this.setState({
       showDonationPopup: true
@@ -633,7 +610,9 @@ class Fund extends React.Component {
     this.setState({
       showMapPopup: false
     })
-   this.componentRernder();
+    if(this.state.popupHeader == "Success" ){
+      this.componentRernder();
+    }
   };
   hideLoginModal  = () => {
     this.setState({
@@ -645,6 +624,7 @@ class Fund extends React.Component {
       isShowLoginModal:true,
     })
   };
+
   render() {
     return (
       <div className="row">
@@ -825,7 +805,7 @@ class Fund extends React.Component {
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
                         </div> }
-                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.linkedCard.stripeCards.length == 0 ) ?
+                        { !this.props.authenticated || ( this.props.authenticated &&  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ?
                           <div>
                             <style
                             dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
@@ -994,15 +974,17 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
-                                role="button" type="submit"
-                                loading={this.state.loading} >
-                          Submit Pledge
-                        </Button>
-                        <Link to={this.props.params && "/event/" + this.props.params.params }>
-                          <a role="button" className="btn btn-success"
-                             >Go back to All Items</a>
-                        </Link>
+                        <div className="row btn-row" >
+                          <div className="col-sm-3">
+                            <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
+                                                             role="button" type="submit"
+                                                             loading={this.state.loading} >
+                            Submit Pledge
+                          </Button></div>
+                          <div className="col-sm-5"><Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success">
+                            Go back to All Items
+                          </Link></div>
+                        </div>
                       </form>
                     </div>
                   </div>
