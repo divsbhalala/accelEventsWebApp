@@ -43,6 +43,13 @@ class Html extends React.Component {
         <link rel="stylesheet" href="http://allenfang.github.io/react-bootstrap-table/css/react-bootstrap-table-all.min.css"/>
         <link href="http://diegoddox.github.io/react-redux-toastr/5.0/react-redux-toastr.min.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/css/carousel.css"/>
+
+        <link rel="stylesheet" href="/css/telInput.css"/>
+        <link rel="stylesheet" href="/css/rrui.css"/>
+        <link rel="stylesheet" href="/css/style2.css"/>
+        <link rel="stylesheet" href="/css/host-dashboard.css" />
+        <link rel="stylesheet" href="/css/vt-icons.css" />
+        <link rel="stylesheet" href="/css/Tel/main.css" />
         <link rel="stylesheet" href="/css/goal-thermometer.css"/>
 
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
@@ -51,16 +58,10 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/sb-admin.css"/>
         <link rel="stylesheet" href="/css/admin-style.css"/>
 
-        <link rel="stylesheet" href="/css/display.css"/>
-        <link rel="stylesheet" href="/css/style.css"/>
+        <link rel="stylesheet" href="/css/style.min.css"/>
+        <link rel="stylesheet" href="/css/display.min.css"/>
 
         <link rel="stylesheet" href="/css/react-styles.min.css"/>
-        <link rel="stylesheet" href="/css/telInput.css"/>
-        <link rel="stylesheet" href="/css/rrui.css"/>
-        <link rel="stylesheet" href="/css/style2.css"/>
-        <link rel="stylesheet" href="/css/host-dashboard.css" />
-        <link rel="stylesheet" href="/css/vt-icons.css" />
-        <link rel="stylesheet" href="/css/Tel/main.css" />
         <script src="/css/Tel/libphonenumber.js"></script>
         {styles.map(style =>
           <style
