@@ -94,6 +94,7 @@ class Event extends React.Component {
 		this.handleScroll = this.handleScroll.bind(this);
 		this.doOrderTicket = this.doOrderTicket.bind(this);
 		this.hideFormError = this.hideFormError.bind(this);
+		this.onEventEnd = this.onEventEnd.bind(this);
 
 	}
 
