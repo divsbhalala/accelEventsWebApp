@@ -205,12 +205,7 @@ class Admin extends React.Component {
                   <div className="project-box-header gray-bg">
                     <div className="name">
                       <div>Raffle
-
-
-
                         <a data-toggle="tooltip" title="Your Raffle is in Test Mode. To begin sellings tickets please activate this module by clicking here." href="/host/settings/account" className="white text-uppercase pull-right badge badge-danger"> Test Mode </a>
-
-
                       </div>
                     </div>
                   </div>

@@ -60,7 +60,7 @@ class Raffle extends React.Component {
                         <th>Item</th>
                         <th>Item Code</th>
                         <th>TICKETS SUBMITTED</th>
-                        <th>WINNING</th>
+                        {this.state.settings && this.state.settings.moduleEnded && <th>WINNING</th>}
                       </tr>
                       </thead>
                     </table>

@@ -6,7 +6,7 @@ class ItemList extends React.Component {
 				<td className="item-name">{this.props.item.itemName}</td>
 				<td className="item-code">{this.props.item.itemCode}</td>
 				<td className="item-startingBid">{this.props.item.totalTicketSubmitted || "-"}</td>
-				<td className="total-pledge">{this.props.item.winnerName || "-"}</td>
+				{this.props.moduleEnded &&<td className="total-pledge">{this.props.item.winnerName || "-"}</td>}
 			</tr>
 		);
 	}
