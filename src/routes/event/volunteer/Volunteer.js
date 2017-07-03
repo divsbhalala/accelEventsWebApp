@@ -1015,17 +1015,17 @@ class Volunteer extends React.Component {
         }
         else {
           this.setState({
-            formError: "Error while Oraring Tickets",
+            formError: "Error while Ordering Tickets",
             showFormError: true,
             showBookingTicketPopup: false
           })
         }
       }).catch(error => {
       this.setState({
-        orderTicket: "Error while Oraring Tickets",
+        orderTicket: "Error while Ordering Tickets",
         showFormError: true,
         showBookingTicketPopup: false,
-        formError :  (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordaring Tickets"
+        formError :  (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordering Tickets"
       })
     })
   };

@@ -575,7 +575,6 @@ class Auction extends React.Component {
     window.location.reload();
   };
   checkIsValidBidData = () =>{
-    console.log(" this.state.lastName ", this.state.lastName )
     let valid1=true;
     let valid2=true;
     let flag=true;
@@ -922,16 +921,16 @@ class Auction extends React.Component {
          Go back to All Items</a></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-                              action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
-                              data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
-                              data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                              data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
                               onSubmit={this.onBidFormClick}>
       <div className="form-group">
-        <div className="text-xs" style={{display: 'block'}}>Email Address <br /> <span
-          className="bidder-email">{this.props.user.email}</span></div>
-        <div className="text-xs" style={{display: 'block'}}>Cell Number <br /> <span
-          className="bidder-name">{this.props.user.phonenumber}</span></div>
+        <label className="control-label" style={{display: 'block'}}>Email Address</label>
+        <div
+          className="input-group">{this.props.user.email}</div>
+      </div>
+      <div className="form-group">
+        <label className="control-label" style={{display: 'block'}}>Cell Number</label>
+        <div
+          className="input-group">{this.props.user.phonenumber}</div>
       </div>
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>

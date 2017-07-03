@@ -354,7 +354,6 @@ class Event extends React.Component {
 		})
 	};
 	setActiveTabState = (label) => {
-		this.setState({tab: label});
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
 
 		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donation' )) {
@@ -375,15 +374,10 @@ class Event extends React.Component {
 			} else if (label == 'Donation') {
 				label = 'donation';
 			}
-			this.props.doGetSettings(this.props.params && this.props.params.params, label).then(resp => {
-				this.setState({
-					settings: resp && resp.data
-				});
-			})
-				.catch(error => {
-					console.log(error);
-					// history.push('/404');
-				});
+			this.setState({tab: label});
+			setTimeout(()=>{
+				this.onEventEnd();
+			},10);
 		}
 	};
 
@@ -595,7 +589,7 @@ class Event extends React.Component {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
 			this.setState({
 				selectedSearchString: searchString
-			})
+			});
 			if (label == 'Auction') {
 				this.setState({
 					auctionPageSearchString: searchString,
@@ -655,17 +649,17 @@ class Event extends React.Component {
 				}
 				else {
 					this.setState({
-						formError: "Error while Oraring Tickets",
+						formError: "Error while Ordering Tickets",
 						showFormError: true,
 						showBookingTicketPopup: false
 					})
 				}
 			}).catch(error => {
 			this.setState({
-				orderTicket: "Error while Oraring Tickets",
+				orderTicket: "Error while Ordering Tickets",
 				showFormError: true,
 				showBookingTicketPopup: false,
-				formError: (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordaring Tickets"
+				formError: (error && error.response && error.response.data && error.response.data.errors && error.response.data.errors[0] && error.response.data.errors[0].message) || "Error while Ordering Tickets"
 			})
 		})
 	}
@@ -678,6 +672,21 @@ class Event extends React.Component {
       history.push('/404');
     });
   };
+
+	onEventEnd = ()=>{
+		if(this.state.tab && this.props.params && this.props.params.params){
+			this.props.doGetSettings(this.props.params && this.props.params.params, this.state.tab).then(resp => {
+				this.setState({
+					settings: resp && resp.data
+				});
+			})
+				.catch(error => {
+					console.log(error);
+					// history.push('/404');
+				});
+		}
+	};
+
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -689,11 +698,11 @@ class Event extends React.Component {
 		return (
 			<div className="row">
 				<div className="col-lg-12">
-					{this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.is_banner_image_enabled &&
+					{this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImageEnabled &&
 					<div className="row">
 						<div className={cx("header-img", "text-center")}>
 							<img
-								src={ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.banner_image ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetail.banner_image : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
+								src={ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImage ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetail.bannerImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
 								className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
 						</div>
 					</div>}
@@ -712,6 +721,7 @@ class Event extends React.Component {
 								            setSearchString={this.setSearchString}
 														params={this.props.params}
 														successTask={this.successTask}
+														onEnd={this.onEventEnd}
 								/>
 							</div>
 							<div className="col-lg-9 col-md-8 col-sm-8 ">

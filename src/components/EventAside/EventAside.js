@@ -10,6 +10,7 @@ import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 
 var countDownInterval = null;
+var isEventEnd = false;
 
 class EventAside extends React.Component {
 	static propTypes = {
@@ -94,11 +95,16 @@ class EventAside extends React.Component {
 				seconds: seconds <= 0 ? "00": seconds <=9 ? ("0" +seconds).slice(-2) : seconds,
 			});
 
-			if( !days && !hours && !minute && !seconds){
+			if( !days && !hours && !minute && !seconds && !isEventEnd){
 				if(countDownInterval){
 					clearInterval(countDownInterval);
+					isEventEnd = true;
+					this.props.onEnd();
 				}
 				//self.props.onEnd();
+			}
+			else {
+				isEventEnd = false;
 			}
 		}, interval);
 	};
