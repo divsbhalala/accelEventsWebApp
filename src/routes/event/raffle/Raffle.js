@@ -17,7 +17,6 @@ import {Carousel} from 'react-responsive-carousel';
 import PopupModel from './../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
 import LoginModal from '../../../components/LoginModal/index';
 import BuyRaffleTicketsModal from './../../../components/BuyRaffleTicketsModal'
 class Raffle extends React.Component {

@@ -2,18 +2,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber} from './../action/index';
+import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber, doGetFundANeedItemByCode} from './../action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
 import LoginModal from '../../../components/LoginModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
-import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
@@ -97,7 +95,7 @@ class Fund extends React.Component {
   };
   onFormClick = (e) => {
     e.preventDefault();
-     let self = this
+     let self = this;
     if (!this.state.settings.moduleActivated){
       this.setState({
         showMapPopup: true,
@@ -123,8 +121,8 @@ class Fund extends React.Component {
   submiteFundForm = () => {
     this.setState({
       loading: true,
-    })
-    let self = this
+    });
+    let self = this;
     if(!this.props.authenticated){
       let userData={
         "firstname":this.state.firstNameValue,
@@ -133,7 +131,7 @@ class Fund extends React.Component {
         "email": this.state.emailValue,
         "password": this.state.passwordValue,
         "phoneNumber": this.state.phone
-      }
+      };
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
         let self = this;
         if(!resp.error){
@@ -142,7 +140,7 @@ class Fund extends React.Component {
             cvc: this.cvv.value.trim(),
             exp_month: this.expMonth.value.trim(),
             exp_year: this.expYear.value.trim(),
-          }
+          };
           Stripe.createToken(card, function (status, response) {
             if (response.error) {
               self.setState({
@@ -155,7 +153,7 @@ class Fund extends React.Component {
                 stripeToken : response.id,
                 amount: self.state.amountValue,
                 itemCode: self.state.fundData.code,
-              }
+              };
               self.fundaNeed(user);
             }
           });
@@ -170,7 +168,7 @@ class Fund extends React.Component {
         cvc: this.cvv.value.trim(),
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
-      }
+      };
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
           self.setState({
@@ -186,7 +184,7 @@ class Fund extends React.Component {
             email:self.props.user.email,
             itemCode: self.state.fundData.code,
             paymenttype:"CC",
-          }
+          };
           self.fundaNeed(user);
         }
       });
@@ -197,7 +195,7 @@ class Fund extends React.Component {
         email:self.props.user.email,
         paymenttype:"CC",
         itemCode: self.state.fundData.code,
-      }
+      };
       self.fundaNeed(user);
     }else {
       this.setState({
@@ -227,7 +225,7 @@ class Fund extends React.Component {
           });
         }
       });
-  }
+  };
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -396,10 +394,10 @@ class Fund extends React.Component {
 
   };
   amountValidateHandler = (e) => {
-    let amount=true
-    let errorMsgAmount=""
+    let amount=true;
+    let errorMsgAmount="";
     if (this.amount.value.trim() == '') {
-      errorMsgAmount= "Bid Amount can't be empty"
+      errorMsgAmount= "Bid Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
       errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)

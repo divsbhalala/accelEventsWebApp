@@ -116,7 +116,7 @@ class Auction extends React.Component {
         cvc: this.cvv.value.trim(),
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
-      }
+      };
       Stripe.createToken(card, function (status, response) {
         if (response.error) {
           self.setState({
@@ -138,7 +138,7 @@ class Auction extends React.Component {
   placeBid = () => {
     this.setState({
       loading:true,
-    })
+    });
       const user = {
         email: this.props.user.email,
         countryCode: parse(this.state.phone).country,
@@ -149,20 +149,20 @@ class Auction extends React.Component {
         itemCode: this.state.auctionData.code,
         amount: this.state.amountValue,
         stripeToken: this.state.stripeToken,
-      }
+      };
     this.submitAuctionBid( user);
 
   };
   placeBidByAmount = () => {
     this.setState({
       loading:true,
-    })
+    });
     const user = {
       itemCode: this.state.auctionData.code,
       amount: this.state.amountValue,
       firstname: this.state.firstNameValue,
       lastname: this.state.lastNameValue,
-    }
+    };
     this.submitAuctionBid(user);
   };
   submitAuctionBid = (user) => {
@@ -173,7 +173,7 @@ class Auction extends React.Component {
             showPopup: true,
             errorMsgCard:resp.message,
             popupHeader:"Successfully",
-          })
+          });
           this.props.changeUserData(this.props.user,user)
         }else{
           this.setState({
@@ -186,24 +186,24 @@ class Auction extends React.Component {
           loading:false,
         })
        });
-  }
+  };
   signupForm = (e) => {
     e.preventDefault();
     this.setState({
       emailFeedBack:true,
       phoneNumberFeedBack:true,
       passwordFeedBack:true,
-    })
+    });
     if (this.state.emailValue && this.state.passwordValue && this.state.phone) {
       this.setState({
         loading:true,
-      })
+      });
       let userData={
         "countryCode": this.state.countryPhone,
         "email": this.state.emailValue,
         "password": this.state.passwordValue,
         "phoneNumber": this.state.phone,
-      }
+      };
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
         if (resp && !resp.errorMessage) {
             this.setState({
@@ -211,7 +211,7 @@ class Auction extends React.Component {
               errorMsgCard: "Thank you for Registration!",
               popupHeader:"Successfully",
               loading:false,
-            })
+            });
           this.componentReRender();
           }
           else{
@@ -378,8 +378,8 @@ class Auction extends React.Component {
 
 	};
 	amountValidateHandler = (e) => {
-		let amount = true
-		let errorMsgAmount = ""
+		let amount = true;
+		let errorMsgAmount = "";
 		if (this.amount.value.trim() == '') {
 			errorMsgAmount = "Bid Amount can't be empty"
 			amount = false
@@ -563,7 +563,7 @@ class Auction extends React.Component {
   hidePopup = () => {
     this.setState({
       showPopup: false
-    })
+    });
     this.componentReRender();
   };
   reRender = ()=>{
