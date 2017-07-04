@@ -101,37 +101,56 @@ class Auction extends React.Component {
     };
   }
   onBidFormClick = (e) => {
+	  this.setState({
+      loading:true
+    });
     e.preventDefault();
-    if( this.props.authenticated  &&   !this.props.eventData.ccRequiredForBidConfirm ) {
+    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded){
       this.setState({
         showPopup: true,
-        errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for " + this.state.auctionData.name ,
-        popupHeader:"Confirm",
+        loading:false,
+        errorMsgCard: " Pledges are no longer being accepted for this auction." ,
+        popupHeader:"Failed",
       })
-    } else {
-    let self = this;
-    if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
-      const card = {
-        number: this.cardNumber.value.trim(),
-        cvc: this.cvv.value.trim(),
-        exp_month: this.expMonth.value.trim(),
-        exp_year: this.expYear.value.trim(),
-      };
-      Stripe.createToken(card, function (status, response) {
-        if (response.error) {
-          self.setState({
-            showPopup: true,
-            errorMsgCard: response.error.message,
-            popupHeader:"Failed"
+    }else {
+      if( this.props.authenticated  &&   !this.props.eventData.ccRequiredForBidConfirm ) {
+        this.setState({
+          loading:false,
+          showPopup: true,
+          errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for " + this.state.auctionData.name ,
+          popupHeader:"Confirm",
+        })
+      } else {
+        let self = this;
+        if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
+          const card = {
+            number: this.cardNumber.value.trim(),
+            cvc: this.cvv.value.trim(),
+            exp_month: this.expMonth.value.trim(),
+            exp_year: this.expYear.value.trim(),
+          };
+          Stripe.createToken(card, function (status, response) {
+            if (response.error) {
+              self.setState({
+                loading:false,
+                showPopup: true,
+                errorMsgCard: response.error.message,
+                popupHeader:"Failed"
+              });
+            } else {
+              self.setState({
+                loading:false,
+                showPopup: true,
+                errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
+                popupHeader:"Success",
+                stripeToken: response.id,})
+            }
           });
-        } else {
-          self.setState({
-            showPopup: true,
-            errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
-            popupHeader:"Success",
-            stripeToken: response.id,})
-          }
-        });
+        }else{
+          this.setState({
+            loading:false,
+          });
+        }
       }
     }
   };
@@ -170,6 +189,7 @@ class Auction extends React.Component {
       .then(resp => {
         if (resp && !resp.errorMessage) {
           this.setState({
+            loading:true,
             showPopup: true,
             errorMsgCard:resp.message,
             popupHeader:"Successfully",
@@ -177,6 +197,7 @@ class Auction extends React.Component {
           this.props.changeUserData(this.props.user,user)
         }else{
           this.setState({
+            loading:false,
             showPopup: true,
             errorMsgCard: resp.errorMessage,
             popupHeader:"Failed"
@@ -514,6 +535,12 @@ class Auction extends React.Component {
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+      if(!resp.data.moduleActivated){
+        this.setState({
+          errorMsgCard:"Please activate this module to start accepting pledges.",
+          popupHeader :'Failed',
+        })
+      }
       this.setState({
         settings: resp && resp.data
       });
@@ -533,9 +560,6 @@ class Auction extends React.Component {
     });
   };
   componentReRender = () => {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
@@ -554,6 +578,10 @@ class Auction extends React.Component {
       }).catch(error => {
       console.log(error)
     });
+    this.setState({
+      amountFeedBack:false,
+    });
+    this.amount.value="";
   };
   showPopup = () => {
     this.setState({
@@ -564,10 +592,12 @@ class Auction extends React.Component {
     this.setState({
       showPopup: false
     });
-    this.componentReRender();
+    if(this.state.popupHeader !== "Failed"){
+      this.componentReRender();
+    }
   };
   reRender = ()=>{
-    window.location.reload();
+   // window.location.reload();
   };
   checkIsValidBidData = () =>{
 
@@ -579,7 +609,7 @@ class Auction extends React.Component {
        valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
        flag=false;
       }
-      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 &&  this.props.eventData.ccRequiredForBidConfirm ){
+      if( this.props.user &&  this.props.eventData.ccRequiredForBidConfirm ){
 
         valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
         flag=false;
@@ -592,10 +622,9 @@ class Auction extends React.Component {
    }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
+
   render() {
     let form_login = <div>
-      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-        { this.state.errorMsgCard }</div>
       <h4>Login or signup below</h4>
       <form className="ajax-form validated fv-form fv-form-bootstrap"
             autoComplete="off" method="POST"
@@ -904,10 +933,10 @@ class Auction extends React.Component {
 					</div>
 				</div> : "" }
 			<div className="col-sm-3">
-				<button className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
-				        type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+				<Button   loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+				        type="submit" >
 					Submit bid
-				</button>
+				</Button>
 				&nbsp;&nbsp;
 			</div>
 			<div className="col-sm-6">
@@ -1135,10 +1164,10 @@ class Auction extends React.Component {
 				</div> : "" }
 
       <div className="col-sm-3">
-        <button className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
-                type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+        <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+                type="submit" >
           Submit bid
-        </button>
+        </Button>
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6">
@@ -1188,6 +1217,8 @@ class Auction extends React.Component {
 											</div>
 										</div>
 										<div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
+                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsgCard }</div>
 											<div className="row">
 												<div className="col-sm-4">
 													<div className="curr-bid-number">$<span

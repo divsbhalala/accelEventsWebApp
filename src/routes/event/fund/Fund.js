@@ -103,7 +103,7 @@ class Fund extends React.Component {
         popupHeader:"Failed",
       })
     }else{
-      if(this.props.authenticated &&  this.props.user && !this.props.eventData.ccRequiredForBidConfirm ){
+      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm ){
         this.setState({
           showMapPopup: true,
           errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
@@ -162,7 +162,7 @@ class Fund extends React.Component {
         }
       });
     }
-    else if(this.props.authenticated &&  this.props.user && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  ){
+    else if(  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  )  ){
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
@@ -527,7 +527,7 @@ class Fund extends React.Component {
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
-      if( this.props.user && this.props.eventData.ccRequiredForBidConfirm )
+      if(this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ))
       {
         valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
         flag=false;
@@ -802,7 +802,7 @@ class Fund extends React.Component {
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
                         </div> }
-                        { !this.props.authenticated || ( this.props.authenticated &&  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ?
+                        { !this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) ) ?
                           <div>
                             <style
                             dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>

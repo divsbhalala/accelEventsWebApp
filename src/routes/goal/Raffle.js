@@ -40,7 +40,7 @@ class Raffle extends React.Component {
   }
   render() {
     return (
-      <div className="container goal-page" style={{"margin-bottom":"120px"}}>
+      <div className="container goal-page" style={{"marginBottom":"120px"}}>
         <div className="row">
           <div className="col-lg-12">
             <div>
