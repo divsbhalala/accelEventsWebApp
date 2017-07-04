@@ -432,10 +432,9 @@ export function doLogin(email, password,rememberme=false) {
       dispatch(storeToken(response.data.access_token));
       getUserDetails(response.data.access_token).then(resp => {
         dispatch(storeLoginData(resp.data));
-        localStorage.setItem('user', JSON.stringify(resp.data));
         localStorage.setItem('token', response.data.access_token);
         sessionService.saveSession(localStorage.getItem('token'));
-        sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+        updateUserData(resp.data);
       }).catch(err => {
         return err;
       })
@@ -457,10 +456,10 @@ export function doSignUp(eventUrl,userData) {
       dispatch(storeToken(response.data.access_token));
       getUserDetails(response.data && response.data.access_token).then(resp => {
         dispatch(storeLoginData(resp.data));
-        localStorage.setItem('user', JSON.stringify(resp.data));
         localStorage.setItem('token', response.data.access_token);
         sessionService.saveSession(localStorage.getItem('token'));
-        sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+        updateUserData(resp.data);
+
       }).catch(err => {
 				return err;
       });
@@ -470,12 +469,15 @@ export function doSignUp(eventUrl,userData) {
     });
   }
 }
+
+function updateUserData(data){
+  localStorage.setItem('user', JSON.stringify(data));
+  sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+}
 export  function changeUserData(data,userData) {
   return (dispatch) => {
-    data.firstName=userData.firstname;
-    data.lastName=userData.lastname;
-    localStorage.setItem('user', JSON.stringify(data));
-    dispatch(changeLoginData(data))
+    console.log('userData', userData);
+    updateUserData(data);
   }
 }
 export function storeLoginData(data) {
