@@ -41,9 +41,7 @@ export function doGetEventTicketSetting(eventUrl) {
         return error;
       });
   }
-
 }
-
 export function doGetEventTicketByOrderId(eventUrl, OrderId) {
   return (dispatch) => {
     return axios({
@@ -53,15 +51,12 @@ export function doGetEventTicketByOrderId(eventUrl, OrderId) {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
-
     })
       .catch(error => {
         return error;
       });
   }
-
 }
-
 /*----------------Auction-------------*/
 export function doGetAuctionSetting(eventUrl) {
   return (dispatch) => {
@@ -72,13 +67,11 @@ export function doGetAuctionSetting(eventUrl) {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
-
     })
       .catch(error => {
         return error;
       });
   }
-
 }
 export function doGetAuctionItemByCode(eventUrl, itemCode) {
   return (dispatch) => {
@@ -153,7 +146,6 @@ export function doGetFundANeedSetting(eventUrl) {
   }
 
 }
-
 export function doGetFundANeedItemByCode(eventUrl, itemCode) {
   return (dispatch) => {
     return axios({
