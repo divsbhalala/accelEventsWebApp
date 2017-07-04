@@ -50,7 +50,6 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/host-dashboard.css" />
         <link rel="stylesheet" href="/css/vt-icons.css" />
         <link rel="stylesheet" href="/css/Tel/main.css" />
-        <link rel="stylesheet" href="/css/goal-thermometer.css"/>
 
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/css/App.css"/>
@@ -58,6 +57,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/sb-admin.css"/>
         <link rel="stylesheet" href="/css/admin-style.css"/>
 
+        <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
         <link rel="stylesheet" href="/css/style.min.css"/>
         <link rel="stylesheet" href="/css/display.min.css"/>
 

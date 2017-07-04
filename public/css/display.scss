@@ -238,104 +238,6 @@ header {
   width: auto\9; /* ie8 */
 }
 
-.card {
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0
-    rgba(0, 0, 0, 0.12);
-}
-
-.card {
-  margin-top: 10px;
-  box-sizing: border-box;
-  border-radius: 2px;
-  background-clip: padding-box;
-}
-
-.card span.card-title {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 300;
-  text-transform: uppercase;
-}
-
-.card .card-image {
-  position: relative;
-  overflow: hidden;
-  padding-bottom: 1px;
-}
-
-.card .card-image img {
-  border-radius: 2px 2px 0 0;
-  background-clip: padding-box;
-  position: relative;
-  z-index: 1;
-}
-
-.card .card-image span.card-title {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 16px;
-}
-
-.card .card-content {
-  padding: 16px;
-  border-radius: 0 0 2px 2px;
-  background-clip: padding-box;
-  box-sizing: border-box;
-  overflow: hidden;
-  height: 86px;
-}
-
-.card .card-content p {
-  margin: 0;
-  color: inherit;
-}
-.card.item-card {
-    /* height: 580px; */
-    padding-bottom: 15px;
-}
-.card .card-content span.card-title {
-  line-height: 48px;
-}
-
-.card .card-action {
-  border-top: 1px solid rgba(160, 160, 160, 0.2);
-  padding: 16px;
-  /*height: 100px;*/
-}
-
-.card .card-action .btn {
-  margin-bottom: -8px
-}
-
-.card .card-action a.actionlinks {
-  margin-right: 16px;
-  transition: color 0.3s ease;
-  text-transform: uppercase;
-}
-
-@media ( max-width : 321px) {
-  .card .card-action a.actionlinks {
-    margin-right: 0px;
-  }
-}
-
-@media ( max-width : 376px) {
-  .card .card-action a.actionlinks {
-  }
-}
-
-@media ( max-width : 424px) {
-  .card .card-action a.actionlinks {
-    padding-left: 9px;
-    padding-right: 9px;
-  }
-}
-
-.card .card-action a:hover {
-  text-decoration: none;
-}
-
 .bidinfo {
   background-color: #white;
   color: black;
@@ -420,17 +322,6 @@ a.socialIcon:hover,
 
 .social-circle a {
   background-color: #D3D3D3;
-}
-
-.card .card-action span.item-code,
-.card .card-action span.item-name,
-.card .card-action span.item-bid-price {
-  color: #000;
-  font-weight: 400;
-}
-.card .card-action span.buy-now-price {
-  color: #FFF;
-  margin-right: 0;
 }
 
 #eventinfo .project-box .project-box-content {
@@ -613,42 +504,6 @@ p.terms {
   width: 100%;*/
 }
 
-.card-image {
-  position: relative;
-}
-
-.card-image img {
-  width: 100%;
-}
-
-.card-image .social-network.social-circle {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 99;
-  margin-right: 10px;
-}
-
-.card-image .social-network.social-circle li a {
-  font-size: inherit;
-  height: 30px;
-  width: 30px;
-  position: initial;
-}
-
-.card-image .social-network.social-circle li {
-  margin: 0;
-  display: inline-block;
-}
-
-.card-image .social-network.social-circle li a i {
-  line-height: 30px;
-  font-size: 1.2em;
-}
-
-.card-image .social-network.social-circle li+li {
-  margin-left: 5px;
-}
 
 .displayhome .tabbable-line>.nav-tabs>li>a {
   font-size: 0.6em;
@@ -890,9 +745,6 @@ input.form-control[name="itembid"] {
 .goal-row .markers {
   overflow: visible !important;;
 }
-.card .card-content a {
-  color: #0044cc;
-}
 
 .powered-by-sidebar {
   font-size: 1.3em;
@@ -1109,9 +961,7 @@ input.form-control[name="itembid"] {
     flex-basis: 150px;
   }
 }
-.card-action .flex-row {
-  margin: 0;
-}
+
 .item-canvas {
   margin-bottom: 80px;
 }
@@ -1164,18 +1014,17 @@ input.form-control[name="itembid"] {
 .card {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   margin-top: 10px;
+  margin-bottom: 10px;
   box-sizing: border-box;
   border-radius: 2px;
   background-clip: padding-box;
-  &.item-card {
-    padding-bottom: 15px;
-  }
   .flex-row {
     margin: 0;
     &+.flex-row {
         margin: 0;
     }
   }
+
   .card-image {
     position: relative;
     overflow: hidden;
@@ -1185,6 +1034,30 @@ input.form-control[name="itembid"] {
       background-clip: padding-box;
       position: relative;
       z-index: 1;
+    }
+    .social-network.social-circle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 99;
+      margin-right: 10px;
+      li {
+        margin: 0;
+        display: inline-block;
+        a {
+          font-size: inherit;
+          height: 30px;
+          width: 30px;
+          position: initial;
+          i {
+            line-height: 30px;
+            font-size: 1.2em;
+          }
+        }
+        &+li {
+          margin-left: 5px;
+        }
+      }
     }
   }
   .card-content {
