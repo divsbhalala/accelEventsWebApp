@@ -309,9 +309,9 @@ export function doGetOrderById(eventUrl, orderId) {
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
-        if(resp && resp.data){
-          dispatch(storeOrderData(resp.data));
-        }
+      if(resp && resp.data){
+        dispatch(storeOrderData(resp.data));
+      }
       return resp;
     }).catch((error, code, status)=>{
       return error && error.response && error.response.data;
@@ -374,7 +374,7 @@ export function getItemStatusByCode(eventUrl, itemCode) {
   }
 }
 //****** Auction Bid*******//
-  export function getUserByEmail(eventUrl, email,modeltype) {
+export function getUserByEmail(eventUrl, email,modeltype) {
   return (dispatch) => {
     return axios({
       method: 'get',
@@ -461,11 +461,11 @@ export function doSignUp(eventUrl,userData) {
         updateUserData(resp.data);
 
       }).catch(err => {
-				return err;
+        return err;
       });
       return response;
     }).catch((error, code, status)=>{
-				return error && error.response && error.response.data;
+      return error && error.response && error.response.data;
     });
   }
 }
@@ -711,7 +711,7 @@ export function getGoalData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/goal' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -727,7 +727,7 @@ export function getScrollData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/scroll' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -743,7 +743,7 @@ export function getTableData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/table' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -760,7 +760,7 @@ export function isVolunteer(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl +'/volunteer/isVolunteer' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       dispatch(storeIsVolunteer(resp.data));
       return resp.data;
@@ -776,7 +776,7 @@ export function doContactSupport(eventUrl, contact) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl +'/contact' ,
       data: contact,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -785,8 +785,8 @@ export function doValidateMobileNumber(mobileNumber) {
     return axios({
       method: 'get',
       url: 'https://lookups.twilio.com/v1/PhoneNumbers/'+mobileNumber+'?Type=carrier&Type=caller-name&_=1498707522630',
-     // data: contact,
-     headers: {Authorization: "Basic QUMzYzk4NDBiZDE2OTgxOGQzZGU1MDUwNWI2Mzc4OWVlNDplYjU4NmE4Y2JkNzk4ZmE3OGM5ZGViNmY4ZTdkM2Q5NA=="}
+      // data: contact,
+      headers: {Authorization: "Basic QUMzYzk4NDBiZDE2OTgxOGQzZGU1MDUwNWI2Mzc4OWVlNDplYjU4NmE4Y2JkNzk4ZmE3OGM5ZGViNmY4ZTdkM2Q5NA=="}
     }).then(resp=>{
       return false;
     }).catch((error, code, status)=>{

@@ -567,7 +567,7 @@ class Auction extends React.Component {
     this.componentReRender();
   };
   reRender = ()=>{
-    window.location.reload();
+   // window.location.reload();
   };
   checkIsValidBidData = () =>{
 
@@ -592,6 +592,7 @@ class Auction extends React.Component {
    }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
+
   render() {
     let form_login = <div>
       <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
