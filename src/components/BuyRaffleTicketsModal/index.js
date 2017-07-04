@@ -481,8 +481,8 @@ class BuyRaffleTicketsModal extends React.Component {
 		this.setState({
 			loading: true,
 		})
-		if (this.props.authenticated && this.props.user && !this.props.ccRequiredForBidConfirm) {
-			const user = {
+    if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0) {
+      const user = {
 				//  compTicketCode: this.state.raffleData.code,
 				raffleTicketId: this.state.raffleTicketValue,
 			}
@@ -892,7 +892,7 @@ class BuyRaffleTicketsModal extends React.Component {
 										{ this.state.raffleTicketFeedBack && !this.state.raffleTicket &&
 										<small className="help-block" data-fv-result="NOT_VALIDATED"> Raffle Ticket required.</small>}
 									</div>
-									{ !this.props.authenticated || ( this.props.authenticated && this.props.ccRequiredForBidConfirm ) ?
+                  { !this.props.authenticated || ( this.props.authenticated && ( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 )) ?
 										<div>
 											<style
 												dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>

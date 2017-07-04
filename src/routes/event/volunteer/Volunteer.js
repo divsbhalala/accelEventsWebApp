@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './Volunteer.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
