@@ -166,14 +166,9 @@ class EventAside extends React.Component {
 								</div>
 							</div>
 						</div> }
-						{ !this.props.isBidInstructionHidden && this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
+						{ !this.props.isBidInstructionHidden && this.props.settings && this.props.settings.instruction && this.props.activeTab && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
 						<div className={cx("card bidinfo")}>
-							{this.props.activeTab == 'Raffle' &&
-							<p className={cx("raffle-text")}>Submit your tickets here or text your ticket submission to: (410)
-								927-5356 with the item's three letter code, and your desired number of tickets ex. ABC10</p>}
-							{ (this.props.activeTab == 'Donation' || this.props.activeTab == 'Auction' || this.props.activeTab == 'The Event' || this.props.activeTab == 'Fund a Need' )
-							&& <p className={cx("causeauction-text donation-text auction-text")}>Bid here or text Your Bid To: (410)
-								927-5356 with the item's three letter code and bid amount ex. ABC$300</p>}
+							<div dangerouslySetInnerHTML={{"__html": this.props.settings.instruction}} />
 						</div>}
 						{ this.props.activeTab
 						&& !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' )

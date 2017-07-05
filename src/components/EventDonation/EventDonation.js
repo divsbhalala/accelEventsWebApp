@@ -333,7 +333,7 @@ class EventDonation extends React.Component {
   componentDidMount(){
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+      Stripe.setPublishableKey(this.props.stripeKey);
     }
   }
 	componentWillReceiveProps(){

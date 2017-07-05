@@ -38,13 +38,13 @@ class Fund extends React.Component {
   }
   render() {
     return (
-      <div className="container goal-page" style={{"marginBottom":"120px"}}>
+      <div className="container goal-page">
         <div className="row">
           <div className="col-lg-12">
             <div>
-              <div className="row">
-                <h1 className="text-center" style={{marginTop: 120}}>Fund a Need Goal</h1>
-                <h4 className="text-center" style={{marginTop: 5, marginBottom: 50}}>
+							<div className="row header">
+                <h1 className="text-center">Fund a Need Goal</h1>
+                <h4 className="text-center">
                   {this.state.goalData && this.state.goalData.bidInstructions} </h4>
               </div>
               <div className="row">

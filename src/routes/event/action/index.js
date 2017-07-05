@@ -468,8 +468,10 @@ function updateUserData(data){
 }
 export  function changeUserData(data,userData) {
   return (dispatch) => {
-    console.log('userData', userData);
-    updateUserData(data);
+    let uData = data;
+    if(userData.firstname !== null) {uData.firstName=userData.firstname;}
+    if(userData.lastname !== null) {uData.lastName=userData.lastname;}
+    updateUserData(uData);
   }
 }
 export function storeLoginData(data) {

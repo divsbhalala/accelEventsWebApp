@@ -98,7 +98,7 @@ class BuyRaffleTicketsModal extends React.Component {
 
 	componentWillMount() {
 		this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-		Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+		// Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
 	}
 	componentWillReceiveProps() {
 	  setTimeout(()=>{
@@ -484,6 +484,8 @@ class BuyRaffleTicketsModal extends React.Component {
     if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0) {
       const user = {
 				//  compTicketCode: this.state.raffleData.code,
+        firstname:this.state.firstNameValue,
+        lastname:this.state.lastNameValue,
 				raffleTicketId: this.state.raffleTicketValue,
 			}
 			this.props.purchaseTickets(this.props.params && this.props.params.params, user)
@@ -549,6 +551,8 @@ class BuyRaffleTicketsModal extends React.Component {
 	byBid = () => {
 		const user = {
 			// compTicketCode: this.state.raffleData.code,
+      firstname:this.state.firstNameValue,
+      lastname:this.state.lastNameValue,
 			raffleTicketId: this.state.raffleTicketValue,
 			stripeToken: this.state.stripeToken,
 		}

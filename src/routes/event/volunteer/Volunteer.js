@@ -122,7 +122,7 @@ class Volunteer extends React.Component {
   }
 	componentDidMount() {
     if(this.props.stripeKey){
-     Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
+     Stripe.setPublishableKey(this.props.stripeKey);
     }
 		if (this.props.params && this.props.params.params) {
 			this.props.isVolunteer(this.props.params && this.props.params.params).then(resp=> {
@@ -628,7 +628,7 @@ class Volunteer extends React.Component {
 
   componentWillMount(){
 	 //if(this.props.stripeKey){
-		  Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
+		  // Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
 	// }
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.doGetEventData(this.props.params && this.props.params.params);

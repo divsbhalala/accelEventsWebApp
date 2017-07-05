@@ -6,6 +6,7 @@ import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber, doGetFundANeedItemByCode} from './../action/index';
+import {getCardToken} from './../../checkout/action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
@@ -103,7 +104,7 @@ class Fund extends React.Component {
         popupHeader:"Failed",
       })
     }else{
-      if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm ){
         this.setState({
           showMapPopup: true,
           errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
@@ -162,14 +163,18 @@ class Fund extends React.Component {
         }
       });
     }
-    else if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ){
+    else if(  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  )  ){
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
       };
+      this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(resp=>{
+        console.log("resp", resp);
+      });
       Stripe.createToken(card, function (status, response) {
+        console.log("response", response);
         if (response.error) {
           self.setState({
             errorMsg: response.error.message,
@@ -527,7 +532,7 @@ class Fund extends React.Component {
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
-      if( this.props.user && this.props.eventData.ccRequiredForBidConfirm )
+      if(this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ))
       {
         valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
         flag=false;
@@ -544,9 +549,9 @@ class Fund extends React.Component {
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    if(this.props.stripeKey){
+    /* if(this.props.stripeKey){
       Stripe.setPublishableKey(this.props.stripeKey);
-    }
+    } */
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
       if(!resp.data.moduleActivated){
@@ -687,7 +692,7 @@ class Fund extends React.Component {
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                            <input type="text" className="form-control" name="firstname" placeholder="FirstName"
                                    ref={ref => {
                                      this.firstName = ref;
                                    }}
@@ -707,7 +712,7 @@ class Fund extends React.Component {
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                            <input type="text" className="form-control" name="lastname" placeholder="LastName"
                                    ref={ref => {
                                      this.lastName = ref;
                                    }}
@@ -732,7 +737,7 @@ class Fund extends React.Component {
                               <div className="input-group-addon">
                                 <i className="fa fa-envelope" aria-hidden="true"/>
                               </div>
-                              <input type="email" className="form-control login-email" name="email"
+                              <input type="email" className="form-control login-email" name="email"name="email" placeholder="Email"
                                      data-fv-field="email"
                                      ref={ref => {
                                        this.email = ref;
@@ -761,7 +766,7 @@ class Fund extends React.Component {
                                   css={['intl-tel-input', 'form-control intl-tel']}
                                   utilsScript="./libphonenumber.js"
                                   separateDialCode={true}
-                                  value={ this.state.phone }
+                                  value={ this.state.phone || "" }
                                   maxLength={16} data-stripe="number"
                                   onPhoneNumberChange={this.changePhone}
                                 />
@@ -802,7 +807,7 @@ class Fund extends React.Component {
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
                         </div> }
-                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ) ?
+                        { !this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) ) ?
                           <div>
                             <style
                             dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
@@ -1029,6 +1034,7 @@ const mapDispatchToProps = {
   fundaNeed: (eventUrl, data) => fundaNeed(eventUrl, data),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,
