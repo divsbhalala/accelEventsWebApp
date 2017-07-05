@@ -213,7 +213,7 @@ class LoginPopup extends React.Component {
       <div >
         <div className="static-modal" id={this.props.id + '-containter'}>
           <div id="login-user">
-            <Modal id="login-user" show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="my-modal" >
+            <Modal id="login-user" show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="" >
               <Modal.Body>
                 <div className="login-signup-wrap">
                   {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
@@ -341,7 +341,7 @@ class LoginPopup extends React.Component {
                                 css={['intl-tel-input', 'form-control intl-tel']}
                                 utilsScript="./libphonenumber.js"
                                 separateDialCode={true}
-                                value={ this.state.phone }
+                                value={ this.state.phone || ""}
                                 onPhoneNumberChange={this.changePhone}
                               />
                               { this.state.phoneNumberFeedBack && this.state.phoneNumber &&

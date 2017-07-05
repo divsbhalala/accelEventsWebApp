@@ -696,7 +696,7 @@ class Event extends React.Component {
 			return item;
 		};
 		return (
-			<div className="row">
+			<div className="row event">
 				<div className="col-lg-12">
 					{this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImageEnabled &&
 					<div className="row">

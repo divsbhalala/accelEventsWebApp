@@ -6,7 +6,6 @@ body {
 }
 /** CSS is Display Pages For the Event **/
 .navbar-default {
-  background-color: #fff;
   border-color: rgba(34, 34, 34, .05);
   transition: all .35s;
 }
@@ -239,7 +238,7 @@ header {
 }
 
 .bidinfo {
-  background-color: #white;
+  background-color: white;
   color: black;
   padding: 5px;
   margin-bottom: 10px;
@@ -479,9 +478,9 @@ p.terms {
   color: #4CAF50;
 }
 
-.navbar.navbar-default.scrolled {
-  background: #000 /*rgba(131, 127, 128, 0.88)*/ !important;
-}
+/*.navbar.navbar-default.scrolled {
+  background: #000 /*rgba(131, 127, 128, 0.88)*//* !important;
+}*/
 
 .item-name-centered {
     text-align: center;
@@ -563,6 +562,8 @@ p.terms {
 
 #login-user .modal-dialog {
   max-width: 320px;
+  min-width:320px;
+  margin: 10px auto;
 }
 
 .item-image {

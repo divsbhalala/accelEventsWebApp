@@ -358,7 +358,7 @@ class HeaderNew extends React.Component {
 		return (
 			<div id="header-navbar" className={cx("content turquoise-bg white")}>
 
-				<Navbar fluid={true} style={ {margin: 0} } className={ this.props.admin && "navbar-fixed-top"}>
+				<Navbar fluid={true} style={ {margin: 0} } className={ cx(this.props.admin && "navbar-fixed-top", "turquoise-bg white")}>
 					<Brand>
             <span>
               { this.props.eventData &&
@@ -428,12 +428,12 @@ class HeaderNew extends React.Component {
 							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs" > Sign up</span>
 						</MenuItem>}
 
-						<MenuItem eventKey="10">
+						<MenuItem eventKey="10" className="hidden-xs">
 							<i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
 						</MenuItem>
 
 						{
-							this.props.authenticated && <NavDropdown title={<i className="fa fa-user fa-fw"></i> } id='navDropdown4'>
+							this.props.authenticated && <NavDropdown title={<p><i className="fa fa-user fa-fw"></i> {this.props.user && this.props.user.firstName &&<label>{this.props.user.firstName}</label>}&nbsp; &nbsp;<span className="caret"></span></p>} id='navDropdown4'>
 								<MenuItem eventKey="2">
 									<span> <i className="fa fa-user fa-fw"></i> User Profile </span>
 								</MenuItem>
