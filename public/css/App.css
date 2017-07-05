@@ -1,6 +1,6 @@
-.container {
+.scroll-container {
   width: 18em;
-  height: 8em;
+  max-height: 500px;
   margin: 1em auto;
   overflow: hidden;
   background: white;

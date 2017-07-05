@@ -6,14 +6,15 @@ import s from './Auction.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import {
-	doGetEventData,
-	doGetSettings,
-	doGetAuctionItemByCode,
-	doSignUp,
-	submitAuctionBid,
-	changeUserData,
-	doValidateMobileNumber
+  doGetEventData,
+  doGetSettings,
+  doGetAuctionItemByCode,
+  doSignUp,
+  submitAuctionBid,
+  changeUserData,
+  doValidateMobileNumber
 } from './../action/index';
+import {getCardToken} from './../../checkout/action/index';
 import  history from './../../../history';
 import  EventAside from './../../../components/EventAside/EventAside';
 import {sessionService, loadSession} from 'redux-react-session';
@@ -24,64 +25,63 @@ import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
 import IntlTelInput from 'react-intl-tel-input';
 
-
 class Auction extends React.Component {
-	static propTypes = {
-		title: PropTypes.string
-	};
+  static propTypes = {
+    title: PropTypes.string
+  };
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			settings: null,
-			showBookingTicketPopup: false,
-			showMapPopup: true,
+  constructor(props) {
+    super(props);
+    this.state = {
+      settings: null,
+      showBookingTicketPopup: false,
+      showMapPopup: true,
 
-			isValidData: false,
-			email: null,
-			password: null,
-			error: null,
-			emailFeedBack: false,
-			passwordFeedBack: false,
-			auctionData: null,
+      isValidData: false,
+      email: null,
+      password: null,
+      error: null,
+      emailFeedBack: false,
+      passwordFeedBack: false,
+      auctionData: null,
 
-			isValidBidData: false,
+      isValidBidData: false,
 
-			firstName: null,
-			lastName: null,
-			cardNumber: null,
-			cardHolder: null,
-			amount: null,
-			cvv: null,
-			month: null,
-			year: null,
-			expMonth: null,
-			expYear: null,
-			phoneNumber: null,
-			popupHeader: null,
+      firstName: null,
+      lastName: null,
+      cardNumber: null,
+      cardHolder: null,
+      amount: null,
+      cvv: null,
+      month: null,
+      year: null,
+      expMonth: null,
+      expYear: null,
+      phoneNumber: null,
+      popupHeader: null,
 
-			firstNameValue: null,
-			lastNameValue: null,
-			cardNumberValue: null,
-			cardHolderValue: null,
-			amountValue: null,
-			cvvValue: null,
-			monthValue: null,
-			yearValue: null,
-			expMonthValue: null,
-			expYearValue: null,
-			emailValue: null,
-			passwordValue: null,
-			phoneNumberValue: null,
-			errorMsgCard: null,
+      firstNameValue: null,
+      lastNameValue: null,
+      cardNumberValue: null,
+      cardHolderValue: null,
+      amountValue: null,
+      cvvValue: null,
+      monthValue: null,
+      yearValue: null,
+      expMonthValue: null,
+      expYearValue: null,
+      emailValue: null,
+      passwordValue: null,
+      phoneNumberValue: null,
+      errorMsgCard: null,
 
-			firstNameFeedBack: false,
-			lastNameFeedBack: false,
-			cardNumberFeedBack: false,
-			cardHolderFeedBack: false,
-			amountFeedBack: false,
-			cvvFeedBack: false,
-			phoneNumberFeedBack: false,
+      firstNameFeedBack: false,
+      lastNameFeedBack: false,
+      cardNumberFeedBack: false,
+      cardHolderFeedBack: false,
+      amountFeedBack: false,
+      cvvFeedBack: false,
+      phoneNumberFeedBack: false,
 
       errorReg: null,
       errorMsgfirstName: null,
@@ -101,7 +101,7 @@ class Auction extends React.Component {
     };
   }
   onBidFormClick = (e) => {
-	  this.setState({
+    this.setState({
       loading:true
     });
     e.preventDefault();
@@ -121,7 +121,6 @@ class Auction extends React.Component {
           popupHeader:"Confirm",
         })
       } else {
-        let self = this;
         if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
           const card = {
             number: this.cardNumber.value.trim(),
@@ -129,19 +128,19 @@ class Auction extends React.Component {
             exp_month: this.expMonth.value.trim(),
             exp_year: this.expYear.value.trim(),
           };
-          Stripe.createToken(card, function (status, response) {
+          this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
             if (response.error) {
-              self.setState({
+              this.setState({
                 loading:false,
                 showPopup: true,
                 errorMsgCard: response.error.message,
                 popupHeader:"Failed"
               });
             } else {
-              self.setState({
+              this.setState({
                 loading:false,
                 showPopup: true,
-                errorMsgCard: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.auctionData.name ,
+                errorMsgCard: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
                 popupHeader:"Success",
                 stripeToken: response.id,})
             }
@@ -158,17 +157,17 @@ class Auction extends React.Component {
     this.setState({
       loading:true,
     });
-      const user = {
-        email: this.props.user.email,
-        countryCode: parse(this.state.phone).country,
-        cellNumber: parse(this.state.phone).phone,
-        firstname: this.state.firstNameValue,
-        lastname: this.state.lastNameValue,
-        paymenttype: 'CC',
-        itemCode: this.state.auctionData.code,
-        amount: this.state.amountValue,
-        stripeToken: this.state.stripeToken,
-      };
+    const user = {
+      email: this.props.user.email,
+      countryCode: parse(this.state.phone).country,
+      cellNumber: parse(this.state.phone).phone,
+      firstname: this.state.firstNameValue,
+      lastname: this.state.lastNameValue,
+      paymenttype: 'CC',
+      itemCode: this.state.auctionData.code,
+      amount: this.state.amountValue,
+      stripeToken: this.state.stripeToken,
+    };
     this.submitAuctionBid( user);
 
   };
@@ -206,7 +205,7 @@ class Auction extends React.Component {
         this.setState({
           loading:false,
         })
-       });
+      });
   };
   signupForm = (e) => {
     e.preventDefault();
@@ -227,233 +226,233 @@ class Auction extends React.Component {
       };
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
         if (resp && !resp.errorMessage) {
-            this.setState({
-              showPopup: true,
-              errorMsgCard: "Thank you for Registration!",
-              popupHeader:"Successfully",
-              loading:false,
-            });
+          this.setState({
+            showPopup: true,
+            errorMsgCard: "Thank you for Registration!",
+            popupHeader:"Successfully",
+            loading:false,
+          });
           this.componentReRender();
-          }
-          else{
-            this.setState({
-              showPopup: true,
-              errorMsgCard: resp.errorMessage,
-              popupHeader:"Failed",
-              loading:false,
-            })
-          }
+        }
+        else{
+          this.setState({
+            showPopup: true,
+            errorMsgCard: resp.errorMessage,
+            popupHeader:"Failed",
+            loading:false,
+          })
+        }
       });
     }
   };
 
-	emailValidateHandler = (e) => {
-		this.setState({
-			emailFeedBack: true,
-			emailValue: this.email.value.trim(),
-		});
-		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  emailValidateHandler = (e) => {
+    this.setState({
+      emailFeedBack: true,
+      emailValue: this.email.value.trim(),
+    });
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value.trim() == '') {
-			this.setState({
-				email: false,
-				errorMsgEmail: "Email is required.",
-			});
-		}
-		else {
-			this.setState({
-				email: re.test(this.email.value.trim()),
-				errorMsgEmail: "Invalid Email.",
-			});
-		}
-		//this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
+    if (this.email.value.trim() == '') {
+      this.setState({
+        email: false,
+        errorMsgEmail: "Email is required.",
+      });
+    }
+    else {
+      this.setState({
+        email: re.test(this.email.value.trim()),
+        errorMsgEmail: "Invalid Email.",
+      });
+    }
+    //this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
 
-	};
-	passwordValidateHandler = (e) => {
-		this.setState({
-			passwordFeedBack: true,
-			passwordValue: this.password.value.trim(),
-		});
-		if (this.password.value.trim() == '') {
-			this.setState({
-				password: false
-			});
-		} else {
-			this.setState({
-				password: true
-			});
-		}
-		//this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
-	};
-	firstNameValidateHandler = (e) => {
-		this.setState({
-			firstNameFeedBack: true,
-			firstNameValue: this.firstName.value.trim()
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
-		if (this.firstName.value.trim() == '') {
-			this.setState({
-				firstName: false
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.setState({
-				firstName: true
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		}
-		//  this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
-	};
-	lastNameValidateHandler = (e) => {
-		this.setState({
-			lastNameFeedBack: true,
-			lastNameValue: this.lastName.value.trim(),
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
-		if (this.lastName.value.trim() == '') {
+  };
+  passwordValidateHandler = (e) => {
+    this.setState({
+      passwordFeedBack: true,
+      passwordValue: this.password.value.trim(),
+    });
+    if (this.password.value.trim() == '') {
+      this.setState({
+        password: false
+      });
+    } else {
+      this.setState({
+        password: true
+      });
+    }
+    //this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
+  };
+  firstNameValidateHandler = (e) => {
+    this.setState({
+      firstNameFeedBack: true,
+      firstNameValue: this.firstName.value.trim()
+    }, function afterStateChange() {
+      this.checkIsValidBidData()
+    });
+    if (this.firstName.value.trim() == '') {
+      this.setState({
+        firstName: false
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else {
+      this.setState({
+        firstName: true
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    }
+    //  this.setState({isValidBidData: !!(this.state.firstNameFeedBack && this.state.lastNameFeedBack && this.state.cardNumberFeedBack && this.state.cardHolderFeedBack && this.state.amountFeedBack && this.state.cvvFeedBack)});
+  };
+  lastNameValidateHandler = (e) => {
+    this.setState({
+      lastNameFeedBack: true,
+      lastNameValue: this.lastName.value.trim(),
+    }, function afterStateChange() {
+      this.checkIsValidBidData()
+    });
+    if (this.lastName.value.trim() == '') {
 
-			this.setState({
-				lastName: false
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.setState({
-				lastName: true
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		}
-		// this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-	};
-	cardHolderValidateHandler = (e) => {
+      this.setState({
+        lastName: false
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else {
+      this.setState({
+        lastName: true
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    }
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
+  };
+  cardHolderValidateHandler = (e) => {
 
-		this.setState({
-			cardHolderFeedBack: true,
-			cardHolderValue: this.cardHolder.value.trim(),
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
+    this.setState({
+      cardHolderFeedBack: true,
+      cardHolderValue: this.cardHolder.value.trim(),
+    }, function afterStateChange() {
+      this.checkIsValidBidData()
+    });
 
-		if (this.cardHolder.value.trim() == '') {
+    if (this.cardHolder.value.trim() == '') {
 
-			this.setState({
-				cardHolder: false,
-				errorMsgcardHolder: "The card holder name is required and can't be empty",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
-			this.setState({
-				cardHolder: false,
-				errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.setState({
-				cardHolder: true
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		}
-		//  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name is required and can't be empty",
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else {
+      this.setState({
+        cardHolder: true
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    }
+    //  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 
-	};
-	cardNumberValidateHandler = (e) => {
+  };
+  cardNumberValidateHandler = (e) => {
 
-		this.setState({
-			cardNumberFeedBack: true,
-			cardNumberValue: this.cardNumber.value.trim(),
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
+    this.setState({
+      cardNumberFeedBack: true,
+      cardNumberValue: this.cardNumber.value.trim(),
+    }, function afterStateChange() {
+      this.checkIsValidBidData()
+    });
 
 
-		if (this.cardNumber.value.trim() == '') {
+    if (this.cardNumber.value.trim() == '') {
 
-			this.setState({
-				cardNumber: false,
-				errorMsgcardNumber: "Enter Card Number ",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else if (this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
-			this.setState({
-				cardNumber: false,
-				errorMsgcardNumber: " Please enter a Valid Card Number ",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.setState({
-				cardNumber: true
-			});
-		}
-		this.checkIsValidBidData();
-		//   this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
+      this.setState({
+        cardNumber: false,
+        errorMsgcardNumber: "Enter Card Number ",
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else if (this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
+      this.setState({
+        cardNumber: false,
+        errorMsgcardNumber: " Please enter a Valid Card Number ",
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else {
+      this.setState({
+        cardNumber: true
+      });
+    }
+    this.checkIsValidBidData();
+    //   this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 
-	};
-	amountValidateHandler = (e) => {
-		let amount = true;
-		let errorMsgAmount = "";
-		if (this.amount.value.trim() == '') {
-			errorMsgAmount = "Bid Amount can't be empty"
-			amount = false
-		} else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value.trim()) {
-			errorMsgAmount = "Bids for this item must be placed in increments of at least $" + this.state.auctionData.bidIncrement + ". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
-			amount = false
-		} else {
-			amount = true
-		}
-		this.setState({
-			//isValidBidData: ( this.amount.value.trim() && amount),
-			amount: amount,
-			amountFeedBack: true,
-			errorMsgAmount: errorMsgAmount,
-			amountValue: this.amount.value.trim()
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
-		//this.checkIsValidBidData();
-	};
-	cvvValidateHandler = (e) => {
+  };
+  amountValidateHandler = (e) => {
+    let amount = true;
+    let errorMsgAmount = "";
+    if (this.amount.value.trim() == '') {
+      errorMsgAmount = "Bid Amount can't be empty"
+      amount = false
+    } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value.trim()) {
+      errorMsgAmount = "Bids for this item must be placed in increments of at least $" + this.state.auctionData.bidIncrement + ". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
+      amount = false
+    } else {
+      amount = true
+    }
+    this.setState({
+      //isValidBidData: ( this.amount.value.trim() && amount),
+      amount: amount,
+      amountFeedBack: true,
+      errorMsgAmount: errorMsgAmount,
+      amountValue: this.amount.value.trim()
+    }, function afterStateChange() {
+      this.checkIsValidBidData()
+    });
+    //this.checkIsValidBidData();
+  };
+  cvvValidateHandler = (e) => {
 
-		this.setState({
-			cvvFeedBack: true
-		}, function afterStateChange() {
-			this.checkIsValidBidData()
-		});
+    this.setState({
+      cvvFeedBack: true
+    }, function afterStateChange() {
+      this.checkIsValidBidData()
+    });
 
-		if (this.cvv.value.trim() == '') {
+    if (this.cvv.value.trim() == '') {
 
-			this.setState({
-				cvv: false,
-				errorMsgcvv: "The CVV is required and can't be empty",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
-			this.setState({
-				cvv: false,
-				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		} else {
-			this.setState({
-				cvv: true
-			}, function afterStateChange() {
-				this.checkIsValidBidData()
-			});
-		}
-		this.checkIsValidBidData();
-		// this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-	};
+      this.setState({
+        cvv: false,
+        errorMsgcvv: "The CVV is required and can't be empty",
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
+      this.setState({
+        cvv: false,
+        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    } else {
+      this.setState({
+        cvv: true
+      }, function afterStateChange() {
+        this.checkIsValidBidData()
+      });
+    }
+    this.checkIsValidBidData();
+    // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
+  };
 
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
 
@@ -473,15 +472,15 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }else{
-    this.props.doValidateMobileNumber(number).then(resp => {
+      this.props.doValidateMobileNumber(number).then(resp => {
 
-      this.setState({
-        phoneNumber: !resp,
-        errorMsgPhoneNumber: "Invalid phone number",
-      },function afterStateChange () {
-        this.checkIsValidBidData()
-      });
-    })
+        this.setState({
+          phoneNumber: !resp,
+          errorMsgPhoneNumber: "Invalid phone number",
+        },function afterStateChange () {
+          this.checkIsValidBidData()
+        });
+      })
     }
     this.setState({
       phone: value,
@@ -521,17 +520,11 @@ class Auction extends React.Component {
     }  else {
       this.setState({
         expYear: true});
-      }
-     this.checkIsValidBidData();
+    }
+    this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
 
-  componentDidMount(){
-
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
-    }
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
@@ -597,17 +590,17 @@ class Auction extends React.Component {
     }
   };
   reRender = ()=>{
-   // window.location.reload();
+    // window.location.reload();
   };
   checkIsValidBidData = () =>{
 
     let valid1=true;
     let valid2=true;
     let flag=true;
-   if(this.props.authenticated){
-     if( this.props.user.firstName == null ){
-       valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
-       flag=false;
+    if(this.props.authenticated){
+      if( this.props.user.firstName == null ){
+        valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
+        flag=false;
       }
       if( this.props.user &&  this.props.eventData.ccRequiredForBidConfirm ){
 
@@ -615,11 +608,11 @@ class Auction extends React.Component {
         flag=false;
       }
       if(flag) {
-         valid1=!!(this.state.amount);
-         valid2=!!(this.state.amount);
+        valid1=!!(this.state.amount);
+        valid2=!!(this.state.amount);
       }
-   } else {
-   }
+    } else {
+    }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
 
@@ -644,137 +637,137 @@ class Auction extends React.Component {
                    ref={ref => {
                      this.email = ref;
                    }}
-						       onKeyUp={this.emailValidateHandler}
-						/>
-						{ this.state.emailFeedBack && this.state.email &&
-						<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-						{ this.state.emailFeedBack && !this.state.email &&
-						<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-					</div>
-					{ this.state.emailFeedBack && !this.state.email &&
-					<small className="help-block">{this.state.errorMsgEmail}</small>}
-				</div>
-				<div className="row">
-					<div className="col-md-8">
-						<div
-							className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-							<label className="control-label">Cell Number</label>
-							<div className="input-group">
-								<div className="input-group-addon">
-									<i className="fa fa-phone" aria-hidden="true"/>
-								</div>
-								<IntlTelInput
-									css={['intl-tel-input', 'form-control intl-tel']}
-									utilsScript="./libphonenumber.js"
-									separateDialCode={true}
-									value={ this.state.phone || ""}
-									onPhoneNumberChange={this.changePhone}
-								/>
-								{ this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-								{ this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-							</div>
-							{ this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-							<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-						</div>
-					</div>
-				</div>
-				<div
-					className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
-					<label className="control-label login-password">Enter or Create Password</label>
-					<div className="input-group">
-						<div className="input-group-addon">
-							<i className="fa fa-key" aria-hidden="true"/>
-						</div>
-						<input type="password" className="form-control zindex" name="password"
-						       autoComplete="new-password"
-						       placeholder="Enter or create a password"
-						       ref={ref => {
+                   onKeyUp={this.emailValidateHandler}
+            />
+            { this.state.emailFeedBack && this.state.email &&
+            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+            { this.state.emailFeedBack && !this.state.email &&
+            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+          </div>
+          { this.state.emailFeedBack && !this.state.email &&
+          <small className="help-block">{this.state.errorMsgEmail}</small>}
+        </div>
+        <div className="row">
+          <div className="col-md-8">
+            <div
+              className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+              <label className="control-label">Cell Number</label>
+              <div className="input-group">
+                <div className="input-group-addon">
+                  <i className="fa fa-phone" aria-hidden="true"/>
+                </div>
+                <IntlTelInput
+                  css={['intl-tel-input', 'form-control intl-tel']}
+                  utilsScript="./libphonenumber.js"
+                  separateDialCode={true}
+                  value={ this.state.phone || ""}
+                  onPhoneNumberChange={this.changePhone}
+                />
+                { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+              </div>
+              { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+              <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+            </div>
+          </div>
+        </div>
+        <div
+          className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
+          <label className="control-label login-password">Enter or Create Password</label>
+          <div className="input-group">
+            <div className="input-group-addon">
+              <i className="fa fa-key" aria-hidden="true"/>
+            </div>
+            <input type="password" className="form-control zindex" name="password"
+                   autoComplete="new-password"
+                   placeholder="Enter or create a password"
+                   ref={ref => {
                      this.password = ref;
                    }}
-						       onKeyUp={this.passwordValidateHandler}
-						/>
-						{ this.state.passwordFeedBack && this.state.password &&
-						<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-						{ this.state.passwordFeedBack && !this.state.password &&
-						<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                   onKeyUp={this.passwordValidateHandler}
+            />
+            { this.state.passwordFeedBack && this.state.password &&
+            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+            { this.state.passwordFeedBack && !this.state.password &&
+            <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 
-					</div>
-					{ this.state.passwordFeedBack && !this.state.password &&
-					<small className="help-block">Password can't be empty.</small>}
+          </div>
+          { this.state.passwordFeedBack && !this.state.password &&
+          <small className="help-block">Password can't be empty.</small>}
 
-				</div>
-				<Button className={cx("btn btn-primary text-uppercase")}
-				        disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
-				        loading={this.state.loading} type="submit"
-				        data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
-					SUBMIT
-				</Button>
-			</form>
-		</div>;
-		let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-		                     onSubmit={this.onBidFormClick}>
-			<div className="form-group">
-				<label className="control-label" style={{display: 'block'}}>Email Address</label>
-				<div
-					className="input-group">{this.props.user.email}</div>
-			</div>
-			<div className="form-group">
-				<label className="control-label" style={{display: 'block'}}>Cell Number</label>
-				<div
-					className="input-group">{this.props.user.phonenumber}</div>
-			</div>
-			{ !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ? <div
-				className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-				<label className="control-label">First Name</label>
-				<div className="input-group">
-					<div className="input-group-addon">
-						<i className="fa fa-user" aria-hidden="true"/>
-					</div>
-					<input type="text" className="form-control" name="firstname" placeholder="First Name"
-					       ref={ref => {
+        </div>
+        <Button className={cx("btn btn-primary text-uppercase")}
+                disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                loading={this.state.loading} type="submit"
+                data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+          SUBMIT
+        </Button>
+      </form>
+    </div>;
+    let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
+                         onSubmit={this.onBidFormClick}>
+      <div className="form-group">
+        <label className="control-label" style={{display: 'block'}}>Email Address</label>
+        <div
+          className="input-group">{this.props.user.email}</div>
+      </div>
+      <div className="form-group">
+        <label className="control-label" style={{display: 'block'}}>Cell Number</label>
+        <div
+          className="input-group">{this.props.user.phonenumber}</div>
+      </div>
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ? <div
+        className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+        <label className="control-label">First Name</label>
+        <div className="input-group">
+          <div className="input-group-addon">
+            <i className="fa fa-user" aria-hidden="true"/>
+          </div>
+          <input type="text" className="form-control" name="firstname" placeholder="First Name"
+                 ref={ref => {
                    this.firstName = ref;
                  }}
-					       onKeyUp={this.firstNameValidateHandler}/>
-					{ this.state.firstNameFeedBack && this.state.email &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-					{ this.state.firstNameFeedBack && !this.state.email &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-				</div>
-				{ this.state.firstNameFeedBack && !this.state.firstName &&
-				<small className="help-block">Firstname is required.</small>}
-			</div> : ""}
-			{ !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
-				className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-				<label className="control-label">Last Name</label>
-				<div className="input-group">
-					<div className="input-group-addon">
-						<i className="fa fa-user" aria-hidden="true"/>
-					</div>
-					<input type="text" className="form-control" name="lastname" placeholder="Last Name"
-					       ref={ref => {
+                 onKeyUp={this.firstNameValidateHandler}/>
+          { this.state.firstNameFeedBack && this.state.email &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+          { this.state.firstNameFeedBack && !this.state.email &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+        </div>
+        { this.state.firstNameFeedBack && !this.state.firstName &&
+        <small className="help-block">Firstname is required.</small>}
+      </div> : ""}
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
+        className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+        <label className="control-label">Last Name</label>
+        <div className="input-group">
+          <div className="input-group-addon">
+            <i className="fa fa-user" aria-hidden="true"/>
+          </div>
+          <input type="text" className="form-control" name="lastname" placeholder="Last Name"
+                 ref={ref => {
                    this.lastName = ref;
                  }}
-					       onKeyUp={this.lastNameValidateHandler}/>
-					{ this.state.lastNameFeedBack && this.state.lastName &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-					{ this.state.lastNameFeedBack && !this.state.lastName &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-				</div>
-				{ this.state.lastNameFeedBack && !this.state.lastName &&
-				<small className="help-block">Lastname is required.</small>}
-			</div> : ''}
-			<div
-				className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
-				<div className="row">
-					<div className="col-md-6">
-						<label className="control-label">Bid Amount</label>
-						<div className="input-group">
-							<div className="input-group-addon">$</div>
-							<input type="number" className="form-control" name="itembid" id="itembid"
-							       placeholder="Amount" step required="required"
-							       ref={ref => {
+                 onKeyUp={this.lastNameValidateHandler}/>
+          { this.state.lastNameFeedBack && this.state.lastName &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+          { this.state.lastNameFeedBack && !this.state.lastName &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+        </div>
+        { this.state.lastNameFeedBack && !this.state.lastName &&
+        <small className="help-block">Lastname is required.</small>}
+      </div> : ''}
+      <div
+        className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
+        <div className="row">
+          <div className="col-md-6">
+            <label className="control-label">Bid Amount</label>
+            <div className="input-group">
+              <div className="input-group-addon">$</div>
+              <input type="number" className="form-control" name="itembid" id="itembid"
+                     placeholder="Amount" step required="required"
+                     ref={ref => {
                        this.amount = ref;
                      }}
                      onKeyUp={this.amountValidateHandler}/>
@@ -789,223 +782,223 @@ class Auction extends React.Component {
         </div>
       </div>
       { !this.props.authenticated || ( this.props.authenticated && ( this.props.user &&   this.props.eventData && this.props.eventData.ccRequiredForBidConfirm ) ) ?
-       <div>
-         <style
-        dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
-      <div className="stripe-form">
-        <div className="stripe-card-info">
-          <div
-            className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
-            <label className="control-label">Card Holder Name</label>
-            <div className="input-group">
-              <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
-              <input type="text" className="form-control" id="cardname" data-stripe="name"
-                     placeholder="Name on the card" data-fv-field="cardholdername"
-                     ref={ref => {
-                       this.cardHolder = ref;
-                     }}
-									       onKeyUp={this.cardHolderValidateHandler}/>
-									{ this.state.cardHolderFeedBack && this.state.cardHolder &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
-
-							</div>
-							<div
-								className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
-								<label className="control-label">Credit Card Number</label>
-								<div className="input-group">
-									<div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
-									</div>
-									<input type="number" className="form-control field-card_number" id="cardnumber"
-									       placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
-									       required="required" data-fv-field="cardnumber"
-									       ref={ref => {
-                       this.cardNumber = ref;
-                     }}
-									       onKeyUp={this.cardNumberValidateHandler}/>
-									{ this.state.cardNumberFeedBack && this.state.cardNumber &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
-								<small className="help-block">{this.state.errorMsgcardNumber}.</small>}
-							</div>
-							<div className="row">
-								<div className="col-md-8">
-									<div
-										className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
-										<label className="control-label">Expiration Date</label>
-										<div className="input-group">
-											<div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-											                                                      aria-hidden="true"/></div>
-											<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
-                    this.expMonth = ref;
-                  }} onChange={this.expMonthValidateHandler}>
-												<option selected value="10">Jan (01)</option>
-												<option value="02">Feb (02)</option>
-												<option value="03">Mar (03)</option>
-												<option value="04">Apr (04)</option>
-												<option value="05">May (05)</option>
-												<option value="06">Jun (06)</option>
-												<option value="07">Jul (07)</option>
-												<option value="08">Aug (08)</option>
-												<option value="09">Sep (09)</option>
-												<option value="10">Oct (10)</option>
-												<option value="11">Nov (11)</option>
-												<option value="12">Dec (12)</option>
-											</select>
-											<select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
-											        ref={ref => {
-                            this.expYear = ref;
-                          }} onChange={this.expYearValidateHandler}>
-												<option value="2017">2017</option>
-												<option value="2018">2018</option>
-												<option value="2019">2019</option>
-												<option value="2020">2020</option>
-												<option value="2021">2021</option>
-												<option value="2022">2022</option>
-												<option value="2023">2023</option>
-												<option value="2024">2024</option>
-												<option value="2025">2025</option>
-												<option value="2026">2026</option>
-												<option value="2027">2027</option>
-												<option value="2028">2028</option>
-												<option value="2029">2029</option>
-												<option value="2030">2030</option>
-												<option value="2031">2031</option>
-												<option value="2032">2032</option>
-												<option value="2033">2033</option>
-												<option value="2034">2034</option>
-												<option value="2035">2035</option>
-												<option value="2036">2036</option>
-												<option value="2037">2037</option>
-												<option value="2038">2038</option>
-												<option value="2039">2039</option>
-												<option value="2040">2040</option>
-												<option value="2041">2041</option>
-												<option value="2042">2042</option>
-												<option value="2043">2043</option>
-												<option value="2044">2044</option>
-												<option value="2045">2045</option>
-												<option value="2046">2046</option>
-												<option value="2047">2047</option>
-												<option value="2048">2048</option>
-												<option value="2049">2049</option>
-												<option value="2050">2050</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div className="col-md-4">
-									<div
-										className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-										<label className="control-label">CVV Number</label>
-										<div className="input-group">
-											<input type="number" className="form-control field-cvv" maxLength={4} size={4}
-											       data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-											       ref={ref => {
-                           this.cvv = ref;
+        <div>
+          <style
+            dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
+          <div className="stripe-form">
+            <div className="stripe-card-info">
+              <div
+                className={cx("form-group", this.state.cardHolderFeedBack && 'has-feedback', this.state.cardHolderFeedBack && this.state.cardHolder && 'has-success', this.state.cardHolderFeedBack && (!this.state.cardHolder) && 'has-error')}>
+                <label className="control-label">Card Holder Name</label>
+                <div className="input-group">
+                  <div className="input-group-addon"><i className="fa fa-user" aria-hidden="true"/></div>
+                  <input type="text" className="form-control" id="cardname" data-stripe="name"
+                         placeholder="Name on the card" data-fv-field="cardholdername"
+                         ref={ref => {
+                           this.cardHolder = ref;
                          }}
-											       onKeyUp={this.cvvValidateHandler}/>
-											{ this.state.cvvFeedBack && this.state.cvv &&
-											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-											{ this.state.cvvFeedBack && !this.state.cvv &&
-											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-										</div>
-										{ this.state.cvvFeedBack && !this.state.cvv &&
-										<small className="help-block">{ this.state.errorMsgcvv  }</small>}
+                         onKeyUp={this.cardHolderValidateHandler}/>
+                  { this.state.cardHolderFeedBack && this.state.cardHolder &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.cardHolderFeedBack && !this.state.cardHolder &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.cardHolderFeedBack && !this.state.cardHolder &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
 
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div className="form-group">
-						<div className="checkbox-nice">
-							<input type="checkbox" id="uptodate" name="uptodate" defaultChecked/> <label
-							htmlFor="uptodate">Stay up to date with Accelevents</label>
-						</div>
-					</div>
-				</div> : "" }
-			<div className="col-sm-3">
-				<Button   loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
-				        type="submit" >
-					Submit bid
-				</Button>
-				&nbsp;&nbsp;
-			</div>
-			<div className="col-sm-6">
-				<a role="button" className="btn btn-success btn-block"
-				   href={this.props.params && "/event/" + this.props.params.params }>
-					Go back to All Items</a></div>
-		</form>;
-		let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-		                          onSubmit={this.onBidFormClick}>
-			<div className="form-group">
-				<label className="control-label" style={{display: 'block'}}>Email Address</label>
-				<div
-					className="input-group">{this.props.user.email}</div>
-			</div>
-			<div className="form-group">
-				<label className="control-label" style={{display: 'block'}}>Cell Number</label>
-				<div
-					className="input-group">{this.props.user.phonenumber}</div>
-			</div>
-			{ !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ? <div
-				className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
-				<label className="control-label">First Name</label>
-				<div className="input-group">
-					<div className="input-group-addon">
-						<i className="fa fa-user" aria-hidden="true"/>
-					</div>
-					<input type="text" className="form-control" name="firstname"
-					       ref={ref => {
+              </div>
+              <div
+                className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
+                <label className="control-label">Credit Card Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
+                  </div>
+                  <input type="number" className="form-control field-card_number" id="cardnumber"
+                         placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
+                         required="required" data-fv-field="cardnumber"
+                         ref={ref => {
+                           this.cardNumber = ref;
+                         }}
+                         onKeyUp={this.cardNumberValidateHandler}/>
+                  { this.state.cardNumberFeedBack && this.state.cardNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.cardNumberFeedBack && !this.state.cardNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.cardNumberFeedBack && !this.state.cardNumber &&
+                <small className="help-block">{this.state.errorMsgcardNumber}.</small>}
+              </div>
+              <div className="row">
+                <div className="col-md-8">
+                  <div
+                    className={cx("form-group", this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}>
+                    <label className="control-label">Expiration Date</label>
+                    <div className="input-group">
+                      <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                            aria-hidden="true"/></div>
+                      <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                        this.expMonth = ref;
+                      }} onChange={this.expMonthValidateHandler}>
+                        <option selected value="01">Jan (01)</option>
+                        <option value="02">Feb (02)</option>
+                        <option value="03">Mar (03)</option>
+                        <option value="04">Apr (04)</option>
+                        <option value="05">May (05)</option>
+                        <option value="06">Jun (06)</option>
+                        <option value="07">Jul (07)</option>
+                        <option value="08">Aug (08)</option>
+                        <option value="09">Sep (09)</option>
+                        <option value="10">Oct (10)</option>
+                        <option value="11">Nov (11)</option>
+                        <option value="12">Dec (12)</option>
+                      </select>
+                      <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                              ref={ref => {
+                                this.expYear = ref;
+                              }} onChange={this.expYearValidateHandler}>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                        <option value="2041">2041</option>
+                        <option value="2042">2042</option>
+                        <option value="2043">2043</option>
+                        <option value="2044">2044</option>
+                        <option value="2045">2045</option>
+                        <option value="2046">2046</option>
+                        <option value="2047">2047</option>
+                        <option value="2048">2048</option>
+                        <option value="2049">2049</option>
+                        <option value="2050">2050</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <div
+                    className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                    <label className="control-label">CVV Number</label>
+                    <div className="input-group">
+                      <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                             data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                             ref={ref => {
+                               this.cvv = ref;
+                             }}
+                             onKeyUp={this.cvvValidateHandler}/>
+                      { this.state.cvvFeedBack && this.state.cvv &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                      { this.state.cvvFeedBack && !this.state.cvv &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                    </div>
+                    { this.state.cvvFeedBack && !this.state.cvv &&
+                    <small className="help-block">{ this.state.errorMsgcvv  }</small>}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="checkbox-nice">
+              <input type="checkbox" id="uptodate" name="uptodate" defaultChecked/> <label
+              htmlFor="uptodate">Stay up to date with Accelevents</label>
+            </div>
+          </div>
+        </div> : "" }
+      <div className="col-sm-3">
+        <Button   loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+                  type="submit" >
+          Submit bid
+        </Button>
+        &nbsp;&nbsp;
+      </div>
+      <div className="col-sm-6">
+        <a role="button" className="btn btn-success btn-block"
+           href={this.props.params && "/event/" + this.props.params.params }>
+          Go back to All Items</a></div>
+    </form>;
+    let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
+                              onSubmit={this.onBidFormClick}>
+      <div className="form-group">
+        <label className="control-label" style={{display: 'block'}}>Email Address</label>
+        <div
+          className="input-group">{this.props.user.email}</div>
+      </div>
+      <div className="form-group">
+        <label className="control-label" style={{display: 'block'}}>Cell Number</label>
+        <div
+          className="input-group">{this.props.user.phonenumber}</div>
+      </div>
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ? <div
+        className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
+        <label className="control-label">First Name</label>
+        <div className="input-group">
+          <div className="input-group-addon">
+            <i className="fa fa-user" aria-hidden="true"/>
+          </div>
+          <input type="text" className="form-control" name="firstname"
+                 ref={ref => {
                    this.firstName = ref;
                  }}
-					       onKeyUp={this.firstNameValidateHandler}/>
-					{ this.state.firstNameFeedBack && this.state.email &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-					{ this.state.firstNameFeedBack && !this.state.email &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-				</div>
-				{ this.state.firstNameFeedBack && !this.state.firstName &&
-				<small className="help-block">Firstname is required.</small>}
-			</div> : ""}
-			{ !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
-				className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
-				<label className="control-label">Last Name</label>
-				<div className="input-group">
-					<div className="input-group-addon">
-						<i className="fa fa-user" aria-hidden="true"/>
-					</div>
-					<input type="text" className="form-control" name="lastname"
-					       ref={ref => {
+                 onKeyUp={this.firstNameValidateHandler}/>
+          { this.state.firstNameFeedBack && this.state.email &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+          { this.state.firstNameFeedBack && !this.state.email &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+        </div>
+        { this.state.firstNameFeedBack && !this.state.firstName &&
+        <small className="help-block">Firstname is required.</small>}
+      </div> : ""}
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
+        className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
+        <label className="control-label">Last Name</label>
+        <div className="input-group">
+          <div className="input-group-addon">
+            <i className="fa fa-user" aria-hidden="true"/>
+          </div>
+          <input type="text" className="form-control" name="lastname"
+                 ref={ref => {
                    this.lastName = ref;
                  }}
-					       onKeyUp={this.lastNameValidateHandler}/>
-					{ this.state.lastNameFeedBack && this.state.lastName &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-					{ this.state.lastNameFeedBack && !this.state.lastName &&
-					<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-				</div>
-				{ this.state.lastNameFeedBack && !this.state.lastName &&
-				<small className="help-block">Lastname is required.</small>}
-			</div> : ''}
-			<div
-				className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
-				<div className="row">
-					<div className="col-md-6">
-						<label className="control-label">Bid Amount</label>
-						<div className="input-group">
-							<div className="input-group-addon">$</div>
-							<input type="number" className="form-control" name="itembid" id="itembid"
-							       placeholder="Amount" step required="required"
-							       ref={ref => {
+                 onKeyUp={this.lastNameValidateHandler}/>
+          { this.state.lastNameFeedBack && this.state.lastName &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+          { this.state.lastNameFeedBack && !this.state.lastName &&
+          <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+        </div>
+        { this.state.lastNameFeedBack && !this.state.lastName &&
+        <small className="help-block">Lastname is required.</small>}
+      </div> : ''}
+      <div
+        className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
+        <div className="row">
+          <div className="col-md-6">
+            <label className="control-label">Bid Amount</label>
+            <div className="input-group">
+              <div className="input-group-addon">$</div>
+              <input type="number" className="form-control" name="itembid" id="itembid"
+                     placeholder="Amount" step required="required"
+                     ref={ref => {
                        this.amount = ref;
                      }}
                      onKeyUp={this.amountValidateHandler}/>
@@ -1035,266 +1028,267 @@ class Auction extends React.Component {
                          ref={ref => {
                            this.cardHolder = ref;
                          }}
-									       onKeyUp={this.cardHolderValidateHandler}/>
-									{ this.state.cardHolderFeedBack && this.state.cardHolder &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
-								<small className="help-block">{this.state.errorMsgcardHolder}</small>}
+                         onKeyUp={this.cardHolderValidateHandler}/>
+                  { this.state.cardHolderFeedBack && this.state.cardHolder &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.cardHolderFeedBack && !this.state.cardHolder &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.cardHolderFeedBack && !this.state.cardHolder &&
+                <small className="help-block">{this.state.errorMsgcardHolder}</small>}
 
-							</div>
-							<div
-								className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
-								<label className="control-label">Credit Card Number</label>
-								<div className="input-group">
-									<div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
-									</div>
-									<input type="number" className="form-control field-card_number" id="cardnumber"
-									       placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
-									       required="required" data-fv-field="cardnumber"
-									       ref={ref => {
+              </div>
+              <div
+                className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
+                <label className="control-label">Credit Card Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
+                  </div>
+                  <input type="number" className="form-control field-card_number" id="cardnumber"
+                         placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
+                         required="required" data-fv-field="cardnumber"
+                         ref={ref => {
                            this.cardNumber = ref;
                          }}
-									       onKeyUp={this.cardNumberValidateHandler}/>
-									{ this.state.cardNumberFeedBack && this.state.cardNumber &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-									{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
-									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-								</div>
-								{ this.state.cardNumberFeedBack && !this.state.cardNumber &&
-								<small className="help-block">{this.state.errorMsgcardNumber}.</small>}
-							</div>
-							<div className="row">
-								<div className="col-md-8">
-									<div className="form-group expiration-date has-feedback">
-										<label className="control-label">Expiration Date</label>
-										<div className="input-group">
-											<div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-											                                                      aria-hidden="true"/></div>
-											<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                         onKeyUp={this.cardNumberValidateHandler}/>
+                  { this.state.cardNumberFeedBack && this.state.cardNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.cardNumberFeedBack && !this.state.cardNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.cardNumberFeedBack && !this.state.cardNumber &&
+                <small className="help-block">{this.state.errorMsgcardNumber}.</small>}
+              </div>
+              <div className="row">
+                <div className="col-md-8">
+                  <div className="form-group expiration-date has-feedback">
+                    <label className="control-label">Expiration Date</label>
+                    <div className="input-group">
+                      <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
+                                                                            aria-hidden="true"/></div>
+                      <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                         this.expMonth = ref;
                       }} onChange={this.expMonthValidateHandler}>
-												<option selected value="10">Jan (01)</option>
-												<option value="02">Feb (02)</option>
-												<option value="03">Mar (03)</option>
-												<option value="04">Apr (04)</option>
-												<option value="05">May (05)</option>
-												<option value="06">Jun (06)</option>
-												<option value="07">Jul (07)</option>
-												<option value="08">Aug (08)</option>
-												<option value="09">Sep (09)</option>
-												<option value="10">Oct (10)</option>
-												<option value="11">Nov (11)</option>
-												<option value="12">Dec (12)</option>
-											</select>
-											<select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
-											        ref={ref => {
+                        <option selected value="01">Jan (01)</option>
+                        <option value="02">Feb (02)</option>
+                        <option value="03">Mar (03)</option>
+                        <option value="04">Apr (04)</option>
+                        <option value="05">May (05)</option>
+                        <option value="06">Jun (06)</option>
+                        <option value="07">Jul (07)</option>
+                        <option value="08">Aug (08)</option>
+                        <option value="09">Sep (09)</option>
+                        <option value="10">Oct (10)</option>
+                        <option value="11">Nov (11)</option>
+                        <option value="12">Dec (12)</option>
+                      </select>
+                      <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                              ref={ref => {
                                 this.expYear = ref;
                               }} onChange={this.expYearValidateHandler}>
-												<option value="2017">2017</option>
-												<option value="2018">2018</option>
-												<option value="2019">2019</option>
-												<option value="2020">2020</option>
-												<option value="2021">2021</option>
-												<option value="2022">2022</option>
-												<option value="2023">2023</option>
-												<option value="2024">2024</option>
-												<option value="2025">2025</option>
-												<option value="2026">2026</option>
-												<option value="2027">2027</option>
-												<option value="2028">2028</option>
-												<option value="2029">2029</option>
-												<option value="2030">2030</option>
-												<option value="2031">2031</option>
-												<option value="2032">2032</option>
-												<option value="2033">2033</option>
-												<option value="2034">2034</option>
-												<option value="2035">2035</option>
-												<option value="2036">2036</option>
-												<option value="2037">2037</option>
-												<option value="2038">2038</option>
-												<option value="2039">2039</option>
-												<option value="2040">2040</option>
-												<option value="2041">2041</option>
-												<option value="2042">2042</option>
-												<option value="2043">2043</option>
-												<option value="2044">2044</option>
-												<option value="2045">2045</option>
-												<option value="2046">2046</option>
-												<option value="2047">2047</option>
-												<option value="2048">2048</option>
-												<option value="2049">2049</option>
-												<option value="2050">2050</option>
-											</select>
-										</div>
-									</div>
-								</div>
-								<div className="col-md-4">
-									<div
-										className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
-										<label className="control-label">CVV Number</label>
-										<div className="input-group">
-											<input type="number" className="form-control field-cvv" maxLength={4} size={4}
-											       data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
-											       ref={ref => {
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                        <option value="2041">2041</option>
+                        <option value="2042">2042</option>
+                        <option value="2043">2043</option>
+                        <option value="2044">2044</option>
+                        <option value="2045">2045</option>
+                        <option value="2046">2046</option>
+                        <option value="2047">2047</option>
+                        <option value="2048">2048</option>
+                        <option value="2049">2049</option>
+                        <option value="2050">2050</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <div
+                    className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
+                    <label className="control-label">CVV Number</label>
+                    <div className="input-group">
+                      <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                             data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
+                             ref={ref => {
                                this.cvv = ref;
                              }}
-											       onKeyUp={this.cvvValidateHandler}/>
-											{ this.state.cvvFeedBack && this.state.cvv &&
-											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-											{ this.state.cvvFeedBack && !this.state.cvv &&
-											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-										</div>
-										{ this.state.cvvFeedBack && !this.state.cvv &&
-										<small className="help-block">{ this.state.errorMsgcvv  }</small>}
+                             onKeyUp={this.cvvValidateHandler}/>
+                      { this.state.cvvFeedBack && this.state.cvv &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                      { this.state.cvvFeedBack && !this.state.cvv &&
+                      <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                    </div>
+                    { this.state.cvvFeedBack && !this.state.cvv &&
+                    <small className="help-block">{ this.state.errorMsgcvv  }</small>}
 
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div className="form-group">
-						<div className="checkbox-nice">
-							<input type="checkbox" id="uptodate" name="uptodate" defaultChecked/> <label
-							htmlFor="uptodate">Stay up to date with Accelevents</label>
-						</div>
-					</div>
-				</div> : "" }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="checkbox-nice">
+              <input type="checkbox" id="uptodate" name="uptodate" defaultChecked/> <label
+              htmlFor="uptodate">Stay up to date with Accelevents</label>
+            </div>
+          </div>
+        </div> : "" }
 
       <div className="col-sm-3">
         <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
-                type="submit" >
+                 type="submit" >
           Submit bid
         </Button>
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6">
         <Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success btn-block" >
-            Go back to All Items
+          Go back to All Items
         </Link>
-       </div>
+      </div>
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
       className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
 
-		return (
-			<div className="row">
-				<div className="col-lg-12">
-					<div id="content-wrapper">
-						<div className="row">
-							<div className="col-lg-3 col-md-4 col-sm-4">
-								<EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings}
-								            eventTicketData={this.props.eventTicketData}
-								            showMapPopup={this.showMapPopup} activeCategory={false}/>
-							</div>
-							<div className="col-lg-9 col-md-8 col-sm-8">
-								<div className="main-box clearfix">
-									<h1 className="text-center mrg-t-lg"
-									    id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
-									<div className="row mrg-t-lg">
-										<div className="col-md-6">
-											<div className="pad-l-md pad-r-md">
-												<div className="item-image">
-													<Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false}>
-														{this.state.auctionData && this.state.auctionData.images.length > 0 ?
-															this.state.auctionData.images.map((item, index) =>
-																<ImageList key={index} item={item}/>
-															) : <div className="item-image-inner" style={{
+    return (
+      <div className="row">
+        <div className="col-lg-12">
+          <div id="content-wrapper">
+            <div className="row">
+              <div className="col-lg-3 col-md-4 col-sm-4">
+                <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings}
+                            eventTicketData={this.props.eventTicketData}
+                            showMapPopup={this.showMapPopup} activeCategory={false}/>
+              </div>
+              <div className="col-lg-9 col-md-8 col-sm-8">
+                <div className="main-box clearfix">
+                  <h1 className="text-center mrg-t-lg"
+                      id="item-name">{this.state.auctionData && this.state.auctionData.name}</h1>
+                  <div className="row mrg-t-lg">
+                    <div className="col-md-6">
+                      <div className="pad-l-md pad-r-md">
+                        <div className="item-image">
+                          <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false}>
+                            {this.state.auctionData && this.state.auctionData.images.length > 0 ?
+                              this.state.auctionData.images.map((item, index) =>
+                                <ImageList key={index} item={item}/>
+                              ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
                                 transform: 'rotate(0deg)'
                               }}/>
-														}
-													</Carousel>
-												</div>
-											</div>
-											<div className="mrg-t-lg pad-l-md pad-r-md"
-											     dangerouslySetInnerHTML={ {__html: this.state.auctionData && this.state.auctionData.description } }>
+                            }
+                          </Carousel>
+                        </div>
+                      </div>
+                      <div className="mrg-t-lg pad-l-md pad-r-md"
+                           dangerouslySetInnerHTML={ {__html: this.state.auctionData && this.state.auctionData.description } }>
 
-											</div>
-										</div>
-										<div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
+                      </div>
+                    </div>
+                    <div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
                       <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
                         { this.state.errorMsgCard }</div>
-											<div className="row">
-												<div className="col-sm-4">
-													<div className="curr-bid-number">$<span
-														className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span>
-													</div>
-													<div className="curr-bid-text">Current Bid</div>
-												</div>
-												{this.state.auctionData && this.state.auctionData.buyItNowPrice > 0 &&
-												<div className="col-sm-4">
-													<div className="curr-bid-number">$<span
-														className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
-													<div className="curr-bid-text">BUY NOW PRICE</div>
-												</div>}
-												{this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
-													<div className="curr-bid-number">$<span
-														className="current-bid">{this.state.auctionData.marketValue}</span></div>
-													<div className="curr-bid-text">MARKET VALUE</div>
-												</div>}
-											</div>
-											{ bid_active ? div_bid_close : '' }
-											{ !bid_active ? this.props.authenticated ? this.props.user ? form_bid_only : form_bid : form_login : '' }
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<PopupModel
-					id="bookingPopup"
-					showModal={this.state.showPopup}
-					headerText={<h4>{this.state.popupHeader}</h4>}
-					modelBody=''
-					onCloseFunc={this.hidePopup}>
-					<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
-						{ this.state && this.state.errorMsgCard }
-						<div className="modal-footer">
-							{this.state.popupHeader == "Success" ? <Button className="btn btn-success" onClick={this.placeBid}
-							                                               loading={this.state.loading}>Confirm</Button> : ""}
-							{this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
-							                                               loading={this.state.loading}>Confirm</Button> : ""}
-							<button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
-						</div>
-					</div>
-				</PopupModel>
-			</div>
-		);
-	}
+                      <div className="row">
+                        <div className="col-sm-4">
+                          <div className="curr-bid-number">$<span
+                            className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span>
+                          </div>
+                          <div className="curr-bid-text">Current Bid</div>
+                        </div>
+                        {this.state.auctionData && this.state.auctionData.buyItNowPrice > 0 &&
+                        <div className="col-sm-4">
+                          <div className="curr-bid-number">$<span
+                            className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
+                          <div className="curr-bid-text">BUY NOW PRICE</div>
+                        </div>}
+                        {this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
+                          <div className="curr-bid-number">$<span
+                            className="current-bid">{this.state.auctionData.marketValue}</span></div>
+                          <div className="curr-bid-text">MARKET VALUE</div>
+                        </div>}
+                      </div>
+                      { bid_active ? div_bid_close : '' }
+                      { !bid_active ? this.props.authenticated ? this.props.user ? form_bid_only : form_bid : form_login : '' }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <PopupModel
+          id="bookingPopup"
+          showModal={this.state.showPopup}
+          headerText={<h4>{this.state.popupHeader}</h4>}
+          modelBody=''
+          onCloseFunc={this.hidePopup}>
+          <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+            { this.state && this.state.errorMsgCard }
+            <div className="modal-footer">
+              {this.state.popupHeader == "Success" ? <Button className="btn btn-success" onClick={this.placeBid}
+                                                             loading={this.state.loading}>Confirm</Button> : ""}
+              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
+                                                             loading={this.state.loading}>Confirm</Button> : ""}
+              <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
+            </div>
+          </div>
+        </PopupModel>
+      </div>
+    );
+  }
 }
 class ImageList extends React.Component {
-	render() {
-		return (
-			<div className="item-image">
-				<img className="item-image-inner"
-				     src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div className="item-image">
+        <img className="item-image-inner"
+             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      </div>
+    );
+  }
 }
 
 const mapDispatchToProps = {
-	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
-	doGetAuctionItemByCode: (eventUrl, itemCode) => doGetAuctionItemByCode(eventUrl, itemCode),
-	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
-	doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
-	submitAuctionBid: (eventUrl, userData) => submitAuctionBid(eventUrl, userData),
-	changeUserData: (data, userData) => changeUserData(data, userData),
-	doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  doGetEventData: (eventUrl) => doGetEventData(eventUrl),
+  doGetAuctionItemByCode: (eventUrl, itemCode) => doGetAuctionItemByCode(eventUrl, itemCode),
+  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
+  doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
+  submitAuctionBid: (eventUrl, userData) => submitAuctionBid(eventUrl, userData),
+  changeUserData: (data, userData) => changeUserData(data, userData),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
-	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
-	eventData: state.event && state.event.data,
-	eventTicketData: state.event && state.event.ticket_data,
-	auction_data: state.event && state.event.auction_data,
-	user: state.session.user,
-	authenticated: state.session.authenticated
+  stripeKey: state.event && state.event.data && state.event.data.stripeKey,
+  eventData: state.event && state.event.data,
+  eventTicketData: state.event && state.event.ticket_data,
+  auction_data: state.event && state.event.auction_data,
+  user: state.session.user,
+  authenticated: state.session.authenticated
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

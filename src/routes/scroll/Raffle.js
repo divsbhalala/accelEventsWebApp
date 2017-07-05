@@ -64,8 +64,8 @@ class Raffle extends React.Component {
                       </tr>
                       </thead>
                     </table>
-                    <div id="scroller" className="scrollingpage">
-											{this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <marquee direction="up" height={ "500px"} loop="infinite">
+                    <div id="scroller" className="scrollingpage microsoft scroll-container container" height={ "500px"}>
+                      {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <p  className="marquee" >
                         <table className={("table datatables scrollingtable" , s.inner)}>
                           <tbody>
 													{this.state.settings && this.state.settings.items &&
@@ -75,7 +75,7 @@ class Raffle extends React.Component {
 													}
                           </tbody>
                         </table>
-                      </marquee>}
+                      </p>}
 											{this.state.settings && this.state.settings.items && this.state.settings.items.length <= 8 && <table className={("table datatables scrollingtable")}>
                         <tbody>
 												{this.state.settings && this.state.settings.items &&

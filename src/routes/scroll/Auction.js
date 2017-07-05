@@ -50,9 +50,6 @@ class Auction extends React.Component {
                   }
                 </div>
               </div>
-              { /* <div className="microsoft container">
-                <p className="marquee">Windows 8 and Windows RT are focused on your life—your friends and family, your apps, and your stuff. With new things like the <a href="https://windows.microsoft.com/en-US/windows-8/start-screen">Start screen</a>, <a href="https://windows.microsoft.com/en-US/windows-8/charms">charms</a>, and a <a href="https://windows.microsoft.com/en-US/windows-8/microsoft-account">Microsoft account</a>, you can spend less time searching and more time doing.</p>
-              </div> */ }
               <div className="row">
                 <div className="col-md-10 col-md-offset-1">
                   <div className="table white-bg scrollingpage">
@@ -70,8 +67,8 @@ class Auction extends React.Component {
                       </tr>
                       </thead>
                     </table>
-                    <div id="scroller" className="scrollingpage microsoft">
-                      {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <p  className="marquee" behavior="scroll" direction="up" height={ "500px"} loop="infinite" >
+                    <div id="scroller" className="scrollingpage microsoft scroll-container container" height={ "500px"}>
+                      {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <p  className="marquee" >
                         <table className={("table datatables scrollingtable" , s.inner)}>
                           <tbody>
                           {this.state.settings && this.state.settings.items &&

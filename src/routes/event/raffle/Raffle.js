@@ -262,7 +262,7 @@ class Raffle extends React.Component {
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
+    },function afterChange () {
       this.checkIsValidBidData()
     });
     if (value == '') {
@@ -358,11 +358,6 @@ class Raffle extends React.Component {
     }
   };
 
-  componentDidMount() {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
-  }
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -392,9 +387,6 @@ class Raffle extends React.Component {
     });
   };
   componentReRender() {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
       this.setState({
@@ -557,12 +549,7 @@ class Raffle extends React.Component {
     });
   };
   render() {
-    let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-                           action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
-                           data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
-                           data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                           data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
-                           onSubmit={this.submiteBuyTicket}>
+    let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post" onSubmit={this.submiteBuyTicket}>
 
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>

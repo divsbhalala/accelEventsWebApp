@@ -16,7 +16,7 @@ import Button from 'react-bootstrap-button-loader';
 import IntlTelInput from 'react-intl-tel-input';
 import PopupModel from '../../components/PopupModal';
 import LoginModal from '../../components/LoginModal';
-
+import {getCardToken} from './../../routes/checkout/action/index';
 class BuyRaffleTicketsModal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -98,7 +98,6 @@ class BuyRaffleTicketsModal extends React.Component {
 
 	componentWillMount() {
 		this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-		// Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
 	}
 	componentWillReceiveProps() {
 	  setTimeout(()=>{
@@ -517,7 +516,6 @@ class BuyRaffleTicketsModal extends React.Component {
 					}
 				});
 		} else {
-			let self = this;
 			//this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
 			if (this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
 				const card = {
@@ -526,23 +524,23 @@ class BuyRaffleTicketsModal extends React.Component {
 					exp_month: this.state.expMonthValue,
 					exp_year: this.state.expYearValue,
 				}
-				Stripe.createToken(card, function (status, response) {
-					if (response.error) {
-						self.setState({
+				this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
+          if (response.error) {
+							this.setState({
 							showPopup: true,
 							errorMsg: response.error.message,
 							popupHeader: "Failed",
 							loading: false,
 						});
 					} else {
-						self.setState({
+						this.setState({
 							stripeToken: response.id,
 						})
-						self.byBid();
+						this.byBid();
 					}
 				});
 			} else {
-				self.setState({
+				this.setState({
 					loading: false,
 				})
 			}
@@ -1090,6 +1088,7 @@ const mapDispatchToProps = {
 	doLogin: (email, password, rememberme) => doLogin(email, password, rememberme),
 	doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 	purchaseTickets: (eventUrl, userData) => purchaseTickets(eventUrl, userData),
+  getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 
 const mapStateToProps = (state) => ({
