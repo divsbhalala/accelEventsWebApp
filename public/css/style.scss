@@ -2210,27 +2210,6 @@ input:-webkit-autofill {
   cursor: hand;
   cursor: pointer;
 }
-.form-group .form-control-feedback,
-.form-group .help-block,
-.form-group.has-feedback.has-success .help-block
-{
-  display: none;
-}
-.form-group.has-feedback.has-error .help-block{
-  display: block;
-}
-.form-group .glyphicon-ok,
-.form-group .glyphicon-remove
-{
-  display: none;
-}
-.form-group.has-feedback.has-success .glyphicon-ok
-{
-  display: block;
-}
-.form-group.has-feedback.has-error .glyphicon-remove{
-  display: block;
-}
 .tabs a.nav-link.disabled{
   display: none;
 }
@@ -2292,4 +2271,29 @@ span.navbar-brand:hover a
 }
 .item-description p, .card .card-content p{
   visibility  :visible !important;
+}
+
+/*************************** FORM STYLES   *****************/
+.form-group {
+  .form-control-feedback,
+  .help-block,
+  &.has-feedback.has-success .help-block {
+    display: none;
+  }
+  &.has-feedback.has-error .help-block {
+    display: block;
+  }
+  .glyphicon-ok,
+  .glyphicon-remove {
+    display: none;
+  }
+  &.has-feedback.has-success .glyphicon-ok {
+    display: block;
+  }
+  &.has-feedback.has-error .glyphicon-remove{
+    display: block;
+  }
+}
+.input-group-addon, .input-group-btn {
+  border-width: 1px;
 }
