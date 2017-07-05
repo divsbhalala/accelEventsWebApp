@@ -99,3 +99,14 @@
 .eventPage .navbar-toggle{
 	display: none;
 }
+.pointer,
+.pointer:focus,
+.pointer:active,
+.pointer:visited
+{
+	cursor: pointer;
+	text-decoration: none;
+}
+.w-100p{
+	width: 100%;
+}
