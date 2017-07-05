@@ -6,6 +6,7 @@ import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber, doGetFundANeedItemByCode} from './../action/index';
+import {getCardToken} from './../../checkout/action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
@@ -169,7 +170,11 @@ class Fund extends React.Component {
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
       };
+      this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(resp=>{
+        console.log("resp", resp);
+      });
       Stripe.createToken(card, function (status, response) {
+        console.log("response", response);
         if (response.error) {
           self.setState({
             errorMsg: response.error.message,
@@ -687,7 +692,7 @@ class Fund extends React.Component {
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                            <input type="text" className="form-control" name="firstname" placeholder="FirstName"
                                    ref={ref => {
                                      this.firstName = ref;
                                    }}
@@ -707,7 +712,7 @@ class Fund extends React.Component {
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                            <input type="text" className="form-control" name="lastname" placeholder="LastName"
                                    ref={ref => {
                                      this.lastName = ref;
                                    }}
@@ -732,7 +737,7 @@ class Fund extends React.Component {
                               <div className="input-group-addon">
                                 <i className="fa fa-envelope" aria-hidden="true"/>
                               </div>
-                              <input type="email" className="form-control login-email" name="email"
+                              <input type="email" className="form-control login-email" name="email"name="email" placeholder="Email"
                                      data-fv-field="email"
                                      ref={ref => {
                                        this.email = ref;
@@ -761,7 +766,7 @@ class Fund extends React.Component {
                                   css={['intl-tel-input', 'form-control intl-tel']}
                                   utilsScript="./libphonenumber.js"
                                   separateDialCode={true}
-                                  value={ this.state.phone }
+                                  value={ this.state.phone || "" }
                                   maxLength={16} data-stripe="number"
                                   onPhoneNumberChange={this.changePhone}
                                 />
@@ -1029,6 +1034,7 @@ const mapDispatchToProps = {
   fundaNeed: (eventUrl, data) => fundaNeed(eventUrl, data),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,
