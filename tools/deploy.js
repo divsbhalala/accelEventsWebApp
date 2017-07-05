@@ -44,13 +44,13 @@ async function deploy() {
   await spawn('git', ['init', '--quiet'], options);
 
   // Changing a remote's URL
-  let isRemoteExists = false;
+  /*let isRemoteExists = false;
   try {
     await spawn('git', ['config', '--get', `remote.${remote.name}.url`], options);
     isRemoteExists = true;
   } catch (error) {
     /* skip */
-  }
+  /*}
   await spawn('git', ['remote', isRemoteExists ? 'set-url' : 'add', remote.name, remote.url], options);
 
   // Fetch the remote repository if it exists
@@ -65,7 +65,7 @@ async function deploy() {
     await spawn('git', ['fetch', remote.name], options);
     await spawn('git', ['reset', `${remote.name}/${remote.branch}`, '--hard'], options);
     await spawn('git', ['clean', '--force'], options);
-  }
+  }*/
 
   // Build the project in RELEASE mode which
   // generates optimized and minimized bundles
@@ -82,7 +82,7 @@ async function deploy() {
   }
 
   // Push the contents of the build folder to the remote server via Git
-  await spawn('git', ['add', '.', '--all'], options);
+  /*await spawn('git', ['add', '.', '--all'], options);
   try {
     await spawn('git', ['diff', '--cached', '--exit-code', '--quiet'], options);
   } catch (error) {
@@ -92,7 +92,7 @@ async function deploy() {
 
   // Check if the site was successfully deployed
   const response = await fetch(remote.website);
-  console.log(`${remote.website} => ${response.status} ${response.statusText}`);
+  console.log(`${remote.website} => ${response.status} ${response.statusText}`);*/
 }
 
 export default deploy;

@@ -257,7 +257,6 @@ class Raffle extends React.Component {
     //this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone:countryData.iso2,
@@ -275,7 +274,6 @@ class Raffle extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-        console.log(resp)
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
@@ -649,13 +647,13 @@ class Raffle extends React.Component {
       <div className="row mrg-t-md">
         <div className="col-md-5 col-lg-10">
           <button role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={this.state.settings && !this.state.settings.moduleActivated}>Get Tickets</button>
+                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}>Get Tickets</button>
         </div>
       </div>
     </form>;
     let form_normal = <div >
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
-      <button  role="button" className="btn btn-primary btn-block"    disabled={this.state.settings && !this.state.settings.moduleActivated}
+      <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
          to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
