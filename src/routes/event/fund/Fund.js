@@ -544,9 +544,9 @@ class Fund extends React.Component {
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    if(this.props.stripeKey){
+    /* if(this.props.stripeKey){
       Stripe.setPublishableKey(this.props.stripeKey);
-    }
+    } */
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
       if(!resp.data.moduleActivated){

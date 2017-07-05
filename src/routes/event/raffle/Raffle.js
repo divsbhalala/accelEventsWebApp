@@ -366,9 +366,6 @@ class Raffle extends React.Component {
     }
   }
   componentWillMount() {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {

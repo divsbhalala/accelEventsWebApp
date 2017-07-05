@@ -98,7 +98,7 @@ class BuyRaffleTicketsModal extends React.Component {
 
 	componentWillMount() {
 		this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-		Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
+		// Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs');
 	}
 	componentWillReceiveProps() {
 	  setTimeout(()=>{
