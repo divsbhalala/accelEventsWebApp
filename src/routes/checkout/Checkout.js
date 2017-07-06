@@ -98,7 +98,6 @@ class Checkout extends React.Component {
 		this.getDiscount = this.getDiscount.bind(this);
 
 	}
-
 	componentWillMount() {
 		eventUrl = this.props.params && this.props.params.params;
 		this.props.doGetEventData(eventUrl);
@@ -522,7 +521,6 @@ class Checkout extends React.Component {
 				}
 
 			}).catch((error, status, msg) => {
-				console.log(error.response.data.error)
 				let respError = error && error.response && error.response.data && error.response.data.error && error.response.data.error;
 				if(respError){
 					if(respError.param == 'exp_year'){
@@ -740,6 +738,16 @@ class Checkout extends React.Component {
 			showMapPopup: false
 		})
 	};
+	hideSuccessAlertPopup = () => {
+		this.setState({
+			ticketPurchaseSuccessPopup:false
+		});
+	}
+	hideformErrorPopup = () => {
+		this.setState({
+			showFormError:false
+		});
+	}
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -1479,19 +1487,34 @@ class Checkout extends React.Component {
 								</div>
 							</div>
 						</PopupModel>
-						{ this.state.ticketPurchaseSuccessPopup &&
-						<SweetAlert title="Thank you for supporting the event. Please check your inbox for your tickets."
-												onConfirm={() => {
-													history.push('/event/' + eventUrl)
-												}}/> }
-						{ this.state.showFormError && <SweetAlert
-							warning
-							confirmBtnText="Continue"
-							confirmBtnBsStyle="danger"
-							title={ this.state.formError || "Invalid Data"}
-							onConfirm={this.hideFormError}
-						>
-						</SweetAlert> }
+						<PopupModel
+							id="ticketPurchaseSuccessPopup"
+							showModal={ this.state.ticketPurchaseSuccessPopup}
+							headerText={<h4>Success</h4>}
+							modelBody={<p>Thank you for supporting the event. Please check your inbox for your tickets.</p>}
+							onCloseFunc={this.hideSuccessAlertPopup}>
+							<div className="ticket-type-container">
+								<p>Thank you for supporting the event. Please check your inbox for your tickets.</p>
+								<div className="modal-footer">
+									<button className="btn btn-green" onClick={() => {
+													history.push('/event/' + eventUrl)}}>Close</button>
+								</div>
+							</div>
+						</PopupModel>
+						{console.log("fdsfdsfsfds", this.state.formError)}
+						<PopupModel
+							id="showFormErroralertPopup"
+							showModal={ this.state.showFormError}
+							headerText={<h4>Faild</h4>}
+							modelBody={<p>{ this.state.formError || "Invalid Data"}</p>}
+							onCloseFunc={this.hideformErrorPopup}>
+							<div className="ticket-type-container">
+								<p>{ this.state.formError || "Invalid Data"}</p>
+								<div className="modal-footer">
+									<button className="btn btn-green" onClick={this.hideformErrorPopup}>Close</button>
+								</div>
+							</div>
+						</PopupModel>
 					</div> : <TimeOut eventUrl={eventUrl}/>
 				: <div></div>
 		);
