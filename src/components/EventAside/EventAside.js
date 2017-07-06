@@ -274,8 +274,8 @@ class EventAside extends React.Component {
 						{ this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories && this.props.activeCategory &&
 						<div id="divItemCategories" className={cx("item-categories hidden-sm hidden-md hidden-lg")}>
 							<h4 className={cx("")}>Categories</h4>
-							<div className={cx("dropdown", this.state.mobileViewCatExpand && "open")}>
-								<button className="btn btn-block dropdown-toggle pointer" type="button" data-toggle="dropdown" aria-expanded={this.props.mobileViewCatExpand} onClick={this.toggleMobileViewCat}>
+							<div className={cx("dropdown", this.state.mobileViewCatExpand && "open")}>{console.log("this.props.selectedCategory", this.props.selectedCategory)}
+								<button className="btn btn-block dropdown-toggle pointer" type="button" data-toggle="dropdown" aria-expanded={this.state.mobileViewCatExpand} onClick={this.toggleMobileViewCat}>
 									<span className="text">{this.props.selectedCategory === '' || !this.props.selectedCategory   ? "All Items" : this.props.selectedCategory}</span>
 									&nbsp;<span className="caret" /></button>
 								<ul className={cx("dropdown-menu category-list w-100p")}>
@@ -292,7 +292,8 @@ class EventAside extends React.Component {
 										this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
 											<li className={cx(this.props.selectedCategory === item.name && "active")}
 													key={item.name + Math.random()} onClick={() => {
-												this.props.setFilterCategory(item.name)
+												this.props.setFilterCategory(item.name),
+												this.toggleMobileViewCat()
 											}}>
 												<a className={cx("category-switcher pointer")}>
 													<i className={cx("fa fa-ticket")} />

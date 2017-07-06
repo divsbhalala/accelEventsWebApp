@@ -68,7 +68,7 @@ class Event extends React.Component {
 			totalTicketQty: 0,
 			totalTickets: [],
 			totalTicketPrice: 0,
-			selectedCategoty: '',
+			selectedCategory: '',
 			lastScrollPos: 0,
 			activeEventTickets: true,
 			activeFund: true,
@@ -550,7 +550,7 @@ class Event extends React.Component {
 		if (this.props.active_tab_data && this.props.active_tab_data.tab) {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
 			this.setState({
-				selectedCategoty: category
+				selectedCategory: category
 			})
 			if (label == 'Auction') {
 				this.setState({
@@ -717,7 +717,7 @@ class Event extends React.Component {
 								            showMapPopup={this.showMapPopup} activeCategory={true}
 								            authenticated={this.props.authenticated}
 								            setFilterCategory={this.setFilterCategory}
-								            selectedCategoty={this.state.selectedCategoty}
+								            selectedCategory={this.state.selectedCategory}
 								            setSearchString={this.setSearchString}
 														params={this.props.params}
 														successTask={this.successTask}
