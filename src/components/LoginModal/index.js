@@ -341,7 +341,7 @@ class LoginPopup extends React.Component {
                                 css={['intl-tel-input', 'form-control intl-tel']}
                                 utilsScript="./libphonenumber.js"
                                 separateDialCode={true}
-                                value={ this.state.phone }
+                                value={ this.state.phone || "" }
                                 onPhoneNumberChange={this.changePhone}
                               />
                               { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
