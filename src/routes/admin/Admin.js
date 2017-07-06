@@ -23,12 +23,20 @@ class Admin extends React.Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <div className="">
+        <div id="content-wrapper">
           <div className="row">
-           <div className="col-lg-offset-2 col-sm-10">
-              <PageHeader>Dashboard</PageHeader>
-          <div className="row form-group flexrow dashboard">
+           <div className="col-sm-12">
+             <div className="row">
+               <div className="col-lg-12">
+                 <div id="content-header" className="clearfix">
+                   <div className="pull-left">
+                     <h1>Dashboard</h1>
+                   </div>
+                 </div>
+               </div>
+             </div>
+
+             <div className="row form-group flexrow dashboard">
 
             <div className="col-lg-6 col-sm-6 col-xs-12">
               <BoxWidget
@@ -57,7 +65,6 @@ class Admin extends React.Component {
 
 
           <div className="form-group flex-row flex-2-col">
-
             <div className="flex-col flex-col-mobile">
               <div className="auction-stat-box main-box clearfix project-box gray-box">
                 <div className="main-box-body clearfix">
@@ -511,8 +518,7 @@ class Admin extends React.Component {
           </div>
 
         </div>
-      </div>
-    );
+     );
   }
 }
 export default withStyles(s)(Admin);

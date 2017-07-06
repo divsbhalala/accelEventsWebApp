@@ -22,7 +22,7 @@
   position: relative;
   min-height: 1200px;
   padding: 15px 15px 35px 15px;
-  margin-left: 220px;
+  margin-left: 220px !important;
   transition: 0.4s all ease-in;
 }
 
@@ -909,7 +909,7 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
     width: 64px;
   }
   .nav-small #content-wrapper {
-    margin-left: 64px;
+    margin-left: 64px !important;
   }
   .nav-small #nav-col #user-left-box {
     display: none;

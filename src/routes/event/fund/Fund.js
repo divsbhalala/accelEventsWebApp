@@ -132,7 +132,6 @@ class Fund extends React.Component {
         "phoneNumber": this.state.phone
       };
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
-        let self = this;
         if(!resp.error){
           const card = {
             number: this.cardNumber.value.trim(),
@@ -214,6 +213,8 @@ class Fund extends React.Component {
             isError:false,
             popupHeader:"Success",
             loading:false,
+          }, function stateChange(){
+            this.clearFormData();
           });
         }else{
           this.setState({
@@ -225,6 +226,20 @@ class Fund extends React.Component {
         }
       });
   };
+  clearFormData = () =>{
+      this.setState({
+      amountFeedBack:false,
+      cardHolderFeedBack:false,
+      cardNumberFeedBack:false,
+      cvvFeedBack:false,
+    })
+    this.amount.value="";
+    if(!this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) )){
+      this.cardHolder.value="";
+      this.cardNumber.value="";
+      this.cvv.value="";
+    }
+  }
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -565,7 +580,7 @@ class Fund extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
+      history.push('/404');
     });
   };
   componentRernder() {
@@ -853,7 +868,7 @@ class Fund extends React.Component {
                                         <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                           this.expMonth = ref;
                                         }}  onChange={this.expMonthValidateHandler} >
-                                          <option selected value="01">Jan (01)</option>
+                                          <option defaultValue value="01">Jan (01)</option>
                                           <option value="02">Feb (02)</option>
                                           <option value="03">Mar (03)</option>
                                           <option value="04">Apr (04)</option>

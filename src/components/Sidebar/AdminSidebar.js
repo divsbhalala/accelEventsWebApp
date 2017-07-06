@@ -26,7 +26,7 @@ class AdminSiderbar extends React.Component {
 
 	render() {
 		return (
-			<div className="">
+			<div className="nav-small-id" >
 				<div id="nav-col">
 					<section id="col-left" className="col-left-nano has-scrollbar">
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
@@ -85,7 +85,7 @@ class AdminSiderbar extends React.Component {
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
 										</Link>
-										<ul className="submenu">
+										<ul className="submenu" style={{display: 'none' }}>
 											<li className>
 												<Link to="/admin/event-ticket-create">
 													Create Event
@@ -108,7 +108,7 @@ class AdminSiderbar extends React.Component {
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
 										</Link>
-										<ul className="submenu" style={{display: this.state.toggle ? 'none' : 'block'}}>
+										<ul className="submenu" style={{display: this.state.toggle ? 'none' : 'none'}}>
 											<li className>
 												<Link to="/admin/silent-auction-add-items">
 													Add Items
@@ -126,7 +126,7 @@ class AdminSiderbar extends React.Component {
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
 										</Link>
-										<ul className="submenu">
+										<ul className="submenu" style={{display: 'none' }}>
 											<li className>
 												<Link to="/admin/raffle-add-items">
 													Add Items
@@ -144,7 +144,7 @@ class AdminSiderbar extends React.Component {
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>
 										</Link>
-										<ul className="submenu">
+										<ul className="submenu" style={{display: 'none' }}>
 											<li className>
 												<Link to="/admin/cause-auction-add-items">
 													Add Items
@@ -163,7 +163,7 @@ class AdminSiderbar extends React.Component {
 											<span>User Management</span>
 										</Link>
 									</li>
-									<li className>
+									<li className style={{display: 'none' }}>
 										<Link to="#" className="dropdown-toggle">
 											<i className="vt vt-settings-gears" />
 											<span>Settings</span>

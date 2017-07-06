@@ -485,7 +485,7 @@ class Auction extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -528,7 +528,7 @@ class Auction extends React.Component {
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-      if(!resp.data.moduleActivated){
+      if(!resp.data.moduleActivated || resp.data.moduleEnded){
         this.setState({
           errorMsgCard:"Please activate this module to start accepting pledges.",
           popupHeader :'Failed',
@@ -839,7 +839,7 @@ class Auction extends React.Component {
                       <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                         this.expMonth = ref;
                       }} onChange={this.expMonthValidateHandler}>
-                        <option selected value="01">Jan (01)</option>
+                        <option defaultValue value="01">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
                         <option value="04">Apr (04)</option>
@@ -899,12 +899,12 @@ class Auction extends React.Component {
                     className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
                     <label className="control-label">CVV Number</label>
                     <div className="input-group">
-                      <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                      <input type="number" className="form-control field-cvv" maxLength="4" size={4}
                              data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
                              ref={ref => {
                                this.cvv = ref;
                              }}
-                             onKeyUp={this.cvvValidateHandler}/>
+                             onKeyUp={this.cvvValidateHandler} />
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                       { this.state.cvvFeedBack && !this.state.cvv &&
@@ -1069,7 +1069,7 @@ class Auction extends React.Component {
                       <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                         this.expMonth = ref;
                       }} onChange={this.expMonthValidateHandler}>
-                        <option selected value="01">Jan (01)</option>
+                        <option defaultValue value="01">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
                         <option value="04">Apr (04)</option>

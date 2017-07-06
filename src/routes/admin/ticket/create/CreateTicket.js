@@ -13,10 +13,9 @@ class CreateTicket extends React.Component {
   
   render() {
     return (
-      <div className="container-fluid">
+      <div id="content-wrapper">
         <div className="row">
-          <div className="col-lg-offset-2 col-sm-10">
-            <div id="content-wrapper">
+          <div className="col-sm-12">
               <div className="row" style={{opacity: 1}}>
                 <div className="col-lg-12">
                   <div className="row">
@@ -1220,7 +1219,6 @@ class CreateTicket extends React.Component {
 
           </div>
         </div>
-      </div>
     );
   }
 }

@@ -1416,7 +1416,7 @@ class Volunteer extends React.Component {
                             <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
                             }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="01">Jan (01)</option>
+                              <option defaultValue value="01">Jan (01)</option>
                               <option value="02">Feb (02)</option>
                               <option value="03">Mar (03)</option>
                               <option value="04">Apr (04)</option>
@@ -1789,7 +1789,7 @@ class Volunteer extends React.Component {
                             <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
                             }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="01">Jan (01)</option>
+                              <option defaultValue value="01">Jan (01)</option>
                               <option value="02">Feb (02)</option>
                               <option value="03">Mar (03)</option>
                               <option value="04">Apr (04)</option>
@@ -2149,7 +2149,7 @@ class Volunteer extends React.Component {
                             <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
                             }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="01">Jan (01)</option>
+                              <option defaultValue value="01">Jan (01)</option>
                               <option value="02">Feb (02)</option>
                               <option value="03">Mar (03)</option>
                               <option value="04">Apr (04)</option>
@@ -2841,7 +2841,7 @@ class Volunteer extends React.Component {
                               <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                 this.expMonth = ref;
                               }}  onChange={this.expMonthValidateHandler} >
-                                <option selected value="01">Jan (01)</option>
+                                <option defaultValue value="01">Jan (01)</option>
                                 <option value="02">Feb (02)</option>
                                 <option value="03">Mar (03)</option>
                                 <option value="04">Apr (04)</option>
