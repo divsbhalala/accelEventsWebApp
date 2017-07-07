@@ -391,10 +391,21 @@ class Event extends React.Component {
 					})
 				}
 				this.setState({
-					auctionPageItems: this.state.auctionPageItems.concat(resp.data && resp.data.items),
+					auctionPageItems:this.state.auctionPageItems.concat(resp.data && resp.data.items) ,
 					auctionPageCount: this.state.auctionPageCount + 1
-				})
-			}
+				},function changeAfter(){
+					var seenNames = {};
+					let	array = this.state.auctionPageItems.filter(function(currentObject) {
+						if (currentObject.id in seenNames) {
+							return false;
+						} else {
+							seenNames[currentObject.id] = true;
+							return true;
+						}
+					});
+					this.setState({auctionPageItems:array,})
+					}
+				)}
 			else {
 				this.setState({
 					auctionPageLoading: false

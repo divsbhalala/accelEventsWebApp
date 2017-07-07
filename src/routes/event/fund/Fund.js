@@ -96,7 +96,7 @@ class Fund extends React.Component {
   };
   onFormClick = (e) => {
     e.preventDefault();
-    if (0 && !this.state.settings.moduleActivated){
+    if (!this.state.settings.moduleActivated){
       this.setState({
         showMapPopup: true,
         errorMsg: " Pledges are no longer being accepted for this Need." ,
@@ -227,7 +227,6 @@ class Fund extends React.Component {
       });
   };
   clearFormData = () =>{
-
       this.setState({
       amountFeedBack:false,
       cardHolderFeedBack:false,
@@ -839,12 +838,12 @@ class Fund extends React.Component {
                                 </div>
                                 <div
                                   className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
-                                  <label className="control-label">Credit Card Number</label>
+                                  <label className="control-label">Credit Card Number !</label>
                                   <div className="input-group">
                                     <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
                                     </div>
                                     <input type="number" className="form-control field-card_number" id="cardnumber"
-                                           placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
+                                           placeholder="8888-8888-8888-8888"  maxLength="16" data-stripe="number"
                                            required="required" data-fv-field="cardnumber"
                                            ref={ref => {
                                              this.cardNumber = ref;
