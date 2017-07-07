@@ -229,7 +229,7 @@ class Auction extends React.Component {
           this.setState({
             showPopup: true,
             errorMsgCard: "Thank you for Registration!",
-            popupHeader:"Successfully",
+            popupHeader:"Successful Registration",
             loading:false,
           });
           this.componentReRender();
@@ -364,7 +364,7 @@ class Auction extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
-
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue: this.cardNumber.value.trim(),
@@ -421,7 +421,7 @@ class Auction extends React.Component {
     //this.checkIsValidBidData();
   };
   cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true
     }, function afterStateChange() {
@@ -489,7 +489,7 @@ class Auction extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue:this.expMonth.value.trim(),
+      expMonthValue:this.expMonth.value,
     },function afterStateChange () {
       this.checkIsValidBidData()
     });
@@ -574,7 +574,9 @@ class Auction extends React.Component {
     this.setState({
       amountFeedBack:false,
     });
-    this.amount.value="";
+    if(this.props.authenticated){
+      this.amount.value="";
+    }
   };
   showPopup = () => {
     this.setState({
@@ -621,7 +623,6 @@ class Auction extends React.Component {
       <h4>Login or signup below</h4>
       <form className="ajax-form validated fv-form fv-form-bootstrap"
             autoComplete="off" method="POST"
-
             noValidate="novalidate"
             onSubmit={this.signupForm}>
         <div
@@ -648,7 +649,7 @@ class Auction extends React.Component {
           <small className="help-block">{this.state.errorMsgEmail}</small>}
         </div>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-12">
             <div
               className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
               <label className="control-label">Cell Number</label>
@@ -992,7 +993,7 @@ class Auction extends React.Component {
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-12">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">$</div>

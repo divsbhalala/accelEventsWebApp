@@ -96,7 +96,7 @@ class Fund extends React.Component {
   };
   onFormClick = (e) => {
     e.preventDefault();
-    if (!this.state.settings.moduleActivated){
+    if (0 && !this.state.settings.moduleActivated){
       this.setState({
         showMapPopup: true,
         errorMsg: " Pledges are no longer being accepted for this Need." ,
@@ -112,7 +112,7 @@ class Fund extends React.Component {
       }else{
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }
@@ -227,6 +227,7 @@ class Fund extends React.Component {
       });
   };
   clearFormData = () =>{
+
       this.setState({
       amountFeedBack:false,
       cardHolderFeedBack:false,
@@ -342,7 +343,6 @@ class Fund extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   cardHolderValidateHandler = (e) => {
-
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue:this.cardHolder.value.trim(),
@@ -376,7 +376,7 @@ class Fund extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
-
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value.trim(),
@@ -432,7 +432,7 @@ class Fund extends React.Component {
     //this.checkIsValidBidData();
   };
   cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true
     },function afterTitleChange () {

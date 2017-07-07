@@ -46,8 +46,8 @@ class BuyRaffleTicketsModal extends React.Component {
 			cvv: null,
 			month: null,
 			year: null,
-			expMonth: null,
-			expYear: null,
+			expMonth: true,
+			expYear: true,
 			phoneNumber: null,
 			popupHeader: null,
 			firstNameValue: null,
@@ -219,6 +219,7 @@ class BuyRaffleTicketsModal extends React.Component {
 
 	};
 	cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
 			cardNumberFeedBack: true,
 			cardNumberValue: this.cardNumber.value,
@@ -241,7 +242,7 @@ class BuyRaffleTicketsModal extends React.Component {
 		//  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 	};
 	cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
 		this.setState({
 			cvvFeedBack: true,
 			cvvValue: this.cvv.value.trim(),
@@ -400,6 +401,12 @@ class BuyRaffleTicketsModal extends React.Component {
 
 	componentReRender() {
 	};
+componentDidMount() {
+ this.setState({
+
+
+ })
+};
 
   onFormClick = (e) => {
     e.preventDefault();
@@ -413,12 +420,13 @@ class BuyRaffleTicketsModal extends React.Component {
 			cardNumberFeedBack: true,
 			firstNameFeedBack: true,
 			lastNameFeedBack: true,
-			expMonthFeedBack: true,
-			expYearFeedBack: true,
+			cvvFeedBack: true,
 			popupHeader: "",
 			errorMsg: "",
-		})
-		if (!this.props.authenticated && this.state.emailValue && this.state.passwordValue && this.state.phone && this.state.cardHolderValue && this.state.cardNumberValue && this.state.expYearValue && this.state.expMonthValue && this.state.cvvValue) {
+      expMonthValue:this.expMonth.value,
+      expYearValue:this.expYear.value,
+  	})
+		if (!this.props.authenticated && this.state.emailValue && this.state.passwordValue && this.state.phone && this.state.cardHolderValue && this.state.cardNumberValue && this.state.cvvValue) {
 			let userData = {
 				"countryCode": this.state.countryPhone,
 				"email": this.state.emailValue,
@@ -451,7 +459,7 @@ class BuyRaffleTicketsModal extends React.Component {
 			});
 		} else {
 			if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0) {
-				if (this.state.cvv && this.state.cardHolder && this.state.cardNumber && this.state.expMonth && this.state.expYear) {
+				if (this.state.cvv && this.state.cardHolder && this.state.cardNumber ) {
 					this.setState({
 						isShowAlertPopup: true,
 					//	showTicketsPopup: false,
@@ -524,7 +532,7 @@ class BuyRaffleTicketsModal extends React.Component {
 					exp_month: this.state.expMonthValue,
 					exp_year: this.state.expYearValue,
 				};
-				this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
+				this.props.getCardToken(this.props.stripeKey, this.state.cardNumberValue,this.state.expMonthValue, this.state.expYearValue, this.state.cvvValue).then(response=>{
           if (response.error) {
 							this.setState({
 							showPopup: true,
@@ -696,7 +704,7 @@ class BuyRaffleTicketsModal extends React.Component {
 				flag = false;
 			}
 			if (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 && this.props.eventData.ccRequiredForBidConfirm) {
-				valid2 = !!(this.state.amount && this.state.cardNumber && this.state.cardHolder && this.state.cvv && this.expMonth && this.expYear);
+				valid2 = !!(this.state.amount && this.state.cardNumber && this.state.cardHolder && this.state.cvv );
 				flag = false;
 			}
 			if (flag) {
@@ -957,7 +965,7 @@ class BuyRaffleTicketsModal extends React.Component {
 																	<select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                   this.expMonth = ref;
                                 }} onChange={this.expMonthValidateHandler}>
-																		<option defaultValue value="10">Jan (01)</option>
+																		<option defaultValue value="01">Jan (01)</option>
 																		<option value="02">Feb (02)</option>
 																		<option value="03">Mar (03)</option>
 																		<option value="04">Apr (04)</option>

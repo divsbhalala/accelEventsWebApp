@@ -178,7 +178,7 @@ class Checkout extends React.Component {
 		}
 	};
 	cardNumberValidateHandler = (e) => {
-
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
 			cardNumberFeedBack: true
 		});

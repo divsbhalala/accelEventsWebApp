@@ -232,6 +232,7 @@ class Event extends React.Component {
 
 	};
 	cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
 			cardNumberFeedBack: true
 		});
@@ -276,7 +277,7 @@ class Event extends React.Component {
 		}
 	};
 	cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
 		this.setState({
 			cvvFeedBack: true
 		});

@@ -19,7 +19,7 @@ import SideNav, { Nav, NavIcon, NavText } from 'react-sidenav';
 class Admin extends React.Component {
   static propTypes = {
     title: PropTypes.string,
-  };
+  };0
 
   render() {
     return (

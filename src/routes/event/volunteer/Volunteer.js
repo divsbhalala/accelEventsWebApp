@@ -149,9 +149,10 @@ class Volunteer extends React.Component {
       itemStatusFeedBack: true,
       raffleTicketFeedBack: true,
       phoneNumberFeedBack: true,
-      expMonthFeedBack: true,
       loading:false,
       stripeToken:null,
+      expMonthValue:this.expMonth.value,
+      expYearValue:this.expYear.value,
     })
   };
 	setActiveView = (view) => {
@@ -476,6 +477,7 @@ class Volunteer extends React.Component {
 
 	};
 	cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
 			cardNumberFeedBack: true
 		});
@@ -564,7 +566,7 @@ class Volunteer extends React.Component {
 		}
 	};
 	cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
 		this.setState({
 			cvvFeedBack: true
 		});

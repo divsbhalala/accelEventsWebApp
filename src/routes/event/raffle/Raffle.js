@@ -210,6 +210,7 @@ class Raffle extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
@@ -232,7 +233,7 @@ class Raffle extends React.Component {
   //  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true,
       ccvValue:this.cvv.value.trim(),
