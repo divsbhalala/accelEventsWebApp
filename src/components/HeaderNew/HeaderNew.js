@@ -75,7 +75,7 @@ class HeaderNew extends React.Component {
 	componentWillReceiveProps() {
 		eventUrl = this.props.params && this.props.params.params;
 		console.log("even", eventUrl);
-		if (this.props.authenticated) {
+		if (this.props.authenticated && this.props.params && this.props.params.params) {
 			this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
 	}

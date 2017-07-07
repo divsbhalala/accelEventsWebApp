@@ -101,7 +101,7 @@ class BuyRaffleTicketsModal extends React.Component {
 	}
 	componentWillReceiveProps() {
 	  setTimeout(()=>{
-      if (this.props.showModal && !this.state.isshowAlertPopup){
+      if (this.props.showModal && !this.state.isShowAlertPopup){
         this.reRender();
       }
     },100);
@@ -428,7 +428,7 @@ class BuyRaffleTicketsModal extends React.Component {
 			this.props.doSignUp(this.props.params && this.props.params.params, userData).then((resp)=> {
 				if (!resp.errorMessage) {
 					this.setState({
-						isshowAlertPopup: true,
+						isShowAlertPopup: true,
 						showTicketsPopup: false,
 						errorMsg: " Your card ending in " + this.state.cardNumberValue.slice(-4) + " will be charged  ",
 						popupHeader: "Confirm",
@@ -453,7 +453,7 @@ class BuyRaffleTicketsModal extends React.Component {
 			if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0) {
 				if (this.state.cvv && this.state.cardHolder && this.state.cardNumber && this.state.expMonth && this.state.expYear) {
 					this.setState({
-						isshowAlertPopup: true,
+						isShowAlertPopup: true,
 					//	showTicketsPopup: false,
 						errorMsg: " Your card ending in " + this.state.cardNumberValue.slice(-4) + " will be charged  ",
 						popupHeader: "Confirm",
@@ -493,7 +493,7 @@ class BuyRaffleTicketsModal extends React.Component {
 					if (resp && !resp.errorMessage) {
 						this.setState({
 							showPopup: true,
-              isshowAlertPopup: false,
+              isShowAlertPopup: false,
 							errorMsg: resp.message,
 							popupHeader: "Success",
 							loading: false,
@@ -523,7 +523,7 @@ class BuyRaffleTicketsModal extends React.Component {
 					cvc: this.state.cvvValue,
 					exp_month: this.state.expMonthValue,
 					exp_year: this.state.expYearValue,
-				}
+				};
 				this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
           if (response.error) {
 							this.setState({
@@ -535,7 +535,7 @@ class BuyRaffleTicketsModal extends React.Component {
 					} else {
 						this.setState({
 							stripeToken: response.id,
-						})
+						});
 						this.byBid();
 					}
 				});
@@ -553,7 +553,7 @@ class BuyRaffleTicketsModal extends React.Component {
       lastname:this.state.lastNameValue,
 			raffleTicketId: this.state.raffleTicketValue,
 			stripeToken: this.state.stripeToken,
-		}
+		};
 		this.props.purchaseTickets(this.props.params && this.props.params.params, user)
 			.then(resp => {
 				if (!resp.errorMessage) {
@@ -578,14 +578,14 @@ class BuyRaffleTicketsModal extends React.Component {
 	showAlertPopup = () => {
 		this.setState({
 		//	showPopup: true,
-			isshowAlertPopup: true,
+			isShowAlertPopup: true,
 
 		})
 	};
 	hideAlertPopup = () => {
 		this.setState({
 			//  showPopup: false,
-			isshowAlertPopup: false,
+			isShowAlertPopup: false,
 		})
 	};
 	hideTicketsPopup = () => {
@@ -757,7 +757,7 @@ class BuyRaffleTicketsModal extends React.Component {
 												<div className="input-group-addon">
 													<i className="fa fa-user" aria-hidden="true"/>
 												</div>
-												<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+												<input type="text" className="form-control" name="firstname" placeholder="First Name"
 												       ref={ref => {
                              this.firstName = ref;
                            }}
@@ -768,7 +768,7 @@ class BuyRaffleTicketsModal extends React.Component {
 												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 											</div>
 											{ this.state.firstNameFeedBack && !this.state.firstName &&
-											<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+											<small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
 										</div> : ""}
 									{ !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
 										className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -777,7 +777,7 @@ class BuyRaffleTicketsModal extends React.Component {
 											<div className="input-group-addon">
 												<i className="fa fa-user" aria-hidden="true"/>
 											</div>
-											<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+											<input type="text" className="form-control" name="lastname" placeholder="Last Name"
 											       ref={ref => {
                              this.lastName = ref;
                            }}
@@ -788,7 +788,7 @@ class BuyRaffleTicketsModal extends React.Component {
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 										</div>
 										{ this.state.lastNameFeedBack && !this.state.lastName &&
-										<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+										<small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
 									</div> : ''}
 									{ !this.props.authenticated &&
 									<div
@@ -799,7 +799,7 @@ class BuyRaffleTicketsModal extends React.Component {
 												<i className="fa fa-envelope" aria-hidden="true"/>
 											</div>
 											<input type="email" className="form-control login-email"
-											       name="email" data-fv-field="email"
+											       name="email" placeholder="Email"
 											       ref={ref => {
                              this.email = ref;
                            }}
@@ -1058,7 +1058,7 @@ class BuyRaffleTicketsModal extends React.Component {
 				</Modal>
 				<PopupModel
 					id="alertPopup"
-					showModal={this.state.isshowAlertPopup}
+					showModal={this.state.isShowAlertPopup}
 					headerText={<h4>{this.state.popupHeader}</h4>}
 					//onCloseFunc={this.hideAlertPopup}
 					>

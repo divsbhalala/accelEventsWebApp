@@ -423,7 +423,7 @@ class EventDonation extends React.Component {
             email:this.props.user.email,
             paymenttype:"CC",
           },
-          contimationMsg : " Your card ending in " + response.card.last4 + " will be charged $ "+  this.state.amountValue  + " towards donation." ,
+          confirmationMsg : " Your card ending in " + response.card.last4 + " will be charged $ "+  this.state.amountValue  + " towards donation." ,
         });
         this.showDonationConfirmationPopup();
       }
@@ -438,8 +438,8 @@ class EventDonation extends React.Component {
         amount: this.state.amountValue,
         email:this.props.user.email,
         paymenttype:"CC",
-    }
-    this.props.giveDonate(this.props.eventUrl, user)
+    };
+    this.props.giveDonate(this.props.eventUrl, this.state.user)
       .then(resp => {
        // console.log("------",resp)
         this.hideDonationConfirmationPopup();
@@ -536,7 +536,7 @@ class EventDonation extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" placeholder="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="First Name"
                            ref={ref => {
                              this.firstName = ref;
                            }}
@@ -547,7 +547,7 @@ class EventDonation extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block">Firstname is required.</small>}
+                  <small className="help-block">First Name is required.</small>}
                 </div> :""}
                 { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -556,7 +556,7 @@ class EventDonation extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" placeholder="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -567,7 +567,7 @@ class EventDonation extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block">Lastname is required.</small>}
+                  <small className="help-block">Last Name is required.</small>}
                 </div> :''}
 
                   <div
@@ -823,7 +823,7 @@ class EventDonation extends React.Component {
           <button className="btn btn-success" onClick={()=>{this.doDonationConfirmation()}}>Confirm</button>
           <button className="btn btn-green" onClick={()=>{this.hideDonationConfirmationPopup()}}>Close</button></div>}
         >
-          <center>{this.state.contimationMsg }</center>
+          <center>{this.state.confirmationMsg }</center>
         </PopupModel>
 
       </div>

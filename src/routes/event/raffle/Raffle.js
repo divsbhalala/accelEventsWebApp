@@ -322,13 +322,13 @@ class Raffle extends React.Component {
   };
   ticketsValidateHandler = (e) => {
 
-    let tickets=true
-    let errorMsgTickets=""
+    let tickets=true;
+    let errorMsgTickets="";
     if (this.tickets.value.trim() == '') {
-      errorMsgTickets= "Number Of Tickets can't be empty"
-      tickets=false
+      errorMsgTickets= "Number Of Tickets can't be empty";
+      tickets=false;
     }else if ( this.state.raffleData.availableTickets  < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
-      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets
+      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets;
       tickets=false
     } else {
       tickets=true
@@ -382,7 +382,7 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
+      console.log(error);
       history.push('/404');
     });
   };
@@ -413,14 +413,14 @@ class Raffle extends React.Component {
     e.preventDefault();
     this.setState({
       loading:true,
-    })
+    });
       const user = {
         itemCode: this.state.raffleData.code,
         submittedTickets: this.state.raffleTicketValue,
-      }
+      };
       this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
-         let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
+         let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue});
           if (!resp.errorMessage) {
             this.setState({
               //showAlertPopup: true,
@@ -457,7 +457,7 @@ class Raffle extends React.Component {
     this.setState({
       showTicketsPopup: false,
       popupTicketHeader: "Pay Now",
-    })
+    });
     this.componentReRender();
   };
   showTicketsPopup = () => {
@@ -544,7 +544,7 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
+      console.log(error);
       history.push('/404');
     });
   };
