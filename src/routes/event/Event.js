@@ -891,7 +891,7 @@ class Event extends React.Component {
 												<div className="type-name"><strong>{item.name}</strong>
 													(<span className="type-cost txt-sm gray"> ${item.price}</span>)
 													<div className="pull-right">
-														<div className="col-md-7">No Of Tickets</div>
+														<div className="col-md-7">No. Of Tickets</div>
 														{ item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
 															<select className="form-control" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
@@ -926,7 +926,7 @@ class Event extends React.Component {
 							 <strong>First ticket type</strong>
 							 (<span className="type-cost txt-sm gray"> $100.00 </span>)
 							 <div className="pull-right">
-							 <div className="col-md-7">No Of Tickets</div>
+							 <div className="col-md-7">No. Of Tickets</div>
 							 <div className="col-md-5"> SOLD OUT </div>
 							 </div>
 							 </div>

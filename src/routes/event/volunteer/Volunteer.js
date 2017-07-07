@@ -346,7 +346,7 @@ class Volunteer extends React.Component {
               phone: resp.phonenumber,
               countryPhone: resp.countryCode,
               errorMsgEmailCheck:"",
-						})
+						});
             if(resp.firstName){this.setState({firstName: true});}
             if(resp.lastName){this.setState({lastName: true});}
             if(resp.phonenumber){this.setState({phoneNumber: true});}
@@ -1191,7 +1191,7 @@ class Volunteer extends React.Component {
 										<div className="input-group-addon">
 											<i className="fa fa-user" aria-hidden="true"/>
 										</div>
-										<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+										<input type="text" className="form-control" name="firstname" placeholder="First Name"
 										       ref={ref => {
                              this.firstName = ref;
                            }}
@@ -1202,7 +1202,7 @@ class Volunteer extends React.Component {
 										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 									</div>
 									{ this.state.firstNameFeedBack && !this.state.firstName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+									<small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
 								</div>
 								<div
 									className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -1211,7 +1211,7 @@ class Volunteer extends React.Component {
 										<div className="input-group-addon">
 											<i className="fa fa-user" aria-hidden="true"/>
 										</div>
-										<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+										<input type="text" className="form-control" name="lastname" placeholder="Last Name"
 										       ref={ref => {
                              this.lastName = ref;
                            }}
@@ -1222,7 +1222,7 @@ class Volunteer extends React.Component {
 										<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 									</div>
 									{ this.state.lastNameFeedBack && !this.state.lastName &&
-									<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+									<small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
 								</div>
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
@@ -1256,7 +1256,7 @@ class Volunteer extends React.Component {
 									<div className="input-group-addon">
 										<i className="fa fa-user" aria-hidden="true"/>
 									</div>
-									<input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+									<input type="text" className="form-control" name="firstname" placeholder="First Name"
 									       ref={ref => {
                            this.firstName = ref;
                          }}
@@ -1267,7 +1267,7 @@ class Volunteer extends React.Component {
 									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 								</div>
 								{ this.state.firstNameFeedBack && !this.state.firstName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+								<small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
 							</div> }
 							{ this.state.userData && !this.state.userData.lastName &&
 							<div
@@ -1277,7 +1277,7 @@ class Volunteer extends React.Component {
 									<div className="input-group-addon">
 										<i className="fa fa-user" aria-hidden="true"/>
 									</div>
-									<input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+									<input type="text" className="form-control" name="lastname" placeholder="Last Name"
 									       ref={ref => {
                            this.lastName = ref;
                          }}
@@ -1288,7 +1288,7 @@ class Volunteer extends React.Component {
 									<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 								</div>
 								{ this.state.lastNameFeedBack && !this.state.lastName &&
-								<small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+								<small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
 							</div> }
 							<div className="form-group">
 								{this.state.userData && this.state.userData.firstName &&
@@ -1566,7 +1566,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="First Name"
                            ref={ref => {
                              this.firstName = ref;
                            }}
@@ -1577,7 +1577,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
                 </div>
                 <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -1586,7 +1586,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -1597,7 +1597,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
                 </div>
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
@@ -1631,7 +1631,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                  <input type="text" className="form-control" name="firstname" placeholder="First Name"
                          ref={ref => {
                            this.firstName = ref;
                          }}
@@ -1642,7 +1642,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.firstNameFeedBack && !this.state.firstName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
               </div> }
               { this.state.userData && !this.state.userData.lastName &&
               <div
@@ -1652,7 +1652,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                  <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                          ref={ref => {
                            this.lastName = ref;
                          }}
@@ -1663,7 +1663,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.lastNameFeedBack && !this.state.lastName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
               </div> }
 
 							<div className="form-group">
@@ -1697,7 +1697,7 @@ class Volunteer extends React.Component {
 							<div className="form-group">
 								<div className="text-xs">Item Name : <span className="item-name"/> {this.state.itemData.itemName} </div>
 								<div className="text-xs">Minimum Price: <span
-									className="currency-symbol">$</span> {this.state.itemData.buyItNow}<span
+									className="currency-symbol">$</span> {this.state.itemData.minPrice}<span
 									className="buy-it-now"/></div>
 							</div> }
 							<div onChange={this.changePaymentType} id="payment-type-selection" className="form-group text-center">
@@ -1940,7 +1940,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="First Name"
                            ref={ref => {
                              this.firstName = ref;
                            }}
@@ -1951,7 +1951,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
                 </div>
                 <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -1960,7 +1960,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -1971,7 +1971,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
                 </div>
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
@@ -2005,7 +2005,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                  <input type="text" className="form-control" name="firstname" placeholder="First Name"
                          ref={ref => {
                            this.firstName = ref;
                          }}
@@ -2016,7 +2016,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.firstNameFeedBack && !this.state.firstName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
               </div> }
               { this.state.userData && !this.state.userData.lastName &&
               <div
@@ -2026,7 +2026,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                  <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                          ref={ref => {
                            this.lastName = ref;
                          }}
@@ -2037,7 +2037,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.lastNameFeedBack && !this.state.lastName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
               </div>  }
 
 							<div className="form-group">
@@ -2300,7 +2300,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="First Name"
                            ref={ref => {
                              this.firstName = ref;
                            }}
@@ -2311,7 +2311,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
                 </div>
                 <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -2320,7 +2320,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -2331,7 +2331,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
                 </div>
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
@@ -2365,7 +2365,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                  <input type="text" className="form-control" name="firstname" placeholder="First Name"
                          ref={ref => {
                            this.firstName = ref;
                          }}
@@ -2376,7 +2376,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.firstNameFeedBack && !this.state.firstName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
               </div> }
               { this.state.userData && !this.state.userData.lastName &&
               <div
@@ -2386,7 +2386,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                  <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                          ref={ref => {
                            this.lastName = ref;
                          }}
@@ -2397,7 +2397,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.lastNameFeedBack && !this.state.lastName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
               </div>  }
 
 							<div className="form-group">
@@ -2641,7 +2641,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="First Name"
                            ref={ref => {
                              this.firstName = ref;
                            }}
@@ -2652,7 +2652,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
                 </div>
                 <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -2661,7 +2661,7 @@ class Volunteer extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -2672,7 +2672,7 @@ class Volunteer extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
                 </div>
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
@@ -2706,7 +2706,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                  <input type="text" className="form-control" name="firstname" placeholder="First Name"
                          ref={ref => {
                            this.firstName = ref;
                          }}
@@ -2717,7 +2717,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.firstNameFeedBack && !this.state.firstName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
               </div> }
               { this.state.userData && !this.state.userData.lastName &&
               <div
@@ -2727,7 +2727,7 @@ class Volunteer extends React.Component {
                   <div className="input-group-addon">
                     <i className="fa fa-user" aria-hidden="true"/>
                   </div>
-                  <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                  <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                          ref={ref => {
                            this.lastName = ref;
                          }}
@@ -2738,7 +2738,7 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 </div>
                 { this.state.lastNameFeedBack && !this.state.lastName &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
               </div>  }
 
 							<div className="form-group">

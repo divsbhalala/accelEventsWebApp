@@ -558,7 +558,7 @@ class Raffle extends React.Component {
           <div className="input-group-addon">
             <i className="fa fa-user" aria-hidden="true"/>
           </div>
-          <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+          <input type="text" className="form-control" name="firstname" placeholder="First Name"
                  ref={ref => {
                    this.firstName = ref;
                  }}
@@ -569,7 +569,7 @@ class Raffle extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
-        <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+        <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
       </div> : ""}
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -578,7 +578,7 @@ class Raffle extends React.Component {
           <div className="input-group-addon">
             <i className="fa fa-user" aria-hidden="true"/>
           </div>
-          <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+          <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                  ref={ref => {
                    this.lastName = ref;
                  }}
@@ -589,7 +589,7 @@ class Raffle extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
-        <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+        <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
       </div> : '' }
 
       <div className="form-group has-feedback">

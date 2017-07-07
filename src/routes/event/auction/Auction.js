@@ -736,7 +736,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
-        <small className="help-block">Firstname is required.</small>}
+        <small className="help-block">First Name is required.</small>}
       </div> : ""}
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -756,7 +756,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
-        <small className="help-block">Lastname is required.</small>}
+        <small className="help-block">Last Name is required.</small>}
       </div> : ''}
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
@@ -956,7 +956,7 @@ class Auction extends React.Component {
           <div className="input-group-addon">
             <i className="fa fa-user" aria-hidden="true"/>
           </div>
-          <input type="text" className="form-control" name="firstname"
+          <input type="text" className="form-control" name="firstname" placeholder="First Name"
                  ref={ref => {
                    this.firstName = ref;
                  }}
@@ -967,7 +967,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
-        <small className="help-block">Firstname is required.</small>}
+        <small className="help-block">First Name is required.</small>}
       </div> : ""}
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -987,7 +987,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
-        <small className="help-block">Lastname is required.</small>}
+        <small className="help-block">Last Name is required.</small>}
       </div> : ''}
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>

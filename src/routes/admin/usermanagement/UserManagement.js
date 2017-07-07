@@ -52,11 +52,11 @@ class UserManagement extends React.Component {
                             <tbody>
                             <tr className="dummy edit">
                               <td>
-                                <input name="name" type="text" className="form-control first-name" required />
+                                <input name="name" type="text" className="form-control first-name" placeholder="First Name" required />
                                 <span className="value" />
                               </td>
                               <td>
-                                <input name="lastName" type="text" className="form-control last-name" required />
+                                <input name="lastName" type="text" className="form-control last-name" placeholder="Last Name" required />
                                 <span className="value" />
                               </td>
                               <td className="email">
