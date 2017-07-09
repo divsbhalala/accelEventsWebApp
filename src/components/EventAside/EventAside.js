@@ -1,3 +1,4 @@
+
 import React from 'react';
 import PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -16,7 +17,7 @@ class EventAside extends React.Component {
 	static propTypes = {
 		activeTab: PropTypes.string,
 		buyItNowPrice: PropTypes.string,
-		selectedCategoty: PropTypes.string,
+		selectedCategory: PropTypes.string,
 		showBookingPopup: PropTypes.func,
 		onEnd: PropTypes.func,
 		showMapPopup: PropTypes.func,
@@ -35,16 +36,17 @@ class EventAside extends React.Component {
 			showBuyRaffleTicketPopup: false,
 			filterCategory: '',
 			searchString: '',
-			isshowBuyRaffleTicketsModal: false,
+			isHowBuyRaffleTicketsModal: false,
 			days: '00',
 			hours: '00',
 			minute: '00',
 			seconds: '00',
-
+			mobileViewCatExpand: false
 		};
 		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
 		this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 		this.setCountDown = this.setCountDown.bind(this);
+		this.toggleMobileViewCat = this.toggleMobileViewCat.bind(this);
 
 	}
 
@@ -58,27 +60,29 @@ class EventAside extends React.Component {
 			showBuyRaffleTicketPopup: false
 		})
 	};
-	serachString = (e) => {
-		this.props.setSearchString(this.serachKey.value);
+	searchString = (e) => {
+		this.props.setSearchString(this.searchKey.value);
 	};
 	showBuyRaffleTicketsModal = () => {
 		this.setState({
-			isshowBuyRaffleTicketsModal: true
+			isHowBuyRaffleTicketsModal: true
 		})
 	};
 	hideBuyRaffleTicketsModal = () => {
 		this.setState({
-			isshowBuyRaffleTicketsModal: false
+			isHowBuyRaffleTicketsModal: false
 		})
 	};
   successTask = ()=> {
     this.props.successTask();
   };
+  toggleMobileViewCat = ()=>{
+  	this.setState({
+			mobileViewCatExpand : !this.state.mobileViewCatExpand
+		})
+	};
 	setCountDown=()=>{
-		let interval = 100;
-		let self=this;
 		if(this.props.settings && this.props.settings.endDate){
-			interval = 60000;
 			let eventTime=moment();
 			if(this.props.settings && this.props.settings.endDate){
 				eventTime = moment(this.props.settings.endDate);
@@ -103,7 +107,7 @@ class EventAside extends React.Component {
 			else {
 				isEventEnd = false;
 			}
-		};
+		}
 	};
 	componentDidMount(){
 		countDownInterval = setInterval(()=>{
@@ -117,12 +121,12 @@ class EventAside extends React.Component {
 		return (
 			<div>
 				<BuyRaffleTicketsModal
-          showModal={this.state.isshowBuyRaffleTicketsModal}
+          showModal={this.state.isHowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
-          successTask={this.successTask}params={this.props.params}  />
-				<script type="text/javascript"
-								src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
+          successTask={this.successTask}params={this.props.params}
+          ccRequiredForBidConfirm={this.props.eventData && this.props.eventData.ccRequiredForBidConfirm} />
+				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>
 					<header className={cx("main-box-header", "clearfix")}>
 						<h2>jkazarian8</h2>
@@ -133,7 +137,7 @@ class EventAside extends React.Component {
 							src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/" + this.props.eventData.eventDesignDetail.logoImage}
 							className="img-responsive center-block"/>
 						}
-						{ this.props.activeTab && (this.props.activeTab == 'The Event' ) &&
+						{ this.props.activeTab && (this.props.activeTab === 'The Event' ) &&
 						<div className={cx("the-event", "mrg-t-lg")}>
 							{ this.props.showBookingPopup && <a onClick={this.props.showBookingPopup}
 																									className={cx("btn", "btn-block", "btn-lg", "btn-orange", this.props.settings ? "" : "disabled")}>Buy
@@ -164,17 +168,12 @@ class EventAside extends React.Component {
 								</div>
 							</div>
 						</div> }
-						{ !this.props.isBidInstructionHidden && this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
+						{ !this.props.isBidInstructionHidden && this.props.settings && this.props.settings.instruction && this.props.activeTab && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
 						<div className={cx("card bidinfo")}>
-							{this.props.activeTab == 'Raffle' &&
-							<p className={cx("raffle-text")}>Submit your tickets here or text your ticket submission to: (410)
-								927-5356 with the item's three letter code, and your desired number of tickets ex. ABC10</p>}
-							{ (this.props.activeTab == 'Donation' || this.props.activeTab == 'Auction' || this.props.activeTab == 'The Event' || this.props.activeTab == 'Fund a Need' )
-							&& <p className={cx("causeauction-text donation-text auction-text")}>Bid here or text Your Bid To: (410)
-								927-5356 with the item's three letter code and bid amount ex. ABC$300</p>}
+							<div dangerouslySetInnerHTML={{"__html": this.props.settings.instruction}} />
 						</div>}
 						{ this.props.activeTab
-						&& !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' )
+						&& !(this.props.activeTab === 'The Event' || this.props.activeTab === 'Donation' )
 						&& (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.countDownTimeHidden )
 						&& <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
 							<div className={cx("main-box-body clearfix")}>
@@ -202,7 +201,7 @@ class EventAside extends React.Component {
 								</div>}
 							</div>
 						</div> }
-						{ this.props.activeTab && !(this.props.activeTab == 'The Event') && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.totalFundRaisedHidden ) &&
+						{ this.props.activeTab && !(this.props.activeTab === 'The Event') && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.totalFundRaisedHidden ) &&
 						<div className={cx("main-box clearfix project-box gray-box card funds-raised-container")}>
 							<div className={cx("main-box-body clearfix")}>
 								<div className={cx("project-box-header gray-bg")}>
@@ -217,16 +216,16 @@ class EventAside extends React.Component {
 								</div>
 							</div>
 						</div> }
-						{ this.props.activeTab && ( this.props.activeTab == 'Raffle' ) && this.props.settings && this.props.settings.endDate &&
-						<a role="button"
+						{ this.props.activeTab && ( this.props.activeTab === 'Raffle' ) && this.props.settings && this.props.settings.endDate &&
+						<button role="button"
 							 className={cx("btn btn-primary btn-block buy-raffle-tickets", ((moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded) && 'disabled')}
-							 disabled={(moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded}
-							 onClick={this.showBuyRaffleTicketsModal}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</a> }
-						{ this.props.activeTab && !(this.props.activeTab == 'The Event' || this.props.activeTab == 'Donation' ) && this.props.activeCategory &&
+							 disabled={ this.state.settings && !this.state.settings.moduleActivated && (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded}
+							 onClick={this.showBuyRaffleTicketsModal}>{ (moment(this.props.settings.endDate).diff(moment()) <= 0 && !this.props.eventData.raffleEnabled) || this.props.settings.moduleEnded ? 'Raffle Closed' : 'Buy Raffle Tickets'}</button> }
+						{ this.props.activeTab && !(this.props.activeTab === 'The Event' || this.props.activeTab === 'Donation' ) && this.props.activeCategory &&
 						<div className={cx("search-bar card")}>
 							<input type="text" className={cx("form-control")} placeholder="Search Items..."
-										 onChange={this.serachString} ref={ref => {
-								this.serachKey = ref;
+										 onChange={this.searchString} ref={ref => {
+								this.searchKey = ref;
 							}}/>
 						</div> }
 						<div className={cx("text-center powered-by-sidebar")}><span>Powered by </span>
@@ -240,23 +239,23 @@ class EventAside extends React.Component {
 						<div id="divItemCategories" className={cx("item-categories hidden-xs")}>
 							<h4 className={cx("")}>Categories</h4>
 							<ul className={cx("nav nav-pills nav-stacked category-list ")}>
-								<li className={cx("all-items", this.props.selectedCategoty == '' && "active")}>
+								<li className={cx("all-items", this.props.selectedCategory === '' && "active")}>
 									<a href="#" className={cx("category-switcher all-items")} onClick={() => {
 										this.props.setFilterCategory("")
 									}}>
-										<i className={cx("fa fa-ticket")}></i>
+										<i className={cx("fa fa-ticket")} />
 										<span className={cx("cat-name")}>All Items</span>
-										<span className={cx("badge badge-primary pull-right cat-count")}></span>
+										<span className={cx("badge badge-primary pull-right cat-count")} />
 									</a>
 								</li>
 								{
 									this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
-										<li className={cx(this.props.selectedCategoty == item.name && "active")}
+										<li className={cx(this.props.selectedCategory === item.name && "active")}
 												key={item.name + Math.random()} onClick={() => {
 											this.props.setFilterCategory(item.name)
 										}}>
 											<a className={cx("category-switcher pointer")}>
-												<i className={cx("fa fa-ticket")}></i>
+												<i className={cx("fa fa-ticket")} />
 												<span className={cx("cat-name")}>{item.name}</span>
 												{item.count &&
 												<span className={cx("badge badge-primary pull-right cat-count")}>{item.count}</span>}
@@ -271,6 +270,48 @@ class EventAside extends React.Component {
 								 </a>
 								 </li>*/}
 							</ul>
+						</div> }
+						{ this.props.settings && this.props.settings.categoriesEnabled && this.props.settings.categories && this.props.activeCategory &&
+						<div id="divItemCategories" className={cx("item-categories hidden-sm hidden-md hidden-lg")}>
+							<h4 className={cx("")}>Categories</h4>
+							<div className={cx("dropdown", this.state.mobileViewCatExpand && "open")}>{console.log("this.props.selectedCategory", this.props.selectedCategory)}
+								<button className="btn btn-block dropdown-toggle pointer" type="button" data-toggle="dropdown" aria-expanded={this.state.mobileViewCatExpand} onClick={this.toggleMobileViewCat}>
+									<span className="text">{this.props.selectedCategory === '' || !this.props.selectedCategory   ? "All Items" : this.props.selectedCategory}</span>
+									&nbsp;<span className="caret" /></button>
+								<ul className={cx("dropdown-menu category-list w-100p")}>
+									<li className={cx("all-items", this.props.selectedCategory === '' && "active")}>
+										<a href="#" className={cx("category-switcher all-items")} onClick={() => {
+											this.props.setFilterCategory("")
+										}}>
+											<i className={cx("fa fa-ticket")} />
+											<span className={cx("cat-name")}>All Items</span>
+											<span className={cx("badge badge-primary pull-right cat-count")} />
+										</a>
+									</li>
+									{
+										this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
+											<li className={cx(this.props.selectedCategory === item.name && "active")}
+													key={item.name + Math.random()} onClick={() => {
+												this.props.setFilterCategory(item.name),
+												this.toggleMobileViewCat()
+											}}>
+												<a className={cx("category-switcher pointer")}>
+													<i className={cx("fa fa-ticket")} />
+													<span className={cx("cat-name")}>{item.name}</span>
+													{item.count &&
+													<span className={cx("badge badge-primary pull-right cat-count")}>{item.count}</span>}
+												</a>
+											</li>)
+									}
+									{/* <li className={cx("")}>
+									 <a href="#" className={cx("category-switcher")} data-category="Uncategorized" data-module="#raffle">
+									 <i className={cx("fa fa-ticket")}></i>
+									 <span className={cx("cat-name")}>Uncategorized</span>
+									 <span className={cx("badge badge-primary pull-right cat-count")}>1</span>
+									 </a>
+									 </li>*/}
+								</ul>
+							</div>
 						</div> }
 					</div>
 				</div>

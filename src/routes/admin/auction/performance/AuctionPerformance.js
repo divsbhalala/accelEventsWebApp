@@ -5,6 +5,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './AuctionPerformance.css';
 import cx from 'classnames';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
+import AuctionItemTable from '../../../../components/Auction/AuctionItemTable';
 
 class AuctionPerformance extends React.Component {
   static propTypes = {
@@ -30,19 +31,8 @@ class AuctionPerformance extends React.Component {
                       <div className="main-box no-header">
                         <div className="main-box-body clearfix">
                           <div id="alertmessage" />
-                          <div className="page-title">
-                            <h1 className="page-header">Auction Item Performance</h1>
-                          </div>
-                          <div className="table table-responsive">
-                            <div id="DataTables_Table_0_wrapper" className="dataTables_wrapper no-footer"><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className placeholder="Search" aria-controls="DataTables_Table_0" /></label></div><table className="table item-performance datatable no-footer dataTable" id="DataTables_Table_0" role="grid" style={{width: 990}}>
-                              <thead className="">
-                              <tr role="row"><th className="show-details sorting_disabled" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 39}} aria-label /><th className="sorting_asc" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 191}} aria-label="Item Name: activate to sort column descending" aria-sort="ascending">Item Name</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 127}} aria-label="Item Code: activate to sort column ascending">Item Code</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 183}} aria-label="Highest Bidder: activate to sort column ascending">Highest Bidder</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 152}} aria-label="Current Bid: activate to sort column ascending">Current Bid</th><th className="sorting_disabled" rowSpan={1} colSpan={1} style={{width: 82}} aria-label="Paid ?">Paid ?</th></tr>
-                              </thead>
-                              <tbody>
-                              <tr role="row" className="odd"><td className=" show-details"><span className="fa-stack pointer"><i className="fa fa-circle fa-stack-2x icon-backgroundGreen" /><i className="fa fa-plus fa-stack-1x fa-lg plus-green white" /></span><span className="item-code AUC" data-item-code="AUC" /></td><td className="sorting_1">My First Auction Item</td><td>AUC</td><td>-</td><td>-</td><td><ul className="readonly-actions list-inline">  <li>    <i className="fa fa-times red" aria-hidden="true" /></li></ul></td></tr></tbody>
-                            </table></div>
-                          </div>
-                          {/* Action Row */}
+                           {/* Action Row */}
+                          <AuctionItemTable />
                           <div className="form-group operations-row mrg-t-lg">
                             <div className="row">
                               <div className="col-md-3" role="group">

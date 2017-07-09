@@ -52,7 +52,7 @@ class Layout extends React.Component {
 
   render() {
     return (
-      <div className="test">
+      <div className={(this.props.class)}>
         <LoadingBar />
         <HeaderNew user={this.state.user} admin={this.state.isAdmin} params={this.props.params}/>
         <div className="page-wrapper" id={this.state.isAdmin && "page-wrapper" }>

@@ -11,13 +11,10 @@ import TotalProceeds from '../../components/Widget/TotalProceeds';
 import  EventAside from './../../components/EventAside/EventAside';
 import ItemList from '../../components/Widget/Raffle/ItemList';
 // import  history from './../../../history';
-
-
 class Raffle extends React.Component {
   static propTypes = {
     title: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -26,25 +23,21 @@ class Raffle extends React.Component {
 			eventSettings: null,
       itemList: null,
     }
-
   }
-
   componentWillMount() {
     this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
       this.setState({
 				eventSettings: resp && resp.data
       });
     });
-		this.props.getScrollData(this.props.params && this.props.params.params, 'raffle').then(resp => {
+		th00is.props.getScrollData(this.props.params && this.props.params.params, 'raffle').then(resp => {
 			this.setState({
 				settings: resp
 			});
 		});
   }
-
   render() {
     return (
-
       <div className="row">
         <div className="col-lg-12">
           <div id="content-wrapper">
@@ -54,7 +47,6 @@ class Raffle extends React.Component {
                             eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
                             showMapPopup={this.showMapPopup} activeCategory={false}/>
               </div>
-
               <div className="col-lg-9 col-md-8 col-sm-8">
                 <div className="main-box no-header clearfix">
                   <div className="main-box-body">
@@ -87,7 +79,6 @@ class Raffle extends React.Component {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     );
@@ -100,4 +91,3 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data});
 export default  connect(mapStateToProps, mapDispatchToProps)(Raffle);
-

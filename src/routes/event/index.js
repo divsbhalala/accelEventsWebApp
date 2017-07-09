@@ -15,7 +15,7 @@ export default {
       action(props) {
         return {
           title: "Event Page",
-          component: <Layout params={props.params}><Event title={title} params={props.params}/></Layout>,
+          component: <Layout params={props.params} class="eventPage"><Event title={title} params={props.params}/></Layout>,
         };
       }
     },
@@ -24,7 +24,7 @@ export default {
       async action(props) {
         return {
           title: "Auction Page",
-          component: <Layout params={props.params}><Auction params={props.params}
+          component: <Layout params={props.params} class="eventPage"><Auction params={props.params}
                                                             itemCode={props.params && props.params.ItemCode}
                                                             title="Auction"/></Layout>,
         };
@@ -35,7 +35,7 @@ export default {
       async action(props) {
         return {
           title: "Fund Page",
-          component: <Layout params={props.params}><Fund params={props.params}
+          component: <Layout params={props.params} class="eventPage"><Fund params={props.params}
                                                          itemCode={props.params && props.params.ItemCode} title="Fund"/></Layout>,
         };
       }
@@ -45,7 +45,7 @@ export default {
       async action(props) {
         return {
           title: "Raffle Page",
-          component: <Layout params={props.params}><Raffle params={props.params}
+          component: <Layout params={props.params} class="eventPage"><Raffle params={props.params}
                                                            itemCode={props.params && props.params.ItemCode}
                                                            title="raffle"/></Layout>,
         };
@@ -56,7 +56,7 @@ export default {
       async action(props) {
         return {
           title: "Volunteer Page",
-          component: <Layout params={props.params}><Volunteer params={props.params} title="Volunteer"/></Layout>,
+          component: <Layout params={props.params} class="eventPage"><Volunteer params={props.params} title="Volunteer"/></Layout>,
         };
       }
     }

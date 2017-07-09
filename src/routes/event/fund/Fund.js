@@ -2,18 +2,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './fund.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber} from './../action/index';
+import {doGetEventData, doGetSettings,doSignUp,fundaNeed,doValidateMobileNumber, doGetFundANeedItemByCode} from './../action/index';
+import {getCardToken} from './../../checkout/action/index';
 import  history from './../../../history';
 
 import PopupModel from './../../../components/PopupModal/index';
 import LoginModal from '../../../components/LoginModal/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 
-import  {doGetFundANeedItemByCode} from './../action/index';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
@@ -23,7 +22,6 @@ class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -95,30 +93,35 @@ class Fund extends React.Component {
       phone:null,
     }
 
-  }
+  };
   onFormClick = (e) => {
     e.preventDefault();
-     let self = this
-    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
+    if (!this.state.settings.moduleActivated){
       this.setState({
         showMapPopup: true,
-        errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
-        popupHeader:"Confirm",
+        errorMsg: " Pledges are no longer being accepted for this Need." ,
+        popupHeader:"Failed",
       })
     }else{
-      this.setState({
-        showMapPopup: true,
-        errorMsg: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.fundData.name ,
-        popupHeader:"Confirm",
-      })
+      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm ){
+        this.setState({
+          showMapPopup: true,
+          errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
+          popupHeader:"Confirm",
+        })
+      }else{
+        this.setState({
+          showMapPopup: true,
+          errorMsg: " Your card ending in " + self.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  self.state.amountValue  + " for  " +  self.state.fundData.name ,
+          popupHeader:"Confirm",
+        })
+      }
     }
-
-  }
+  };
   submiteFundForm = () => {
     this.setState({
       loading: true,
-    })
-    let self = this
+    });
     if(!this.props.authenticated){
       let userData={
         "firstname":this.state.firstNameValue,
@@ -127,7 +130,7 @@ class Fund extends React.Component {
         "email": this.state.emailValue,
         "password": this.state.passwordValue,
         "phoneNumber": this.state.phone
-      }
+      };
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
         let self = this;
         if(!resp.error){
@@ -136,39 +139,21 @@ class Fund extends React.Component {
             cvc: this.cvv.value.trim(),
             exp_month: this.expMonth.value.trim(),
             exp_year: this.expYear.value.trim(),
-          }
-          Stripe.createToken(card, function (status, response) {
-            if (response.error) {
-              self.setState({
-                errorMsg: response.error.message,
+          };
+          this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(resp=>{
+            if (resp.error) {
+              this.setState({
+                errorMsg: resp.error.message,
                 isError:true,
                 loading:false,
               });
             } else {
               const user = {
-                stripeToken : response.id,
-                amount: self.state.amountValue,
-                itemCode: self.state.fundData.code,
-              }
-              self.props.fundaNeed(self.props.params && self.props.params.params, user)
-                .then(resp => {
-                  console.log(resp)
-                  if (resp && resp.message) {
-                    self.setState({
-                      errorMsg: resp.message,
-                      isError:false,
-                      popupHeader:"Success",
-                      loading:false,
-                    });
-                  }else{
-                    self.setState({
-                      errorMsg: resp.errorMessage,
-                      isError:true,
-                      popupHeader:"Failed",
-                      loading:false,
-                    });
-                  }
-                });
+                stripeToken : resp.id,
+                amount: this.state.amountValue,
+                itemCode: this.state.fundData.code,
+              };
+              this.fundaNeed(user);
             }
           });
         } else{
@@ -176,77 +161,41 @@ class Fund extends React.Component {
         }
       });
     }
-    else if(this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0 ){
+    else if(  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  )  ){
       const card = {
         number: this.cardNumber.value.trim(),
         cvc: this.cvv.value.trim(),
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
-      }
-      Stripe.createToken(card, function (status, response) {
-        if (response.error) {
-          self.setState({
-            errorMsg: response.error.message,
+      };
+      this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(resp=>{
+        if (resp.error) {
+          this.setState({
+            errorMsg: resp.error.message,
             isError:true,
             popupHeader:"Failed",
             loading:false,
           });
         } else {
           const user = {
-            stripeToken : response.id,
-            amount: self.state.amountValue,
-            email:self.props.user.email,
-            itemCode: self.state.fundData.code,
+            stripeToken : resp.id,
+            amount: this.state.amountValue,
+            email:this.props.user.email,
+            itemCode: this.state.fundData.code,
             paymenttype:"CC",
-          }
-          self.props.fundaNeed(self.props.params && self.props.params.params, user)
-            .then(resp => {
-              console.log(resp)
-              if (resp && resp.message) {
-                self.setState({
-                  errorMsg: resp.message,
-                  isError:false,
-                  popupHeader:"Success",
-                  loading:false,
-                });
-              }else{
-                self.setState({
-                  errorMsg: resp.errorMessage,
-                  isError:true,
-                  popupHeader:"Failed",
-                  loading:false,
-                });
-              }
-            });
+          };
+          this.fundaNeed(user);
         }
       });
     }
-    else if(self.state.amountValue){
+    else if(this.state.amountValue){
       const user = {
-        amount: self.state.amountValue,
-        email:self.props.user.email,
+        amount: this.state.amountValue,
+        email:this.props.user.email,
         paymenttype:"CC",
-        itemCode: self.state.fundData.code,
-      }
-      this.props.fundaNeed(this.props.params && this.props.params.params, user)
-        .then(resp => {
-          console.log(resp)
-          if (resp && resp.message) {
-            this.setState({
-              errorMsg: resp.message,
-              isError:false,
-              popupHeader:"Success",
-              loading:false,
-            });
-          }else{
-            this.setState({
-              errorMsg: resp.errorMessage,
-              isError:true,
-              popupHeader:"Failed",
-              loading:false,
-            });
-          }
-        });
+        itemCode: this.state.fundData.code,
+      };
+      this.fundaNeed(user);
     }else {
       this.setState({
         loading:false,
@@ -255,7 +204,27 @@ class Fund extends React.Component {
     this.setState({
       showDonationPopup:false,
     })
-  }
+  };
+  fundaNeed = (user) => {
+    this.props.fundaNeed(this.props.params && this.props.params.params, user)
+      .then(resp => {
+        if (resp && resp.message) {
+          this.setState({
+            errorMsg: resp.message,
+            isError:false,
+            popupHeader:"Success",
+            loading:false,
+          });
+        }else{
+          this.setState({
+            errorMsg: resp.errorMessage,
+            isError:true,
+            popupHeader:"Failed",
+            loading:false,
+          });
+        }
+      });
+  };
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -424,10 +393,10 @@ class Fund extends React.Component {
 
   };
   amountValidateHandler = (e) => {
-    let amount=true
-    let errorMsgAmount=""
+    let amount=true;
+    let errorMsgAmount="";
     if (this.amount.value.trim() == '') {
-      errorMsgAmount= "Bid Amount can't be empty"
+      errorMsgAmount= "Bid Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
       errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)
@@ -480,7 +449,6 @@ class Fund extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone:countryData.iso2,
@@ -498,7 +466,6 @@ class Fund extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-        console.log(resp)
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
@@ -510,7 +477,7 @@ class Fund extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -550,7 +517,7 @@ class Fund extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
 
-  checkIsValidBidData = () =>{
+  checkIsValidBidData = () => {
     let valid1=true;
     let valid2=true;
     let flag=true;
@@ -559,7 +526,7 @@ class Fund extends React.Component {
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
-      if( this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0 )
+      if(this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ))
       {
         valid2=!!(this.state.amount && this.state.cardNumber && this.state.cardHolder  && this.state.cvv && this.expMonth && this.expYear);
         flag=false;
@@ -576,13 +543,16 @@ class Fund extends React.Component {
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+      if(!resp.data.moduleActivated){
+        this.setState({
+          errorMsg:"Please activate this module to start accepting pledges.",
+          popupHeader :'Failed',
+        })
+      }
       this.setState({
-        settings: resp && resp.data
+        settings: resp && resp.data,
       });
     }).catch(error => {
       history.push('/404');
@@ -597,11 +567,8 @@ class Fund extends React.Component {
       }).catch(error => {
       console.log(error)
     });
-  }
+  };
   componentRernder() {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
@@ -620,10 +587,10 @@ class Fund extends React.Component {
       }).catch(error => {
       console.log(error)
     });
-  }
+  };
   reRender = ()=>{
     // window.location.reload();
-  }
+  };
   showPopup = () => {
     this.setState({
       showDonationPopup: true
@@ -633,7 +600,9 @@ class Fund extends React.Component {
     this.setState({
       showMapPopup: false
     })
-   this.componentRernder();
+    if(this.state.popupHeader == "Success" ){
+      this.componentRernder();
+    }
   };
   hideLoginModal  = () => {
     this.setState({
@@ -645,6 +614,7 @@ class Fund extends React.Component {
       isShowLoginModal:true,
     })
   };
+
   render() {
     return (
       <div className="row">
@@ -710,7 +680,7 @@ class Fund extends React.Component {
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+                            <input type="text" className="form-control" name="firstname" placeholder="FirstName"
                                    ref={ref => {
                                      this.firstName = ref;
                                    }}
@@ -730,7 +700,7 @@ class Fund extends React.Component {
                             <div className="input-group-addon">
                               <i className="fa fa-user" aria-hidden="true"/>
                             </div>
-                            <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+                            <input type="text" className="form-control" name="lastname" placeholder="LastName"
                                    ref={ref => {
                                      this.lastName = ref;
                                    }}
@@ -755,7 +725,7 @@ class Fund extends React.Component {
                               <div className="input-group-addon">
                                 <i className="fa fa-envelope" aria-hidden="true"/>
                               </div>
-                              <input type="email" className="form-control login-email" name="email"
+                              <input type="email" className="form-control login-email" name="email" placeholder="Email"
                                      data-fv-field="email"
                                      ref={ref => {
                                        this.email = ref;
@@ -784,7 +754,7 @@ class Fund extends React.Component {
                                   css={['intl-tel-input', 'form-control intl-tel']}
                                   utilsScript="./libphonenumber.js"
                                   separateDialCode={true}
-                                  value={ this.state.phone }
+                                  value={ this.state.phone || "" }
                                   maxLength={16} data-stripe="number"
                                   onPhoneNumberChange={this.changePhone}
                                 />
@@ -825,7 +795,7 @@ class Fund extends React.Component {
                           <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
 
                         </div> }
-                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.linkedCard.stripeCards.length == 0 ) ?
+                        { !this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) ) ?
                           <div>
                             <style
                             dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n"}}/>
@@ -883,7 +853,7 @@ class Fund extends React.Component {
                                         <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                           this.expMonth = ref;
                                         }}  onChange={this.expMonthValidateHandler} >
-                                          <option selected value="10">Jan (01)</option>
+                                          <option selected value="01">Jan (01)</option>
                                           <option value="02">Feb (02)</option>
                                           <option value="03">Mar (03)</option>
                                           <option value="04">Apr (04)</option>
@@ -994,15 +964,17 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
-                                role="button" type="submit"
-                                loading={this.state.loading} >
-                          Submit Pledge
-                        </Button>
-                        <Link to={this.props.params && "/event/" + this.props.params.params }>
-                          <a role="button" className="btn btn-success"
-                             >Go back to All Items</a>
-                        </Link>
+                        <div className="row btn-row" >
+                          <div className="col-sm-3">
+                            <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
+                                                             role="button" type="submit"
+                                                             loading={this.state.loading} >
+                            Submit Pledge
+                          </Button></div>
+                          <div className="col-sm-5"><Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success">
+                            Go back to All Items
+                          </Link></div>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -1050,6 +1022,7 @@ const mapDispatchToProps = {
   fundaNeed: (eventUrl, data) => fundaNeed(eventUrl, data),
   doSignUp: (eventUrl, userData) => doSignUp(eventUrl, userData),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,

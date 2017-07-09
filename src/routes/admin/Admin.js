@@ -205,12 +205,7 @@ class Admin extends React.Component {
                   <div className="project-box-header gray-bg">
                     <div className="name">
                       <div>Raffle
-
-
-
                         <a data-toggle="tooltip" title="Your Raffle is in Test Mode. To begin sellings tickets please activate this module by clicking here." href="/host/settings/account" className="white text-uppercase pull-right badge badge-danger"> Test Mode </a>
-
-
                       </div>
                     </div>
                   </div>
@@ -396,7 +391,7 @@ class Admin extends React.Component {
                         <div className="desc">Specify when the silent auction winners will be selected (East Coast Time).</div>
                       </div>
                       <div className="actions">
-       d                 <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
+                       <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
                           <span className="label label-danger">Set Date &amp; Time</span>
                         </a>
                       </div>
@@ -520,5 +515,4 @@ class Admin extends React.Component {
     );
   }
 }
-
 export default withStyles(s)(Admin);

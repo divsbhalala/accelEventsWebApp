@@ -41,9 +41,7 @@ export function doGetEventTicketSetting(eventUrl) {
         return error;
       });
   }
-
 }
-
 export function doGetEventTicketByOrderId(eventUrl, OrderId) {
   return (dispatch) => {
     return axios({
@@ -53,15 +51,12 @@ export function doGetEventTicketByOrderId(eventUrl, OrderId) {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
-
     })
       .catch(error => {
         return error;
       });
   }
-
 }
-
 /*----------------Auction-------------*/
 export function doGetAuctionSetting(eventUrl) {
   return (dispatch) => {
@@ -72,13 +67,11 @@ export function doGetAuctionSetting(eventUrl) {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
-
     })
       .catch(error => {
         return error;
       });
   }
-
 }
 export function doGetAuctionItemByCode(eventUrl, itemCode) {
   return (dispatch) => {
@@ -153,7 +146,6 @@ export function doGetFundANeedSetting(eventUrl) {
   }
 
 }
-
 export function doGetFundANeedItemByCode(eventUrl, itemCode) {
   return (dispatch) => {
     return axios({
@@ -309,9 +301,9 @@ export function doGetOrderById(eventUrl, orderId) {
       data: {},
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
-        if(resp && resp.data){
-          dispatch(storeOrderData(resp.data));
-        }
+      if(resp && resp.data){
+        dispatch(storeOrderData(resp.data));
+      }
       return resp;
     }).catch((error, code, status)=>{
       return error && error.response && error.response.data;
@@ -374,7 +366,7 @@ export function getItemStatusByCode(eventUrl, itemCode) {
   }
 }
 //****** Auction Bid*******//
-  export function getUserByEmail(eventUrl, email,modeltype) {
+export function getUserByEmail(eventUrl, email,modeltype) {
   return (dispatch) => {
     return axios({
       method: 'get',
@@ -432,10 +424,9 @@ export function doLogin(email, password,rememberme=false) {
       dispatch(storeToken(response.data.access_token));
       getUserDetails(response.data.access_token).then(resp => {
         dispatch(storeLoginData(resp.data));
-        localStorage.setItem('user', JSON.stringify(resp.data));
         localStorage.setItem('token', response.data.access_token);
         sessionService.saveSession(localStorage.getItem('token'));
-        sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+        updateUserData(resp.data);
       }).catch(err => {
         return err;
       })
@@ -457,25 +448,30 @@ export function doSignUp(eventUrl,userData) {
       dispatch(storeToken(response.data.access_token));
       getUserDetails(response.data && response.data.access_token).then(resp => {
         dispatch(storeLoginData(resp.data));
-        localStorage.setItem('user', JSON.stringify(resp.data));
         localStorage.setItem('token', response.data.access_token);
         sessionService.saveSession(localStorage.getItem('token'));
-        sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+        updateUserData(resp.data);
+
       }).catch(err => {
-				return err;
+        return err;
       });
       return response;
     }).catch((error, code, status)=>{
-				return error && error.response && error.response.data;
+      return error && error.response && error.response.data;
     });
   }
 }
+
+function updateUserData(data){
+  localStorage.setItem('user', JSON.stringify(data));
+  sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+}
 export  function changeUserData(data,userData) {
   return (dispatch) => {
-    data.firstName=userData.firstname;
-    data.lastName=userData.lastname;
-    localStorage.setItem('user', JSON.stringify(data));
-    dispatch(changeLoginData(data))
+    let uData = data;
+    if(userData.firstname !== null) {uData.firstName=userData.firstname;}
+    if(userData.lastname !== null) {uData.lastName=userData.lastname;}
+    updateUserData(uData);
   }
 }
 export function storeLoginData(data) {
@@ -709,7 +705,7 @@ export function getGoalData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/goal' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -725,7 +721,7 @@ export function getScrollData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/scroll' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -741,7 +737,7 @@ export function getTableData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/table' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -758,7 +754,7 @@ export function isVolunteer(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl +'/volunteer/isVolunteer' ,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       dispatch(storeIsVolunteer(resp.data));
       return resp.data;
@@ -774,7 +770,7 @@ export function doContactSupport(eventUrl, contact) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl +'/contact' ,
       data: contact,
-     headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 }
@@ -783,8 +779,8 @@ export function doValidateMobileNumber(mobileNumber) {
     return axios({
       method: 'get',
       url: 'https://lookups.twilio.com/v1/PhoneNumbers/'+mobileNumber+'?Type=carrier&Type=caller-name&_=1498707522630',
-     // data: contact,
-     headers: {Authorization: "Basic QUMzYzk4NDBiZDE2OTgxOGQzZGU1MDUwNWI2Mzc4OWVlNDplYjU4NmE4Y2JkNzk4ZmE3OGM5ZGViNmY4ZTdkM2Q5NA=="}
+      // data: contact,
+      headers: {Authorization: "Basic QUMzYzk4NDBiZDE2OTgxOGQzZGU1MDUwNWI2Mzc4OWVlNDplYjU4NmE4Y2JkNzk4ZmE3OGM5ZGViNmY4ZTdkM2Q5NA=="}
     }).then(resp=>{
       return false;
     }).catch((error, code, status)=>{

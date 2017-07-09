@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {Tabs, Tab} from 'react-bootstrap-tabs';
 import s from './Volunteer.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
@@ -14,7 +13,7 @@ import Moment from 'react-moment';
 import moment from 'moment';
 import IntlTelInput from 'react-intl-tel-input';
 import {doValidateMobileNumber,doGetEventData} from './../action/index';
-import {createCardToken} from './../../checkout/action/index';
+import {getCardToken} from './../../checkout/action/index';
 
 import  {
   getItemStatusByCode,
@@ -122,10 +121,7 @@ class Volunteer extends React.Component {
     this.selectHandle = this.selectHandle.bind(this);
   }
 	componentDidMount() {
-    if(this.props.stripeKey){
-     Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
-    }
-		if (this.props.params && this.props.params.params) {
+   		if (this.props.params && this.props.params.params) {
 			this.props.isVolunteer(this.props.params && this.props.params.params).then(resp=> {
 				this.setState({
 					isloaded: true
@@ -511,22 +507,37 @@ class Volunteer extends React.Component {
 				availTickets: false,
 				errorMsgAvailTickets: "Please enter tickets you want to submit.",
 			});
-		} else if (!tickets) {
-			this.setState({
-				availTickets: false,
-				errorMsgAvailTickets: "Please enter Bidder email to submit tickets. ",
-			});
-		} else if (this.availTickets.value.trim() > tickets) {
-			this.setState({
-				availTickets: false,
-				errorMsgAvailTickets: " Please enter ticket less than or equal to " + tickets,
-			});
-		} else {
-			this.setState({
-				availTickets: true,
-				errorMsgAvailTickets: "",
-			});
 		}
+		 if(this.state.userData){
+       if (tickets == null ) {
+         this.setState({
+           availTickets: false,
+           errorMsgAvailTickets: "Please enter Bidder email to submit tickets. ",
+         });
+       } else if(tickets == 0){
+         this.setState({
+           availTickets: false,
+           errorMsgAvailTickets: "This user does not have any raffle tickets. Please purchase tickets.",
+         });
+       } else if (this.availTickets.value.trim() > tickets) {
+         this.setState({
+           availTickets: false,
+           errorMsgAvailTickets: " Please enter ticket less than or equal to " + tickets,
+         });
+
+       } else {
+         this.setState({
+           availTickets: true,
+           errorMsgAvailTickets: "",
+         });
+       }
+     }else {
+       this.setState({
+         availTickets: true,
+         errorMsgAvailTickets: "",
+       });
+     }
+
 	};
 	amountValidateHandler = (e) => {
 		this.setState({
@@ -628,9 +639,6 @@ class Volunteer extends React.Component {
   };
 
   componentWillMount(){
-	 //if(this.props.stripeKey){
-		  Stripe.setPublishableKey(this.props.stripeKey || 'pk_test_VEOlEYJwVFMr7eSmMRhApnJs' );
-	// }
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
@@ -658,7 +666,6 @@ class Volunteer extends React.Component {
   submiteSilentAuctionBid = (e) => {
     e.preventDefault();
     this.validateField();
-    let self = this;
     this.setState({loading:true});
 
      if (this.state.itemCode && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
@@ -668,39 +675,39 @@ class Volunteer extends React.Component {
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
       }
-      Stripe.createToken(card, function (status, response) {
+       this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
         if (response.error) {
-          self.setState({
+          this.setState({
             loading:false,
             showPopup: true,
             errorMsgCard: response.error.message});
         }else{
           const user = {
-            email: self.state.emailValue,
-            countryCode: self.state.countryPhone,
-            cellNumber: self.state.phone,
-            firstname: self.state.firstNameValue,
-            lastname: self.state.lastNameValue,
+            email: this.state.emailValue,
+            countryCode: this.state.countryPhone,
+            cellNumber: this.state.phone,
+            firstname: this.state.firstNameValue,
+            lastname: this.state.lastNameValue,
             paymenttype: 'CC',
-            itemCode: self.state.itemCodeValue,
-            amount: self.state.amountValue,
+            itemCode: this.state.itemCodeValue,
+            amount: this.state.amountValue,
             stripeToken: response.id,
           }
-          self.submitBids(user);
+          this.submitBids(user);
         }
        });
      } else if( this.state.itemCode && this.state.amount && this.state.itemCode && this.state.itemCodeValue) {
        const user = {
-         email: self.state.emailValue,
-         countryCode: self.state.countryPhone,
-         cellNumber: self.state.phone,
-         firstname: self.state.firstNameValue,
-         lastname: self.state.lastNameValue,
+         email: this.state.emailValue,
+         countryCode: this.state.countryPhone,
+         cellNumber: this.state.phone,
+         firstname: this.state.firstNameValue,
+         lastname: this.state.lastNameValue,
          paymenttype: 'CC',
-         itemCode: self.state.itemCodeValue,
-         amount: self.state.amountValue,
+         itemCode: this.state.itemCodeValue,
+         amount: this.state.amountValue,
        }
-       self.submitBids(user);
+       this.submitBids(user);
      }else{
        this.setState({loading:false})
      }
@@ -730,7 +737,6 @@ class Volunteer extends React.Component {
   submitPledgeBid = (e) => {
     e.preventDefault();
     this.validateField();
-    let self = this;
     this.setState({loading:true});
     if(this.state.paymentType =="CC"){
      if (this.state.itemCode && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.amount && this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
@@ -740,38 +746,38 @@ class Volunteer extends React.Component {
         exp_month: this.expMonth.value.trim(),
         exp_year: this.expYear.value.trim(),
       }
-      Stripe.createToken(card, function (status, response) {
+       this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
         if (response.error) {
-          self.setState({
+          this.setState({
             loading:false,
             showPopup: true,
             errorMsgCard: response.error.message});
         }else{
           const user = {
-            amount: self.state.amountValue,
-            cellNumber: self.state.phone,
-            countryCode: self.state.countryPhone,
-            email: self.state.emailValue,
-            firstname: self.state.firstNameValue,
-            lastname: self.state.lastNameValue,
-            paymenttype: self.state.paymentType,
-            itemCode: self.state.itemCodeValue,
+            amount: this.state.amountValue,
+            cellNumber: this.state.phone,
+            countryCode: this.state.countryPhone,
+            email: this.state.emailValue,
+            firstname: this.state.firstNameValue,
+            lastname: this.state.lastNameValue,
+            paymenttype: this.state.paymentType,
+            itemCode: this.state.itemCodeValue,
             stripeToken: response.id,
           }
-          self.submitPledge(user);
+          this.submitPledge(user);
         }
        });
      }else{this.setState({loading:false})}
     }else if( this.state.itemCode && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName )  {
       const user = {
-        amount: self.state.amountValue,
-        cellNumber: self.state.phone,
-        countryCode: self.state.countryPhone,
-        email: self.state.emailValue,
-        firstname: self.state.firstNameValue,
-        lastname: self.state.lastNameValue,
-        paymenttype: self.state.paymentType,
-        itemCode: self.state.itemCodeValue,
+        amount: this.state.amountValue,
+        cellNumber: this.state.phone,
+        countryCode: this.state.countryPhone,
+        email: this.state.emailValue,
+        firstname: this.state.firstNameValue,
+        lastname: this.state.lastNameValue,
+        paymenttype: this.state.paymentType,
+        itemCode: this.state.itemCodeValue,
         stripeToken: this.state.stripeToken}
       this.submitPledge(user);
     }else{
@@ -798,12 +804,11 @@ class Volunteer extends React.Component {
           });
         }
       });
-  }
+  };
 
   sellTicketsBid = (e) => {
     e.preventDefault();
     this.validateField();
-    let self = this;
     this.setState({loading:true});
     if(this.state.paymentType =="CC"){
       if (this.state.raffleTicketValue && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
@@ -813,41 +818,41 @@ class Volunteer extends React.Component {
           exp_month: this.expMonth.value.trim(),
           exp_year: this.expYear.value.trim(),
         }
-        Stripe.createToken(card, function (status, response) {
+        this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
           if (response.error) {
-            self.setState({
+            this.setState({
               loading:false,
               showPopup: true,
               errorMsgCard: response.error.message});
           }else{
             const user = {
-              email: self.state.emailValue,
-              countryCode: self.state.countryPhone,
-              cellNumber: self.state.phone,
-              firstname: self.state.firstNameValue,
-              lastname: self.state.lastNameValue,
-              paymenttype: self.state.paymentType,
-              itemCode: self.state.itemCodeValue,
-              raffleTicketId: self.state.raffleTicketValue,
+              email: this.state.emailValue,
+              countryCode: this.state.countryPhone,
+              cellNumber: this.state.phone,
+              firstname: this.state.firstNameValue,
+              lastname: this.state.lastNameValue,
+              paymenttype: this.state.paymentType,
+              itemCode: this.state.itemCodeValue,
+              raffleTicketId: this.state.raffleTicketValue,
               stripeToken: response.id,
             }
-            self.sellTickets(user);
+            this.sellTickets(user);
           }
         });
       }else{this.setState({loading:false})}
     }else if(this.state.raffleTicketValue && this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName )  {
       const user = {
-        email: self.state.emailValue,
-        countryCode: self.state.countryPhone,
-        cellNumber: self.state.phone,
-        firstname: self.state.firstNameValue,
-        lastname: self.state.lastNameValue,
-        paymenttype: self.state.paymentType,
-        itemCode: self.state.itemCodeValue,
-        raffleTicketId: self.state.raffleTicketValue,
-        stripeToken: self.state.stripeToken,
+        email: this.state.emailValue,
+        countryCode: this.state.countryPhone,
+        cellNumber: this.state.phone,
+        firstname: this.state.firstNameValue,
+        lastname: this.state.lastNameValue,
+        paymenttype: this.state.paymentType,
+        itemCode: this.state.itemCodeValue,
+        raffleTicketId: this.state.raffleTicketValue,
+        stripeToken: this.state.stripeToken,
       }
-      self.sellTickets(user);
+      this.sellTickets(user);
     }else{this.setState({loading:false})}
 
   };
@@ -869,33 +874,32 @@ class Volunteer extends React.Component {
           });
         }
       });
-  }
+  };
 
   submitTicketsbid = (e) => {
     e.preventDefault();
     this.validateField();
-    let self = this;
     this.setState({loading:true});
      if (this.state.email && this.state.availTickets && this.state.itemCode) {
           const user = {
-            email: self.state.emailValue,
-            countryCode: self.state.countryPhone,
-            cellNumber: self.state.phone,
-            firstname: self.state.firstNameValue,
-            lastname: self.state.lastNameValue,
-            itemCode: self.state.itemCodeValue,
-            submittedTickets: self.state.submittedTickets,
+            email: this.state.emailValue,
+            countryCode: this.state.countryPhone,
+            cellNumber: this.state.phone,
+            firstname: this.state.firstNameValue,
+            lastname: this.state.lastNameValue,
+            itemCode: this.state.itemCodeValue,
+            submittedTickets: this.state.submittedTickets,
           }
-          self.props.submitTickets(self.props.params && self.props.params.params, user)
+          this.props.submitTickets(this.props.params && this.props.params.params, user)
             .then(resp => {
               if (resp && resp.message) {
-                self.setState({
+                this.setState({
                   loading:false,
                   showPopup: true,
                   errorMsgCard: resp.message,
                   popupHeader:"Success"});
               }else{
-                self.setState({
+                this.setState({
                   loading:false,
                   showPopup: true,
                   errorMsgCard: resp.errorMessage,
@@ -912,8 +916,8 @@ class Volunteer extends React.Component {
     this.setState({loading:true});
     if(this.state.paymentType =="CC"){
      if( this.state.email  && this.state.phoneNumber  && this.state.lastName  && this.state.firstName  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
-         this.props.createCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(),  this.cvv.value.trim())
-           .then(resp => {
+       this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(resp => {
+         if (resp.error) {
            const user = {
                  email: this.state.emailValue,
                  countryCode: this.state.countryPhone,
@@ -924,25 +928,7 @@ class Volunteer extends React.Component {
                  amount: this.state.amountValue,
                  stripeToken:  resp.data.id}
           this.submiteDonation(user);
-         }).catch((error, status, msg) => {
-         let respError = error && error.response && error.response.data && error.response.data.error && error.response.data.error;
-           if(respError){
-             if(respError.param == 'exp_year'){
-               this.setState({
-                 cardExpYear: false,
-               });
-             }
-             if(respError.param == 'exp_month'){
-               this.setState({
-                 cardExpMonth: false,
-               });
-             }
-             if(respError.param == 'number'){
-               this.setState({
-                 cardNumber: false,
-               });
-             }
-           }
+         }else
            this.setState({
              loading:false,
              showPopup: true,
@@ -991,7 +977,7 @@ class Volunteer extends React.Component {
           });
         }
       });
-  }
+  };
 
   doOrderTicket() {
     let Data = {};
@@ -1060,7 +1046,7 @@ class Volunteer extends React.Component {
       expMonthFeedBack:false,
       expYearFeedBack:false,
     });
-  }
+  };
   render() {
     let makeItem = function (i) {
       let item = [];
@@ -1430,7 +1416,7 @@ class Volunteer extends React.Component {
                             <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
                             }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="10">Jan (01)</option>
+                              <option selected value="01">Jan (01)</option>
                               <option value="02">Feb (02)</option>
                               <option value="03">Mar (03)</option>
                               <option value="04">Apr (04)</option>
@@ -1803,7 +1789,7 @@ class Volunteer extends React.Component {
                             <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
                             }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="10">Jan (01)</option>
+                              <option selected value="01">Jan (01)</option>
                               <option value="02">Feb (02)</option>
                               <option value="03">Mar (03)</option>
                               <option value="04">Apr (04)</option>
@@ -2163,7 +2149,7 @@ class Volunteer extends React.Component {
                             <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                               this.expMonth = ref;
                             }}  onChange={this.expMonthValidateHandler} >
-                              <option selected value="10">Jan (01)</option>
+                              <option selected value="01">Jan (01)</option>
                               <option value="02">Feb (02)</option>
                               <option value="03">Mar (03)</option>
                               <option value="04">Apr (04)</option>
@@ -2463,9 +2449,9 @@ class Volunteer extends React.Component {
 								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
 								{ this.state.availTicketsFeedBack && !this.state.availTickets &&
 								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                { this.state.availTicketsFeedBack && !this.state.availTickets &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
 							</div>
-							{ this.state.availTicketsFeedBack && !this.state.lastName &&
-							<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
 							<div className="form-group">
 								<Button loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
 							</div>
@@ -2855,7 +2841,7 @@ class Volunteer extends React.Component {
                               <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                 this.expMonth = ref;
                               }}  onChange={this.expMonthValidateHandler} >
-                                <option selected value="10">Jan (01)</option>
+                                <option selected value="01">Jan (01)</option>
                                 <option value="02">Feb (02)</option>
                                 <option value="03">Mar (03)</option>
                                 <option value="04">Apr (04)</option>
@@ -2948,7 +2934,7 @@ class Volunteer extends React.Component {
 					</view> }
 				</views>}
 				{this.state.isloaded && !this.props.is_volunteer && <div>
-					<h3>You are not authorize to Access this page</h3>
+					<h3>This tab is only visible to event hosts and event volunteers</h3>
 				</div>}
 				<PopupModel
 					id="bookingPopup"
@@ -3001,7 +2987,7 @@ const mapDispatchToProps = {
 	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
-  createCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => createCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
+  getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 const mapStateToProps = (state) => ({
 	is_volunteer : state.event && state.event.is_volunteer,

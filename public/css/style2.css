@@ -87,3 +87,26 @@
 
 	border : none;
 }
+/* Custom CSS*/
+.modal-dialog{
+	margin: 10px auto;
+}
+#login-user .modal-dialog {
+	max-width: 320px;
+	min-width:320px;
+	margin: 10px auto;
+}
+.eventPage .navbar-toggle{
+	display: none;
+}
+.pointer,
+.pointer:focus,
+.pointer:active,
+.pointer:visited
+{
+	cursor: pointer;
+	text-decoration: none;
+}
+.w-100p{
+	width: 100%;
+}

@@ -17,7 +17,6 @@ import {Carousel} from 'react-responsive-carousel';
 import PopupModel from './../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
 import LoginModal from '../../../components/LoginModal/index';
 import BuyRaffleTicketsModal from './../../../components/BuyRaffleTicketsModal'
 class Raffle extends React.Component {
@@ -98,8 +97,6 @@ class Raffle extends React.Component {
       countryPhone:null,
       phone:null,
   }
-    this.purchaseTicket=this.purchaseTicket.bind(this);
-
   }
   onFormClick = (e) => {
     e.preventDefault();
@@ -260,13 +257,12 @@ class Raffle extends React.Component {
     //this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
+    },function afterChange () {
       this.checkIsValidBidData()
     });
     if (value == '') {
@@ -278,7 +274,6 @@ class Raffle extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-        console.log(resp)
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
@@ -365,11 +360,14 @@ class Raffle extends React.Component {
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
+      if(!resp.data.moduleActivated){
+        this.setState({
+          errorMsg:"Please activate this module to start accepting pledges.",
+          popupHeader :'Failed',
+        });
+      }
       this.setState({
         settings: resp && resp.data
       });
@@ -389,9 +387,6 @@ class Raffle extends React.Component {
     });
   };
   componentReRender() {
-    if(this.props.stripeKey){
-      Stripe.setPublishableKey(this.props.stripeKey);
-    }
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
       this.setState({
@@ -426,7 +421,6 @@ class Raffle extends React.Component {
       this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
          let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          console.log(updateraffleData)
           if (!resp.errorMessage) {
             this.setState({
               //showAlertPopup: true,
@@ -446,103 +440,10 @@ class Raffle extends React.Component {
           })
         });
   };
-  purchaseTicket = (e) => {
-    this.setState({
-      loading:true,
-    })
-    if( this.props.authenticated &&  this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ){
-      const user = {
-        compTicketCode: this.state.raffleData.code,
-        raffleTicketId: this.state.raffleTicketValue,
-      }
-      this.props.purchaseTickets(this.props.params && this.props.params.params, user)
-        .then(resp => {
-          // let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          if (resp && !resp.errorMessage) {
-            this.setState({
-              showPopup: true,
-              errorMsg: resp.message,
-              popupHeader:"Success",
-              loading:false,
-              popupTicketHeader:"Close",
-            //  raffleData: updateraffleData,
-            })
-          }else{
-            this.setState({
-              showPopup: true,
-              errorMsg: resp.errorMessage,
-              loading:false,
-              popupHeader:'Failed',
-              popupTicketHeader:"Close",
-            });
-          }
-        });
-    } else {
-     let self = this;
-     this.setState({isValidBidData: (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv)});
-     if ( this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
-        const card = {
-          number: this.state.cardNumberValue,
-          cvc: this.state.cvvValue,
-          exp_month: this.state.expMonthValue,
-          exp_year: this.state.expYearValue,
-        }
-        Stripe.createToken(card, function (status, response) {
-          if (response.error) {
-            self.setState({
-              showPopup: true,
-              errorMsg: response.error.message,
-              popupHeader:"Failed",
-              loading:false,
-            });
-          } else {
-            self.setState({
-              showPopup: false,
-              errorMsg: " ",
-           //   popupHeader:"Success",
-              stripeToken: response.id,
-              loading:false,
-            })
-            self.byBid();
-          }
-        });
-     }else {
-       self.setState({
-         loading:false,
-       })
-     }
-    }
-  };
-  byBid = () => {
-    const user = {
-      compTicketCode: this.state.raffleData.code,
-      raffleTicketId: this.state.raffleTicketValue,
-      stripeToken:this.state.stripeToken,
-    }
-    this.props.purchaseTickets(this.props.params && this.props.params.params, user)
-      .then(resp => {
-        if (!resp.errorMessage) {
-          this.setState({
-            showPopup: true,
-            errorMsg:  resp.message,
-            popupHeader:"Success",
-            loading:false,
-           })
-        }else{
-          this.setState({
-            showPopup: true,
-            errorMsg: resp.errorMessage,
-            popupHeader:"Failed",
-            loading:false,
-          });
-        }
-      });
-  };
   showAlertPopup = () => {
     this.setState({
       showPopup: true,
       showAlertPopup: true,
-
     })
   };
   hideAlertPopup = () => {
@@ -578,7 +479,6 @@ class Raffle extends React.Component {
     //window.location.reload();
   };
   checkIsValidBidData = () =>{
-    console.log(" this.state.lastName ", this.state.lastName )
     let valid1=true;
     let valid2=true;
     let flag=true;
@@ -603,7 +503,13 @@ class Raffle extends React.Component {
   hideLoginModal  = () => {
     this.setState({
       isShowLoginModal:false,
-    })
+    }, function afterStateChange() {
+      let self = this;
+      setTimeout(function() {
+        self.successTasks();
+      },3000);
+      }
+    );
   };
   showLoginModal = () => {
     this.setState({
@@ -643,14 +549,7 @@ class Raffle extends React.Component {
     });
   };
   render() {
-    let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-                           action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
-                           data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
-                           data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                           data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
-                           onSubmit={this.submiteBuyTicket}>
-      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-        { this.state.errorMsg }</div>
+    let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post" onSubmit={this.submiteBuyTicket}>
 
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -699,11 +598,11 @@ class Raffle extends React.Component {
         <div className="row">
           <div className="col-md-5 col-lg-5">
             <div
-              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? 'aaa' : 'disabled')}>
+              className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? '' : 'disabled')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
               <input type="number"  name="itembid"  required="required"
                      className={cx("form-control")}
-                     disabled={(this.state.raffleData && this.state.raffleData.availableTickets > 0) ? '' : 'disabled'}
+                     disabled={(this.state.raffleData && !this.state.raffleData.availableTickets <= 0) ? false : true}
 
                  ref={ref => {
                  this.tickets = ref;
@@ -727,28 +626,22 @@ class Raffle extends React.Component {
 
         </div>
         <div className="col-md-6 col-lg-5">
-          <Link to={this.props.params && "/event/" + this.props.params.params }>
-            <a role="button" className="btn btn-success btn-block" >
-              Go back to All Items</a>
+          <Link to={this.props.params && "/event/" + this.props.params.params } role="button" className="btn btn-success btn-block" >
+              Go back to All Items
           </Link>
-
         </div>
       </div>
       <div className="row mrg-t-md">
         <div className="col-md-5 col-lg-10">
-          <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-             onClick={this.showBuyRaffleTicketsModal} >Get Tickets</a>
+          <button role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
+                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}>Get Tickets</button>
         </div>
       </div>
     </form>;
     let form_normal = <div >
-      {this.state.raffleData && this.state.raffleData.active &&
-      <div className="text-danger text-center bold"> Please activate this module to start accepting
-        pledges.
-      </div>}
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
-      <a role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-         onClick={this.showBuyRaffleTicketsModal} >Get Tickets</a>
+      <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
+         onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
          to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
     </div>;
@@ -791,6 +684,8 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
+                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsg }</div>
                       { this.props.authenticated ? form_login : form_normal  }
                     </div>
                   </div>
@@ -825,7 +720,9 @@ class Raffle extends React.Component {
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
           successTask={this.successTasks}
-          params={this.props.params}  />
+          params={this.props.params}
+          ccRequiredForBidConfirm={this.props.eventData && this.props.eventData.ccRequiredForBidConfirm }
+        />
       </div>
     );
   }
