@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from '../Link';
 import cx from 'classnames';
+import $ from 'jquery'
+
 class AdminSiderbar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -80,12 +82,12 @@ class AdminSiderbar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-									<li className="active" >
+									<li className="active" onClick={()=>{ toggleLi(); }} >
 										<Link to="#" className="dropdown-toggle">
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
 										</Link>
-										<ul className="submenu" style={{display: 'none' }}>
+										<ul className="submenu">
 											<li className>
 												<Link to="/admin/event-ticket-create">
 													Create Event
@@ -103,12 +105,12 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li>
-									<li className={cx(this.state.toggle ? "open":'')} onClick={this.toggleUl}>
+									<li onClick={()=>{ toggleLi(); }} >
 										<Link to="#" className="dropdown-toggle" >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
 										</Link>
-										<ul className="submenu" style={{display: this.state.toggle ? 'none' : 'none'}}>
+										<ul className="submenu" >
 											<li className>
 												<Link to="/admin/silent-auction-add-items">
 													Add Items
@@ -121,12 +123,12 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li>
-									<li className>
+									<li onClick={()=>{ toggleLi(); }} >
 										<Link to="#" className="dropdown-toggle" >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
 										</Link>
-										<ul className="submenu" style={{display: 'none' }}>
+										<ul className="submenu" >
 											<li className>
 												<Link to="/admin/raffle-add-items">
 													Add Items
@@ -139,12 +141,12 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li>
-									<li className>
+									<li className="nav-li" onClick={()=>{ toggleLi(); }}>
 										<Link to="#" className="dropdown-toggle">
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>
 										</Link>
-										<ul className="submenu" style={{display: 'none' }}>
+										<ul className="submenu" >
 											<li className>
 												<Link to="/admin/cause-auction-add-items">
 													Add Items
@@ -163,7 +165,7 @@ class AdminSiderbar extends React.Component {
 											<span>User Management</span>
 										</Link>
 									</li>
-									<li className style={{display: 'none' }}>
+									<li onClick={()=>{ toggleLi(); }} >
 										<Link to="#" className="dropdown-toggle">
 											<i className="vt vt-settings-gears" />
 											<span>Settings</span>
@@ -197,5 +199,15 @@ class AdminSiderbar extends React.Component {
 		);
 	}
 }
-
+function toggleLi (){
+	$(".nav-li").click(function () {
+    alert( "Handler for .click() called." );
+  })
+  // if ($(".nav-small-class").hasClass('nav-small')) {
+  //   $(".nav-small-class").removeClass('nav-small');
+  // }
+  // else {
+  //   $(".nav-small-class").addClass('nav-small');
+  // }
+}
 export default AdminSiderbar;

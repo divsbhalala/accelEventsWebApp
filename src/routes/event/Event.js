@@ -394,7 +394,7 @@ class Event extends React.Component {
 					auctionPageItems:this.state.auctionPageItems.concat(resp.data && resp.data.items) ,
 					auctionPageCount: this.state.auctionPageCount + 1
 				},function changeAfter(){
-					var seenNames = {};
+          let seenNames = {};
 					let	array = this.state.auctionPageItems.filter(function(currentObject) {
 						if (currentObject.id in seenNames) {
 							return false;
@@ -453,8 +453,18 @@ class Event extends React.Component {
 				this.setState({
 					rafflePageItems: this.state.rafflePageItems.concat(resp.data.items),
 					rafflePageCount: this.state.rafflePageCount + 1
-
-				})
+				},function changeAfter(){
+          let seenNames = {};
+          let	array = this.state.rafflePageItems.filter(function(currentObject) {
+            if (currentObject.id in seenNames) {
+              return false;
+            } else {
+              seenNames[currentObject.id] = true;
+              return true;
+            }
+          });
+          this.setState({rafflePageItems:array,})
+        })
 			}
 			else {
 				this.setState({
@@ -503,8 +513,18 @@ class Event extends React.Component {
 				this.setState({
 					fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data.items),
 					fundANeedPageCount: this.state.fundANeedPageCount + 1
-
-				})
+				},function changeAfter(){
+          let seenNames = {};
+          let	array = this.state.fundANeedPageItems.filter(function(currentObject) {
+            if (currentObject.id in seenNames) {
+              return false;
+            } else {
+              seenNames[currentObject.id] = true;
+              return true;
+            }
+          });
+          this.setState({fundANeedPageItems:array,})
+        })
 			}
 			else {
 				this.setState({

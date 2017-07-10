@@ -110,3 +110,6 @@
 .w-100p{
 	width: 100%;
 }
+.alert-height {
+	max-height: 51px;
+}

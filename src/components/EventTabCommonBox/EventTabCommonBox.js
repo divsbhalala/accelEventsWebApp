@@ -144,7 +144,7 @@ class EventTabCommonBox extends React.Component {
               <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.buyItNowPrice}</Link>}
               { this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
-                <div className={cx("alert alert-success mrg-b-0")}> {this.props.auctionBuyNowTitle}</div>
+                <div className={cx("alert alert-success mrg-b-0 alert-height")}> {this.props.auctionBuyNowTitle}</div>
               </div> }
             </div>
           </div>

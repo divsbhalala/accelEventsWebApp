@@ -1177,7 +1177,7 @@ class Auction extends React.Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <div id="content-wrapper">
+          <div id="content-wrapper" >
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
                 <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings}
