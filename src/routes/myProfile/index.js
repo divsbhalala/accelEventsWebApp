@@ -7,13 +7,15 @@ const title = 'MyProfile';
 
 export default {
 
-  path: '/my-profile',
-
+  path: '/',
+  children: [
+    {
+      path: '/my-profile',
   action() {
     return {
       title,
       component: <Layout class="eventPage" title={title}><MyProfile title={title}/></Layout>,
     };
-  },
+  }}]
 
 };

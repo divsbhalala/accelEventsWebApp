@@ -435,7 +435,7 @@ class HeaderNew extends React.Component {
 						{
 							this.props.authenticated && <NavDropdown title={<p><i className="fa fa-user fa-fw"></i> {this.props.user && this.props.user.firstName &&<label>{this.props.user.firstName}</label>}&nbsp; &nbsp;<span className="caret"></span></p>} id='navDropdown4'>
 								<MenuItem eventKey="2">
-									<span> <i className="fa fa-user fa-fw"></i> User Profile </span>
+									<Link to="my-profile" > 	<span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
 								</MenuItem>
 								<MenuItem divider/>
 								<MenuItem eventKey="4" onClick={this.logout}>

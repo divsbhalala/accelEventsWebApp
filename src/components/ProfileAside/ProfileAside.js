@@ -30,7 +30,7 @@ class ProfileAside extends React.Component {
 	}
 	render() {
 		return (
-			<div id="user-profile">
+			<div id="user-profile">{console.log("user",this.props.user)}
 				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>
 					<header className={cx("main-box-header", "clearfix")}>
@@ -40,9 +40,9 @@ class ProfileAside extends React.Component {
 						<img src="/images/user-icon-placeholder.png" className="profile-img img-responsive center-block" />
 						<div className="profile-details">
 							<ul className="fa-ul">
-								<li><i className="fa-li fa fa-envelope-o" />Penit1936@einrot.com</li>
-								<li><i className="fa-li fa fa-phone" /></li>
-								<li><i className="fa-li fa fa-building-o" /></li>
+								<li><i className="fa-li fa fa-envelope-o" />{this.props.user && this.props.user.email}</li>
+								<li><i className="fa-li fa fa-phone" />{this.props.user && this.props.user.phonenumber}</li>
+								<li><i className="fa-li fa fa-building-o" />{this.props.user && this.props.user.address1 + " " +  this.props.user.address2  + " " +this.props.user.cityOrProvidence  + " " +this.props.user.state + " " +this.props.user.zipcode  }</li>
 							</ul>
 						</div>
 						<div className="profile-message-btn center-block text-center">
