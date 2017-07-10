@@ -44,26 +44,22 @@
 }
 
 .react-phone-number-input__phone,
-.react-phone-number-input__country .rrui__select__selected--autocomplete
-{
+.react-phone-number-input__country .rrui__select__selected--autocomplete {
 	border        : none;
 	border-bottom : 1px solid #C5D2E0;
 	transition    : border 0.1s;
 }
 
-.react-phone-number-input__phone:focus
-{
+.react-phone-number-input__phone:focus {
 	border-bottom-color: #0093C4;
 }
 
-.react-phone-number-input .rrui__select__arrow
-{
+.react-phone-number-input .rrui__select__arrow {
 	margin-top  : 0.3em;
 	margin-left : 0.3em;
 }
 
-.react-phone-number-input__icon
-{
+.react-phone-number-input__icon {
 	/* The flag icon size is 4x3 hence the exact `width` and `height` values */
 	width      : 1.24em;
 	height     : 0.93em;
@@ -73,8 +69,7 @@
 	box-sizing : content-box;
 }
 
-.react-phone-number-input__icon--international
-{
+.react-phone-number-input__icon--international {
 	/* The international icon size is square */
 	/* and also has no border hence the `2 * 1px` `width` and `height` compensation */
 	width         : calc(0.93em + 2px);
@@ -86,27 +81,4 @@
 	padding-right : 0.155em;
 
 	border : none;
-}
-/* Custom CSS*/
-.modal-dialog{
-	margin: 10px auto;
-}
-#login-user .modal-dialog {
-	max-width: 320px;
-	min-width:320px;
-	margin: 10px auto;
-}
-.eventPage .navbar-toggle{
-	display: none;
-}
-.pointer,
-.pointer:focus,
-.pointer:active,
-.pointer:visited
-{
-	cursor: pointer;
-	text-decoration: none;
-}
-.w-100p{
-	width: 100%;
 }
