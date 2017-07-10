@@ -47,21 +47,19 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/telInput.css"/>
         <link rel="stylesheet" href="/css/rrui.css"/>
         <link rel="stylesheet" href="/css/style2.css"/>
-        <link rel="stylesheet" href="/css/host-dashboard.css" />
         <link rel="stylesheet" href="/css/vt-icons.css" />
         <link rel="stylesheet" href="/css/Tel/main.css" />
 
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/css/App.css"/>
         <link rel="stylesheet" href="/css/loader.css"/>
-        <link rel="stylesheet" href="/css/sb-admin.css"/>
-        <link rel="stylesheet" href="/css/admin-style.css"/>
 
-        <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
         <link rel="stylesheet" href="/css/style.min.css"/>
+        <link rel="stylesheet" href="/css/sb-admin.min.css"/>
+        <link rel="stylesheet" href="/css/admin-style.min.css"/>
+        <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
+        <link rel="stylesheet" href="/css/host-dashboard.min.css" />
         <link rel="stylesheet" href="/css/display.min.css"/>
-
-        <link rel="stylesheet" href="/css/react-styles.min.css"/>
         <script src="/css/Tel/libphonenumber.js"></script>
         {styles.map(style =>
           <style

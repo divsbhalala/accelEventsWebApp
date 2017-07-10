@@ -992,14 +992,6 @@ input.form-control[name="itembid"] {
   overflow: hidden;
 }
 
-.action-btns .btn {
-  margin-bottom: 17px;
-}
-.w-50{
-  width: 50%;
-}
-
-
 /***********************         DISPLAY PAGE         ***********************/
 
 .tabs {
@@ -1080,12 +1072,14 @@ input.form-control[name="itembid"] {
     }
     .card-action {
       padding: 16px;
+      height: 100px;
       .btn {
         margin-bottom: 0px;
         margin-bottom: -8px
       }
     }
     .action-btns {
+      height: 100px;
       a {
         transition: color 0.3s ease;
         text-transform: uppercase;

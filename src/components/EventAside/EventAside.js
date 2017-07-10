@@ -278,7 +278,7 @@ class EventAside extends React.Component {
 								<button className="btn btn-block dropdown-toggle pointer" type="button" data-toggle="dropdown" aria-expanded={this.state.mobileViewCatExpand} onClick={this.toggleMobileViewCat}>
 									<span className="text">{this.props.selectedCategory === '' || !this.props.selectedCategory   ? "All Items" : this.props.selectedCategory}</span>
 									&nbsp;<span className="caret" /></button>
-								<ul className={cx("dropdown-menu category-list w-100p")}>
+								<ul className={cx("dropdown-menu category-list")}>
 									<li className={cx("all-items", this.props.selectedCategory === '' && "active")}>
 										<a href="#" className={cx("category-switcher all-items")} onClick={() => {
 											this.props.setFilterCategory("")
