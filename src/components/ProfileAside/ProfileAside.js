@@ -42,11 +42,12 @@ class ProfileAside extends React.Component {
 							<ul className="fa-ul">
 								<li><i className="fa-li fa fa-envelope-o" />Penit1936@einrot.com</li>
 								<li><i className="fa-li fa fa-phone" /></li>
+								<li><i className="fa-li fa fa-building-o" /></li>
 							</ul>
 						</div>
 						<div className="profile-message-btn center-block text-center">
 							<a  className="btn btn-success edit-profile" onClick={()=>{
-								this.props.setActiveTabState();
+								this.props.setActiveTabState("Profile");
 							}}>
 								<i className="fa fa-pencil" />
 								Edit Profile
