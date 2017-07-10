@@ -42,7 +42,7 @@ class MyProfile extends React.Component {
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
-                <ProfileAside />
+                <ProfileAside setActiveTabState={this.setActiveTabState} />
               </div>
               <div className="col-lg-9 col-md-8 col-sm-8 ">
 								{ this.state.isLoaded && <div className="main-box">
