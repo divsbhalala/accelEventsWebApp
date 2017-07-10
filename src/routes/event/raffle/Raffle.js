@@ -670,7 +670,8 @@ class Raffle extends React.Component {
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false} >
                             {this.state.raffleData && this.state.raffleData.images.length > 0 ?
                               this.state.raffleData.images.map((item, index) =>
-                                <ImageList key={index} item={item} />
+                                <ImageList key={index} item={item}
+                                           imageUrl={item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}/>
                               ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
@@ -730,10 +731,12 @@ class Raffle extends React.Component {
 }
 class ImageList extends React.Component {
   render() {
+    let img = '';
     return (
-      <div className="item-image">
-        <img className="item-image-inner"
-             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      <div>
+        <div className={cx("item-image-inner")}
+             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+
       </div>
 
     );

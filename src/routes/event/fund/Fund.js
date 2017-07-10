@@ -96,17 +96,17 @@ class Fund extends React.Component {
   };
   onFormClick = (e) => {
     e.preventDefault();
-    if (!this.state.settings.moduleActivated){
+    if ( !this.state.settings.moduleActivated){
       this.setState({
         showMapPopup: true,
         errorMsg: " Pledges are no longer being accepted for this Need." ,
         popupHeader:"Failed",
       })
     }else{
-      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm ){
+      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
         this.setState({
           showMapPopup: true,
-          errorMsg: " You are placing a bid of $"+ this.state.amountValue  +" for Smiles Are Always In Style." ,
+          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }else{
@@ -144,6 +144,7 @@ class Fund extends React.Component {
               this.setState({
                 errorMsg: resp.error.message,
                 isError:true,
+                popupHeader:"Failed",
                 loading:false,
               });
             } else {
@@ -414,7 +415,7 @@ class Fund extends React.Component {
       errorMsgAmount= "Bid Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
-      errorMsgAmount= "Bids for this item must be placed in increments of at least $"+this.state.fundData.pledgePrice+". Please enter a value of at least " + ( this.state.fundData.pledgePrice)
+      errorMsgAmount= "Submitted pledge amount should be greater than or equal to the stated pledge amount.";
       amount=false
     } else {
       amount=true
@@ -584,6 +585,7 @@ class Fund extends React.Component {
     });
   };
   componentRernder() {
+    this.clearFormData();
     this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
@@ -613,10 +615,15 @@ class Fund extends React.Component {
   };
   hidePopup = () => {
     this.setState({
-      showMapPopup: false
+      showMapPopup: false,
     })
     if(this.state.popupHeader == "Success" ){
       this.componentRernder();
+    }
+    if(this.state.popupHeader == "Confirm" ){
+     this.setState({
+       errorMsg:""
+     });
     }
   };
   hideLoginModal  = () => {
@@ -652,7 +659,8 @@ class Fund extends React.Component {
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false} dynamicHeight emulateTouch>
                             {this.state.fundData && this.state.fundData.images.length > 0 ?
                               this.state.fundData.images.map((item, index) =>
-                                <ImageList key={index} item={item} />
+                                <ImageList key={index} item={item}
+                                           imageUrl={item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}/>
                               ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
@@ -838,7 +846,7 @@ class Fund extends React.Component {
                                 </div>
                                 <div
                                   className={cx("form-group", this.state.cardNumberFeedBack && 'has-feedback', this.state.cardNumberFeedBack && this.state.cardNumber && 'has-success', this.state.cardNumberFeedBack && (!this.state.cardNumber) && 'has-error')}>
-                                  <label className="control-label">Credit Card Number !</label>
+                                  <label className="control-label">Credit Card Number </label>
                                   <div className="input-group">
                                     <div className="input-group-addon"><i className="fa fa-credit-card" aria-hidden="true"/>
                                     </div>
@@ -1003,7 +1011,7 @@ class Fund extends React.Component {
           showModal={this.state.showMapPopup}
           headerText= {<h4>{this.state.popupHeader}</h4>}
           modelBody='<div><h1>Location</h1></div>'
-          onCloseFunc={this.hideMapPopup}
+          onCloseFunc={this.hidePopup}
         >
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsg }
@@ -1021,15 +1029,17 @@ class Fund extends React.Component {
 }
 class ImageList extends React.Component {
   render() {
+    let img = '';
     return (
-      <div className="item-image">
-        <img className="item-image-inner"
-             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      <div>
+        <div className={cx("item-image-inner")}
+             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+
       </div>
+
     );
   }
 }
-
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   doGetFundANeedItemByCode: (eventUrl, itemCode) => doGetFundANeedItemByCode(eventUrl, itemCode),

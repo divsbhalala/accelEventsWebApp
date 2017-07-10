@@ -111,5 +111,5 @@
 	width: 100%;
 }
 .alert-height {
-	max-height: 51px;
+	max-height: 51px !important;
 }

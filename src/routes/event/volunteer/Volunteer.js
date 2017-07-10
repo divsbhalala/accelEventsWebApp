@@ -28,7 +28,8 @@ import  {
   submitDonate,
 	isVolunteer,
   doOrderTicket,
-  doGetSettings
+  doGetSettings,
+  getUserByMobile,
 } from './../action/index';
 
 class Volunteer extends React.Component {
@@ -40,6 +41,8 @@ class Volunteer extends React.Component {
 		super(props);
 		this.state = {
 			activeViews: 'select-action',
+      phoneEnable:true,
+      emailEnable:true,
 			isValidData: false,
 			isloaded: false,
 			error: null,
@@ -151,8 +154,8 @@ class Volunteer extends React.Component {
       phoneNumberFeedBack: true,
       loading:false,
       stripeToken:null,
-      expMonthValue:this.expMonth.value,
-      expYearValue:this.expYear.value,
+      //expMonthValue:this.expMonth.value,
+     // expYearValue:this.expYear.value,
     })
   };
 	setActiveView = (view) => {
@@ -160,6 +163,8 @@ class Volunteer extends React.Component {
       this.getAttendeesList();
     }
     this.setState({
+      phoneEnable:true,
+      emailEnable:true,
       activeViews: view,
       isValidData: false,
       error: null,
@@ -353,6 +358,7 @@ class Volunteer extends React.Component {
             if(resp.phonenumber){this.setState({phoneNumber: true});}
 					}else{
             this.setState({
+              phoneEnable:true,
               firstName: false,
               firstNameFeedBack: false,
               lastName: false,
@@ -360,7 +366,59 @@ class Volunteer extends React.Component {
               phoneNumber: false,
               phoneNumberFeedBack: false,
               userData: null,
-              phone:null,
+             // phone:null,
+              errorMsgEmailCheck: "User Does Not Exists. Account Will be created."
+            })
+           }
+				}).catch(error => {
+				this.setState({
+					userData: null,
+					errorMsgEmailCheck: "User Does Not Exists. Account Will be created."
+				})
+				console.log(error);
+			});
+		}
+	};
+  checkMobileUser = (e) => {
+		if (this.state.phone) {
+			let modeltype = 'auction';
+			if (this.state.activeViews == 'select-action') {
+				modeltype = 'auction'
+			}
+			if (this.state.activeViews == 'sell-raffle-tickets') {
+				modeltype = 'raffle'
+			}
+			if (this.state.activeViews == 'submit-raffle-tickets') {
+				modeltype = 'raffle'
+			}
+      this.props.getUserByMobile(this.props.params && this.props.params.params, this.state.phone.trim(),this.state.countryPhone, modeltype)
+				.then(resp => {
+         	if (resp && !resp.errorMessage) {
+						this.setState({
+							userData: resp,
+							firstNameValue: resp.firstName,
+							lastNameValue: resp.lastName,
+              phoneNumber: true,
+              phone: resp.phonenumber,
+              countryPhone: resp.countryCode,
+              errorMsgEmailCheck:"",
+              email:true,
+						});
+						this.email.value=resp.email;
+            if(resp.firstName){this.setState({firstName: true});}
+            if(resp.lastName){this.setState({lastName: true});}
+            if(resp.phonenumber){this.setState({phoneNumber: true});}
+					}else{
+            this.email.value="";
+            this.setState({
+              firstName: false,
+              firstNameFeedBack: false,
+              lastName: false,
+              lastNameFeedBack: false,
+              // phoneNumber: false,
+              // phoneNumberFeedBack: false,
+              userData: null,
+              //phone:null,
               errorMsgEmailCheck: "User Does Not Exists. Account Will be created."
             })
            }
@@ -383,12 +441,14 @@ class Volunteer extends React.Component {
 
 		if (this.email.value.trim() == '') {
 			this.setState({
+        phoneEnable:true,
 				email: false,
 				errorMsgEmail: "Email is required.",
 			});
 		}
 		else {
 			this.setState({
+        phoneEnable:false,
 				email: re.test(this.email.value.trim()),
 				errorMsgEmail: "Invalid Email.",
 			});
@@ -435,16 +495,19 @@ class Volunteer extends React.Component {
     });
     if (value == '') {
       this.setState({
+        emailEnable: true,
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
       });
     } else {
       this.props.doValidateMobileNumber(number).then(resp => {
-        console.log(resp)
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
         });
+      })
+      this.setState({
+        emailEnable:false,
       })
     }
     this.setState({
@@ -541,6 +604,30 @@ class Volunteer extends React.Component {
      }
 
 	};
+  submitPledgeAmountValidateHandler = (e) => {
+    this.setState({
+      amountFeedBack: true,
+      amountValue: this.amount.value.trim()
+    });
+    let bid = 0;
+    bid = this.state.itemData && this.state.itemData.minPrice ;
+
+    if (this.amount.value.trim() == '') {
+      this.setState({
+        amount: false,
+        errorMsgAmount: "Submitted pledge Amount can't be empty",
+      });
+    } else if (bid > this.amount.value.trim()) {
+      this.setState({
+        amount: false,
+        errorMsgAmount: "Submitted pledge amount should be greater than or equal to the stated pledge amount.",
+      });
+    } else {
+      this.setState({
+        amount: true
+      });
+    }
+	}
 	amountValidateHandler = (e) => {
 		this.setState({
 			amountFeedBack: true,
@@ -671,13 +758,7 @@ class Volunteer extends React.Component {
     this.setState({loading:true});
 
      if (this.state.itemCode && this.props.eventData && this.props.eventData.ccRequiredForBidConfirm  && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
-      const card = {
-        number: this.cardNumber.value.trim(),
-        cvc: this.cvv.value.trim(),
-        exp_month: this.expMonth.value.trim(),
-        exp_year: this.expYear.value.trim(),
-      }
-       this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
+     this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then(response=>{
         if (response.error) {
           this.setState({
             loading:false,
@@ -1151,6 +1232,7 @@ class Volunteer extends React.Component {
                 }}
 								       onKeyUp={this.emailValidateHandler}
 								       onBlur={this.checkAuctionUser}
+                       disabled={!this.state.emailEnable}
 								/>
 								{ this.state.emailFeedBack && this.state.email &&
 								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1161,9 +1243,7 @@ class Volunteer extends React.Component {
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
-
-							{ !this.state.userData && this.state.email &&
-							<div>
+              {  // this.state.userData && !this.state.userData.phonenumber &&
                 <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                   <label className="control-label">Cell Number</label>
                   <div className="input-group">
@@ -1176,6 +1256,8 @@ class Volunteer extends React.Component {
                       separateDialCode={true}
                       value={ this.state.phone || "" }
                       onPhoneNumberChange={this.changePhone}
+                      onPhoneNumberBlur={this.checkMobileUser}
+                      disabled={!this.state.phoneEnable}
                     />
                     { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1185,8 +1267,11 @@ class Volunteer extends React.Component {
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <small className="help-block"
                          data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-                </div>
-								<div
+                  <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
+                </div> }
+							{ !this.state.userData && this.state.email &&
+							<div>
+                <div
 									className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
 									<label className="control-label">First Name</label>
 									<div className="input-group">
@@ -1227,29 +1312,7 @@ class Volunteer extends React.Component {
 									<small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
 								</div>
               </div> }
-              { this.state.userData && !this.state.userData.phonenumber &&
-              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
-                <div className="input-group">
-                  <div className="input-group-addon">
-                    <i className="fa fa-phone" aria-hidden="true"/>
-                  </div>
-                  <IntlTelInput
-                    css={['intl-tel-input', 'form-control intl-tel']}
-                    utilsScript="./libphonenumber.js"
-                    separateDialCode={true}
-                    value={ this.state.phone || "" }
-                    onPhoneNumberChange={this.changePhone}
-                  />
-                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                </div>
-                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                <small className="help-block"
-                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-              </div> }
+
 							{ this.state.userData && !this.state.userData.firstName &&
 							<div
 								className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -1526,6 +1589,7 @@ class Volunteer extends React.Component {
                 }}
 								       onKeyUp={this.emailValidateHandler}
 								       onBlur={this.checkAuctionUser}
+                       disabled={!this.state.emailEnable}
 								/>
 								{ this.state.emailFeedBack && this.state.email &&
 								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1537,30 +1601,33 @@ class Volunteer extends React.Component {
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
 
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone || "" }
+                    onPhoneNumberChange={this.changePhone}
+                    onPhoneNumberBlur={this.checkMobileUser}
+                    disabled={!this.state.phoneEnable}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
+              </div>
               { !this.state.userData && this.state.email &&
               <div>
-                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                  <label className="control-label">Cell Number</label>
-                  <div className="input-group">
-                    <div className="input-group-addon">
-                      <i className="fa fa-phone" aria-hidden="true"/>
-                    </div>
-                    <IntlTelInput
-                      css={['intl-tel-input', 'form-control intl-tel']}
-                      utilsScript="./libphonenumber.js"
-                      separateDialCode={true}
-                      value={ this.state.phone || "" }
-                      onPhoneNumberChange={this.changePhone}
-                    />
-                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                  </div>
-                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                  <small className="help-block"
-                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-                </div>
                 <div
                   className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                   <label className="control-label">First Name</label>
@@ -1602,29 +1669,7 @@ class Volunteer extends React.Component {
                   <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
                 </div>
               </div> }
-              { this.state.userData && !this.state.userData.phonenumber &&
-              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
-                <div className="input-group">
-                  <div className="input-group-addon">
-                    <i className="fa fa-phone" aria-hidden="true"/>
-                  </div>
-                  <IntlTelInput
-                    css={['intl-tel-input', 'form-control intl-tel']}
-                    utilsScript="./libphonenumber.js"
-                    separateDialCode={true}
-                    value={ this.state.phone || "" }
-                    onPhoneNumberChange={this.changePhone}
-                  />
-                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                </div>
-                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                <small className="help-block"
-                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-              </div> }
+
               { this.state.userData && !this.state.userData.firstName &&
               <div
                 className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -1719,7 +1764,7 @@ class Volunteer extends React.Component {
 											       ref={ref => {
                                this.amount = ref;
                              }}
-											       onKeyUp={this.amountValidateHandler}/>
+											       onKeyUp={this.submitPledgeAmountValidateHandler}/>
 											{ this.state.amountFeedBack && this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
 											{ this.state.amountFeedBack && !this.state.amount &&
@@ -1900,6 +1945,7 @@ class Volunteer extends React.Component {
                 }}
 								       onKeyUp={this.emailValidateHandler}
 								       onBlur={this.checkAuctionUser}
+                       disabled={!this.state.emailEnable}
 								/>
 								{ this.state.emailFeedBack && this.state.email &&
 								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1910,10 +1956,7 @@ class Volunteer extends React.Component {
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
-
-              { !this.state.userData && this.state.email &&
-              <div>
-                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+              {<div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                   <label className="control-label">Cell Number</label>
                   <div className="input-group">
                     <div className="input-group-addon">
@@ -1925,6 +1968,8 @@ class Volunteer extends React.Component {
                       separateDialCode={true}
                       value={ this.state.phone || "" }
                       onPhoneNumberChange={this.changePhone}
+                      onPhoneNumberBlur={this.checkMobileUser}
+                      disabled={!this.state.phoneEnable}
                     />
                     { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1934,7 +1979,10 @@ class Volunteer extends React.Component {
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <small className="help-block"
                          data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-                </div>
+                  <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
+                </div> }
+              { !this.state.userData && this.state.email &&
+              <div>
                 <div
                   className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                   <label className="control-label">First Name</label>
@@ -2260,6 +2308,7 @@ class Volunteer extends React.Component {
                 }}
 								       onKeyUp={this.emailValidateHandler}
 								       onBlur={this.checkAuctionUser}
+                       disabled={!this.state.emailEnable}
 								/>
 								{ this.state.emailFeedBack && this.state.email &&
 								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -2270,31 +2319,33 @@ class Volunteer extends React.Component {
 								<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
 							</div>
-
+              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                <label className="control-label">Cell Number</label>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone || "" }
+                    onPhoneNumberChange={this.changePhone}
+                    onPhoneNumberBlur={this.checkMobileUser}
+                    disabled={!this.state.phoneEnable}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block"
+                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
+              </div>
               { !this.state.userData && this.state.email &&
               <div>
-                <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                  <label className="control-label">Cell Number</label>
-                  <div className="input-group">
-                    <div className="input-group-addon">
-                      <i className="fa fa-phone" aria-hidden="true"/>
-                    </div>
-                    <IntlTelInput
-                      css={['intl-tel-input', 'form-control intl-tel']}
-                      utilsScript="./libphonenumber.js"
-                      separateDialCode={true}
-                      value={ this.state.phone || "" }
-                      onPhoneNumberChange={this.changePhone}
-                    />
-                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                  </div>
-                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                  <small className="help-block"
-                         data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-                </div>
                 <div
                   className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                   <label className="control-label">First Name</label>
@@ -2336,29 +2387,7 @@ class Volunteer extends React.Component {
                   <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
                 </div>
               </div> }
-              { this.state.userData && !this.state.userData.phonenumber &&
-              <div className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
-                <div className="input-group">
-                  <div className="input-group-addon">
-                    <i className="fa fa-phone" aria-hidden="true"/>
-                  </div>
-                  <IntlTelInput
-                    css={['intl-tel-input', 'form-control intl-tel']}
-                    utilsScript="./libphonenumber.js"
-                    separateDialCode={true}
-                    value={ this.state.phone || "" }
-                    onPhoneNumberChange={this.changePhone}
-                  />
-                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                </div>
-                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                <small className="help-block"
-                       data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-              </div>  }
+
               { this.state.userData && !this.state.userData.firstName &&
               <div
                 className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
@@ -2978,6 +3007,7 @@ const mapDispatchToProps = {
   getItemStatusByCode: (eventUrl, itemCode) => getItemStatusByCode(eventUrl, itemCode),
   getAttendees: (eventUrl) => getAttendees(eventUrl),
   getUserByEmail: (eventUrl, itemCode,modeltype) => getUserByEmail(eventUrl, itemCode,modeltype),
+  getUserByMobile: (eventUrl, mobile,countryCode,modeltype) => getUserByMobile(eventUrl, mobile,countryCode,modeltype),
   setAttendees: (eventUrl, barcode,status) => setAttendees(eventUrl, barcode,status),
   getAuctionItemStatusByCode: (eventUrl, itemCode) => getAuctionItemStatusByCode(eventUrl, itemCode),
   submitBids: (eventUrl, userData) => submitBids(eventUrl, userData),
