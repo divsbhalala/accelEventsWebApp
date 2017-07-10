@@ -443,7 +443,7 @@ class Event extends React.Component {
 	}
 
 	doGetRaffleItemByLimit(eventUrl) {
-		this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
+		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
 					this.setState({
@@ -503,7 +503,7 @@ class Event extends React.Component {
 	}
 
 	doGetFundANeedItemByLimit(eventUrl) {
-		this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
+		this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
 					this.setState({
@@ -579,7 +579,7 @@ class Event extends React.Component {
 		});
 	}
 	setFilterCategory = (category)=> {
-		if (this.props.active_tab_data && this.props.active_tab_data.tab) {
+	  if (this.props.active_tab_data && this.props.active_tab_data.tab) {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
 			this.setState({
 				selectedCategory: category
@@ -602,7 +602,7 @@ class Event extends React.Component {
 					rafflePageCount: 0,
 					rafflePageItems: [],
 				})
-				this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
+    		this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
 
 			} else if (label == 'Fund a Need') {
 				this.setState({
