@@ -229,7 +229,7 @@ class Auction extends React.Component {
           this.setState({
             showPopup: true,
             errorMsgCard: "Thank you for Registration!",
-            popupHeader:"Successfully",
+            popupHeader:"Successful Registration",
             loading:false,
           });
           this.componentReRender();
@@ -364,7 +364,7 @@ class Auction extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
-
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue: this.cardNumber.value.trim(),
@@ -421,7 +421,7 @@ class Auction extends React.Component {
     //this.checkIsValidBidData();
   };
   cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true
     }, function afterStateChange() {
@@ -485,11 +485,11 @@ class Auction extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue:this.expMonth.value.trim(),
+      expMonthValue:this.expMonth.value,
     },function afterStateChange () {
       this.checkIsValidBidData()
     });
@@ -528,7 +528,7 @@ class Auction extends React.Component {
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-      if(!resp.data.moduleActivated){
+      if(!resp.data.moduleActivated || resp.data.moduleEnded){
         this.setState({
           errorMsgCard:"Please activate this module to start accepting pledges.",
           popupHeader :'Failed',
@@ -574,7 +574,9 @@ class Auction extends React.Component {
     this.setState({
       amountFeedBack:false,
     });
-    this.amount.value="";
+    if(this.props.authenticated){
+      this.amount.value="";
+    }
   };
   showPopup = () => {
     this.setState({
@@ -621,7 +623,6 @@ class Auction extends React.Component {
       <h4>Login or signup below</h4>
       <form className="ajax-form validated fv-form fv-form-bootstrap"
             autoComplete="off" method="POST"
-
             noValidate="novalidate"
             onSubmit={this.signupForm}>
         <div
@@ -648,7 +649,7 @@ class Auction extends React.Component {
           <small className="help-block">{this.state.errorMsgEmail}</small>}
         </div>
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-12">
             <div
               className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
               <label className="control-label">Cell Number</label>
@@ -736,7 +737,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
-        <small className="help-block">Firstname is required.</small>}
+        <small className="help-block">First Name is required.</small>}
       </div> : ""}
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -756,7 +757,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
-        <small className="help-block">Lastname is required.</small>}
+        <small className="help-block">Last Name is required.</small>}
       </div> : ''}
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
@@ -839,7 +840,7 @@ class Auction extends React.Component {
                       <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                         this.expMonth = ref;
                       }} onChange={this.expMonthValidateHandler}>
-                        <option selected value="01">Jan (01)</option>
+                        <option defaultValue value="01">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
                         <option value="04">Apr (04)</option>
@@ -899,12 +900,12 @@ class Auction extends React.Component {
                     className={cx("input-group", this.state.cvvFeedBack && 'has-feedback', this.state.cvvFeedBack && this.state.cvv && 'has-success', this.state.cvvFeedBack && (!this.state.cvv) && 'has-error')}>
                     <label className="control-label">CVV Number</label>
                     <div className="input-group">
-                      <input type="number" className="form-control field-cvv" maxLength={4} size={4}
+                      <input type="number" className="form-control field-cvv" maxLength="4" size={4}
                              data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
                              ref={ref => {
                                this.cvv = ref;
                              }}
-                             onKeyUp={this.cvvValidateHandler}/>
+                             onKeyUp={this.cvvValidateHandler} />
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                       { this.state.cvvFeedBack && !this.state.cvv &&
@@ -956,7 +957,7 @@ class Auction extends React.Component {
           <div className="input-group-addon">
             <i className="fa fa-user" aria-hidden="true"/>
           </div>
-          <input type="text" className="form-control" name="firstname"
+          <input type="text" className="form-control" name="firstname" placeholder="First Name"
                  ref={ref => {
                    this.firstName = ref;
                  }}
@@ -967,7 +968,7 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
-        <small className="help-block">Firstname is required.</small>}
+        <small className="help-block">First Name is required.</small>}
       </div> : ""}
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -987,12 +988,12 @@ class Auction extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
-        <small className="help-block">Lastname is required.</small>}
+        <small className="help-block">Last Name is required.</small>}
       </div> : ''}
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-12">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">$</div>
@@ -1069,7 +1070,7 @@ class Auction extends React.Component {
                       <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                         this.expMonth = ref;
                       }} onChange={this.expMonthValidateHandler}>
-                        <option selected value="01">Jan (01)</option>
+                        <option defaultValue value="01">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
                         <option value="04">Apr (04)</option>
@@ -1176,7 +1177,7 @@ class Auction extends React.Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <div id="content-wrapper">
+          <div id="content-wrapper" >
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
                 <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.settings}
@@ -1194,7 +1195,8 @@ class Auction extends React.Component {
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false}>
                             {this.state.auctionData && this.state.auctionData.images.length > 0 ?
                               this.state.auctionData.images.map((item, index) =>
-                                <ImageList key={index} item={item}/>
+                              <ImageList key={index} item={item}
+                                   imageUrl={item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}/>
                               ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
@@ -1263,11 +1265,14 @@ class Auction extends React.Component {
 }
 class ImageList extends React.Component {
   render() {
+    let img = '';
     return (
-      <div className="item-image">
-        <img className="item-image-inner"
-             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      <div>
+        <div className={cx("item-image-inner")}
+             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+
       </div>
+
     );
   }
 }

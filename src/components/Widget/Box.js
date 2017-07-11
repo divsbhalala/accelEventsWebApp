@@ -20,9 +20,9 @@ class BoxWidget extends Component { // eslint-disable-line
         <span className="headline">{this.props.headerText}</span>
         <span className="desc">{this.props.descText}</span>
         <span className="value">
-                      <a href={this.props.linkTo} data-toggle="tooltip" title={this.props.linkTitle}
-                         target="_blank">{this.props.linkText}</a>
-                    </span>
+          <a href={this.props.linkTo} data-toggle="tooltip" title={this.props.linkTitle}
+             target="_blank">{this.props.linkText}</a>
+        </span>
       </div>
     );
   }

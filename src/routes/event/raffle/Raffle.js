@@ -210,6 +210,7 @@ class Raffle extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
@@ -232,7 +233,7 @@ class Raffle extends React.Component {
   //  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true,
       ccvValue:this.cvv.value.trim(),
@@ -322,13 +323,13 @@ class Raffle extends React.Component {
   };
   ticketsValidateHandler = (e) => {
 
-    let tickets=true
-    let errorMsgTickets=""
+    let tickets=true;
+    let errorMsgTickets="";
     if (this.tickets.value.trim() == '') {
-      errorMsgTickets= "Number Of Tickets can't be empty"
-      tickets=false
+      errorMsgTickets= "Number Of Tickets can't be empty";
+      tickets=false;
     }else if ( this.state.raffleData.availableTickets  < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
-      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets
+      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets;
       tickets=false
     } else {
       tickets=true
@@ -382,7 +383,7 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
+      console.log(error);
       history.push('/404');
     });
   };
@@ -413,14 +414,14 @@ class Raffle extends React.Component {
     e.preventDefault();
     this.setState({
       loading:true,
-    })
+    });
       const user = {
         itemCode: this.state.raffleData.code,
         submittedTickets: this.state.raffleTicketValue,
-      }
+      };
       this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
-         let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
+         let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue});
           if (!resp.errorMessage) {
             this.setState({
               //showAlertPopup: true,
@@ -457,7 +458,7 @@ class Raffle extends React.Component {
     this.setState({
       showTicketsPopup: false,
       popupTicketHeader: "Pay Now",
-    })
+    });
     this.componentReRender();
   };
   showTicketsPopup = () => {
@@ -544,7 +545,7 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
+      console.log(error);
       history.push('/404');
     });
   };
@@ -558,7 +559,7 @@ class Raffle extends React.Component {
           <div className="input-group-addon">
             <i className="fa fa-user" aria-hidden="true"/>
           </div>
-          <input type="text" className="form-control" name="firstname" data-fv-field="firstName"
+          <input type="text" className="form-control" name="firstname" placeholder="First Name"
                  ref={ref => {
                    this.firstName = ref;
                  }}
@@ -569,7 +570,7 @@ class Raffle extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.firstNameFeedBack && !this.state.firstName &&
-        <small className="help-block" data-fv-result="NOT_VALIDATED">Firstname is required.</small>}
+        <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
       </div> : ""}
       { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -578,7 +579,7 @@ class Raffle extends React.Component {
           <div className="input-group-addon">
             <i className="fa fa-user" aria-hidden="true"/>
           </div>
-          <input type="text" className="form-control" name="lastname" data-fv-field="lastName"
+          <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                  ref={ref => {
                    this.lastName = ref;
                  }}
@@ -589,7 +590,7 @@ class Raffle extends React.Component {
           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
         </div>
         { this.state.lastNameFeedBack && !this.state.lastName &&
-        <small className="help-block" data-fv-result="NOT_VALIDATED">Lastname is required.</small>}
+        <small className="help-block" data-fv-result="NOT_VALIDATED">Last Name is required.</small>}
       </div> : '' }
 
       <div className="form-group has-feedback">
@@ -669,7 +670,8 @@ class Raffle extends React.Component {
                           <Carousel axis="horizontal" showThumbs={false} showArrows={true} showStatus={false} >
                             {this.state.raffleData && this.state.raffleData.images.length > 0 ?
                               this.state.raffleData.images.map((item, index) =>
-                                <ImageList key={index} item={item} />
+                                <ImageList key={index} item={item}
+                                           imageUrl={item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}/>
                               ) : <div className="item-image-inner" style={{
                                 backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")',
                                 width: '',
@@ -729,10 +731,12 @@ class Raffle extends React.Component {
 }
 class ImageList extends React.Component {
   render() {
+    let img = '';
     return (
-      <div className="item-image">
-        <img className="item-image-inner"
-             src={this.props.item.imageUrl ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + this.props.item.imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg" }/>
+      <div>
+        <div className={cx("item-image-inner")}
+             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+
       </div>
 
     );

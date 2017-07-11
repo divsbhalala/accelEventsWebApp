@@ -181,6 +181,7 @@ class EventDonation extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true
     });
@@ -223,7 +224,7 @@ class EventDonation extends React.Component {
     }
   };
   cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true
     });
@@ -356,7 +357,11 @@ class EventDonation extends React.Component {
       lastNameFeedBack: false,
       passwordFeedBack: false,
       emailFeedBack: false,
-    })
+      amount: true,
+    },function loadAfterChange() {
+      this.amount.value=this.state.donationRate;
+    });
+
   };
   hideDonationPopup = () => {
     this.setState({
@@ -423,7 +428,7 @@ class EventDonation extends React.Component {
             email:this.props.user.email,
             paymenttype:"CC",
           },
-          contimationMsg : " Your card ending in " + response.card.last4 + " will be charged $ "+  this.state.amountValue  + " towards donation." ,
+          confirmationMsg : "Your card ending in " + response.card.last4 + " will be charged $ "+  this.state.amountValue  + " towards donation." ,
         });
         this.showDonationConfirmationPopup();
       }
@@ -438,8 +443,11 @@ class EventDonation extends React.Component {
         amount: this.state.amountValue,
         email:this.props.user.email,
         paymenttype:"CC",
+    };
+    if(this.state.user){
+      user = this.state.user;
     }
-    this.props.giveDonate(this.props.eventUrl, user)
+    this.props.giveDonate(this.props.eventUrl,user)
       .then(resp => {
        // console.log("------",resp)
         this.hideDonationConfirmationPopup();
@@ -536,7 +544,7 @@ class EventDonation extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="firstname" placeholder="firstName"
+                    <input type="text" className="form-control" name="firstname" placeholder="First Name"
                            ref={ref => {
                              this.firstName = ref;
                            }}
@@ -547,7 +555,7 @@ class EventDonation extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.firstNameFeedBack && !this.state.firstName &&
-                  <small className="help-block">Firstname is required.</small>}
+                  <small className="help-block">First Name is required.</small>}
                 </div> :""}
                 { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
                   className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
@@ -556,7 +564,7 @@ class EventDonation extends React.Component {
                     <div className="input-group-addon">
                       <i className="fa fa-user" aria-hidden="true"/>
                     </div>
-                    <input type="text" className="form-control" name="lastname" placeholder="lastName"
+                    <input type="text" className="form-control" name="lastname" placeholder="Last Name"
                            ref={ref => {
                              this.lastName = ref;
                            }}
@@ -567,10 +575,10 @@ class EventDonation extends React.Component {
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                   </div>
                   { this.state.lastNameFeedBack && !this.state.lastName &&
-                  <small className="help-block">Lastname is required.</small>}
+                  <small className="help-block">Last Name is required.</small>}
                 </div> :''}
 
-                  <div
+                <div
                  className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) &&  !this.props.authenticated && 'has-error')}>
                  <label className="control-label">Email Address</label>
                  <div className="input-group">
@@ -593,27 +601,27 @@ class EventDonation extends React.Component {
                  { this.state.emailFeedBack && !this.state.email &&
                  <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                </div>
-                    <div
-                      className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && !this.props.user.phonenumber && 'has-error')}>
-                      <label className="control-label">Cell Number</label>
-                      <div className="input-group">
-                        <div className="input-group-addon">
-                          <i className="fa fa-phone" aria-hidden="true"/>
-                        </div>
-                        { !this.props.user.phonenumber ? <IntlTelInput
-                          css={['intl-tel-input', 'form-control intl-tel']}
-                          utilsScript="./libphonenumber.js"
-                          separateDialCode={true}
-                          onPhoneNumberChange={this.changePhone}
-                        /> : <input className="form-control" value={this.state.phone} disabled={true} /> }
-                        { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
-                        <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                        { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                        <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-                      </div>
-                      { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
-                      <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
-                   </div>
+               <div
+                  className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && !this.props.user.phonenumber && 'has-error')}>
+                  <label className="control-label">Cell Number</label>
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-phone" aria-hidden="true"/>
+                    </div>
+                    { !this.props.user.phonenumber ? <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      onPhoneNumberChange={this.changePhone}
+                    /> : <input className="form-control" value={this.state.phone} disabled={true} /> }
+                    { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+                 </div>
                 { !this.props.authenticated && <div
                   className={cx("form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.password && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
                   <label className="control-label login-password">Enter or Create
@@ -721,7 +729,7 @@ class EventDonation extends React.Component {
                                 <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
                                   this.expMonth = ref;
                                 }}>
-                                  <option selected value="01">Jan (01)</option>
+                                  <option defaultValue value="01">Jan (01)</option>
                                   <option value="02">Feb (02)</option>
                                   <option value="03">Mar (03)</option>
                                   <option value="04">Apr (04)</option>
@@ -823,7 +831,7 @@ class EventDonation extends React.Component {
           <button className="btn btn-success" onClick={()=>{this.doDonationConfirmation()}}>Confirm</button>
           <button className="btn btn-green" onClick={()=>{this.hideDonationConfirmationPopup()}}>Close</button></div>}
         >
-          <center>{this.state.contimationMsg }</center>
+          <center>{this.state.confirmationMsg }</center>
         </PopupModel>
 
       </div>

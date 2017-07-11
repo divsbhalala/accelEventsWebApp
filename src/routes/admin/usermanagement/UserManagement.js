@@ -14,11 +14,10 @@ class UserManagement extends React.Component {
 
   render() {
     return (
-      <div className="container-fluid">
+      <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
-          <div className="col-lg-offset-2 col-sm-10">
-            <div id="content-wrapper">
-              <div className="row" style={{opacity: 1}}>
+          <div className=" col-sm-12">
+             <div className="row" style={{opacity: 1}}>
                 <div className="col-lg-12">
                   <div className="row">
                     <div className="col-lg-12">
@@ -53,11 +52,11 @@ class UserManagement extends React.Component {
                             <tbody>
                             <tr className="dummy edit">
                               <td>
-                                <input name="name" type="text" className="form-control first-name" required />
+                                <input name="name" type="text" className="form-control first-name" placeholder="First Name" required />
                                 <span className="value" />
                               </td>
                               <td>
-                                <input name="lastName" type="text" className="form-control last-name" required />
+                                <input name="lastName" type="text" className="form-control last-name" placeholder="Last Name" required />
                                 <span className="value" />
                               </td>
                               <td className="email">
@@ -152,7 +151,6 @@ class UserManagement extends React.Component {
 
           </div>
         </div>
-      </div>
     );
   }
 }
