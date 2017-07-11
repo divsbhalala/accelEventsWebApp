@@ -2263,9 +2263,6 @@ span.navbar-brand:hover a
 .m-b-5{
   margin-bottom: 5px !important;
 }
-/*.my-modal {
-  width: 25%    /* Occupy the 90% of the screen width */
-/*}*/
 #login-user .modal-footer{
   border-top:none;
   padding-top:0px;
@@ -2297,4 +2294,8 @@ span.navbar-brand:hover a
 }
 .input-group-addon, .input-group-btn {
   border-width: 1px;
+}
+
+.w-50 {
+  width: 50%;
 }

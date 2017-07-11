@@ -1,13 +1,37 @@
-# This is a sample build configuration for Javascript (Node.js).
-# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# This is a sample build configuration for Haskell.
+# Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: node:6.9.4
+image: node:6.9.2
 
 pipelines:
-  default:
-    - step:
-        script: # Modify the commands below to build your repository.
-          - npm install
-          - npm test
+  branches:
+    master:
+      - step:
+          script:
+           - apt-get update
+           - python --version
+           - apt-get -y install python-dev
+           - apt-get -y install python-pip
+           - pip install awscli
+           - pip --help
+           - aws --version
+           - git reset --hard
+           - npm install
+           - npm run deploy
+           - aws --region us-west-2 s3 sync . s3://ae-frontend-auto/ --acl public-read --exclude ".vscode/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml"
+    develop:
+      - step:
+          script:
+           - apt-get update
+           - python --version
+           - apt-get -y install python-dev
+           - apt-get -y install python-pip
+           - pip install awscli
+           - pip --help
+           - aws --version
+           - git reset --hard
+           - npm install
+           - npm run deploy
+           - aws --region us-west-2 s3 sync . s3://ae-frontend-auto/ --acl public-read --exclude ".vscode/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml"
