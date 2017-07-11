@@ -18,7 +18,6 @@ pipelines:
            - pip --help
            - aws --version
            - git reset --hard
-           - git checkout develop -f
            - npm install
            - npm run deploy
            - aws --region us-west-2 s3 sync . s3://ae-frontend-auto/ --acl public-read --exclude ".vscode/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml"
