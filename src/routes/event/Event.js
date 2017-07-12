@@ -232,6 +232,7 @@ class Event extends React.Component {
 
 	};
 	cardNumberValidateHandler = (e) => {
+    this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
 			cardNumberFeedBack: true
 		});
@@ -276,7 +277,7 @@ class Event extends React.Component {
 		}
 	};
 	cvvValidateHandler = (e) => {
-
+    this.cvv.value=this.cvv.value.substr(0,4);
 		this.setState({
 			cvvFeedBack: true
 		});
@@ -390,10 +391,21 @@ class Event extends React.Component {
 					})
 				}
 				this.setState({
-					auctionPageItems: this.state.auctionPageItems.concat(resp.data && resp.data.items),
+					auctionPageItems:this.state.auctionPageItems.concat(resp.data && resp.data.items) ,
 					auctionPageCount: this.state.auctionPageCount + 1
-				})
-			}
+				},function changeAfter(){
+          let seenNames = {};
+					let	array = this.state.auctionPageItems.filter(function(currentObject) {
+						if (currentObject.id in seenNames) {
+							return false;
+						} else {
+							seenNames[currentObject.id] = true;
+							return true;
+						}
+					});
+					this.setState({auctionPageItems:array,})
+					}
+				)}
 			else {
 				this.setState({
 					auctionPageLoading: false
@@ -431,7 +443,7 @@ class Event extends React.Component {
 	}
 
 	doGetRaffleItemByLimit(eventUrl) {
-		this.props.doGetRaffleItemByLimit(eventUrl, this.state.rafflePageCount, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
+		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
 					this.setState({
@@ -441,8 +453,18 @@ class Event extends React.Component {
 				this.setState({
 					rafflePageItems: this.state.rafflePageItems.concat(resp.data.items),
 					rafflePageCount: this.state.rafflePageCount + 1
-
-				})
+				},function changeAfter(){
+          let seenNames = {};
+          let	array = this.state.rafflePageItems.filter(function(currentObject) {
+            if (currentObject.id in seenNames) {
+              return false;
+            } else {
+              seenNames[currentObject.id] = true;
+              return true;
+            }
+          });
+          this.setState({rafflePageItems:array,})
+        })
 			}
 			else {
 				this.setState({
@@ -481,7 +503,7 @@ class Event extends React.Component {
 	}
 
 	doGetFundANeedItemByLimit(eventUrl) {
-		this.props.doGetFundANeedItemByLimit(eventUrl, this.state.fundANeedPageCount, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
+		this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
 					this.setState({
@@ -491,8 +513,18 @@ class Event extends React.Component {
 				this.setState({
 					fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data.items),
 					fundANeedPageCount: this.state.fundANeedPageCount + 1
-
-				})
+				},function changeAfter(){
+          let seenNames = {};
+          let	array = this.state.fundANeedPageItems.filter(function(currentObject) {
+            if (currentObject.id in seenNames) {
+              return false;
+            } else {
+              seenNames[currentObject.id] = true;
+              return true;
+            }
+          });
+          this.setState({fundANeedPageItems:array,})
+        })
 			}
 			else {
 				this.setState({
@@ -547,7 +579,7 @@ class Event extends React.Component {
 		});
 	}
 	setFilterCategory = (category)=> {
-		if (this.props.active_tab_data && this.props.active_tab_data.tab) {
+	  if (this.props.active_tab_data && this.props.active_tab_data.tab) {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
 			this.setState({
 				selectedCategory: category
@@ -570,7 +602,7 @@ class Event extends React.Component {
 					rafflePageCount: 0,
 					rafflePageItems: [],
 				})
-				this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
+    		this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
 
 			} else if (label == 'Fund a Need') {
 				this.setState({
@@ -891,7 +923,7 @@ class Event extends React.Component {
 												<div className="type-name"><strong>{item.name}</strong>
 													(<span className="type-cost txt-sm gray"> ${item.price}</span>)
 													<div className="pull-right">
-														<div className="col-md-7">No Of Tickets</div>
+														<div className="col-md-7">No. Of Tickets</div>
 														{ item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
 															<select className="form-control" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
@@ -926,7 +958,7 @@ class Event extends React.Component {
 							 <strong>First ticket type</strong>
 							 (<span className="type-cost txt-sm gray"> $100.00 </span>)
 							 <div className="pull-right">
-							 <div className="col-md-7">No Of Tickets</div>
+							 <div className="col-md-7">No. Of Tickets</div>
 							 <div className="col-md-5"> SOLD OUT </div>
 							 </div>
 							 </div>

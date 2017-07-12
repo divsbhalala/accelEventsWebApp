@@ -21,6 +21,7 @@ export default {
     require('./table').default,
     require('./goal').default,
     require('./checkout').default,
+    require('./myProfile').default,
 
 
     // Wildcard routes, e.g. { path: '*', ... } (must go last)

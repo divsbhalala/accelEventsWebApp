@@ -4,9 +4,8 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Navigation.css';
 import Link from '../Link';
 import _ from 'lodash';
-
+import $ from  'jquery';
 class Navigation extends React.Component {
-
   render() {
     return (
       /*<div className={s.root} role="navigation">
@@ -25,14 +24,14 @@ class Navigation extends React.Component {
             <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png" alt className="normal-logo logo-white has-custom" />
           </a>
           <div className="clearfix">
-            <button className="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button">
+            <button className="navbar-toggle" data-target=".navbar-ex1-collapse" data-toggle="collapse" type="button"  >
               <span className="sr-only">Toggle navigation</span>
               <span className="fa fa-bars" />
             </button>
             <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
               <ul className="nav navbar-nav pull-left">
                 <li>
-                  <a className="btn" id="make-small-nav">
+                  <a className="btn" id="make-small-nav" onClick={()=>{ toggleSide();}}>
                     <i className="fa fa-bars" />
                   </a>
                 </li>
@@ -52,7 +51,9 @@ class Navigation extends React.Component {
                     <i className="fa fa-question-circle" aria-hidden="true" /> &nbsp;Help
                   </a>
                 </li>
-                <li className="dropdown profile-dropdown">
+                <li className="dropdown profile-dropdown"  onClick={() => {
+                  toggleMenu();
+                }}>
                   <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                     <img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png" alt="Jon" />
                     <span className="hidden-xs">Jon</span> <b className="caret" />
@@ -67,9 +68,23 @@ class Navigation extends React.Component {
           </div>
         </div>
       </header>
-
     );
   }
 }
-
+function toggleSide (){
+  if ($(".nav-small-class").hasClass('nav-small')) {
+    $(".nav-small-class").removeClass('nav-small');
+  }
+  else {
+    $(".nav-small-class").addClass('nav-small');
+  }
+}
+function toggleMenu (){
+  if ($(".profile-dropdown").hasClass('open')) {
+    $(".profile-dropdown").removeClass('open');
+  }
+  else {
+    $(".profile-dropdown").addClass('open');
+  }
+}
 export default (withStyles(s)(Navigation))

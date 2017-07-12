@@ -909,7 +909,7 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
     width: 64px;
   }
   .nav-small #content-wrapper {
-    margin-left: 64px;
+    margin-left: 64px !important;
   }
   .nav-small #nav-col #user-left-box {
     display: none;
@@ -6047,4 +6047,8 @@ svg {
   text-align: center;
   padding: 20px;
   background-color: #eee;
+}
+/******* Nayan ********/
+.admin-content-wrapper {
+  margin-left: 220px !important ;
 }

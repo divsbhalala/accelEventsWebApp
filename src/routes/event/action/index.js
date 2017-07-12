@@ -382,6 +382,22 @@ export function getUserByEmail(eventUrl, email,modeltype) {
     });
   }
 }
+export function getUserByMobile(eventUrl, mobile,countryCode,modelType) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + mobile + '/'+ countryCode +'/module/'+modelType,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 export function getAuctionItemStatusByCode(eventUrl, itemCode) {
   return (dispatch) => {
     return axios({
