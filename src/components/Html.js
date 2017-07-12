@@ -60,6 +60,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
         <link rel="stylesheet" href="/css/host-dashboard.min.css" />
         <link rel="stylesheet" href="/css/display.min.css"/>
+        <link rel="stylesheet" href="https://vitalets.github.io/x-editable/assets/x-editable/bootstrap3-editable/css/bootstrap-editable.css" />
         <script src="/css/Tel/libphonenumber.js"></script>
         {styles.map(style =>
           <style
