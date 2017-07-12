@@ -146,8 +146,8 @@ class EventList extends React.Component {
         <a href={"/AccelEventsWebApp/u/display/hostevent/" + this.props.item.eventURL}><font><font>{this.props.item.name}</font></font></a>
       </td>
       <td>
-        <font><font>{new Date(1*this.props.item.eventEndDate).toUTCString()}
-        </font></font></td>
+        {new Date(1*this.props.item.eventEndDate).toUTCString()}
+      </td>
     </tr>
     );
   }
