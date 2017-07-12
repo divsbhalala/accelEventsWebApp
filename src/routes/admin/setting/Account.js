@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Setting.css';
-import AdminSiderbar from '../../../components/Sidebar/AdminSidebar';
+import {connect} from 'react-redux';
+import {doGetHostSettings} from './action';
 
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import CKEditor from 'react-ckeditor-wrapper';
 //let CKEditor = require('react-ckeditor-wrapper');
 class Account extends React.Component {
 	constructor(props) {
@@ -21,7 +20,13 @@ class Account extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-
+	componentWillMount(){
+		this.props.doGetHostSettings("biling").then(resp =>{
+			console.log("resp", resp);
+		}).catch(error=>{
+			console.log('error', error)
+		})
+	}
 
   render() {
 	  //http://allenfang.github.io/react-bootstrap-table/example.html
@@ -105,7 +110,7 @@ class Account extends React.Component {
 			                        </div>
 			                        <div className="form-group">
 				                        <label htmlFor="package-subtotal">Country Code</label>
-				                        <select id="countrycode" name="countrycode" className="form-control">
+				                        <select id="countrycode" name="countrycode" className="form-control" defaultValue>
 					                        <option value="US">US</option>
 					                        <option value="AF">AF</option>
 					                        <option value="AL">AL</option>
@@ -353,7 +358,7 @@ class Account extends React.Component {
 								                        <label className="control-label">Expiration Date</label>
 								                        <div className="input-group">
 									                        <div className="input-group-addon"><i className="fa fa-calendar" aria-hidden="true" /></div>
-									                        <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth">
+									                        <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" defaultValue>
 										                        <option selected value={1}>Jan (01)</option>
 										                        <option value={2}>Feb (02)</option>
 										                        <option value={3}>Mar (03)</option>
@@ -367,7 +372,7 @@ class Account extends React.Component {
 										                        <option value={11}>Nov (11)</option>
 										                        <option value={12}>Dec (12)</option>
 									                        </select>
-									                        <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear">
+									                        <select className data-stripe="exp_year" id="exp-year" data-fv-field="expYear" defaultValue>
 										                        <option value={2016}>2016</option>
 										                        <option value={2017}>2017</option>
 										                        <option value={2018}>2018</option>
@@ -444,14 +449,6 @@ class Account extends React.Component {
 				                        <button className="btn btn-primary" type="submit">Make payment</button>
 			                        </div>
 		                        </form>
-														<BootstrapTable data={products} striped hover search>
-															<TableHeaderColumn isKey dataField='id'>Product ID</TableHeaderColumn>
-															<TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
-															<TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
-														</BootstrapTable>
-                            <CKEditor
-                              value={this.state.content}
-                              onChange={this.updateContent.bind(this)} />
 													</div>
                         </div>
                       </div>
@@ -466,5 +463,10 @@ class Account extends React.Component {
   }
 }
 
+const mapDispatchToProps = {
+	doGetHostSettings: (type) => doGetHostSettings(type)
+};
 
-export default withStyles(s)(Account);
+const mapStateToProps = (state) => ({
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Account));

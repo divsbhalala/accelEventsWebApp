@@ -2,12 +2,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import {connect} from 'react-redux';
 import s from './Setting.css';
-import AdminSiderbar from '../../../components/Sidebar/AdminSidebar';
+import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
+import PopupModel from '../../../components/PopupModal';
+
+import {doGetHostSettings} from './action';
+
 
 class CreditCard extends React.Component {
   static propTypes = {
     title: PropTypes.string,
+  };
+	constructor() {
+		super();
+		this.state = {
+			creditCardEnabled: false,
+			ccRequiredForBidConfirm: false,
+			showItemTransactions : false
+		};
+		this.toggleItemTransactionsPopup = this.toggleItemTransactionsPopup.bind(this);
+
+	};
+
+	componentWillMount(){
+		this.props.doGetHostSettings("creditCard").then(resp =>{
+			console.log("resp", resp);
+		}).catch(error=>{
+			console.log('error', error)
+		})
+	}
+
+	toggleItemTransactionsPopup = ()=>{
+		this.setState({
+			showItemTransactions: !this.state.showItemTransactions
+		})
   };
   render() {
     return (
@@ -31,7 +60,7 @@ class CreditCard extends React.Component {
                         <h1>
                           Credit Card Processing
                           <div className="pull-right">
-                            <button className="btn btn-info mrg-b-md" type="button" onclick="$('#form').submit();">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            <button className="btn btn-info mrg-b-md" type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
                           </div>
                         </h1>
                       </div>
@@ -66,13 +95,7 @@ class CreditCard extends React.Component {
                                 <p className="help-text">This option is only available when Stripe Payments is connected.</p>
                               </div>
                               <div className="col-md-4">
-                                <div className="onoffswitch onoffswitch-success">
-                                  <input id="cc-option" name="creditCardEnabled" className="onoffswitch-checkbox" disabled="disabled" type="checkbox" defaultValue="true" />
-                                  <label className="onoffswitch-label" htmlFor="cc-option">
-                                    <div className="onoffswitch-inner" />
-                                    <div className="onoffswitch-switch" />
-                                  </label>
-                                </div>
+                                <ToggleSwitch name="creditCardEnabled" id="creditCardEnabled" defaultValue={this.state.creditCardEnabled} className="success" onChange={()=>{ this.state.creditCardEnabled = !this.state.creditCardEnabled}}/>
                               </div>
                             </div>
                             <div className="form-group row">
@@ -81,13 +104,7 @@ class CreditCard extends React.Component {
                                 <p className="help-text">Enabling this will require all bidders to enter their credit card information upon submitting their first bid. Bidders will then be asked to confirm the transaction if they win an item. Note, this feature only applies to silent auctions.</p>
                               </div>
                               <div className="col-md-4">
-                                <div className="onoffswitch onoffswitch-success">
-                                  <input id="require-cc" name="ccRequiredForBidConfirm" className="onoffswitch-checkbox" type="checkbox" defaultValue="true" /><input type="hidden" name="_ccRequiredForBidConfirm" defaultValue="on" />
-                                  <label className="onoffswitch-label" htmlFor="require-cc">
-                                    <div className="onoffswitch-inner" />
-                                    <div className="onoffswitch-switch" />
-                                  </label>
-                                </div>
+                                <ToggleSwitch name="ccRequiredForBidConfirm" id="ccRequiredForBidConfirm" defaultValue={this.state.ccRequiredForBidConfirm} className="success" onChange={()=>{ this.state.ccRequiredForBidConfirm = !this.state.ccRequiredForBidConfirm}}/>
                               </div>
                             </div>
                             <div className="form-group row">
@@ -103,12 +120,12 @@ class CreditCard extends React.Component {
                             </div>
                             <div className="form-group row mrg-t-lg">
                               <div className="col-md-3">
-                                <button className="btn btn-info" type="button" onclick="$('#form').submit();">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <button className="btn btn-info" type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
                               </div>
                             </div>
                             <div className="form-group row mrg-t-lg">
                               <div className="col-md-4">
-                                <a href="#" className="btn btn-default btn-block mrg-b-md" data-toggle="modal" data-target="#item-transactions">View Item Transactions</a>
+                                <a  className="btn btn-default btn-block mrg-b-md" onClick={this.toggleItemTransactionsPopup}>View Item Transactions</a>
                               </div>
                             </div>
                             <div>
@@ -122,10 +139,43 @@ class CreditCard extends React.Component {
             </div>
 
           </div>
-        </div>
+        <PopupModel
+          id="mapPopup"
+          showModal={this.state.showItemTransactions}
+          headerText={"Stripe Customers"}
+          onCloseFunc={this.toggleItemTransactionsPopup}
+          modelFooter = {<div>
+            <button className="btn btn-green" onClick={()=>{this.toggleItemTransactionsPopup()}}>Close</button></div>}
+        >
+          <table className="table">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Source</th>
+            </tr>
+            </thead>
+            <tbody><tr>
+              <td>alex</td>
+              <td>(508) 254-0009</td>
+              <td>105.36</td>
+              <td>SUCCESS</td>
+              <td>EVENT_TICKETING</td>
+            </tr>
+            </tbody></table>
+
+        </PopupModel>
+
+      </div>
     );
   }
 }
+const mapDispatchToProps = {
+	doGetHostSettings: (type) => doGetHostSettings(type)
+};
 
-
-export default withStyles(s)(CreditCard);
+const mapStateToProps = (state) => ({
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(CreditCard));
