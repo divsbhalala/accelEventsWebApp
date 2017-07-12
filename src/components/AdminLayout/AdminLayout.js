@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import './AdminLayout.css';
 import Header from '../Header';
+import HeaderNew from '../HeaderNew/HeaderNew';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
 import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
@@ -16,8 +17,9 @@ class AdminLayout extends React.Component {
 
   render() {
     return (
-      <div className="container nav-small-class"  >
+      <div className="container nav-small-class p-0"  >
         <Header />
+        <HeaderNew admin={true}/>
         <AdminSiderbar />
         {this.props.children}
         {this.props.showFeedBack && <Feedback />}

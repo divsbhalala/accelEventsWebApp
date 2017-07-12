@@ -80,7 +80,9 @@ class HeaderNew extends React.Component {
 		}
 	}
 	componentDidMount() {
-		this.props.doGetEventData(this.props.params && this.props.params.params);
+		if(this.props.params && this.props.params.params){
+			this.props.doGetEventData(this.props.params && this.props.params.params);
+		}
 	}
 
 	onFormClick = (e) => {
@@ -358,7 +360,7 @@ class HeaderNew extends React.Component {
 		return (
 			<div id="header-navbar" className={cx("content turquoise-bg white")}>
 
-				<Navbar fluid={true} style={ {margin: 0} } className={ cx(this.props.admin && "navbar-fixed-top", "turquoise-bg white")}>
+				<Navbar fluid={true} style={ {margin: 0} } className={ cx("turquoise-bg white")}>
 					<Brand>
             <span>
               { this.props.eventData &&
@@ -376,13 +378,13 @@ class HeaderNew extends React.Component {
 					</Brand>
 					<ul className="nav navbar-top-links navbar-right">
 
-						<MenuItem eventKey="1" onClick={this.showContactPopup}>
+						{ !this.props.admin && <MenuItem eventKey="1" onClick={this.showContactPopup}>
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
-						</MenuItem>
-						{ event && this.props.is_volunteer && <MenuItem eventKey="3" onClick={()=>{history.push('/event/' + event + '/volunteer')}}>
+						</MenuItem> }
+						{ event && this.props.is_volunteer && !this.props.admin && <MenuItem eventKey="3" onClick={()=>{history.push('/event/' + event + '/volunteer')}}>
 							Volunteer
 						</MenuItem>}
-						{ event &&
+						{ event && !this.props.admin &&
 						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
 
 							<MenuItem eventKey="5" onClick={()=>{history.push("/scroll/" + event + "/auction")}}>
@@ -428,12 +430,15 @@ class HeaderNew extends React.Component {
 							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs" > Sign up</span>
 						</MenuItem>}
 
-						<MenuItem eventKey="10" className="hidden-xs">
+						{ !this.props.admin && <MenuItem eventKey="10" className="hidden-xs">
 							<i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
-						</MenuItem>
+						</MenuItem> }
+						{ this.props.admin && <MenuItem eventKey="10" className="white">
+							<i className="fa fa-question-circle"></i>Help
+						</MenuItem> }
 
 						{
-							this.props.authenticated && <NavDropdown title={<p><i className="fa fa-user fa-fw"></i> {this.props.user && this.props.user.firstName &&<label>{this.props.user.firstName}</label>}&nbsp; &nbsp;<span className="caret"></span></p>} id='navDropdown4'>
+							this.props.authenticated && <NavDropdown  className=" profile-dropdown pointer" title={<label><img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png" alt="Jon" /> {this.props.user && this.props.user.firstName &&<label>{this.props.user.firstName}</label>}</label>} id='navDropdown4'>
 								<MenuItem eventKey="2">
 									<Link to="my-profile" > 	<span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
 								</MenuItem>
@@ -445,7 +450,7 @@ class HeaderNew extends React.Component {
 						}
 
 					</ul>
-					{ this.props.admin && this.props.authenticated && <SidebarNew />}
+
 				</Navbar>
 				<PopupModel
 					id="contactPopup"
