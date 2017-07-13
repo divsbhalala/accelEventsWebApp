@@ -20,7 +20,6 @@ import {
 import Navbar, {Brand} from 'react-bootstrap/lib/Navbar';
 import history from '../../history';
 import $ from "jquery";
-import SidebarNew from '../SidebarNew';
 import cx from 'classnames';
 import PopupModel from './../PopupModal';
 import {sessionService} from 'redux-react-session';
@@ -37,7 +36,7 @@ import {
 import LoginModal from './../../components/LoginModal/index';
 
 const logo = require('./logo.png');
-let eventUrl= "";
+let eventUrl = "";
 
 class HeaderNew extends React.Component {
 
@@ -79,8 +78,9 @@ class HeaderNew extends React.Component {
 			this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
 	}
+
 	componentDidMount() {
-		if(this.props.params && this.props.params.params){
+		if (this.props.params && this.props.params.params) {
 			this.props.doGetEventData(this.props.params && this.props.params.params);
 		}
 	}
@@ -210,7 +210,7 @@ class HeaderNew extends React.Component {
 			messageFeedBack: true,
 			messageValue: this.message.value,
 		});
-		if(this.message.value == ''){
+		if (this.message.value == '') {
 			this.message.value = '';
 		}
 		if (this.message.value.trim() == '') {
@@ -247,7 +247,7 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-	//	history.push('/login');
+		//	history.push('/login');
 	};
 	showContactPopup = () => {
 		this.setState({
@@ -294,48 +294,48 @@ class HeaderNew extends React.Component {
 		})
 	};
 
-	doContactRequest = ()=>{
-		console.log("here", "this.props.authenticated",this.props.authenticated  , (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)) ,this.message && this.message.value, !this.message.value);
-		if( (this.props.authenticated || (this.email && this.name && this.email.value.trim() !='' && this.name.value.trim() !='')) && this.message && this.message.value.trim() !='' ){
-			let contactData={};
-			if(!this.props.authenticated){
+	doContactRequest = () => {
+		console.log("here", "this.props.authenticated", this.props.authenticated, (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)), this.message && this.message.value, !this.message.value);
+		if ((this.props.authenticated || (this.email && this.name && this.email.value.trim() != '' && this.name.value.trim() != '')) && this.message && this.message.value.trim() != '') {
+			let contactData = {};
+			if (!this.props.authenticated) {
 				contactData = {
-					email : this.email.value,
-					name : this.name.value,
+					email: this.email.value,
+					name: this.name.value,
 				}
 			}
-			contactData.message=this.message.value;
-			if(eventUrl){
-				this.props.doContactSupport(eventUrl, contactData).then(resp=>{
+			contactData.message = this.message.value;
+			if (eventUrl) {
+				this.props.doContactSupport(eventUrl, contactData).then(resp => {
 					console.log("resp", resp);
-					if(resp && resp.status == 200){
+					if (resp && resp.status == 200) {
 						this.setState({
 							formMessage: resp.data && resp.data.message || "Thank you for writing to us, we will get back to you soon!",
-							showFormMessagePopup : true,
-							showContactPopup : false,
+							showFormMessagePopup: true,
+							showContactPopup: false,
 						})
 					}
-					else{
+					else {
 						this.setState({
 							formMessage: "Opps! Error while processing your request. Please try after sometime",
-							showFormMessagePopup : true,
-							showContactPopup : false,
+							showFormMessagePopup: true,
+							showContactPopup: false,
 						})
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					this.setState({
 						formMessage: "Opps! Error while processing your request. Please try after sometime",
-						showFormMessagePopup : true,
-						showContactPopup : false,
+						showFormMessagePopup: true,
+						showContactPopup: false,
 					})
 					console.log("error", error);
 				})
 			}
-			else{
+			else {
 				this.setState({
 					formMessage: "No EventFound",
-					showFormMessagePopup : true,
-					showContactPopup : false,
+					showFormMessagePopup: true,
+					showContactPopup: false,
 				})
 			}
 
@@ -348,9 +348,9 @@ class HeaderNew extends React.Component {
 				errorMsgEmail: "Email is required.",
 				message: false,
 				errorMsgMessage: "Message is required.",
-				nameFeedBack : true,
-				emailFeedBack : true,
-				messageFeedBack : true,
+				nameFeedBack: true,
+				emailFeedBack: true,
+				messageFeedBack: true,
 			});
 		}
 	};
@@ -361,11 +361,14 @@ class HeaderNew extends React.Component {
 			<div id="header-navbar" className={cx("content turquoise-bg white")}>
 
 				<Navbar fluid={true} style={ {margin: 0} } className={ cx("turquoise-bg white")}>
-					<Brand>
-            <span>
+					<Brand className="p-0">
+            <span >
               { this.props.eventData &&
 							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
+							<a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo" className="navbar-brand" style={{paddingLeft:"22"}}>
+            		<img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png" alt className="normal-logo logo-white has-custom" />
+          		</a>
 							<button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}} style={{position: 'absolute', right: 0, top: 0}}>
@@ -374,46 +377,86 @@ class HeaderNew extends React.Component {
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                 </button>
+
             </span>
+
 					</Brand>
+					<div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
+						<ul className="nav navbar-nav pull-left">
+							<li>
+								<a className="btn" id="make-small-nav" onClick={() => {
+									toggleSide();
+								}}>
+									<i className="fa fa-bars"/>
+								</a>
+							</li>
+							<li className="hide"> {/*  hidden temporarily */}
+								<div className="eventmode">
+									<span> Event Mode</span>
+									<a href="?live" className="disabled">Live</a>
+									<a href="#" className="active">Test</a>
+								</div>
+							</li>
+						</ul>
+					</div>
 					<ul className="nav navbar-top-links navbar-right">
 
 						{ !this.props.admin && <MenuItem eventKey="1" onClick={this.showContactPopup}>
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
 						</MenuItem> }
-						{ event && this.props.is_volunteer && !this.props.admin && <MenuItem eventKey="3" onClick={()=>{history.push('/event/' + event + '/volunteer')}}>
+						{ event && this.props.is_volunteer && !this.props.admin && <MenuItem eventKey="3" onClick={() => {
+							history.push('/event/' + event + '/volunteer')
+						}}>
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
 						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
 
-							<MenuItem eventKey="5" onClick={()=>{history.push("/scroll/" + event + "/auction")}}>
+							<MenuItem eventKey="5" onClick={() => {
+								history.push("/scroll/" + event + "/auction")
+							}}>
 								<span> Auction Scrolling </span>
 							</MenuItem>
-							<MenuItem eventKey="6" onClick={()=>{history.push("/scroll/" + event + "/raffle")}}>
+							<MenuItem eventKey="6" onClick={() => {
+								history.push("/scroll/" + event + "/raffle")
+							}}>
 								<span> Raffle Scrolling </span>
 							</MenuItem>
-							<MenuItem eventKey="7" onClick={()=>{history.push("/scroll/" + event + "/fund")}}>
+							<MenuItem eventKey="7" onClick={() => {
+								history.push("/scroll/" + event + "/fund")
+							}}>
 								<span> Fund a Need Scrolling </span>
 							</MenuItem>
 							<MenuItem divider/>
-							<MenuItem eventKey="8" onClick={()=>{history.push("/goal/" + event + "/auction")}}>
+							<MenuItem eventKey="8" onClick={() => {
+								history.push("/goal/" + event + "/auction")
+							}}>
 								<span> Auction Goal </span>
 							</MenuItem>
-							<MenuItem eventKey="9" onClick={()=>{history.push("/goal/" + event + "/raffle")}}>
+							<MenuItem eventKey="9" onClick={() => {
+								history.push("/goal/" + event + "/raffle")
+							}}>
 								<span> Raffle Goal </span>
 							</MenuItem>
-							<MenuItem eventKey="10" onClick={()=>{history.push("/goal/" + event + "/fund")}}>
+							<MenuItem eventKey="10" onClick={() => {
+								history.push("/goal/" + event + "/fund")
+							}}>
 								<span> Fund a Need Goal </span>
 							</MenuItem>
 							<MenuItem divider/>
-							<MenuItem eventKey="11" onClick={()=>{history.push("/table/" + event + "/auction")}}>
+							<MenuItem eventKey="11" onClick={() => {
+								history.push("/table/" + event + "/auction")
+							}}>
 								<span> Auction Table </span>
 							</MenuItem>
-							<MenuItem eventKey="12" onClick={()=>{history.push("/table/" + event + "/raffle")}}>
+							<MenuItem eventKey="12" onClick={() => {
+								history.push("/table/" + event + "/raffle")
+							}}>
 								<span> Raffle Table </span>
 							</MenuItem>
-							<MenuItem eventKey="13" onClick={()=>{history.push("/table/" + event + "/fund")}}>
+							<MenuItem eventKey="13" onClick={() => {
+								history.push("/table/" + event + "/fund")
+							}}>
 								<span> Fund a Need Table </span>
 							</MenuItem>
 
@@ -424,10 +467,12 @@ class HeaderNew extends React.Component {
 						</MenuItem>}
 
 						{ !this.props.authenticated && <MenuItem eventKey="9"
-             // onClick={this.showLoginPopup}
-						  onClick={(event) => { history.push('/signup');}}
+							// onClick={this.showLoginPopup}
+																										 onClick={(event) => {
+																											 history.push('/signup');
+																										 }}
 						>
-							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs" > Sign up</span>
+							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
 						</MenuItem>}
 
 						{ !this.props.admin && <MenuItem eventKey="10" className="hidden-xs">
@@ -438,7 +483,10 @@ class HeaderNew extends React.Component {
 						</MenuItem> }
 
 						{
-							this.props.authenticated && <NavDropdown  className=" profile-dropdown pointer" title={<label><img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png" alt="Jon" /> {this.props.user && this.props.user.firstName &&<label>{this.props.user.firstName}</label>}</label>} id='navDropdown4'>
+							this.props.authenticated && <NavDropdown className=" profile-dropdown pointer" title={<span><img
+								src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png"
+								alt="Jon"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+							</span>} id='navDropdown4'>
 								<MenuItem eventKey="2">
 									<Link to="my-profile" > 	<span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
 								</MenuItem>
@@ -455,7 +503,7 @@ class HeaderNew extends React.Component {
 				<PopupModel
 					id="contactPopup"
 					showModal={this.state.showContactPopup}
-					headerText={<h4>Contact</h4>}
+					headerText={<p>Contact</p>}
 					onCloseFunc={this.hideContactPopup}
 				>
 					<div className="modal-body">
@@ -468,13 +516,15 @@ class HeaderNew extends React.Component {
 							<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
 								className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
 							{!this.props.authenticated &&
-							<div className={cx("form-group", this.state.nameFeedBack && 'has-feedback', this.state.nameFeedBack && this.state.name && 'has-success', this.state.nameFeedBack && (!this.state.name) && 'has-error')}>
-							<label className="control-label">Name</label>
+							<div
+								className={cx("form-group", this.state.nameFeedBack && 'has-feedback', this.state.nameFeedBack && this.state.name && 'has-success', this.state.nameFeedBack && (!this.state.name) && 'has-error')}>
+								<label className="control-label">Name</label>
 								<div className="input-group">
 									<div className="input-group-addon">
 										<i className="fa fa-user" aria-hidden="true"/>
 									</div>
-									<input type="text" className="form-control" id="name" name="name" data-fv-notempty="true" placeholder="Name"
+									<input type="text" className="form-control" id="name" name="name" data-fv-notempty="true"
+												 placeholder="Name"
 												 data-fv-notempty-message="Name is required." required="required" data-fv-field="name"
 												 ref={ref => {
 													 this.name = ref;
@@ -490,13 +540,15 @@ class HeaderNew extends React.Component {
 								<small className="help-block">This value is not valid</small> }
 							</div>}
 							{!this.props.authenticated &&
-							<div className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
+							<div
+								className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
 								<label className="control-label">Email Address</label>
 								<div className="input-group">
 									<div className="input-group-addon">
 										<i className="fa fa-envelope" aria-hidden="true"/>
 									</div>
-									<input type="email" className="form-control" id="email" name="email" required="required" placeholder="Email"
+									<input type="email" className="form-control" id="email" name="email" required="required"
+												 placeholder="Email"
 												 ref={ref => {
 													 this.email = ref;
 												 }}
@@ -512,7 +564,8 @@ class HeaderNew extends React.Component {
 							</div>}
 
 
-							<div className={cx("form-group", this.state.messageFeedBack && 'has-feedback', this.state.messageFeedBack && this.state.message && 'has-success', this.state.messageFeedBack && (!this.state.message) && 'has-error')}>
+							<div
+								className={cx("form-group", this.state.messageFeedBack && 'has-feedback', this.state.messageFeedBack && this.state.message && 'has-success', this.state.messageFeedBack && (!this.state.message) && 'has-error')}>
 								<label className="control-label">Message to Event Host</label>
 								<div className="input-group">
 									<div className="input-group-addon">
@@ -541,7 +594,8 @@ class HeaderNew extends React.Component {
 								{ this.state.messageFeedBack && !this.state.message &&
 								<small className="help-block">This value is not valid</small> }
 							</div>
-							<button type="button" className="btn btn-primary m-r-5" onClick={this.doContactRequest}>Send Message</button>
+							<button type="button" className="btn btn-primary m-r-5" onClick={this.doContactRequest}>Send Message
+							</button>
 							<button type="button" className="btn btn-danger" onClick={this.hideContactPopup}>Cancel</button>
 						</form>
 					</div>
@@ -550,9 +604,12 @@ class HeaderNew extends React.Component {
 				{ this.state.showFormMessagePopup &&
 				<PopupModel
 					id="mapPopup"
+					headerText={<p/>}
 					showModal={this.state.showFormMessagePopup}
 					onCloseFunc={this.hideFormMessagePopup}
-					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormMessagePopup()}}>Close</button>}
+					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={() => {
+						this.hideFormMessagePopup()
+					}}>Close</button>}
 				>
 					<center>{ this.state.formMessage }</center>
 				</PopupModel> }
@@ -560,21 +617,15 @@ class HeaderNew extends React.Component {
 					showModal={this.state.showLoginPopup}
 					headerText=""
 					onCloseFunc={this.hideLoginPopup}
-          params={this.props.params }
-					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginPopup()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+					params={this.props.params }
+					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
+						this.hideLoginPopup()
+					}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
 				/>
 
 			</div>
 		)
 	};
-}
-function toggleMenu() {
-	if ($(".navbar-collapse").hasClass('collapse')) {
-		$(".navbar-collapse").removeClass('collapse');
-	}
-	else {
-		$(".navbar-collapse").addClass('collapse');
-	}
 }
 
 //export default HeaderNew;
@@ -593,4 +644,20 @@ const mapStateToProps = (state) => ({
 	authenticated: state.session && state.session.authenticated,
 });
 
+function toggleSide() {
+	if ($(".nav-small-class").hasClass('nav-small')) {
+		$(".nav-small-class").removeClass('nav-small');
+	}
+	else {
+		$(".nav-small-class").addClass('nav-small');
+	}
+}
+function toggleMenu() {
+	if ($(".profile-dropdown").hasClass('open')) {
+		$(".profile-dropdown").removeClass('open');
+	}
+	else {
+		$(".profile-dropdown").addClass('open');
+	}
+}
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(HeaderNew));

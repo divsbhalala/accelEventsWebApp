@@ -17,6 +17,7 @@ class CreditCard extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+		  settings: {},
 			creditCardEnabled: false,
 			ccRequiredForBidConfirm: false,
 			showItemTransactions : false
@@ -27,7 +28,9 @@ class CreditCard extends React.Component {
 
 	componentWillMount(){
 		this.props.doGetHostSettings("creditCard").then(resp =>{
-			console.log("resp", resp);
+			this.setState({
+        settings : resp && resp.data
+      })
 		}).catch(error=>{
 			console.log('error', error)
 		})
@@ -95,7 +98,7 @@ class CreditCard extends React.Component {
                                 <p className="help-text">This option is only available when Stripe Payments is connected.</p>
                               </div>
                               <div className="col-md-4">
-                                <ToggleSwitch name="creditCardEnabled" id="creditCardEnabled" defaultValue={this.state.creditCardEnabled} className="success" onChange={()=>{ this.state.creditCardEnabled = !this.state.creditCardEnabled}}/>
+                                <ToggleSwitch name="creditCardEnabled" id="creditCardEnabled" defaultValue={this.state.settings && this.state.settings.creditCardEnabled} className="success" onChange={()=>{ this.state.settings.creditCardEnabled = !this.state.settings.creditCardEnabled}}/>
                               </div>
                             </div>
                             <div className="form-group row">
@@ -104,7 +107,7 @@ class CreditCard extends React.Component {
                                 <p className="help-text">Enabling this will require all bidders to enter their credit card information upon submitting their first bid. Bidders will then be asked to confirm the transaction if they win an item. Note, this feature only applies to silent auctions.</p>
                               </div>
                               <div className="col-md-4">
-                                <ToggleSwitch name="ccRequiredForBidConfirm" id="ccRequiredForBidConfirm" defaultValue={this.state.ccRequiredForBidConfirm} className="success" onChange={()=>{ this.state.ccRequiredForBidConfirm = !this.state.ccRequiredForBidConfirm}}/>
+                                <ToggleSwitch name="ccRequiredForBidConfirm" id="ccRequiredForBidConfirm" defaultValue={this.state.settings && this.state.settings.ccRequiredForBidConfirm} className="success" onChange={()=>{ this.state.settings.ccRequiredForBidConfirm = !this.state.settings.ccRequiredForBidConfirm}}/>
                               </div>
                             </div>
                             <div className="form-group row">

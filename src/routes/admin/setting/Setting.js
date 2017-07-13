@@ -14,6 +14,7 @@ class Setting extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+			settings: {},
 			requireBidderAddress: false,
 			silentAuctionEnabled: false,
 			raffleEnabled: false,
@@ -26,6 +27,9 @@ class Setting extends React.Component {
 	componentWillMount(){
 		this.props.doGetHostSettings("general").then(resp =>{
 				console.log("resp", resp);
+				this.setState({
+					settings: resp && resp.data
+				})
 		}).catch(error=>{
 			console.log('error', error)
 		})
@@ -67,8 +71,8 @@ class Setting extends React.Component {
 															<label>Select Currency</label>
 														</div>
 														<div className="col-md-4">
-															<select className="form-control" name="currency" id="currency" defaultValue>
-																<option value="USD" selected> USD ( $ )</option>
+															<select className="form-control" name="currency" id="currency" defaultValue={ (this.state.settings && this.state.settings.fundRaisingGoal) || "USD"}>
+																<option value="USD"> USD ( $ )</option>
 																<option value="CAD"> CAD ( $ )</option>
 																<option value="AUD"> AUD ( $ )</option>
 																<option value="EURO"> EURO ( € )</option>
@@ -88,7 +92,7 @@ class Setting extends React.Component {
 														<div className="col-md-4">
 															<div className="input-group">
 																<span className="input-group-addon">$</span>
-																<input type="text" className="form-control" name="fundRaisingGoal" defaultValue={0}/>
+																<input type="text" className="form-control" name="fundRaisingGoal" defaultValue={ (this.state.settings && this.state.settings.fundRaisingGoal) || 0}/>
 															</div>
 														</div>
 													</div>
@@ -102,7 +106,7 @@ class Setting extends React.Component {
 														<div className="col-md-4">
 															<div className="input-group">
 																<span className="input-group-addon">$</span>
-																<input type="text" className="form-control" name="goalStartingAmount" defaultValue={0}/>
+																<input type="text" className="form-control" name="goalStartingAmount" defaultValue={(this.state.settings && this.state.settings.goalStartingAmount) || 0}/>
 															</div>
 														</div>
 													</div>
@@ -113,7 +117,7 @@ class Setting extends React.Component {
 																which may be helpful for delivering an item.</p>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="requireBidderAddress" id="requireBidderAddress" defaultValue={this.state.requireBidderAddress} className="success" onChange={()=>{ this.state.requireBidderAddress = !this.state.requireBidderAddress}}/>
+															<ToggleSwitch name="requireBidderAddress" id="requireBidderAddress" defaultValue={this.state.settings && this.state.settings.requireBidderAddress} className="success" onChange={()=>{ this.state.settings.requireBidderAddress = !this.state.settings.requireBidderAddress}}/>
 														</div>
 													</div>
 													<div className="main-box-body clearfix">
@@ -127,7 +131,7 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="silentAuctionEnabled" id="silentAuctionEnabled" defaultValue={this.state.silentAuctionEnabled} className="success" onChange={()=>{ this.state.silentAuctionEnabled = !this.state.silentAuctionEnabled}}/>
+															<ToggleSwitch name="silentAuctionEnabled" id="silentAuctionEnabled" defaultValue={this.state.settings && this.state.settings.silentAuctionEnabled} className="success" onChange={()=>{ this.state.settings.silentAuctionEnabled = !this.state.settings.silentAuctionEnabled}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -136,7 +140,7 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="raffleEnabled" id="raffleEnabled" defaultValue={this.state.raffleEnabled} className="success" onChange={()=>{ this.state.raffleEnabled = !this.state.raffleEnabled}}/>
+															<ToggleSwitch name="raffleEnabled" id="raffleEnabled" defaultValue={this.state.settings && this.state.settings.raffleEnabled} className="success" onChange={()=>{ this.state.settings.raffleEnabled = !this.state.settings.raffleEnabled}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -145,7 +149,7 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="causeAuctionEnabled" id="causeAuctionEnabled" defaultValue={this.state.causeAuctionEnabled} className="success" onChange={()=>{ this.state.causeAuctionEnabled = !this.state.causeAuctionEnabled}}/>
+															<ToggleSwitch name="causeAuctionEnabled" id="causeAuctionEnabled" defaultValue={this.state.settings && this.state.settings.causeAuctionEnabled} className="success" onChange={()=>{ this.state.settings.causeAuctionEnabled = !this.state.settings.causeAuctionEnabled}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -154,7 +158,7 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="donationEnabled" id="donationEnabled" defaultValue={this.state.donationEnabled} className="success" onChange={()=>{ this.state.donationEnabled = !this.state.donationEnabled}}/>
+															<ToggleSwitch name="donationEnabled" id="donationEnabled" defaultValue={this.state.settings && this.state.settings.donationEnabled} className="success" onChange={()=>{ this.state.settings.donationEnabled = !this.state.settings.donationEnabled}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -163,7 +167,7 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="ticketingEnabled" id="ticketingEnabled" defaultValue={this.state.ticketingEnabled} className="success" onChange={()=>{ this.state.ticketingEnabled = !this.state.ticketingEnabled}}/>
+															<ToggleSwitch name="ticketingEnabled" id="ticketingEnabled" defaultValue={this.state.settings && this.state.settings.ticketingEnabled} className="success" onChange={()=>{ this.state.settings.ticketingEnabled = !this.state.settings.ticketingEnabled}}/>
 														</div>
 													</div>
 													<div className="row">

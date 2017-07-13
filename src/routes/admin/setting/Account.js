@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Setting.css';
 import {connect} from 'react-redux';
@@ -11,6 +12,7 @@ class Account extends React.Component {
 		super(props);
 		this.state = {
 			content: 'content',
+			settings: {}
 		}
 	}
 
@@ -21,8 +23,11 @@ class Account extends React.Component {
     title: PropTypes.string,
   };
 	componentWillMount(){
-		this.props.doGetHostSettings("biling").then(resp =>{
+		this.props.doGetHostSettings("billing").then(resp =>{
 			console.log("resp", resp);
+			this.setState({
+				settings : resp && resp.data
+			})
 		}).catch(error=>{
 			console.log('error', error)
 		})
@@ -50,7 +55,8 @@ class Account extends React.Component {
 
 	  return (
 			<div id="content-wrapper" className="admin-content-wrapper">
-        <div className="row">
+				<style dangerouslySetInnerHTML={{__html: ".btn span.glyphicon {opacity: 0;}.btn.active span.glyphicon {opacity: 1;}.packages-check .btn-danger {background-color: #DE564B;}.packages-check .btn-success {background-color: #699e08;}.packages-check .btn-danger.active {background-color: #e44730;}.form-group .glyphicon-ok, .form-group .glyphicon-remove{display:inline-block}" }} />
+				<div className="row">
           <div className="col-sm-12">
            	<div className="row" style={{opacity: 1}}>
                 <div className="col-md-8 col-md-offset-2">
@@ -74,29 +80,29 @@ class Account extends React.Component {
 				                        <div className="packages-check">
 					                        <div className="row">
 						                        <div className="col-md-6 mrg-b-md" data-toggle="buttons">
-							                        <label className="btn btn-lg btn-block  btn-danger">
-								                        <input type="checkbox" autoComplete="off" name="silentactionpkg" id="silentactionpkg" data-cost={99} defaultValue="true" />
+							                        <label className={cx("btn btn-lg btn-block", this.props.settings && this.props.settings.slientAuctionActivated ? "btn-success" : "btn-danger")}>
+								                        <input type="checkbox" autoComplete="off" name="silentactionpkg" id="silentactionpkg" data-cost={99} defaultValue={this.props.settings && this.props.settings.slientAuctionActivated} />
 								                        <span className="glyphicon glyphicon-ok" />
 								                        Activate Silent Auction ($99)
 							                        </label>
 						                        </div>
 						                        <div className="col-md-6 mrg-b-md" data-toggle="buttons">
-							                        <label className="btn btn-lg btn-block  btn-danger">
-								                        <input type="checkbox" autoComplete="off" name="causeauctionpkg" id="causeauctionpkg" data-cost={99} defaultValue="true" />
+							                        <label className={cx("btn btn-lg btn-block", this.props.settings && this.props.settings.causeAuctionActivated ? "btn-success" : "btn-danger")}>
+								                        <input type="checkbox" autoComplete="off" name="causeauctionpkg" id="causeauctionpkg" data-cost={99} defaultValue={this.props.settings && this.props.settings.causeAuctionActivated} />
 								                        <span className="glyphicon glyphicon-ok" />
 								                        Activate Fund a Need ($99)
 							                        </label>
 						                        </div>
 						                        <div className="col-md-6 mrg-b-md" data-toggle="buttons">
-							                        <label className="btn btn-lg btn-block  btn-danger">
-								                        <input type="checkbox" autoComplete="off" name="rafflepkg" id="rafflepkg" data-cost={99} defaultValue="true" />
+							                        <label className={cx("btn btn-lg btn-block", this.props.settings && this.props.settings.raffleActivated ? "btn-success" : "btn-danger")}>
+								                        <input type="checkbox" autoComplete="off" name="rafflepkg" id="rafflepkg" data-cost={99} defaultValue={this.props.settings && this.props.settings.raffleActivated} />
 								                        <span className="glyphicon glyphicon-ok" />
 								                        Activate Raffle  ($99)
 							                        </label>
 						                        </div>
 						                        <div className="col-md-6 mrg-b-md" data-toggle="buttons">
-							                        <label className="btn btn-lg btn-block  btn-danger">
-								                        <input type="checkbox" autoComplete="off" name="ticketingpkg" id="ticketingpkg" data-cost={0} defaultValue="true" />
+							                        <label className={cx("btn btn-lg btn-block", this.props.settings && this.props.settings.ticketingActivated ? "btn-success" : "btn-danger")}>
+								                        <input type="checkbox" autoComplete="off" name="ticketingpkg" id="ticketingpkg" data-cost={0} defaultValue={this.props.settings && this.props.settings.ticketingActivated} />
 								                        <span className="glyphicon glyphicon-ok" />
 								                        Activate Ticketing
 							                        </label>
@@ -111,226 +117,9 @@ class Account extends React.Component {
 			                        <div className="form-group">
 				                        <label htmlFor="package-subtotal">Country Code</label>
 				                        <select id="countrycode" name="countrycode" className="form-control" defaultValue>
-					                        <option value="US">US</option>
-					                        <option value="AF">AF</option>
-					                        <option value="AL">AL</option>
-					                        <option value="DZ">DZ</option>
-					                        <option value="AD">AD</option>
-					                        <option value="AO">AO</option>
-					                        <option value="AG">AG</option>
-					                        <option value="AR">AR</option>
-					                        <option value="AM">AM</option>
-					                        <option value="AW">AW</option>
-					                        <option value="AU">AU</option>
-					                        <option value="AT">AT</option>
-					                        <option value="AZ">AZ</option>
-					                        <option value="BH">BH</option>
-					                        <option value="BD">BD</option>
-					                        <option value="BY">BY</option>
-					                        <option value="BE">BE</option>
-					                        <option value="BZ">BZ</option>
-					                        <option value="BJ">BJ</option>
-					                        <option value="BT">BT</option>
-					                        <option value="BA">BA</option>
-					                        <option value="BW">BW</option>
-					                        <option value="BR">BR</option>
-					                        <option value="IO">IO</option>
-					                        <option value="BG">BG</option>
-					                        <option value="BF">BF</option>
-					                        <option value="BI">BI</option>
-					                        <option value="KH">KH</option>
-					                        <option value="CM">CM</option>
-					                        <option value="CA">CA</option>
-					                        <option value="CV">CV</option>
-					                        <option value="CF">CF</option>
-					                        <option value="TD">TD</option>
-					                        <option value="CL">CL</option>
-					                        <option value="CN">CN</option>
-					                        <option value="CX">CX</option>
-					                        <option value="CO">CO</option>
-					                        <option value="KM">KM</option>
-					                        <option value="CG">CG</option>
-					                        <option value="CK">CK</option>
-					                        <option value="CR">CR</option>
-					                        <option value="HR">HR</option>
-					                        <option value="CU">CU</option>
-					                        <option value="CY">CY</option>
-					                        <option value="CZ">CZ</option>
-					                        <option value="DK">DK</option>
-					                        <option value="DJ">DJ</option>
-					                        <option value="EC">EC</option>
-					                        <option value="EG">EG</option>
-					                        <option value="SV">SV</option>
-					                        <option value="GQ">GQ</option>
-					                        <option value="ER">ER</option>
-					                        <option value="EE">EE</option>
-					                        <option value="ET">ET</option>
-					                        <option value="FO">FO</option>
-					                        <option value="FJ">FJ</option>
-					                        <option value="FI">FI</option>
-					                        <option value="FR">FR</option>
-					                        <option value="GF">GF</option>
-					                        <option value="PF">PF</option>
-					                        <option value="GA">GA</option>
-					                        <option value="GM">GM</option>
-					                        <option value="GE">GE</option>
-					                        <option value="DE">DE</option>
-					                        <option value="GH">GH</option>
-					                        <option value="GI">GI</option>
-					                        <option value="GR">GR</option>
-					                        <option value="GL">GL</option>
-					                        <option value="GP">GP</option>
-					                        <option value="GT">GT</option>
-					                        <option value="GN">GN</option>
-					                        <option value="GW">GW</option>
-					                        <option value="GY">GY</option>
-					                        <option value="HT">HT</option>
-					                        <option value="HN">HN</option>
-					                        <option value="HU">HU</option>
-					                        <option value="IS">IS</option>
-					                        <option value="IN">IN</option>
-					                        <option value="ID">ID</option>
-					                        <option value="IQ">IQ</option>
-					                        <option value="IE">IE</option>
-					                        <option value="IL">IL</option>
-					                        <option value="IT">IT</option>
-					                        <option value="JP">JP</option>
-					                        <option value="JO">JO</option>
-					                        <option value="KE">KE</option>
-					                        <option value="KI">KI</option>
-					                        <option value="KW">KW</option>
-					                        <option value="KG">KG</option>
-					                        <option value="LV">LV</option>
-					                        <option value="LB">LB</option>
-					                        <option value="LS">LS</option>
-					                        <option value="LR">LR</option>
-					                        <option value="LI">LI</option>
-					                        <option value="LT">LT</option>
-					                        <option value="LU">LU</option>
-					                        <option value="MG">MG</option>
-					                        <option value="MW">MW</option>
-					                        <option value="MY">MY</option>
-					                        <option value="MV">MV</option>
-					                        <option value="ML">ML</option>
-					                        <option value="MT">MT</option>
-					                        <option value="MH">MH</option>
-					                        <option value="MQ">MQ</option>
-					                        <option value="MR">MR</option>
-					                        <option value="MU">MU</option>
-					                        <option value="YT">YT</option>
-					                        <option value="MX">MX</option>
-					                        <option value="MC">MC</option>
-					                        <option value="MN">MN</option>
-					                        <option value="ME">ME</option>
-					                        <option value="MS">MS</option>
-					                        <option value="MA">MA</option>
-					                        <option value="MM">MM</option>
-					                        <option value="NA">NA</option>
-					                        <option value="NR">NR</option>
-					                        <option value="NP">NP</option>
-					                        <option value="NL">NL</option>
-					                        <option value="AN">AN</option>
-					                        <option value="NC">NC</option>
-					                        <option value="NZ">NZ</option>
-					                        <option value="NI">NI</option>
-					                        <option value="NE">NE</option>
-					                        <option value="NG">NG</option>
-					                        <option value="NU">NU</option>
-					                        <option value="NF">NF</option>
-					                        <option value="NO">NO</option>
-					                        <option value="OM">OM</option>
-					                        <option value="PK">PK</option>
-					                        <option value="PW">PW</option>
-					                        <option value="PA">PA</option>
-					                        <option value="PG">PG</option>
-					                        <option value="PY">PY</option>
-					                        <option value="PE">PE</option>
-					                        <option value="PH">PH</option>
-					                        <option value="PL">PL</option>
-					                        <option value="PT">PT</option>
-					                        <option value="QA">QA</option>
-					                        <option value="RO">RO</option>
-					                        <option value="RW">RW</option>
-					                        <option value="WS">WS</option>
-					                        <option value="SM">SM</option>
-					                        <option value="SA">SA</option>
-					                        <option value="SN">SN</option>
-					                        <option value="RS">RS</option>
-					                        <option value="SC">SC</option>
-					                        <option value="SL">SL</option>
-					                        <option value="SG">SG</option>
-					                        <option value="SK">SK</option>
-					                        <option value="SI">SI</option>
-					                        <option value="SB">SB</option>
-					                        <option value="ZA">ZA</option>
-					                        <option value="GS">GS</option>
-					                        <option value="ES">ES</option>
-					                        <option value="LK">LK</option>
-					                        <option value="SD">SD</option>
-					                        <option value="SR">SR</option>
-					                        <option value="SZ">SZ</option>
-					                        <option value="SE">SE</option>
-					                        <option value="CH">CH</option>
-					                        <option value="TJ">TJ</option>
-					                        <option value="TH">TH</option>
-					                        <option value="TG">TG</option>
-					                        <option value="TK">TK</option>
-					                        <option value="TO">TO</option>
-					                        <option value="TN">TN</option>
-					                        <option value="TR">TR</option>
-					                        <option value="TM">TM</option>
-					                        <option value="TV">TV</option>
-					                        <option value="UG">UG</option>
-					                        <option value="UA">UA</option>
-					                        <option value="AE">AE</option>
-					                        <option value="GB">GB</option>
-					                        <option value="UY">UY</option>
-					                        <option value="UZ">UZ</option>
-					                        <option value="VU">VU</option>
-					                        <option value="WF">WF</option>
-					                        <option value="YE">YE</option>
-					                        <option value="ZM">ZM</option>
-					                        <option value="ZW">ZW</option>
-					                        <option value="BO">BO</option>
-					                        <option value="BN">BN</option>
-					                        <option value="CC">CC</option>
-					                        <option value="CD">CD</option>
-					                        <option value="CI">CI</option>
-					                        <option value="FK">FK</option>
-					                        <option value="GG">GG</option>
-					                        <option value="VA">VA</option>
-					                        <option value="HK">HK</option>
-					                        <option value="IR">IR</option>
-					                        <option value="IM">IM</option>
-					                        <option value="JE">JE</option>
-					                        <option value="KP">KP</option>
-					                        <option value="KR">KR</option>
-					                        <option value="LA">LA</option>
-					                        <option value="LY">LY</option>
-					                        <option value="MO">MO</option>
-					                        <option value="MK">MK</option>
-					                        <option value="FM">FM</option>
-					                        <option value="MD">MD</option>
-					                        <option value="MZ">MZ</option>
-					                        <option value="PS">PS</option>
-					                        <option value="PN">PN</option>
-					                        <option value="RE">RE</option>
-					                        <option value="RU">RU</option>
-					                        <option value="BL">BL</option>
-					                        <option value="SH">SH</option>
-					                        <option value="MF">MF</option>
-					                        <option value="PM">PM</option>
-					                        <option value="ST">ST</option>
-					                        <option value="SO">SO</option>
-					                        <option value="SJ">SJ</option>
-					                        <option value="SY">SY</option>
-					                        <option value="TW">TW</option>
-					                        <option value="TZ">TZ</option>
-					                        <option value="TL">TL</option>
-					                        <option value="VE">VE</option>
-					                        <option value="VN">VN</option>
-					                        <option value="VG">VG</option>
-					                        <option value="VI">VI</option>
+																	{
+																		this.props.settings && this.props.settings.countryCodes ? this.props.settings.countryCodes.map(item=>{<option value={item}>{item}</option>}) : <option value="US">US</option>
+																	}
 				                        </select>
 			                        </div>
 			                        <style dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }} />
