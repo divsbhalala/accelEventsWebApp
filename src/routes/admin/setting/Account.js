@@ -44,7 +44,6 @@ class Account extends React.Component {
 		})
 	}
 	addPackage = (item)=>{
-		console.log(item.target);
 		if(item.target){
 			let price = item.target.getAttribute("data-cost");
 			let type = item.target.getAttribute("data-type");
@@ -69,7 +68,6 @@ class Account extends React.Component {
 				});
 			}
 		}
-		console.log(item.target.getAttribute("data-cost"))
 	};
 	render() {
 		//http://allenfang.github.io/react-bootstrap-table/example.html
