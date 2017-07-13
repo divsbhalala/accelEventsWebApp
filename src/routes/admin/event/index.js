@@ -21,11 +21,8 @@ class EventList extends React.Component {
   }
 getEventsList = () => {
   this.props.eventsList("search").then((resp) => {
-    let event = resp.data.map(function (value) {
-      return {  ...value , 'eventEndDate': new Date(1*value.eventEndDate).toUTCString() }
-    })
     this.setState({
-      event:event
+      event:resp.data
     })
 
   });
@@ -67,8 +64,14 @@ componentDidMount(){
     function buttonFormatter(cell, row){
       return '<ul class="readonly-actions list-inline"><li><a href="edit/7" ><i class="fa fa-cog blue" aria-hidden="true"></i></a></li><li><a href="/AccelEventsWebApp/auctions/admin/events/delete/" ><i class="fa fa-trash red" aria-hidden="true"></i></a></li></ul>';
     }
+    function dateFormatter(cell, row){
+      return new Date(1*cell).toUTCString();
+    }
     function urlFormate(cell, row){
       return '<a href="/AccelEventsWebApp/auctions/admin/events/delete/">' + cell + ' </a>';
+    }
+    function indexN(cell, row, enumObject, index) {
+      return (<div>{index+1}</div>)
     }
     return (
       <div className={s.root}>
@@ -88,12 +91,12 @@ componentDidMount(){
               </SplitButton>
             </div>
           </div>
-          <div className="row">
+          <d5iv className="row">
             <div className="col-md-12">
-              {/*{new Date(1*this.props.item.eventEndDate).toUTCString()}*/}
               <BootstrapTable data={this.state.event} striped hover search  pagination={ true }  options={ options }>
-                <TableHeaderColumn dataSort isKey dataField='eventName'>EVENT NAME</TableHeaderColumn>
-                <TableHeaderColumn dataSort dataField='eventEndDate'>END DATE</TableHeaderColumn>
+                <TableHeaderColumn dataSort isKey dataField='eventName' dataFormat={indexN}>No</TableHeaderColumn>
+                <TableHeaderColumn dataSort  dataField='eventName'>EVENT NAME</TableHeaderColumn>
+                <TableHeaderColumn dataSort dataField='eventEndDate' dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
                 <TableHeaderColumn columnClassName='theme-turquoise' dataFormat={urlFormate} dataSort dataField='eventURL' >URL</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='twilioNumber'>Twilio Number</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Archive Number</TableHeaderColumn>
@@ -102,7 +105,7 @@ componentDidMount(){
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
               </BootstrapTable>
             </div>
-          </div>
+          </d5iv>
         </div>
       </div>
     );

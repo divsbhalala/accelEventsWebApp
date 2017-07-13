@@ -3,192 +3,225 @@ import   PropTypes   from 'prop-types';
 import {Panel} from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
-
+import PopupModel from './../../components/PopupModal';
+import Button from 'react-bootstrap-button-loader';
+import IntlTelInput from 'react-intl-tel-input';
+import {connect} from 'react-redux';
+import  { doValidateMobileNumber} from './../../routes/event/action/index';
+import {
+  dashboardSubmitBid,
+  dashboardRafflePurchaseTicket,
+  dashboardSubmitPledge} from './../../routes/admin/action/index';
 class EventChecklist extends Component { // eslint-disable-line
-  static propTypes = {
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      showPopup:false,
+      message:null,
+      loading:false,
+      popupHeader:false,
+      phone:null,
+      phoneNumber: null,
+      errorMsgPhoneNumber:null,
+      countryPhone:null,
+      phoneNumberFeedBack: false,
+      isError:false,
 
+    }
+  }
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+      loading:false,
+      message:null,
+    });
+  };
+phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+    this.setState({
+      phone: value,
+      countryPhone:countryData.iso2,
+      phoneNumberFeedBack: true,
+      errorMsgPhoneNumber :"",
+    });
+    if (value == '') {
+      this.setState({
+        phoneNumber: false,
+        errorMsgPhoneNumber: "phoneNumber is Require",
+      });
+    }else{
+      this.props.doValidateMobileNumber(number).then(resp => {
+        this.setState({
+          phoneNumber: !resp,
+          errorMsgPhoneNumber: "Invalid phone number",
+        });
+      })
+    }
+    this.setState({
+      phone: value,
+    });
+  };
+componentWillMount() {
+  this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+}
+submiteForm = (e) => {
+  e.preventDefault();
+  if(this.state.phoneNumber){
+    this.setState({loading:true})
+    if(this.props.checkList.todoButtonText == "Submit Bid"){
+      this.dashboardSubmitBid();
+    }
+    if(this.props.checkList.todoButtonText == "Submit Pledge"){
+      this.dashboardSubmitPledge();
+    }
+    if(this.props.checkList.todoButtonText == "Submit Raffle Ticket"){
+      this.dashboardRafflePurchaseTicket();
+    }
+  }
+}
+dashboardSubmitBid = () => {
+  this.props.dashboardSubmitBid(this.state.countryPhone, this.state.phone)
+    .then(resp => {
+      if (resp && resp.message) {
+        this.setState({
+          loading:false,
+          message:resp.message,
+          isError:false,
+        });
+      }else{
+        this.setState({
+          loading:false,
+          message:"Something went wrong",
+          isError:true
+        });
+      }
+      this.setState({
+        loading:false,
+      })
+    });
+};
+dashboardSubmitPledge = () => {
+  this.props.dashboardSubmitPledge(this.state.countryPhone, this.state.phone)
+    .then(resp => {
+      if (resp && resp.message) {
+        this.setState({
+          loading:false,
+          message:resp.message,
+          isError:false,
+        });
+      }else{
+        this.setState({
+          loading:false,
+          message:"Something went wrong",
+          isError:true
+        });
+      }
+      this.setState({
+        loading:false,
+      })
+    });
+};
+dashboardRafflePurchaseTicket = () => {
+  this.props.dashboardRafflePurchaseTicket(this.state.countryPhone, this.state.phone)
+    .then(resp => {
+      if (resp && resp.message) {
+        this.setState({
+          loading:false,
+          message:resp.message,
+          isError:false,
+        });
+      }else{
+        this.setState({
+          loading:false,
+          message:"Something went wrong",
+          isError:true
+        });
+      }
+      this.setState({
+        loading:false,
+      })
+    });
+};
   render() {
     return (
-      <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div className="main-box clearfix">
-          <header className="main-box-header clearfix">
-            <h2>Event Checklist</h2>
-          </header>
-          <div className="main-box-body clearfix">
-            <ul className="widget-todo">
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Name your event</label>
-                  </div>
-                  <div className="desc">Your event name will be used through the system.</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/event-management/design" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Set Event Name</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Submit a sample bid for your Auction</label>
-                  </div>
-                  <div className="desc">Give your silent auction a try to see how it works for free!</div>
-                </div>
-                <div className="actions">
-                  <a href="#sample-bid" className="table-link btn btn-xs btn-danger" role="button" data-toggle="modal">
-                    <span className="label label-danger">Submit Bid</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Add auction items</label>
-                  </div>
-                  <div className="desc">Add the Auction Items your guests will bid for.</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/silent-auction/add-items" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Add Auction Items</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Set auction date and ending time</label>
-                  </div>
-                  <div className="desc">Specify when the silent auction winners will be selected (East Coast Time).</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/silent-auction/settings" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Set Date &amp; Time</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Submit a sample ticket for your Raffle</label>
-                  </div>
-                  <div className="desc">Submit a sample ticket for your Raffle to see how it works for free!</div>
-                </div>
-                <div className="actions">
-                  <a href="#sample-ticket" className="table-link btn btn-xs btn-danger" role="button" data-toggle="modal">
-                    <span className="label label-danger">Submit Raffle Ticket</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Add raffle items</label>
-                  </div>
-                  <div className="desc">Add the Raffle Items your guests will bid for.</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/raffle/add-items" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Add Raffle Items</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Set raffle date and ending time</label>
-                  </div>
-                  <div className="desc">Specify when the raffle winners will be selected (East Coast Time).</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/raffle/settings" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Set Date &amp; Time</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Submit a sample pledge for your fund a need</label>
-                  </div>
-                  <div className="desc">Submit a sample pledge for your fund a need to see how it works for free!</div>
-                </div>
-                <div className="actions">
-                  <a href="#sample-cause-bid" className="table-link btn btn-xs btn-danger" role="button" data-toggle="modal">
-                    <span className="label label-danger">Submit Pledge</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Set fund a need date and ending time</label>
-                  </div>
-                  <div className="desc">Specify when the fund a need winners will be selected (East Coast Time).</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/cause-auction/settings" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Set Date &amp; Time</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Starting Selling Tickets</label>
-                  </div>
-                  <div className="desc">Starting Selling Tickets</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/settings/account" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Starting Selling Tickets</span>
-                  </a>
-                </div>
-              </li>
-
-              <li className="clearfix">
-                <div className="name">
-                  <div className="checkbox-nice">
-                    <input type="checkbox" disabled="disabled" />
-                    <label>Set up credit card processing</label>
-                  </div>
-                  <div className="desc">Accept credit card payments from your participants.</div>
-                </div>
-                <div className="actions">
-                  <a href="https://www.accelevents.com/host/settings/credit-card" className="table-link btn btn-xs btn-danger">
-                    <span className="label label-danger">Setup Payment Processing</span>
-                  </a>
-                </div>
-              </li>
-
-            </ul>
+      <li className="clearfix">
+        <div className="name">
+          <div className="checkbox-nice">
+            <input type="checkbox" disabled="disabled"  defaultChecked={this.props.checkList.active ? "checked" :""} />
+              <label>{this.props.checkList.label}</label>
           </div>
+          <div className="desc">{this.props.checkList.description}</div>
         </div>
-      </div>
+        <div className="actions">
+          {this.props.checkList.dialog  ?
+          <a onClick={this.showPopup}  className={cx("table-link btn btn-xs",!this.props.checkList.active ? "btn-danger" :"btn-success")}  >
+            <span className={cx("label",!this.props.checkList.active ? "btn-danger" :"btn-success")}  dangerouslySetInnerHTML={{__html: this.props.checkList.todoButtonText}}></span>
+          </a>
+          : <Link to={this.props.checkList.todoLink}  className={cx("table-link btn btn-xs",!this.props.checkList.active ? "btn-danger" :"btn-success")}  >
+            <span className={cx("label",!this.props.checkList.active ? "btn-danger" :"btn-success")}  dangerouslySetInnerHTML={{__html: this.props.checkList.todoButtonText}}></span>
+          </Link>
+          }
+        </div>
+        <PopupModel
+          id="bookingPopup"
+          showModal={this.state.showPopup}
+          headerText={<span>{this.props.checkList.label}</span>}
+          modelBody=''
+          onCloseFunc={this.hidePopup}>
+          <div className="ticket-type-container">
+            { this.props.checkList.description }
+            <form method="POST" className="ajax-form validated" data-onsuccess="reloadPage">
+              <div
+                className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
+                {/*<label className="control-label">Cell Number</label>*/}
+                <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                  { this.state.message }</div>
+                <div className="input-group">
+                  <div className="input-group-addon">
+                    <i className="fa fa-phone" aria-hidden="true"/>
+                  </div>
+                  <IntlTelInput
+                    css={['intl-tel-input', 'form-control intl-tel']}
+                    utilsScript="./libphonenumber.js"
+                    separateDialCode={true}
+                    value={ this.state.phone || ""}
+                    onPhoneNumberChange={this.changePhone}
+                  />
+                  { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgPhoneNumber}</small>}
+              </div>
+              <input type="hidden" name defaultValue />
+              <div className="text-center">
+                <Button type="submit" className="btn btn-primary m-r-5"  onClick={this.submiteForm} loading={this.state.loading} data-loading-text="<i class='fa fa-spinner fa-spin'></i> Submitting">{this.props.checkList.todoButtonText}</Button>
+                <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.hidePopup}>Cancel</button>
+              </div>
+            </form>
+
+              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
+                                                             loading={this.state.loading}>Confirm</Button> : ""}
+          </div>
+        </PopupModel>
+      </li>
     );
   }
 }
+const mapDispatchToProps = {
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
+  dashboardSubmitPledge: (countryCode,phoneNumber) => dashboardSubmitPledge(countryCode,phoneNumber),
+  dashboardRafflePurchaseTicket: (countryCode,phoneNumber) => dashboardRafflePurchaseTicket(countryCode,phoneNumber),
+  dashboardSubmitBid: (countryCode,phoneNumber) => dashboardSubmitBid(countryCode,phoneNumber),
+};
+const mapStateToProps = (state) => ({
 
-export default EventChecklist;
+});
+
+export default  connect(mapStateToProps, mapDispatchToProps)((EventChecklist));

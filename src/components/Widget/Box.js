@@ -3,6 +3,7 @@ import   PropTypes   from 'prop-types';
 import {Panel} from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
+import {Tooltip,OverlayTrigger} from 'react-bootstrap';
 
 class BoxWidget extends Component { // eslint-disable-line
   static propTypes = {
@@ -20,12 +21,25 @@ class BoxWidget extends Component { // eslint-disable-line
         <span className="headline">{this.props.headerText}</span>
         <span className="desc">{this.props.descText}</span>
         <span className="value">
-          <a href={this.props.linkTo} data-toggle="tooltip" title={this.props.linkTitle}
-             target="_blank">{this.props.linkText}</a>
+           <LinkWithTooltip tooltip={this.props.tooltip} href="#" id="tooltip-1">
+             <a href={this.props.linkTo} data-toggle="tooltip" title={this.props.linkTitle}
+             target="_blank">{this.props.linkText}
+         </a></LinkWithTooltip>
         </span>
       </div>
     );
   }
 }
-
+const LinkWithTooltip = React.createClass({
+  render() {
+    let tooltip = <Tooltip id={this.props.id}>{this.props.tooltip}</Tooltip>;
+    return (
+      <OverlayTrigger
+        overlay={tooltip} placement="bottom"
+        delayShow={300} delayHide={150}>
+        <a href={this.props.href}>{this.props.children}</a>
+      </OverlayTrigger>
+    );
+  }
+});
 export default BoxWidget;
