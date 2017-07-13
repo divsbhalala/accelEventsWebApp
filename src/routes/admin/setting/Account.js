@@ -12,7 +12,9 @@ class Account extends React.Component {
 		super(props);
 		this.state = {
 			content: 'content',
-			settings: {}
+			settings: {},
+			itemSelected:[],
+			totalPrice:0
 		};
 		this.addPackage = this.addPackage.bind(this);
 	}
@@ -25,6 +27,12 @@ class Account extends React.Component {
 		title: PropTypes.string,
 	};
 
+	componentDidUpdate(){
+		console.log("this.state.itemSelected", this.state.itemSelected);
+		if(this.state.itemSelected){
+
+		}
+	}
 	componentWillMount() {
 		this.props.doGetHostSettings("billing").then(resp => {
 			console.log("resp", resp);
@@ -37,6 +45,30 @@ class Account extends React.Component {
 	}
 	addPackage = (item)=>{
 		console.log(item.target);
+		if(item.target){
+			let price = item.target.getAttribute("data-cost");
+			let type = item.target.getAttribute("data-type");
+			let index = _.findIndex(this.state.itemSelected,{"type": type});
+			if(index >= 0){
+				let itemSelected = this.state.itemSelected;
+				delete itemSelected[index];
+				this.setState({
+					itemSelected:itemSelected,
+					totalPrice : this.state.totalPrice - parseInt(price)
+				});
+			}
+			else {
+				let itemSelected = this.state.itemSelected;
+				itemSelected.push({
+					"type" : type,
+					"price" : parseInt(price) ? parseInt(price)  : 0,
+				});
+				this.setState({
+					itemSelected:itemSelected,
+					totalPrice : this.state.totalPrice + parseInt(price)
+				});
+			}
+		}
 		console.log(item.target.getAttribute("data-cost"))
 	};
 	render() {
@@ -74,9 +106,9 @@ class Account extends React.Component {
 				<div className="row">
 					<div className="col-sm-12">
 						<div className="row" style={{opacity: 1}}>
-							<div className="col-md-10 col-md-offset-2">
+							<div className="col-md-8 col-md-offset-2">
 								<div className="row">
-									<div className="col-md-8 col-md-offset-2">
+									<div className>
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
 												<div className="form">
@@ -103,12 +135,12 @@ class Account extends React.Component {
 																<div className="row">
 																	{ products.map(item=> <div className="col-md-6 mrg-b-md" data-toggle="buttons" key={item.id}>
 																		<label
-																			className={cx("btn btn-lg btn-block", this.props.settings && this.props.settings[item.type] ? "btn-success" : "btn-danger")}>
+																			className={cx("btn btn-lg btn-block", this.props.settings && this.props.settings[item.type] ? "btn-success" : "btn-danger", _.findIndex(this.state.itemSelected,{"type": item.type}) >=0 && "active" )}>
 																			<input type="checkbox" autoComplete="off" name={item.code}
-																						 id={item.code} data-cost={item.price} onChange={this.addPackage}
+																						 id={item.code} data-cost={item.price} data-type={item.type} onChange={this.addPackage}
 																						 defaultValue={this.props.settings && this.props.settings[item.type]}/>
 																			<span className="glyphicon glyphicon-ok"/>
-																			Activate {item.name} {item.price ? "($"+item.price+")" : ""}
+																			{ (this.props.settings && this.props.settings[item.type]) ? item.name + " Activated" : "Activate " + item.name + (item.price ? "($"+item.price+")" : "")}
 																		</label>
 																	</div>) }
 																</div>
@@ -117,7 +149,7 @@ class Account extends React.Component {
 														<div className="form-group">
 															<label htmlFor="package-subtotal">Subtotal</label>
 															<input readOnly="readonly" id="package-subtotal" name="amount" type="text"
-																		 className="form-control" defaultValue={0}/>
+																		 className="form-control" value={this.state.totalPrice}/>
 														</div>
 														<div className="form-group">
 															<label htmlFor="package-subtotal">Country Code</label>

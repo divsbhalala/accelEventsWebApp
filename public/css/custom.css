@@ -1,6 +1,9 @@
 .container{
     padding: 0px !important;
 }
+#content-wrapper.admin-content-wrapper{
+    margin-left: 220px !important;
+}
 .p-0{
     padding: 0px !important;
 }
