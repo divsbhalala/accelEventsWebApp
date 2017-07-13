@@ -67,10 +67,11 @@ class PenalBoxWidget extends Component { // eslint-disable-line
                 </div>
               </div>
             </div>
+            {console.log(this.props.data && this.props.data[0])}
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">Proceeds:</div>
+              <div className="flex-col text-left lh-30">:</div>
               <div className="flex-col lh-30">
-                $0.00
+                {/*{this.props.data && this.props.data[1]}*/}
               </div>
             </div>
             <div className="flex-row">

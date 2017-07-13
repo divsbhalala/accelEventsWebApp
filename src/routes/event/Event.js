@@ -764,7 +764,9 @@ class Event extends React.Component {
 
 										<Tab label="The Event" disabled={!this.state.activeEventTickets}>
 											<div className={cx("row item-canvas")}>
-												<div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}></div>
+												<div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}
+                             dangerouslySetInnerHTML={ {__html:this.props.eventData && this.props.eventData.eventDesignDetail.descripation} }>
+												</div>
 											</div>
 											<div className={cx("row text-center")}>
 												<div className={cx("col-md-offset-3 col-md-6")}>

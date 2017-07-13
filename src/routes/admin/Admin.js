@@ -6,17 +6,34 @@ import s from './Admin.css';
 import BoxWidget from '../../components/Widget/Box';
 import EventChecklist from '../../components/EventChecklist/index';
 import PenalBoxWidget from '../../components/Widget/PenalBox';
-
+import {getDashboard} from './action/index';
+import {connect} from 'react-redux';
 
 class Admin extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null,
+    }
+  }
+  componentDidMount(){
+    this.getDashboard()
+  }
+  getDashboard = () => {
+    this.props.getDashboard().then((resp) => {
+      this.setState({
+        data:resp
+      })
+    });
+  }
   render() {
     return (
         <div id="content-wrapper" className="admin-content-wrapper">
           <div className="row">
+            {console.log("-><-",this.state.data)}
            <div className="col-sm-12">
              <div className="row">
                <div className="col-lg-12">
@@ -35,9 +52,9 @@ class Admin extends React.Component {
                 className="main-box infographic-box colored display-page-box"
                 headerText="Fundraiser Page"
                 descText="Share this URL with your audience so that they can learn about your fundraiser and participate online."
-                linkTo="https://www.accelevents.com/events/a"
+                linkTo={ this.state.data && "https://www.accelevents.com/events/" +  this.state.data.eventUrl}
                 linkTitle="Share your custom event page with your participants"
-                linkText="https://www.accelevents.com/events/a"
+                linkText={ this.state.data && "https://www.accelevents.com/events/" +  this.state.data.eventUrl}
                 linkTarget="_blank"
               />
             </div>
@@ -48,7 +65,7 @@ class Admin extends React.Component {
                 descText="This is the phone number that participants will use."
                 linkTo="javascript:void(0)"
                 linkTitle="Text bids, raffle tickets, and pledges to this number"
-                linkText="[account activation required]"
+                linkText={ this.state.data && this.state.data.eventPhoneNumber}
                 linkTarget=""
               />
 
@@ -68,7 +85,7 @@ class Admin extends React.Component {
                 endsInHours="10"
                 endsInMinute="11"
                 endsInSecond="20"
-                data={[{"Proceeds":"$0.00"}, {"Bidders":"0"}]}
+                data={[{"Total Collection from ticket sales": this.state.data && "$"+this.state.data.ticketingDetail.collectedAmout}, {"Bidders": this.state.data && this.state.data.ticketingDetail.numberOfTicketSold}]}
               />
             </div>
             <div className="flex-col flex-col-mobile">
@@ -83,7 +100,7 @@ class Admin extends React.Component {
                 endsInHours="10"
                 endsInMinute="11"
                 endsInSecond="20"
-                data={[{"Proceeds":"$0.00"}, {"Bidders":"0"}]}
+                data={[{"Proceeds":this.state.data && "$"+ this.state.data.auctionDetail.collectedAmout}, {"Bidders":this.state.data && this.state.data.auctionDetail.numberOfBidder}]}
               />
             </div>
             <div className="flex-col flex-col-mobile">
@@ -98,7 +115,7 @@ class Admin extends React.Component {
                 endsInHours="10"
                 endsInMinute="11"
                 endsInSecond="20"
-                data={[{"Proceeds":"$0.00"}, {"Bidders":"0"}]}
+                data={[{"Proceeds":this.state.data && "$"+ this.state.data.raffleDetail.collectedAmout}, {"Ticket Purchasers":this.state.data && this.state.data.raffleDetail.numberOfTicketPurchased}]}
               />
             </div>
             <div className="flex-col flex-col-mobile">
@@ -113,7 +130,7 @@ class Admin extends React.Component {
                 endsInHours="10"
                 endsInMinute="11"
                 endsInSecond="20"
-                data={[{"Proceeds":"$0.00"}, {"Bidders":"0"}]}
+                data={[{"Proceeds":this.state.data && "$"+ this.state.data.fundANeedDetail.collectedAmout}, {"Donors":this.state.data && this.state.data.fundANeedDetail.donors}]}
               />
             </div>
           </div>
@@ -128,4 +145,12 @@ class Admin extends React.Component {
      );
   }
 }
-export default withStyles(s)(Admin);
+
+const mapDispatchToProps = {
+  getDashboard: () => getDashboard()
+};
+const mapStateToProps = (state) => ({
+});
+
+export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Admin));
+

@@ -6067,6 +6067,10 @@ react-bootstrap-validation@^0.1.11:
     react-bootstrap ">=0.23.0"
     validator "^3.41.3"
 
+react-bootstrap-xeditable@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-xeditable/-/react-bootstrap-xeditable-0.2.10.tgz#36388045837794bcd0692351b469395cfb3957f7"
+
 react-bootstrap@0.30.10, react-bootstrap@>=0.23.0:
   version "0.30.10"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-0.30.10.tgz#dbba6909595f2af4d91937db0f96ec8c2df2d1a8"
@@ -6121,6 +6125,10 @@ react-easy-swipe@^0.0.13:
   resolved "https://registry.yarnpkg.com/react-easy-swipe/-/react-easy-swipe-0.0.13.tgz#c00e90dabed8d0878e8c8313b867e01435f0f637"
   dependencies:
     prop-types "^15.5.8"
+
+react-edit-inline@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/react-edit-inline/-/react-edit-inline-1.0.8.tgz#d144670b5217b5adc6c5bcb6976fc6b257f09b72"
 
 react-event-listener@^0.2.1:
   version "0.2.1"
@@ -6307,12 +6315,6 @@ react-telephone-input@^4.0.1:
     country-telephone-data "0.4.2"
     lodash "^4.17.4"
     react-onclickoutside "5.3.1"
-
-react-text-marquee@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-text-marquee/-/react-text-marquee-1.0.1.tgz#6fac16a68ceeebb8b29403088e4541cdd6ed7e13"
-  dependencies:
-    prop-types "^15.5.8"
 
 react@15.5.0, react@^15.4.2:
   version "15.5.0"
