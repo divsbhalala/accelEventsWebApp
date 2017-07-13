@@ -361,27 +361,30 @@ class HeaderNew extends React.Component {
 			<div id="header-navbar" className={cx("content turquoise-bg white")}>
 
 				<Navbar fluid={true} style={ {margin: 0} } className={ cx("turquoise-bg white")}>
-					<Brand className="p-0">
+					<Brand className={cx(this.props.admin && "p-0")}>
             <span >
               { this.props.eventData &&
 							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
-							<a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo" className="navbar-brand" style={{paddingLeft:"22"}}>
-            		<img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png" alt className="normal-logo logo-white has-custom" />
-          		</a>
-							<button type="button" className="navbar-toggle" onClick={() => {
+							{ this.props.admin && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
+								 className="navbar-brand" style={{paddingLeft: "22"}}>
+            		<img
+									src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
+									alt className="normal-logo logo-white has-custom"/>
+          		</a>}
+							{ this.props.admin && <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}} style={{position: 'absolute', right: 0, top: 0}}>
                   <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
-                </button>
+                </button>}
 
             </span>
 
 					</Brand>
-					<div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
+					{ this.props.admin && <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
 						<ul className="nav navbar-nav pull-left">
 							<li>
 								<a className="btn" id="make-small-nav" onClick={() => {
@@ -398,7 +401,7 @@ class HeaderNew extends React.Component {
 								</div>
 							</li>
 						</ul>
-					</div>
+					</div>}
 					<ul className="nav navbar-top-links navbar-right">
 
 						{ !this.props.admin && <MenuItem eventKey="1" onClick={this.showContactPopup}>
@@ -488,7 +491,7 @@ class HeaderNew extends React.Component {
 								alt="Jon"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
 							</span>} id='navDropdown4'>
 								<MenuItem eventKey="2">
-									<Link to="my-profile" > 	<span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
+									<Link to="my-profile"> <span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
 								</MenuItem>
 								<MenuItem divider/>
 								<MenuItem eventKey="4" onClick={this.logout}>

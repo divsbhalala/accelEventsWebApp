@@ -7,3 +7,12 @@
 .navbar-top-links li:last-child{
     padding-right: 0px;
 }
+#header-navbar .profile-dropdown > a  img {
+    border-radius: 50%;
+    background-clip: padding-box;
+    /* float: left; */
+    height: 35px;
+    margin-right: 5px;
+    width: 35px;
+    border: 2px solid #fff;
+}
