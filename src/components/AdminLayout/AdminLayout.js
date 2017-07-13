@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import './AdminLayout.css';
-import Header from '../Header';
+import HeaderNew from '../HeaderNew/HeaderNew';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
 import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import SidebarNew from '../../components/SidebarNew';
 
 class AdminLayout extends React.Component {
   static propTypes = {
@@ -16,8 +14,8 @@ class AdminLayout extends React.Component {
 
   render() {
     return (
-      <div className="container nav-small-class"  >
-        <Header />
+      <div className="container nav-small-class p-0"  >
+        <HeaderNew admin={true}/>
         <AdminSiderbar />
         {this.props.children}
         {this.props.showFeedBack && <Feedback />}

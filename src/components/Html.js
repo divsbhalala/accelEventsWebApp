@@ -53,6 +53,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="/css/App.css"/>
         <link rel="stylesheet" href="/css/loader.css"/>
+				<link rel="stylesheet" href="/css/custom.css"/>
 
         <link rel="stylesheet" href="/css/style.min.css"/>
         <link rel="stylesheet" href="/css/sb-admin.min.css"/>

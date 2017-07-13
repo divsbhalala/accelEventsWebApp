@@ -2,16 +2,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import {connect} from 'react-redux';
 import s from './UserManagement.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../components/Sidebar/AdminSidebar';
+import {getUserManagementStaff} from './action';
+
 
 class UserManagement extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
 
-
+	componentWillMount(){
+		this.props.getUserManagementStaff().then(resp =>{
+			console.log("resp", resp);
+		}).catch(error=>{
+			console.log('error', error)
+		})
+	}
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -155,4 +163,10 @@ class UserManagement extends React.Component {
   }
 }
 
-export default withStyles(s)(UserManagement);
+const mapDispatchToProps = {
+	getUserManagementStaff: () => getUserManagementStaff()
+};
+
+const mapStateToProps = (state) => ({
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(UserManagement));

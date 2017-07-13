@@ -191,7 +191,7 @@ class AdminSiderbar extends React.Component {
 								</ul>
 							</div>
 						</div>
-						<div className="nano-pane"><div className="nano-slider" style={{height: 174, transform: 'translate(0px, 0px)'}} /></div></section>
+						<div className="nano-pane"><div className="nano-slider" style={{ transform: 'translate(0px, 0px)'}} /></div></section>
 					<div id="nav-col-submenu" />
 				</div>
 			</div>
