@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './event.css';
 import {SplitButton, MenuItem} from 'react-bootstrap';
-import {eventsList,whiteLabelUrl} from './action/index';
+import {eventsList,whiteLabelUrl,setEvents} from './action/index';
 import {connect} from 'react-redux';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
 
 class EventList extends React.Component {
   static propTypes = {
@@ -19,26 +19,31 @@ class EventList extends React.Component {
       whiteLabelUrl: null,
     }
   }
-getEventsList = () => {
-  this.props.eventsList("search").then((resp) => {
-    this.setState({
-      event:resp.data
-    })
+  getEventsList = () => {
+    this.props.eventsList("search").then((resp) => {
+      this.setState({
+        event:resp.data
+      })
 
-  });
-}
+    });
+  }
+  setActiveEvents = (row) => {
+    this.props.setEvents(row.eventId).then((resp) => {
+    });
+  }
   getWhiteLabelUrl = () => {
-  this.props.whiteLabelUrl().then((resp) => {
-    this.setState({
-      whiteLabelUrl:resp
-    })
-  });
-}
-componentDidMount(){
-  this.getEventsList();
-  this.getWhiteLabelUrl();
-}
+    this.props.whiteLabelUrl().then((resp) => {
+      this.setState({
+        whiteLabelUrl:resp
+      })
+    });
+  }
+  componentDidMount(){
+    this.getEventsList();
+    this.getWhiteLabelUrl();
+  }
   render() {
+    var self = this;
     const options = {
       page: 1,  // which page you want to show as default
       sizePerPageList: [ {
@@ -55,7 +60,7 @@ componentDidMount(){
       nextPage: 'Next', // Next page button text
       // firstPage: 'First', // First page button text
       // lastPage: 'Last', // Last page button text
-     // paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
+      // paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
       paginationPosition: 'bottom'  // default is bottom, top and both is all available
       // hideSizePerPage: true > You can hide the dropdown for sizePerPage
       // alwaysShowAllBtns: true // Always show next and previous button
@@ -68,11 +73,15 @@ componentDidMount(){
       return new Date(1*cell).toUTCString();
     }
     function urlFormate(cell, row){
-      return '<a href="/AccelEventsWebApp/auctions/admin/events/delete/">' + cell + ' </a>';
+      return (<a onClick={()=>activeEvent(row)} > {cell} </a>)
     }
     function indexN(cell, row, enumObject, index) {
       return (<div>{index+1}</div>)
     }
+    function activeEvent(row) {
+      self.setActiveEvents(row);
+    }
+
     return (
       <div className={s.root}>
         <div className={s.container}>
@@ -91,21 +100,21 @@ componentDidMount(){
               </SplitButton>
             </div>
           </div>
-          <d5iv className="row">
+          <div className="row">
             <div className="col-md-12">
               <BootstrapTable data={this.state.event} striped hover search  pagination={ true }  options={ options }>
                 <TableHeaderColumn dataSort isKey dataField='eventName' dataFormat={indexN}>No</TableHeaderColumn>
                 <TableHeaderColumn dataSort  dataField='eventName'>EVENT NAME</TableHeaderColumn>
-                <TableHeaderColumn dataSort dataField='eventEndDate' dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
+                <TableHeaderColumn dataSort dataField='eventEndDate' width="15%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
                 <TableHeaderColumn columnClassName='theme-turquoise' dataFormat={urlFormate} dataSort dataField='eventURL' >URL</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='twilioNumber'>Twilio Number</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Archive Number</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'># Particaipants</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Last Login</TableHeaderColumn>
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
-              </BootstrapTable>
+             </BootstrapTable>
             </div>
-          </d5iv>
+          </div>
         </div>
       </div>
     );
@@ -120,6 +129,7 @@ class WhiteLabelUrlList extends React.Component {
 }
 const mapDispatchToProps = {
   eventsList: (search) => eventsList(search),
+  setEvents: (eventId) => setEvents(eventId),
   whiteLabelUrl: () => whiteLabelUrl()
 };
 const mapStateToProps = (state) => ({

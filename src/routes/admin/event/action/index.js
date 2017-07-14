@@ -8,7 +8,7 @@ export function eventsList(search) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'superadmin/events?offset=0&limit=305'  ,
+      url: API_URL + 'superadmin/events?offset=0&limit=350'  ,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
@@ -25,6 +25,22 @@ export function whiteLabelUrl() {
     return axios({
       method: 'get',
       url: API_URL + 'superadmin/whiteLabelUrl'  ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function setEvents(eventId) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'superadmin/setEvent/'+ eventId  ,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){

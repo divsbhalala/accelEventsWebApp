@@ -112,7 +112,7 @@ class PenalBoxWidget extends Component { // eslint-disable-line
             <div className="flex-row">
               <div className="flex-col text-left lh-30">{this.props.secondTitle}:</div>
               <div className="flex-col lh-30">
-                {this.props.secondData}
+                ${this.props.secondData.toFixed(2)}
               </div>
             </div>
             <div className="flex-row">
