@@ -20,4 +20,53 @@ export function getDashboard() {
     });
   }
 }
+export function dashboardSubmitBid(countryCode,phoneNumber) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'host/auction/submitBid/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function dashboardSubmitPledge(countryCode,phoneNumber) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'host/fundANeed/submitPledge/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function dashboardRafflePurchaseTicket(countryCode,phoneNumber) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'host/raffle/purchaseTicket/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+
 
