@@ -4,9 +4,14 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './event.css';
 import {SplitButton, MenuItem} from 'react-bootstrap';
-import {eventsList,whiteLabelUrl,setEvents} from './action/index';
+import {eventsList,whiteLabelUrl,setEvents,createWhiteLabelUrl} from './action/index';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
+import PopupModel from './../../../components/PopupModal';
+import Button from 'react-bootstrap-button-loader';
+import cx from 'classnames';
+import {browserHistory} from 'react-router';
+import Link from "../../../components/Link/Link";
 
 class EventList extends React.Component {
   static propTypes = {
@@ -16,7 +21,15 @@ class EventList extends React.Component {
     super(props);
     this.state = {
       event: null,
-      whiteLabelUrl: null,
+      showPopup:false,
+      message:null,
+      loading:false,
+      popupHeader:false,
+      isError:false,
+      whiteLabelUrlFeedBack: false,
+      whiteLabelUrlValue:null,
+      whiteLabelUrl:false,
+      whiteLabelUrlList:null,
     }
   }
   getEventsList = () => {
@@ -29,12 +42,17 @@ class EventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
+      {/*<Link to="/admin" >*/}
+      {/*</Link>*/}
+     //this.context.router.push('/admin');
+     // browserHistory.push('/login');
+
     });
   }
   getWhiteLabelUrl = () => {
     this.props.whiteLabelUrl().then((resp) => {
       this.setState({
-        whiteLabelUrl:resp
+        whiteLabelUrlList:resp
       })
     });
   }
@@ -42,6 +60,59 @@ class EventList extends React.Component {
     this.getEventsList();
     this.getWhiteLabelUrl();
   }
+  whiteLabelUrlValidateHandler = (e) => {
+    this.setState({
+      whiteLabelUrlFeedBack: true,
+      whiteLabelUrlValue:this.whiteLabelUrl.value.trim()
+    });
+    if (this.whiteLabelUrl.value.trim() == '') {
+      this.setState({
+        whiteLabelUrl: false
+      });
+    } else {
+      this.setState({
+        whiteLabelUrl: true
+      });
+    }
+
+  };
+  submiteForm = (e) => {
+    e.preventDefault();
+    if(this.state.whiteLabelUrl){
+      this.setState({loading:true})
+      this.props.createWhiteLabelUrl(this.state.whiteLabelUrlValue)
+        .then(resp => {
+          if (resp && resp.message) {
+            this.setState({
+              loading:false,
+              message:resp.message,
+              isError:false,
+            });
+          }else{
+            this.setState({
+              loading:false,
+              message:"Something went wrong",
+              isError:true
+            });
+          }
+          this.setState({
+            loading:false,
+          })
+        });
+    }
+  }
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+      loading:false,
+      message:null,
+    });
+  };
   render() {
     var self = this;
     const options = {
@@ -88,13 +159,13 @@ class EventList extends React.Component {
           <h1 className="text-center">All Events</h1>
           <div className="row">
             <div className="col-md-2" role="group">
-              <a href="#addwhitelabel" role="button" data-toggle="modal" className="btn btn-block btn-default mrg-b-md">
+              <a onClick={this.showPopup} className="btn btn-block btn-default mrg-b-md">
                 <span className="hidden-xs">Add White Label</span>
               </a>
             </div>
             <div className="col-md-2" role="group">
               <SplitButton title="Access White Label" pullRight id="split-button-pull-right">
-                {this.state.whiteLabelUrl && this.state.whiteLabelUrl.map((value,index)=>
+                {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.map((value,index)=>
                   <WhiteLabelUrlList key={index} item={value} />
                 )}
               </SplitButton>
@@ -102,6 +173,7 @@ class EventList extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-12">
+              {this.state.event &&
               <BootstrapTable data={this.state.event} striped hover search  pagination={ true }  options={ options }>
                 <TableHeaderColumn dataSort isKey dataField='eventName' dataFormat={indexN}>No</TableHeaderColumn>
                 <TableHeaderColumn dataSort  dataField='eventName'>EVENT NAME</TableHeaderColumn>
@@ -112,9 +184,46 @@ class EventList extends React.Component {
                 <TableHeaderColumn dataSort dataField='price'># Particaipants</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Last Login</TableHeaderColumn>
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
-             </BootstrapTable>
+             </BootstrapTable> }
             </div>
           </div>
+          <PopupModel
+            id="bookingPopup"
+            showModal={this.state.showPopup}
+            headerText={<span>Add White Label</span>}
+            modelBody=''
+            onCloseFunc={this.hidePopup}>
+            <div className="ticket-type-container">
+              <form id="contactform">
+                <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                  { this.state.message }</div>
+                <div    className={cx("form-group", this.state.whiteLabelUrlFeedBack && 'has-feedback', this.state.whiteLabelUrlFeedBack && this.state.whiteLabelUrl && 'has-success', this.state.whiteLabelUrlFeedBack && (!this.state.whiteLabelUrl) && 'has-error')}>
+                  <label className="control-label">Enter White Label Url</label><br />
+                  <label id="alert-modal-whitelabelurl" className="modal-title alert-danger" />
+                  <div className="input-group">
+                    <div className="input-group-addon">
+                      <i className="fa fa-arrow-right" aria-hidden="true" />
+                    </div>
+                    <input type="text" className="form-control" name="whitelabelurl" id="whitelabelurl"
+                           ref={ref => {
+                             this.whiteLabelUrl = ref;
+                           }}
+                           onKeyUp={this.whiteLabelUrlValidateHandler}/>
+                    { this.state.whiteLabelUrlFeedBack && this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                    { this.state.whiteLabelUrlFeedBack && !this.state.email &&
+                    <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+                  </div>
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">White Label Url.</small>
+                </div>
+
+                <input type="hidden" name defaultValue />
+                <Button type="button" className="btn btn-primary m-r-5" onClick={this.submiteForm} loading={this.state.loading}>Create White Label</Button>
+                <button type="button" className="btn btn-danger"  onClick={this.hidePopup}>Cancel</button>
+              </form>
+            </div>
+          </PopupModel>
+
         </div>
       </div>
     );
@@ -123,14 +232,15 @@ class EventList extends React.Component {
 class WhiteLabelUrlList extends React.Component {
   render() {
     return (
-      <MenuItem eventKey={this.props.key}>{this.props.item}</MenuItem>
+      <MenuItem eventKey={this.props.key}><Link to={"u/"+this.props.item+"/home"} >{this.props.item}</Link></MenuItem>
     );
   }
 }
 const mapDispatchToProps = {
   eventsList: (search) => eventsList(search),
   setEvents: (eventId) => setEvents(eventId),
-  whiteLabelUrl: () => whiteLabelUrl()
+  whiteLabelUrl: () => whiteLabelUrl(),
+  createWhiteLabelUrl: (label) => createWhiteLabelUrl(label)
 };
 const mapStateToProps = (state) => ({
 });
