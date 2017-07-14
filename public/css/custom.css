@@ -22,3 +22,15 @@
 .react-bs-table{
     border: none;
 }
+#sidebar-nav .nav li .submenu{
+    display: none;
+}
+#sidebar-nav .nav li.active .submenu{
+    display: block;
+}
+#sidebar-nav .nav li .submenu>li.active{
+    background: #ddd !important;
+    font-weight: 700;
+    border: none;
+    box-shadow: none;
+}
