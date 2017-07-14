@@ -46,7 +46,7 @@ export default {
 				return {
 					title,
 					chunk: 'admin',
-					component: <Admin title={title}/>,
+					component: <AdminLayout><Admin title={title}/></AdminLayout>,
 				};
 			}
 		},

@@ -5,12 +5,13 @@ import {connect} from 'react-redux';
 import s from './Setting.css';
 import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 
-import {doGetHostSettings} from './action';
-
+import {doGetHostSettings, putGetHostSettings} from './action';
+let regOnlyNumber = new RegExp('^[0-9]*$');
 class Setting extends React.Component {
 	static propTypes = {
 		title: PropTypes.string,
 	};
+
 	constructor() {
 		super();
 		this.state = {
@@ -21,19 +22,108 @@ class Setting extends React.Component {
 			causeAuctionEnabled: false,
 			donationEnabled: false,
 			ticketingEnabled: false
-		}
+		};
+		this.submitSettings = this.submitSettings.bind(this);
 	};
 
-	componentWillMount(){
-		this.props.doGetHostSettings("general").then(resp =>{
-				console.log("resp", resp);
-				this.setState({
-					settings: resp && resp.data
-				})
-		}).catch(error=>{
+	componentWillMount() {
+		this.props.doGetHostSettings("general").then(resp => {
+			console.log("resp", resp);
+			this.setState({
+				settings: resp && resp.data
+			})
+		}).catch(error => {
 			console.log('error', error)
 		})
 	}
+
+	submitSettings = (e) => {
+		e.preventDefault();
+		let settings = this.state.settings;
+		delete settings.allCurrencies;
+		this.props.putGetHostSettings("general", settings).then(resp =>{
+
+		}).catch(error=>{
+
+		});
+		console.log(e, e.target, this.state.settings)
+	};
+	changeGoalStartingAmount = (event) => {
+		if(this.goalStartingAmount && this.goalStartingAmount.value){
+			if(regOnlyNumber.test(this.goalStartingAmount.value.trim())){
+				event.target.parentElement.classList.remove('has-error');
+				let settings = this.state.settings;
+				if (!settings){
+					settings={};
+				}
+				if(!settings.goalStartingAmount){
+					settings.goalStartingAmount = 0;
+				}
+				this.goalStartingAmount.value = parseInt(this.goalStartingAmount.value.trim());
+				settings.goalStartingAmount = this.goalStartingAmount.value;
+				this.setState({
+					settings : settings
+				})
+			}
+			else{
+				event.target.parentElement.classList.add('has-error');
+			}
+		}
+		else{
+			event.target.parentElement.classList.add('has-error');
+		}
+	};
+	changeFundRaisingGoal = (event) => {
+		if(this.fundStartingAmount && this.fundStartingAmount.value){
+			if(regOnlyNumber.test(this.fundStartingAmount.value.trim())){
+				event.target.parentElement.classList.remove('has-error');
+				let settings = this.state.settings;
+				if (!settings){
+					settings={};
+				}
+				if(!settings.fundRaisingGoal){
+					settings.fundRaisingGoal = 0;
+				}
+				this.fundStartingAmount.value = parseInt(this.fundStartingAmount.value.trim());
+				settings.fundRaisingGoal = this.fundStartingAmount.value;
+				this.setState({
+					settings : settings
+				})
+
+			}
+			else{
+				event.target.parentElement.classList.add('has-error');
+			}
+		}
+		else{
+			event.target.parentElement.classList.add('has-error');
+		}
+	};
+	SelectCurrency = (event) => {
+		if(this.currency && this.currency.value){
+			if(this.currency.value && this.currency.value.trim()){
+				event.target.parentElement.classList.remove('has-error');
+				let settings = this.state.settings;
+				if (!settings){
+					settings={};
+				}
+				if(!settings.currency){
+					settings.currency = 0;
+				}
+				settings.currency = (this.currency.value.trim());
+				this.setState({
+					settings : settings
+				})
+
+			}
+			else{
+				event.target.parentElement.classList.add('has-error');
+			}
+		}
+		else{
+			event.target.parentElement.classList.add('has-error');
+		}
+	};
 
 	render() {
 		return (
@@ -54,7 +144,7 @@ class Setting extends React.Component {
 											<h1>
 												General Settings
 												<div className="pull-right">
-													<button className="btn btn-info" id="save-settings"
+													<button className="btn btn-info" id="save-settings" onClick={this.submitSettings}
 																	type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
 												</div>
 											</h1>
@@ -65,19 +155,23 @@ class Setting extends React.Component {
 									<div className>
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
-												<form id="form" action="/AccelEventsWebApp/host/settings/updatesettings" method="post">
+												<form id="form">
 													<div className="form-group row">
 														<div className="col-md-4">
 															<label>Select Currency</label>
 														</div>
 														<div className="col-md-4">
-															<select className="form-control" name="currency" id="currency" defaultValue={ (this.state.settings && this.state.settings.fundRaisingGoal) || "USD"}>
-																<option value="USD"> USD ( $ )</option>
-																<option value="CAD"> CAD ( $ )</option>
-																<option value="AUD"> AUD ( $ )</option>
-																<option value="EURO"> EURO ( € )</option>
-																<option value="POUND"> POUND ( £ )</option>
-																<option value="RAND"> RAND ( R )</option>
+															<select className="form-control" name="currency" id="currency"
+																			ref={(input) => {
+																				this.currency = input;
+																			}}
+																			onChange={this.SelectCurrency}
+																			defaultValue={ (this.state.settings && this.state.settings.currency) || "USD"}>
+
+																{
+																	this.state.settings && this.state.settings.allCurrencies ? this.state.settings.allCurrencies.map(item =>
+																		<option value={item} key={item}> {item}</option>) : <option value="USD"> USD ( $ )</option>
+																}
 															</select>
 														</div>
 													</div>
@@ -92,7 +186,14 @@ class Setting extends React.Component {
 														<div className="col-md-4">
 															<div className="input-group">
 																<span className="input-group-addon">$</span>
-																<input type="text" className="form-control" name="fundRaisingGoal" defaultValue={ (this.state.settings && this.state.settings.fundRaisingGoal) || 0}/>
+																<input type="text"
+																			 className="form-control"
+																			 name="fundRaisingGoal"
+																			 ref={(input) => {
+																				 this.fundStartingAmount = input;
+																			 }}
+																			 onChange={this.changeFundRaisingGoal}
+																			 defaultValue={ (this.state.settings && this.state.settings.fundRaisingGoal) || 0}/>
 															</div>
 														</div>
 													</div>
@@ -106,7 +207,14 @@ class Setting extends React.Component {
 														<div className="col-md-4">
 															<div className="input-group">
 																<span className="input-group-addon">$</span>
-																<input type="text" className="form-control" name="goalStartingAmount" defaultValue={(this.state.settings && this.state.settings.goalStartingAmount) || 0}/>
+																<input type="text"
+																			 className="form-control"
+																			 name="goalStartingAmount"
+																			 ref={(input) => {
+																				 this.goalStartingAmount = input;
+																			 }}
+																			 onChange={this.changeGoalStartingAmount}
+																			 defaultValue={(this.state.settings && this.state.settings.goalStartingAmount) || 0}/>
 															</div>
 														</div>
 													</div>
@@ -117,7 +225,11 @@ class Setting extends React.Component {
 																which may be helpful for delivering an item.</p>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="requireBidderAddress" id="requireBidderAddress" defaultValue={this.state.settings && this.state.settings.requireBidderAddress} className="success" onChange={()=>{ this.state.settings.requireBidderAddress = !this.state.settings.requireBidderAddress}}/>
+															<ToggleSwitch name="requireBidderAddress" id="requireBidderAddress"
+																						defaultValue={ (this.state.settings && this.state.settings.requireBidderAddress)}
+																						className="success" onChange={() => {
+																this.state.settings.requireBidderAddress = !this.state.settings.requireBidderAddress
+															}}/>
 														</div>
 													</div>
 													<div className="main-box-body clearfix">
@@ -131,7 +243,11 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="silentAuctionEnabled" id="silentAuctionEnabled" defaultValue={this.state.settings && this.state.settings.silentAuctionEnabled} className="success" onChange={()=>{ this.state.settings.silentAuctionEnabled = !this.state.settings.silentAuctionEnabled}}/>
+															<ToggleSwitch name="silentAuctionEnabled" id="silentAuctionEnabled"
+																						defaultValue={ (this.state.settings && this.state.settings.silentAuctionEnabled)}
+																						className="success" onChange={() => {
+																this.state.settings.silentAuctionEnabled = !this.state.settings.silentAuctionEnabled
+															}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -140,7 +256,11 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="raffleEnabled" id="raffleEnabled" defaultValue={this.state.settings && this.state.settings.raffleEnabled} className="success" onChange={()=>{ this.state.settings.raffleEnabled = !this.state.settings.raffleEnabled}}/>
+															<ToggleSwitch name="raffleEnabled" id="raffleEnabled"
+																						defaultValue={ (this.state.settings && this.state.settings.raffleEnabled)}
+																						className="success" onChange={() => {
+																this.state.settings.raffleEnabled = !this.state.settings.raffleEnabled
+															}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -149,7 +269,11 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="causeAuctionEnabled" id="causeAuctionEnabled" defaultValue={this.state.settings && this.state.settings.causeAuctionEnabled} className="success" onChange={()=>{ this.state.settings.causeAuctionEnabled = !this.state.settings.causeAuctionEnabled}}/>
+															<ToggleSwitch name="causeAuctionEnabled" id="causeAuctionEnabled"
+																						defaultValue={ (this.state.settings && this.state.settings.causeAuctionEnabled)}
+																						className="success" onChange={() => {
+																this.state.settings.causeAuctionEnabled = !this.state.settings.causeAuctionEnabled
+															}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -158,7 +282,11 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="donationEnabled" id="donationEnabled" defaultValue={this.state.settings && this.state.settings.donationEnabled} className="success" onChange={()=>{ this.state.settings.donationEnabled = !this.state.settings.donationEnabled}}/>
+															<ToggleSwitch name="donationEnabled" id="donationEnabled"
+																						defaultValue={ (this.state.settings && this.state.settings.donationEnabled)}
+																						className="success" onChange={() => {
+																this.state.settings.donationEnabled = !this.state.settings.donationEnabled
+															}}/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -167,12 +295,16 @@ class Setting extends React.Component {
 															<p className="help-text"/>
 														</div>
 														<div className="col-md-4">
-															<ToggleSwitch name="ticketingEnabled" id="ticketingEnabled" defaultValue={this.state.settings && this.state.settings.ticketingEnabled} className="success" onChange={()=>{ this.state.settings.ticketingEnabled = !this.state.settings.ticketingEnabled}}/>
+															<ToggleSwitch name="ticketingEnabled" id="ticketingEnabled"
+																						defaultValue={ (this.state.settings && this.state.settings.ticketingEnabled)}
+																						className="success" onChange={() => {
+																this.state.settings.ticketingEnabled = !this.state.settings.ticketingEnabled
+															}}/>
 														</div>
 													</div>
 													<div className="row">
 														<div className="col-md-3">
-															<button className="btn btn-info" id="submitForm" type="submit">&nbsp;&nbsp;&nbsp;&nbsp;
+															<button className="btn btn-info" id="submitForm" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;
 																Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
 														</div>
 													</div>
@@ -193,9 +325,9 @@ class Setting extends React.Component {
 }
 
 const mapDispatchToProps = {
-	doGetHostSettings: (type) => doGetHostSettings(type)
+	doGetHostSettings: (type) => doGetHostSettings(type),
+	putGetHostSettings: (type, data) => putGetHostSettings(type, data)
 };
 
-const mapStateToProps = (state) => ({
-});
+const mapStateToProps = (state) => ({});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Setting));
