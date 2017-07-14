@@ -29,7 +29,7 @@ export function updateAuctionSettings(auctionDTO) {
     return axios({
       method: 'put',
       url: API_URL + 'host/auction/settings',
-      data : {auctionHostSettingsDto:auctionDTO},
+      data : auctionDTO,
       headers: {Authorization: localStorage.getItem('token')}
     })
   }
@@ -97,7 +97,7 @@ export function updateAuctionCategory(id, itemCategory) {
     return axios({
       method: 'put',
       url: API_URL + 'host/auction/itemCategory/'+ id,
-      data : {itemCategoryDto:itemCategory},
+      data : itemCategory,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp => {
       return resp;

@@ -10,7 +10,7 @@ import request from 'superagent';
 import {getAuctionItems, addAuctionItem, updateAuctionItem} from './../Auction';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-//import {Dropdown} from 'react-bootstrap';
+import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
@@ -61,7 +61,6 @@ class BSTable extends React.Component {
   };
 
   render() {
-    console.log(this.props.data);
     if (this.props.data) {
         return (
             <div className="col-md-12 data-wrap">
@@ -199,6 +198,7 @@ class SilentAuctionAddItems extends React.Component {
   };
 
   updateItem = (row, cellName, cellValue) => {
+    console.log(row);
     if(row && row.id){
       this.props.updateAuctionItem(row.id ,row).then(resp => {
         console.log(resp);
@@ -320,8 +320,7 @@ class SilentAuctionAddItems extends React.Component {
                                               cellEdit={ editItem }
                                               expandColumnOptions={{
                                                 expandColumnVisible: true,
-                                                expandColumnComponent: this.expandColumnComponent,
-                                                columnWidth: 50
+                                                expandColumnComponent: this.expandColumnComponent
                                               }}>
                                 <TableHeaderColumn isKey dataField='id' dataFormat={indexN}>No</TableHeaderColumn>
                                 <TableHeaderColumn dataField='name' expandable={ false }>Item Name</TableHeaderColumn>

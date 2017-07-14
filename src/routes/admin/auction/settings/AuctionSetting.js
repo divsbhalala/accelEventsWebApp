@@ -9,6 +9,7 @@ import {EditableTextField} from 'react-bootstrap-xeditable';
 import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory} from './../Auction';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 
 class AuctionSetting extends React.Component {
   static propTypes = {
@@ -17,7 +18,7 @@ class AuctionSetting extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {settings: {}, title: props['title'], bidIncrement:true, itemCategories:[]};
+    this.state = {settings: {}, title: props['title'], bidIncrement:false, itemCategories:[], isValidData : false};
   };
 
   categoryNameValidator = (value, row) => {
@@ -45,6 +46,7 @@ class AuctionSetting extends React.Component {
   };
 
   updateItemCategory = (row, cellName, cellValue) => {
+    console.log(row);
       if(row && row.id){
         this.props.updateAuctionCategory(row.id ,row).then(resp => {
           console.log(resp);
@@ -53,6 +55,8 @@ class AuctionSetting extends React.Component {
         });
       }
   };
+
+
 
   componentWillMount(){
     this.props.getAuctionSettings().then(resp => {
@@ -97,36 +101,48 @@ class AuctionSetting extends React.Component {
         cvv: true
       });
     }
-    //this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
 
   bidHandler = (e) => {
     const settings = this.state.settings;
-    if (this.defaultBidIncrement.value.trim() == '') {
-      this.setState({bidIncrement: false});
+    if (this.defaultBidIncrement.value.trim() == '' || isNaN(this.defaultBidIncrement.value) ) {
+      this.setState({bidIncrement: true, isValidData:true});
     }
     else {
       settings.defaultBidIncrement = this.defaultBidIncrement.value;
-      this.setState({settings,bidIncrement: true});
+      this.setState({settings,bidIncrement: false, isValidData:true});
       console.log(this.state.settings);
     }
-    this.setState({isValidData: !!(this.defaultBidIncrement.value.trim() && this.defaultBidIncrement.value.trim())});
-  }
+  };
 
   createSelectItems = () => {
     let items = [];
-    let i;
     let timezones = this.state.settings.timeZones;
-    for (i in timezones) {
-      items.push(<option key={timezones[i].name} value={timezones[i].name}>{timezones[i].name}</option>);
+    for (let i in timezones) {
+        items.push(<option key={timezones[i].name} value={timezones[i].name}>{timezones[i].name}</option>);
     }
     return items;
   };
+  updateTimezone = (e) =>{
+    let selected = e.nativeEvent.target;
+    let settings = this.state.settings;
+    settings.eventTimeZone = selected[selected.selectedIndex].text;
+    this.setState({settings});
+  };
 
   onSaveSetting = () =>{
-    console.log(this.state.settings);
-
-    this.props.updateAuctionSettings(this.state.settings).then(resp => {
+    const settings = {};
+    settings.activated = this.state.settings.activated;
+    settings.categoryEnabled = this.state.settings.categoryEnabled;
+    settings.defaultBidIncrement = this.state.settings.defaultBidIncrement;
+    settings.enableMarketValue = this.state.settings.enableMarketValue;
+    settings.eventTimeZone = this.state.settings.eventTimeZone;
+    settings.highestBidderHidden = this.state.settings.highestBidderHidden;
+    settings.moduleHidden = this.state.settings.moduleHidden;
+    settings.socialSharingEnabled = this.state.settings.socialSharingEnabled;
+    settings.userTime = this.state.settings.userTime;
+    console.log(settings);
+    this.props.updateAuctionSettings(settings).then(resp => {
       console.log(resp);
     }).catch((error) => {
       console.log(error);
@@ -215,10 +231,10 @@ class AuctionSetting extends React.Component {
                               Select Timezone
                               <div className="help-text" />
                             </div>
-                            <div className="col-md-3">
-                              <select name="timezone" className="form-control" value={this.state.settings.eventTimeZone}>
+                            <div className="col-md-3">{this.state.settings.eventTimeZone &&
+                              <select name="timezone" className="form-control" defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone}>
                                 {this.createSelectItems()}
-                              </select>
+                              </select>}
                             </div>
                           </div>
                           <div className="row form-group">
@@ -231,19 +247,13 @@ class AuctionSetting extends React.Component {
                                 <div className="input-group-addon">
                                   <i className="fa fa-usd" aria-hidden="true"/>
                                 </div>
-                                <input type="text"
-                                       className="form-control"
-                                       name="settings.defaultBidIncrement"
-                                       id="defaultBid"
-                                       defaultValue={10}
-                                       required="required"
-                                       ref={(input) => {
-                                         this.defaultBidIncrement = input;
-                                       }}
+                                <input type="text" className="form-control"
+                                       name="defaultBidIncrement" id="defaultBid"
+                                       value={this.state.settings.defaultBidIncrement}
+                                       required="required" ref={(input) => {this.defaultBidIncrement = input;}}
                                        onChange={this.bidHandler}/>
-
                               </div>
-                              {this.state.bidIncrement && <div className="hide" id="bidError">Bid increament must be greater than 0 or numeric.</div>}
+                              {this.state.bidIncrement && <p className="red">Bid increament must be greater than 0 or numeric.</p>}
                             </div>
                           </div>
                           <div className="row form-group">
@@ -251,70 +261,60 @@ class AuctionSetting extends React.Component {
                               Enable Social Sharing
                               <div className="help-text">This is popup text for enable social sharing</div>
                             </div>
-                            <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="socialSharingEnabled" className="onoffswitch-checkbox" id="social" defaultChecked value={this.state.settings.socialSharingEnabled} />
-                                <label className="onoffswitch-label" htmlFor="social">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                            <div className="col-md-3"> {this.state.settings.socialSharingEnabled &&
+                              <ToggleSwitch name="socialSharingEnabled"
+                                            id="socialSharingEnabled"
+                                            defaultValue={this.state.settings.socialSharingEnabled}
+                                            className="success"
+                                            onChange={()=>{ this.state.settings.socialSharingEnabled = !this.state.settings.socialSharingEnabled}}/> }
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Enable Item Categories
                             </div>
-                            <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="categoryEnabled" className="onoffswitch-checkbox" id="categories" defaultChecked />
-                                <label className="onoffswitch-label" htmlFor="categories">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                            <div className="col-md-3">{this.state.settings.categoryEnabled &&
+                              <ToggleSwitch name="categoryEnabled"
+                                            id="categoryEnabled"
+                                            defaultValue={this.state.settings.categoryEnabled}
+                                            className="success"
+                                            onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/> }
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Hide Auction Tab
                             </div>
-                            <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="moduleHidden" className="onoffswitch-checkbox" id="hidden" value={this.state.settings.moduleHidden}/>
-                                <label className="onoffswitch-label" htmlFor="hidden">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                            <div className="col-md-3">{this.state.settings && this.state.settings.activated &&
+                              <ToggleSwitch name="activated"
+                                            id="activated"
+                                            defaultValue={this.state.settings.activated}
+                                            className="success"
+                                            onChange={()=>{ this.state.settings.activated = !this.state.settings.activated}}/> }
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Hide Highest Bidder
                             </div>
-                            <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="highestBidderHidden" className="onoffswitch-checkbox" id="highestBidderHidden" />
-                                <label className="onoffswitch-label" htmlFor="highestBidderHidden">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                            <div className="col-md-3">{this.state.settings.highestBidderHidden &&
+                              <ToggleSwitch name="highestBidderHidden"
+                                            id="highestBidderHidden"
+                                            defaultValue={this.state.settings.highestBidderHidden}
+                                            className="success"
+                                            onChange={()=>{ this.state.settings.highestBidderHidden = !this.state.settings.highestBidderHidden}}/>}
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Enable Market Value
                             </div>
-                            <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="enableMarketValue" className="onoffswitch-checkbox" id="enableMarketValue" />
-                                <label className="onoffswitch-label" htmlFor="enableMarketValue">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                            <div className="col-md-3">{this.state.settings.enableMarketValue &&
+                              <ToggleSwitch name="enableMarketValue"
+                                            id="enableMarketValue"
+                                            defaultValue={this.state.settings.enableMarketValue}
+                                            className="success"
+                                            onChange={()=>{ this.state.settings.enableMarketValue = !this.state.settings.enableMarketValue}}/>}
                             </div>
                           </div>
                           <input type="hidden" name defaultValue />
@@ -336,7 +336,7 @@ class AuctionSetting extends React.Component {
                             <BootstrapTable data={ this.state.itemCategories } striped hover search  pagination={ true }
                                             insertRow={ true } cellEdit={ editCategory } deleteRow={ true }
                                             selectRow={ selectCategory } options={ options }>
-                              <TableHeaderColumn isKey dataField='name' dataFormat={indexN}>No</TableHeaderColumn>
+                              <TableHeaderColumn isKey dataField='id' dataFormat={indexN}>No</TableHeaderColumn>
                               <TableHeaderColumn dataSort dataField='name' editable={{validator : this.categoryNameValidator}}>Name</TableHeaderColumn>
                             </BootstrapTable>}
                           </div>
