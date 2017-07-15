@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import {doGetHostSettings,makePyment} from './action';
 import {getCardToken} from './../../checkout/action/index';
 import Button from 'react-bootstrap-button-loader';
-
+import PopupModel from './../../../components/PopupModal';
 //let CKEditor = require('react-ckeditor-wrapper');
 class Account extends React.Component {
 	constructor(props) {
@@ -55,6 +55,7 @@ class Account extends React.Component {
       isError:false,
       message:null,
       modulActiveMessage:null,
+      showPopup: false,
 		};
 		this.addPackage = this.addPackage.bind(this);
 	}
@@ -213,6 +214,9 @@ class Account extends React.Component {
             updatedSettings:Object.assign({},this.state.updatedSettings,{'raffleActivated': !this.state.updatedSettings.raffleActivated})
         });
 		  }	if(type === "ticketingActivated"){
+		    if(!this.state.updatedSettings.ticketingActivated){
+          this.setState({showPopup:true})
+        }
 			    this.setState({
             updatedSettings:Object.assign({},this.state.updatedSettings,{'ticketingActivated': !this.state.updatedSettings.ticketingActivated})
         });
@@ -271,6 +275,16 @@ class Account extends React.Component {
       });
     }else{this.setState({loading:false})}
 
+  };
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+    });
   };
 	render() {
 		//http://allenfang.github.io/react-bootstrap-table/example.html
@@ -539,6 +553,21 @@ class Account extends React.Component {
 						</div>
 					</div>
 				</div>
+        <PopupModel
+          id="bookingPopup"
+          showModal={this.state.showPopup}
+          headerText={<span>Ticketing Activation</span>}
+          modelBody=''
+          onCloseFunc={this.hidePopup}
+          modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
+            this.hidePopup()
+          }}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}>
+          <div className="ticket-type-container">
+              <div>
+                Your card with not be charged at this time. Payments will be made in two installments. The first payment will be at the halfway point between when you begin selling tickets and the date of your event. The second charge will be after your event concludes. You will be charged $1 per ticket sold and 1% of the value of each ticket. You can also pass these fees to the ticket purchase.
+              </div>
+          </div>
+        </PopupModel>
 			</div>
 		);
 	}
