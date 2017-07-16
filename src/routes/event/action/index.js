@@ -356,11 +356,12 @@ export function storeIsVolunteer(data) {
 }
 //*************  Volunteer   ****************//
 
-export function getItemStatusByCode(eventUrl, itemCode) {
+export function getItemStatusByCode(eventUrl, itemCode,module) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
+      //url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
+      url: API_URL + 'events/' + eventUrl + '/volunteer/module/'+ module +'/prices/item/' + itemCode,
       headers: {Authorization: localStorage.getItem('token')}
     });
   }

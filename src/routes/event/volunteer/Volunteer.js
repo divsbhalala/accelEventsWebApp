@@ -162,7 +162,21 @@ class Volunteer extends React.Component {
     if(view == "event-ticketing" && this.state.attendees == null){
       this.getAttendeesList();
     }
+    let modeltype = 'auction';
+    if (view == 'select-action') {
+      modeltype = 'auction'
+    }
+    if (view == 'sell-raffle-tickets') {
+      modeltype = 'raffle'
+    }
+    if (view == 'submit-raffle-tickets') {
+      modeltype = 'raffle'
+    }
+    if (view == 'submit-pledge') {
+      modeltype = 'fundANeed'
+    }
     this.setState({
+      modelType:modeltype,
       phoneEnable:true,
       emailEnable:true,
       activeViews: view,
@@ -249,7 +263,7 @@ class Volunteer extends React.Component {
 			itemCodeValue: this.itemCode.value.trim(),
 		});
 		if (this.itemCode.value.trim().length == 3) {
-			this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim())
+			this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim(), this.state.modelType)
 				.then(resp => {
 					if (resp && resp.data) {
 						this.setState({
@@ -299,7 +313,7 @@ class Volunteer extends React.Component {
       });
     }
    	if (this.itemCode.value.trim().length == 3) {
-			this.props.getAuctionItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim())
+			this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim(),this.state.modelType)
 				.then(resp => {
 					if (resp && resp.data) {
 						this.setState({
@@ -381,17 +395,8 @@ class Volunteer extends React.Component {
 	};
   checkMobileUser = (e) => {
 		if (this.state.phone) {
-			let modeltype = 'auction';
-			if (this.state.activeViews == 'select-action') {
-				modeltype = 'auction'
-			}
-			if (this.state.activeViews == 'sell-raffle-tickets') {
-				modeltype = 'raffle'
-			}
-			if (this.state.activeViews == 'submit-raffle-tickets') {
-				modeltype = 'raffle'
-			}
-      this.props.getUserByMobile(this.props.params && this.props.params.params, this.state.phone.trim(),this.state.countryPhone, modeltype)
+
+      this.props.getUserByMobile(this.props.params && this.props.params.params, this.state.phone.trim(),this.state.countryPhone, this.state.modelType)
 				.then(resp => {
          	if (resp && !resp.errorMessage) {
 						this.setState({
@@ -3004,7 +3009,7 @@ class AttendeesList extends React.Component {
 }
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
-  getItemStatusByCode: (eventUrl, itemCode) => getItemStatusByCode(eventUrl, itemCode),
+  getItemStatusByCode: (eventUrl, itemCode,module) => getItemStatusByCode(eventUrl, itemCode,module),
   getAttendees: (eventUrl) => getAttendees(eventUrl),
   getUserByEmail: (eventUrl, itemCode,modeltype) => getUserByEmail(eventUrl, itemCode,modeltype),
   getUserByMobile: (eventUrl, mobile,countryCode,modeltype) => getUserByMobile(eventUrl, mobile,countryCode,modeltype),

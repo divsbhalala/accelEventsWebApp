@@ -50,5 +50,14 @@ export function getProfileData() {
 
     })
   }
+}
+export function updateProfile(field,value) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'u/myprofile/updatefield/field/'+field+'/value/'+value,
+      headers: {Authorization: localStorage.getItem('token')}
 
+    })
+  }
 }

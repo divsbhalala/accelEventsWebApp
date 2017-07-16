@@ -84,7 +84,7 @@ class Register extends React.Component {
   passwordValidateHandler = (e) => {
     this.setState({
       passwordFeedBack: true
-    })
+    });
 
     if (this.password.value.trim() == '') {
 

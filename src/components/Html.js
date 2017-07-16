@@ -52,6 +52,7 @@ class Html extends React.Component {
         /* <link rel="stylesheet" href="/css/rrui.css"/>
         <link rel="stylesheet" href="/css/loader.css"/>
         <link rel="stylesheet" href="/css/host-dashboard.min.css" />*/
+				<link rel="stylesheet" href="/css/custom.css"/>
 
         /* plugins */
         <link rel="stylesheet" href="/css/Tel/main.css" />
@@ -65,6 +66,7 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/style2.css"/>
 
 
+        <link rel="stylesheet" href="/css/bootstrap-editable.css" />
         <script src="/css/Tel/libphonenumber.js"></script>
         {styles.map(style =>
           <style

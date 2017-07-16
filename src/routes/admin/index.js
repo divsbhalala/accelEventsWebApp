@@ -24,6 +24,7 @@ import RaffleAddItems from './raffle/addItem/RaffleAddItems';
 import RaffleSetting from './raffle/settings/RaffleSetting';
 import DonationPerformance from './donation/performance/DonationPerformance';
 import UserManagement from './usermanagement/UserManagement';
+import EventsList from './event/index';
 
 
 const title = 'Admin Page';
@@ -264,7 +265,16 @@ export default {
 					component: <AdminLayout><UserManagement title="user management volunteers"/></AdminLayout>,
 				};
 			}
-		}
+		},
+    {
+      path: '/superadmin/events',
+      async action() {
+        return {
+          title: "Events",
+          component: <EventsList title="Events"/>,
+        };
+      }
+    }
 	]
 
 };
