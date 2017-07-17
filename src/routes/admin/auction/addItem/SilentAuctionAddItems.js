@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -11,18 +10,57 @@ import {getAuctionItems, addAuctionItem, updateAuctionItem} from './../Auction';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
+import CKEditor from 'react-ckeditor-wrapper';
+import {Alert} from 'react-bootstrap';
 
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
 
+class SilentAuctionAddItems extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			uploadedFileCloudinaryUrl: '',
+      items:[],
+      alertVisible: false,
+      alertMessage:null,
+      alertType:null,
+      item:{}
+		};
+	};
 
-class BSTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      uploadedFileCloudinaryUrl: '',
-      items:[]
-    };
+  componentWillMount(){
+    this.props.getAuctionItems().then(resp => {
+      if(resp && resp.data && resp.data.items.length){
+        this.setState({items:resp.data.items});
+        console.log(this.state.items);
+      }
+      else{
+        console.log(resp);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
+
+  updateContent(value) {
+    console.log(value);
+    if(value){
+      let item = this.state.item;
+      item.description = value;
+      this.setState({item});
+      console.log(this.state.item);
+      this.updateItem(item);
+      return value;
+    }
+  };
+
+  updateCategory = (e) =>{
+    let selected = e.nativeEvent.target;
+    let item = this.state.item;
+    item.category = selected[selected.selectedIndex].text;
+    this.setState({item});
+    this.updateItem(item);
   };
   onImageDrop(files) {
     this.setState({
@@ -35,7 +73,7 @@ class BSTable extends React.Component {
   buildCategoryDropDown = () => {
     let items = [];
     let i;
-    let categories = this.props.data.categories;
+    let categories = this.state.item.categories;
     for (i in categories) {
       items.push(<option key={categories[i]} value={categories[i]}>{categories[i]}</option>);
     }
@@ -60,123 +98,15 @@ class BSTable extends React.Component {
     });
   };
 
-  render() {
-    if (this.props.data) {
-        return (
-            <div className="col-md-12 data-wrap">
-              <div className="data">
-                <div className="item-data">
-                  <div className="row">
-                    <div className="col-md-8">
-                      <textarea rows={3} className="form-control" placeholder="Item description" name="description" defaultValue={""} />
-                      <div>
-                        <div id className="dropzone dz-clickable" action="/AccelEventsWebApp/host/upload">
-                          <div className="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                        </div>
-                        <Dropzone
-                          multiple={true}
-                          accept="image/*"
-                          onDrop={this.onImageDrop.bind(this)} >
-                          <p>Drop an image or click to select a file to upload.</p>
-                        </Dropzone>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="row">
-                        <div className="form-group">
-                          <label htmlFor="bidIncrement">Bid Increment</label>
-                          <div className="input-group">
-                            <span className="input-group-addon">$</span>
-                            <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" />
-                          </div>
-                        </div>
-                        <div className="form-group">
-                          <select className="form-control" name="itemCategory">
-                            <option value={0} disabled selected>-- Select Category --</option>
-                            {this.buildCategoryDropDown()}
-                          </select>
-                        </div>
-                      </div>
-                      <br />
-                      <div className="row">
-                        <div className="col-md-6">
-                          Hide Item
-                          <div className="help-text">This is will hide item from display page</div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="onoffswitch onoffswitch-success activeswitch">
-                            <input type="checkbox" name="activeEnabled" className="onoffswitch-checkbox" id="active" />
-                            <label className="onoffswitch-label" htmlFor="active">
-                              <div className="onoffswitch-inner" />
-                              <div className="onoffswitch-switch" />
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <input type="hidden" name defaultValue />
-                <i className="fa fa-trash delete-item red" />
-              </div>
-            </div>);
-        } else{
-            return (<p>?</p>);
-        }
-  }
-}
-
-
-
-class SilentAuctionAddItems extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			uploadedFileCloudinaryUrl: '',
-      items:[]
-		};
-	};
-
-  componentWillMount(){
-    this.props.getAuctionItems().then(resp => {
-      if(resp && resp.data && resp.data.items.length){
-        this.setState({items:resp.data.items});
-        console.log(this.state.items);
-      }
-      else{
-        console.log(resp);
-      }
-    }).catch((error) => {
-      console.log(error);
-    });
+  handleAlertDismiss = () => {
+    this.setState({alertVisible: false});
   };
 
-	onImageDrop(files) {
-		this.setState({
-			uploadedFile: files[0]
-		});
+  handleAlertShow = (alertMessage,alertType) => {
+    this.setState({alertVisible: true, alertMessage,alertType});
+    setTimeout(function() { this.setState({alertVisible: false}); }.bind(this), 2000);
+  };
 
-		this.handleImageUpload(files[0]);
-	}
-	handleImageUpload(file) {
-		let upload = request.post(CLOUDINARY_UPLOAD_URL)
-			.field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-			.field('file', file);
-
-		upload.end((err, response) => {
-			if (err) {
-				console.error(err);
-			}
-
-			if (response.body.secure_url !== '') {
-				this.setState({
-					uploadedFileCloudinaryUrl: response.body.secure_url
-				});
-			}
-		});
-	}
   static propTypes = {
     title: PropTypes.string,
   };
@@ -188,9 +118,62 @@ class SilentAuctionAddItems extends React.Component {
   };
 
   expandComponent = (row) => {
+    this.state.item = row;
     return (
-      <BSTable data={ row }/>
-    );
+      <div className="data-wrap">
+        <div className="data">
+          <div className="item-data">
+            <div className="row">
+              <div className="col-md-8">
+                <CKEditor value={this.state.item.description} onChange={this.updateContent.bind(this)} />
+                <div>
+                  <Dropzone
+                    multiple={true}
+                    accept="image/*"
+                    onDrop={this.onImageDrop.bind(this)}>
+                    <div className="dz-default dz-message">
+                      <span>Drop files here to upload</span>
+                    </div>
+                  </Dropzone>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="row">
+                  <div className="form-group">
+                    <label htmlFor="bidIncrement">Bid Increment</label>
+                    <div className="input-group">
+                      <span className="input-group-addon">$</span>
+                      <input className="form-control" placeholder="Increment (optional)" defaultValue={row.bidIncrement} data-price="true" name="bidIncrement" type="number" />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <select className="form-control" name="itemCategory"  defaultValue={row.category} onChange={this.updateCategory}>
+                      <option value={0} disabled selected>-- Select Category --</option>
+                      {this.buildCategoryDropDown()}
+                    </select>
+                  </div>
+                </div>
+                <br />
+                <div className="row">
+                  <div className="col-md-6">
+                    Hide Item
+                    <div className="help-text">This is will hide item from display page</div>
+                  </div>
+                  <div className="col-md-6">
+                    <ToggleSwitch name="categoryEnabled"
+                                  id="categoryEnabled"
+                                  defaultValue={row.active}
+                                  className="success"
+                                  onChange={()=>{ row.active = !row.active; this.updateItem(row)}}/>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <i className="fa fa-2x fa-trash delete-item red" />
+        </div>
+      </div>);
   };
 
   isExpandableRow = (row) => {
@@ -202,6 +185,10 @@ class SilentAuctionAddItems extends React.Component {
     if(row && row.id){
       this.props.updateAuctionItem(row.id ,row).then(resp => {
         console.log(resp);
+        if(resp && resp.data)
+          this.handleAlertShow(resp.data.message, 'success');
+        else
+          console.log("Invalid response");
       }).catch((error) => {
         console.log(error);
       });
@@ -218,10 +205,25 @@ class SilentAuctionAddItems extends React.Component {
   };
 
   handleInsertButtonClick = (onClick) => {
-    // Custom your onClick event here,
-    // it's not necessary to implement this function if you have no any process before onClick
     console.log('This is my custom function for InserButton click event');
-    onClick();
+    //onClick();
+  };
+
+  buyItNowPriceValidator = (value, row) => {
+    const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
+    if (!value) {
+      response.isValid = false;
+      response.notification.type = 'error';
+      response.notification.msg = 'Category name can\'t be empty!';
+      response.notification.title = 'Requested Category Name';
+    }
+    else if(value < row.currentBid){
+      response.isValid = false;
+      response.notification.type = 'error';
+      response.notification.msg = 'Buy it now price must be greater than Starting Bid';
+      response.notification.title = '';
+    }
+    return response;
   };
 
   render() {
@@ -304,16 +306,17 @@ class SilentAuctionAddItems extends React.Component {
 		                            <p>Drop an image or click to select a file to upload.</p>
 	                            </Dropzone>*/}
 
-                              <div className="ajax-wrap">
-                                <div className="ajax-msg-box text-center" style={{display: 'none'}}>
-                                  <span className="fa fa-spinner fa-pulse fa-fw" />
-                                  <span className="resp-message" />
-                                </div>
+                              <div className="ajax-wrap text-center">
+                                { this.state.alertVisible &&
+                                  <Alert bsStyle={this.state.alertType} onDismiss={this.handleAlertDismiss}>
+                                    <h4>{this.state.alertMessage}</h4>
+                                  </Alert>
+                                }
                               </div>
 
                               <div className="table prizes-table">
                               { this.state.items && this.state.items.length &&
-                              <BootstrapTable data={ this.state.items } search  pagination={ true }
+                              <BootstrapTable data={ this.state.items } pagination={ true }
                                               insertRow={ true } options={ options }
                                               expandableRow={ this.isExpandableRow }
                                               expandComponent={ this.expandComponent }
@@ -326,7 +329,7 @@ class SilentAuctionAddItems extends React.Component {
                                 <TableHeaderColumn dataField='name' expandable={ false }>Item Name</TableHeaderColumn>
                                 <TableHeaderColumn dataField='code' expandable={ false }>Item Code</TableHeaderColumn>
                                 <TableHeaderColumn dataField='startingBid' expandable={ false }>Starting Bid</TableHeaderColumn>
-                                <TableHeaderColumn dataField='buyItNowPrice' expandable={ false }>Buy It Now Price</TableHeaderColumn>
+                                <TableHeaderColumn dataField='buyItNowPrice' expandable={ false } editable={{validator : this.buyItNowPriceValidator}}>Buy It Now Price</TableHeaderColumn>
                                 <TableHeaderColumn dataField='' editable={ false } dataFormat={actionCell}>Action</TableHeaderColumn>
                               </BootstrapTable>}
                               </div>
