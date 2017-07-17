@@ -4,14 +4,72 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './TicketPerformance.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
+import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
+import {getPerformanceSale,getPerformanceBuyer,
+  getPerformanceBuyerCSV,getPerformanceHolderCSV} from './action';
+import {connect} from 'react-redux';
 
 class TicketPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      order: null,
+      sales: null,
+      showPopup: false,
+      loading:false,
+      message:null,
+    }
+  }
+  getPerformanceBuyerCSV = () => {
+    this.props.getPerformanceBuyerCSV().then((resp) => {
+    });
+  }
+  getPerformanceHolderCSV = () => {
+    this.props.getPerformanceHolderCSV().then((resp) => {
+    });
+  }
+  componentWillMount() {
+    this.props.getPerformanceSale("general").then(resp => {
+      console.log("resp", resp);
+      this.setState({
+        sales: resp
+      })
+    }).catch(error => {
+      console.log('error', error)
+    })
+    this.props.getPerformanceBuyer("general").then(resp => {
+      console.log("resp", resp);
+      this.setState({
+        order: resp
+      })
+    }).catch(error => {
+      console.log('error', error)
+    })
+  }
   render() {
+    const options = {
+      page: 1,  // which page you want to show as default
+      sizePerPageList: [ {
+        text: '10', value: 10
+      }, {
+        text: '100', value: 100
+      }], // you can change the dropdown list for size per page
+      sizePerPage: 10,  // which size per page you want to locate as default
+      pageStartIndex: 0, // where to start counting the pages
+      paginationSize: 2,  // the pagination bar size.
+      prePage: 'Prev', // Previous page button text
+      nextPage: 'Next', // Next page button text
+      paginationPosition: 'bottom'  // default is bottom, top and both is all available
+       };
+    function dateFormatter(cell, row){
+      return new Date(1*cell).toUTCString();
+    }
+    function priceFormate(cell, row){
+      return  "$"+ cell;
+    }
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
@@ -30,43 +88,52 @@ class TicketPerformance extends React.Component {
                         <h1 className="page-header">Ticket Sales Performance</h1>
                       </div>
                       <div className="post-page-header" />
+                        <br /><br /><br />
                       <div className="grossSales">
                         <strong>Gross Sales</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <strong><span className="sales">$0.00</span></strong>
+                        <strong><span className="sales">$0.00 {}</span></strong>
                       </div>
-                      <div className="table table-responsive">
-                        <div id="DataTables_Table_0_wrapper" className="dataTables_wrapper no-footer"><div className="dataTables_length" id="DataTables_Table_0_length"><label>Show <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" className><option value={10}>10</option><option value={25}>25</option><option value={50}>50</option><option value={100}>100</option></select> entries</label></div><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className placeholder="Search" aria-controls="DataTables_Table_0" /></label></div><table className="table sales-by-tickettype datatable no-footer dataTable" id="DataTables_Table_0" role="grid" style={{width: 990}}>
-                          <thead className="">
-                          <tr role="row"><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 202}} aria-label="Ticket Type: activate to sort column ascending">Ticket Type</th><th className="sorting_asc" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 114}} aria-label="Price: activate to sort column descending" aria-sort="ascending">Price</th><th className="sorting_disabled" rowSpan={1} colSpan={1} style={{width: 106}} aria-label="Sold">Sold</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 137}} aria-label="Status: activate to sort column ascending">Status</th><th className="sorting_disabled" rowSpan={1} colSpan={1} style={{width: 251}} aria-label="Sales End Date">Sales End Date</th></tr>
-                          </thead>
-                          <tbody>
-                          <tr className="odd"><td valign="top" colSpan={5} className="dataTables_empty">No item to show</td></tr></tbody>
-                        </table><div className="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><a className="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx={0} tabIndex={0} id="DataTables_Table_0_previous">Previous</a><span /><a className="paginate_button next disabled" aria-controls="DataTables_Table_0" data-dt-idx={1} tabIndex={0} id="DataTables_Table_0_next">Next</a></div></div>
-                      </div>
-                      <div className="table table-responsive">
+                      <div id="DataTables_Table_1_wrapper" >
+                        {this.state.sales &&
+                        <BootstrapTable data={this.state.sales} striped hover search  pagination={ true }   options={ options }>
+                          <TableHeaderColumn  isKey={true} dataField='ticketTypeName'>Ticket Type</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='ticketPrice' dataFormat={priceFormate}>PRICE</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='ticketSold'>SOLD</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='status'>STATUS</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='endDate'  dataFormat={dateFormatter}>SALES END DATE</TableHeaderColumn>
+                        </BootstrapTable>
+                        }
+                     </div>
+                      <div >
                         <h4><strong>Recent Orders</strong></h4>
-                        <div id="DataTables_Table_1_wrapper" className="dataTables_wrapper no-footer"><div className="dataTables_length" id="DataTables_Table_1_length"><label>Show <select name="DataTables_Table_1_length" aria-controls="DataTables_Table_1" className><option value={10}>10</option><option value={25}>25</option><option value={50}>50</option><option value={100}>100</option></select> entries</label></div><div id="DataTables_Table_1_filter" className="dataTables_filter"><label><input type="search" className placeholder="Search" aria-controls="DataTables_Table_1" /></label></div><table className="table all-ticket-holder datatable no-footer dataTable" id="DataTables_Table_1" role="grid" style={{width: 990}}>
-                          <thead className="">
-                          <tr role="row"><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 119}} aria-label="Order #: activate to sort column ascending">Order #</th><th className="sorting_asc" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 98}} aria-label="Buyer: activate to sort column descending" aria-sort="ascending">Buyer</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 71}} aria-label="QTY: activate to sort column ascending">QTY</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 91}} aria-label="Price: activate to sort column ascending">Price</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 145}} aria-label="Refunded: activate to sort column ascending">Refunded</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 83}} aria-label="Date: activate to sort column ascending">Date</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_1" rowSpan={1} colSpan={1} style={{width: 131}} aria-label="Payment: activate to sort column ascending">Payment</th></tr>
-                          </thead>
-                          <tbody>
-                          <tr className="odd"><td valign="top" colSpan={7} className="dataTables_empty">No item to show</td></tr></tbody>
-                        </table><div className="dataTables_paginate paging_simple_numbers" id="DataTables_Table_1_paginate"><a className="paginate_button previous disabled" aria-controls="DataTables_Table_1" data-dt-idx={0} tabIndex={0} id="DataTables_Table_1_previous">Previous</a><span /><a className="paginate_button next disabled" aria-controls="DataTables_Table_1" data-dt-idx={1} tabIndex={0} id="DataTables_Table_1_next">Next</a></div></div>
+                        <div id="DataTables_Table_1_wrapper" >
+                          {this.state.order &&
+                          <BootstrapTable data={this.state.order} striped hover search  pagination={ true }   options={ options }>
+                            <TableHeaderColumn  isKey={true} dataField='orderNo'>#ORDER</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='ticketBuyerName'>BUYER</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='quantity'>QTY</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='eventEndDate'>PRICE</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='refundedAmount'>REFUNDED</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='orderDate' width="20%" dataFormat={dateFormatter}>DATE</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='paymentMode'>PAYMENT</TableHeaderColumn>
+                          </BootstrapTable>
+                          }
+                        </div>
                       </div>
                       <div className="form-group operations-row mrg-t-lg">
                         <div className="row">
                           <div className="col-md-3" role="group">
-                            <a href="/AccelEventsWebApp/host/item-performance/download/ticket/holder/CSV" className="btn btn-block btn-default mrg-b-md">Download Ticket Holder Data</a>
+                            <a onClick={this.getPerformanceHolderCSV} className="btn btn-block btn-default mrg-b-md">Download Ticket Holder Data</a>
                           </div>
                           <div className="col-md-3" role="group">
-                            <a href="/AccelEventsWebApp/host/item-performance/download/ticket/buyer/CSV" className="btn btn-block btn-default mrg-b-md">Download Ticket Buyer Data</a>
+                            <a onClick={this.getPerformanceBuyerCSV} className="btn btn-block btn-default mrg-b-md">Download Ticket Buyer Data</a>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div> {/* /.col-lg-12 */}
-              </div> {/* /.row */}
+                </div>
+              </div>
             </div>
          </div>
       </div>
@@ -74,4 +141,13 @@ class TicketPerformance extends React.Component {
   }
 }
 
-export default withStyles(s)(TicketPerformance);
+
+const mapDispatchToProps = {
+  getPerformanceSale: () => getPerformanceSale(),
+  getPerformanceBuyer: () => getPerformanceBuyer(),
+  getPerformanceBuyerCSV: () => getPerformanceBuyerCSV(),
+  getPerformanceHolderCSV: () => getPerformanceHolderCSV(),
+};
+
+const mapStateToProps = (state) => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(TicketPerformance));
