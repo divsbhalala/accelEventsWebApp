@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
@@ -6,10 +5,11 @@ import s from './AuctionSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import {EditableTextField} from 'react-bootstrap-xeditable';
-import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory} from './../Auction';
+import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory, resetAuctionSettings} from './../Auction';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
+import {Modal ,Button, Alert} from 'react-bootstrap';
 
 class AuctionSetting extends React.Component {
   static propTypes = {
@@ -18,7 +18,17 @@ class AuctionSetting extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {settings: {}, title: props['title'], bidIncrement:false, itemCategories:[], isValidData : false};
+    this.state = {
+      settings: {},
+      title: props['title'],
+      bidIncrement:false,
+      itemCategories:[],
+      isValidData : false,
+      alert : null,
+      showModal: false,
+      alertVisible: false,
+      alertMessage:null,
+      alertType:null,};
   };
 
   categoryNameValidator = (value, row) => {
@@ -30,6 +40,15 @@ class AuctionSetting extends React.Component {
         response.notification.title = 'Requested Category Name';
       }
       return response;
+  };
+
+  handleAlertDismiss = () => {
+    this.setState({alertVisible: false});
+  };
+
+  handleAlertShow = (alertMessage,alertType) => {
+    this.setState({alertVisible: true, alertMessage,alertType});
+    setTimeout(function() { this.setState({alertVisible: false}); }.bind(this), 2000);
   };
 
   onInsertRow = (row) => {
@@ -56,7 +75,27 @@ class AuctionSetting extends React.Component {
       }
   };
 
+  closeResetModal = () => {
+    this.setState({ showModal: false });
+  };
 
+  openResetModal = () => {
+    this.setState({ showModal: true });
+  };
+
+  resetAuctionSettings = () => {
+    this.props.resetAuctionSettings().then(resp => {
+      if(resp && resp.data){
+        this.closeResetModal();
+        this.handleAlertShow(resp.data.message,'success');
+      }
+      else{
+        console.log(resp);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
 
   componentWillMount(){
     this.props.getAuctionSettings().then(resp => {
@@ -143,7 +182,12 @@ class AuctionSetting extends React.Component {
     settings.userTime = this.state.settings.userTime;
     console.log(settings);
     this.props.updateAuctionSettings(settings).then(resp => {
-      console.log(resp);
+      if(resp && resp.data){
+        this.handleAlertShow(resp.data.message,'success');
+      }
+      else{
+        console.log(resp);
+      }
     }).catch((error) => {
       console.log(error);
     })
@@ -207,8 +251,15 @@ class AuctionSetting extends React.Component {
                   </div>
                   <div className="row">
                     <div className>
+                      {this.state.alert}
                       <div className="main-box no-header">
-                        <div id="formmessage" />
+                        <div className="ajax-wrap text-center">
+                          { this.state.alertVisible &&
+                          <Alert bsStyle={this.state.alertType} onDismiss={this.handleAlertDismiss}>
+                            <h4>{this.state.alertMessage}</h4>
+                          </Alert>
+                          }
+                        </div>
                         <form id="command" className="form" action="update" method="POST">
                           <input type="hidden" name="id" defaultValue={288} />
                           <div className="row form-group">
@@ -261,7 +312,7 @@ class AuctionSetting extends React.Component {
                               Enable Social Sharing
                               <div className="help-text">This is popup text for enable social sharing</div>
                             </div>
-                            <div className="col-md-3"> {this.state.settings.socialSharingEnabled &&
+                            <div className="col-md-3"> {this.state.settings &&
                               <ToggleSwitch name="socialSharingEnabled"
                                             id="socialSharingEnabled"
                                             defaultValue={this.state.settings.socialSharingEnabled}
@@ -273,7 +324,7 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3 col-md-offset-1">
                               Enable Item Categories
                             </div>
-                            <div className="col-md-3">{this.state.settings.categoryEnabled &&
+                            <div className="col-md-3">{this.state.settings &&
                               <ToggleSwitch name="categoryEnabled"
                                             id="categoryEnabled"
                                             defaultValue={this.state.settings.categoryEnabled}
@@ -297,7 +348,7 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3 col-md-offset-1">
                               Hide Highest Bidder
                             </div>
-                            <div className="col-md-3">{this.state.settings.highestBidderHidden &&
+                            <div className="col-md-3">{this.state.settings &&
                               <ToggleSwitch name="highestBidderHidden"
                                             id="highestBidderHidden"
                                             defaultValue={this.state.settings.highestBidderHidden}
@@ -309,7 +360,7 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3 col-md-offset-1">
                               Enable Market Value
                             </div>
-                            <div className="col-md-3">{this.state.settings.enableMarketValue &&
+                            <div className="col-md-3">{this.state.settings &&
                               <ToggleSwitch name="enableMarketValue"
                                             id="enableMarketValue"
                                             defaultValue={this.state.settings.enableMarketValue}
@@ -322,7 +373,7 @@ class AuctionSetting extends React.Component {
                           </div></form>
 
                         <div className="form-group operations-row text-center">
-                          <button className="btn btn-default   reset" data-toggle="modal" data-target="#resetModuleConfirm">Reset</button>
+                          <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
                         </div>
 
                         <div className="row form-group category-settings" style={{display : 'block'}}>
@@ -343,17 +394,31 @@ class AuctionSetting extends React.Component {
 
                         </div>
                         <div className="form-group operations-row text-center">
-                          <button className="btn btn-info mrg-t-lg save-settings" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
-                        </div>{/*onClick="$('.main-box > .form').submit();"*/}
-                      </div> {/* /.form */}
+                          <button className="btn btn-info mrg-b-lg save-settings" type="submit" onClick={this.onSaveSetting} data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
+          <Modal show={this.state.showModal} onHide={this.closeResetModal}>
+            <Modal.Header closeButton>
+              <Modal.Title>Reset Auction</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Reseting your auction will delete all bid history. You will not be able to recover this information. Are you sure you want to reset?</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button bsStyle="danger" onClick={this.resetAuctionSettings}>Reset</Button>
+              <Button onClick={this.closeResetModal}>Close</Button>
+            </Modal.Footer>
+          </Modal>
           </div>
         </div>
+
+
+
 
     );
   }
@@ -364,7 +429,8 @@ const mapDispatchToProps = {
   getAuctionCategories : () => getAuctionCategories(),
   removeAuctionCategory : (id) => removeAuctionCategory(id),
   addAuctionCategory : (itemCategory) => addAuctionCategory (itemCategory),
-  updateAuctionCategory : (id, itemCategory) => updateAuctionCategory(id, itemCategory)
+  updateAuctionCategory : (id, itemCategory) => updateAuctionCategory(id, itemCategory),
+  resetAuctionSettings : () => resetAuctionSettings()
 };
 
 const mapStateToProps = (state) => ({});
