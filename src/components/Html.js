@@ -63,6 +63,8 @@ class Html extends React.Component {
         <link rel="stylesheet" href="/css/host-dashboard.min.css" />
         <link rel="stylesheet" href="/css/display.min.css"/>
         <link rel="stylesheet" href="/css/bootstrap-editable.css" />
+        <link rel="stylesheet" href="/css/color-picker.css" />
+
         <script src="/css/Tel/libphonenumber.js"></script>
         {styles.map(style =>
           <style

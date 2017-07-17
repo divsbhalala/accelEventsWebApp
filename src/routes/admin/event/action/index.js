@@ -100,4 +100,37 @@ export function setEvents(eventId) {
     });
   }
 }
+export function getOrganizationSettings(whiteLabelURL) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'whiteLabelURL/'+ whiteLabelURL + '/settings',
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function setOrganizationSettings(whiteLabelURL,data) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'whiteLabelURL/'+ whiteLabelURL + '/settings',
+      data:data,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 
