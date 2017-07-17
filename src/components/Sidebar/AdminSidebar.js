@@ -91,7 +91,7 @@ class AdminSiderbar extends React.Component {
 										</Link>
 									</li>
 									<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
-										<Link className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
+										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
 										</Link>

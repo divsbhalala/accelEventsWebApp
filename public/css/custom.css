@@ -31,6 +31,6 @@
 #sidebar-nav .nav li .submenu>li.active{
     background: #ddd !important;
     font-weight: 700;
-    border: none;
-    box-shadow: none;
+    border: none!important;
+    box-shadow: none!important;
 }
