@@ -32,18 +32,23 @@ class TicketPerformance extends React.Component {
     });
   }
   componentWillMount() {
-    this.props.getPerformanceSale("general").then(resp => {
+    var total =0
+    this.props.getPerformanceSale().then(resp => {
       console.log("resp", resp);
+      resp.map(function(value){total +=value.ticketPrice })
       this.setState({
-        sales: resp
+        sales: resp,
       })
+      console.log("total",total)
     }).catch(error => {
       console.log('error', error)
     })
-    this.props.getPerformanceBuyer("general").then(resp => {
+    this.props.getPerformanceBuyer().then(resp => {
       console.log("resp", resp);
+      resp.map(function(value){total +=value.orderAmount  })
       this.setState({
-        order: resp
+        order: resp,
+        total: total.toFixed(2),
       })
     }).catch(error => {
       console.log('error', error)
@@ -68,7 +73,10 @@ class TicketPerformance extends React.Component {
       return new Date(1*cell).toUTCString();
     }
     function priceFormate(cell, row){
-      return  "$"+ cell;
+      return  "$"+ cell.toFixed(2);
+    }
+    function soldFormate(cell, row){
+      return   cell + "/" + row.totalTickets;
     }
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -91,14 +99,14 @@ class TicketPerformance extends React.Component {
                         <br /><br /><br />
                       <div className="grossSales">
                         <strong>Gross Sales</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <strong><span className="sales">$0.00 {}</span></strong>
+                        <strong><span className="sales">${this.state.total}</span></strong>
                       </div>
                       <div id="DataTables_Table_1_wrapper" >
                         {this.state.sales &&
                         <BootstrapTable data={this.state.sales} striped hover search  pagination={ true }   options={ options }>
                           <TableHeaderColumn  isKey={true} dataField='ticketTypeName'>Ticket Type</TableHeaderColumn>
                           <TableHeaderColumn  dataField='ticketPrice' dataFormat={priceFormate}>PRICE</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='ticketSold'>SOLD</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='ticketSold' dataFormat={soldFormate}>SOLD</TableHeaderColumn>
                           <TableHeaderColumn  dataField='status'>STATUS</TableHeaderColumn>
                           <TableHeaderColumn  dataField='endDate'  dataFormat={dateFormatter}>SALES END DATE</TableHeaderColumn>
                         </BootstrapTable>
@@ -112,8 +120,8 @@ class TicketPerformance extends React.Component {
                             <TableHeaderColumn  isKey={true} dataField='orderNo'>#ORDER</TableHeaderColumn>
                             <TableHeaderColumn  dataField='ticketBuyerName'>BUYER</TableHeaderColumn>
                             <TableHeaderColumn  dataField='quantity'>QTY</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='eventEndDate'>PRICE</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='refundedAmount'>REFUNDED</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='orderAmount' dataFormat={priceFormate} >PRICE</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='refundedAmount' dataFormat={priceFormate}>REFUNDED</TableHeaderColumn>
                             <TableHeaderColumn  dataField='orderDate' width="20%" dataFormat={dateFormatter}>DATE</TableHeaderColumn>
                             <TableHeaderColumn  dataField='paymentMode'>PAYMENT</TableHeaderColumn>
                           </BootstrapTable>
