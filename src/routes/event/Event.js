@@ -728,181 +728,176 @@ class Event extends React.Component {
 			return item;
 		};
 		return (
-			<div className="row event">
-				<div className="col-lg-12">
-					{this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImageEnabled &&
+			<div className="event-wrap">
+				{this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImageEnabled &&
+				<div className={cx("header-img", "text-center")}>
+					<img
+						src={ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImage ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetail.bannerImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
+						className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
+				</div>}
+				<div id="content-wrapper" className="container">
 					<div className="row">
-						<div className={cx("header-img", "text-center")}>
-							<img
-								src={ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.bannerImage ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/" + this.props.eventData.eventDesignDetail.bannerImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/0-1900x300/d631f896-be71-4e95-9d29-9ce501f7a4b8_fall_formal_2015.png"}
-								className={cx("img-responsive", "img-banner")} style={{width: "100%"}}/>
+						<div className={cx("col-lg-3", "col-md-4", "col-sm-4")}>
+							<EventAside activeTab={(this.props.active_tab_data && this.props.active_tab_data.tab) || this.state.tab}
+							            eventData={this.props.eventData}
+							            settings={this.state.settings}
+							            eventTicketData={this.props.eventTicketData}
+							            showBookingPopup={this.showBookingPopup}
+							            showMapPopup={this.showMapPopup} activeCategory={true}
+							            authenticated={this.props.authenticated}
+							            setFilterCategory={this.setFilterCategory}
+							            selectedCategory={this.state.selectedCategory}
+							            setSearchString={this.setSearchString}
+													params={this.props.params}
+													successTask={this.successTask}
+													onEnd={this.onEventEnd}
+							/>
 						</div>
-					</div>}
-					<div id="content-wrapper">
-						<div className="row">
-							<div className="col-lg-3 col-md-4 col-sm-4">
-								<EventAside activeTab={(this.props.active_tab_data && this.props.active_tab_data.tab) || this.state.tab}
-								            eventData={this.props.eventData}
-								            settings={this.state.settings}
-								            eventTicketData={this.props.eventTicketData}
-								            showBookingPopup={this.showBookingPopup}
-								            showMapPopup={this.showMapPopup} activeCategory={true}
-								            authenticated={this.props.authenticated}
-								            setFilterCategory={this.setFilterCategory}
-								            selectedCategory={this.state.selectedCategory}
-								            setSearchString={this.setSearchString}
-														params={this.props.params}
-														successTask={this.successTask}
-														onEnd={this.onEventEnd}
-								/>
-							</div>
-							<div className="col-lg-9 col-md-8 col-sm-8 ">
-								{ this.state.tab && this.state.isLoaded && <div className="main-box">
-									<Tabs onSelect={ (index, label) => {
-                    this.setActiveTabState(label)
-                  } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
+						<div className="col-lg-9 col-md-8 col-sm-8 ">
+							{ this.state.tab && this.state.isLoaded && <div className="main-box">
+								<Tabs onSelect={ (index, label) => {
+                  this.setActiveTabState(label)
+                } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
 
-										<Tab label="The Event" disabled={!this.state.activeEventTickets}>
-											<div className={cx("row item-canvas")}>
-												<div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}
-                             dangerouslySetInnerHTML={ {__html:this.props.eventData && this.props.eventData.eventDesignDetail.descripation} }>
-												</div>
+									<Tab label="The Event" disabled={!this.state.activeEventTickets}>
+										<div className={cx("row item-canvas")}>
+											<div className={cx("mrg-t-lg mrg-b-lg pad-t-lg pad-r-lg pad-b-lg pad-l-lg event-description-display")}
+                           dangerouslySetInnerHTML={ {__html:this.props.eventData && this.props.eventData.eventDesignDetail.descripation} }>
 											</div>
-											<div className={cx("row text-center")}>
-												<div className={cx("col-md-offset-3 col-md-6")}>
-													<a onClick={this.showBookingPopup}
-													   className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
-														Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
-												</div>
+										</div>
+										<div className={cx("row text-center")}>
+											<div className={cx("col-md-offset-3 col-md-6")}>
+												<a onClick={this.showBookingPopup}
+												   className={cx("btn btn-block btn-lg btn-orange ")}>&nbsp; &nbsp; &nbsp; &nbsp; Buy
+													Tickets&nbsp; &nbsp; &nbsp; &nbsp; </a>
 											</div>
-										</Tab>
-										<Tab label="Auction" disabled={!this.state.activeAuction}>
-											<div className="row" id="auction">
-												{ !this.state.auctionPageItems.length && !this.state.auctionPageLoading &&
-												<div className="no-items-container text-center">
-													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
-												</div>}
+										</div>
+									</Tab>
+									<Tab label="Auction" disabled={!this.state.activeAuction}>
+										<div className="row" id="auction">
+											{ !this.state.auctionPageItems.length && !this.state.auctionPageLoading &&
+											<div className="no-items-container text-center">
+												<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
+											</div>}
 
-												<InfiniteScroll
-													next={this.doGetLoadMoreAuctionItem}
-													hasMore={this.state.auctionPageLoading}
-													loader={<div className="text-center"><span
-                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
-													{
-														this.state.auctionPageItems.map((item) =>
-															<EventTabCommonBox key={item.id + Math.random().toString()}
-															                   type="auction"
-															                   headerText={item.name}
-															                   itemCode={item.code}
-															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
-															                   data={
-                                                   [
-                                                     {
-                                                       title: item.currentBid != 0 ? "CURRENT BID" : "Starting Bid",
-                                                       value: item.currentBid != 0 ? '$' + item.currentBid : '$' + item.startingBid
-                                                     }
-                                                   ]
-                                                 }
-															                   descText={item.excerpt}
-															                   images={item.images}
-															                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
-															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
-															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
-															                   auctionPurchaseFor={ item.purchased}
-															                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now $" + item.buyItNowPrice : null}
-															                   auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
-															                   auctionBuyNowClassName="item-link btn btn-success actionlinks"
-															                   marketValue={item.marketValue > 0 ? '$' + item.marketValue : null}
-															                   marketValueLabel={item.marketValue > 0 ? 'Market Value' : null}
-															/>
-														)
-													}
-												</InfiniteScroll>
-											</div>
-										</Tab>
-										<Tab label="Raffle" disabled={!this.state.activeRaffle}>
-											<div className="row" id="raffle">
-												{ !this.state.rafflePageItems.length && !this.state.rafflePageLoading &&
-												<div className="no-items-container text-center">
-													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
-												</div>}
-												<InfiniteScroll
-													next={this.doGetLoadMoreRaffleItem}
-													hasMore={this.state.rafflePageLoading}
-													loader={<div className="text-center"><span
-                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
-													{
-														this.state.rafflePageItems.map((item) =>
-															<EventTabCommonBox key={item.id + Math.random().toString()}
-															                   type="raffle"
-															                   headerText={item.name}
-															                   itemCode={item.code}
-															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
-															                   data={
-                                                   [
-                                                     {
-                                                       title: "TICKETS SUBMITTED",
-                                                       value: item.ticketsSubmitted ? item.ticketsSubmitted : 0
-                                                     }
-                                                   ]
-                                                 }
-															                   descText={item.excerpt}
-															                   images={item.images}
-															                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
-															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Raffle Closed" : "SUBMIT TICEKTS"}
-															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
-															/>
-														)
-													}
-												</InfiniteScroll>
-											</div>
-										</Tab>
-										<Tab label="Fund a Need" disabled={!this.state.activeFund}>
-											<div className="row" id="causeauction">
-												{ !this.state.fundANeedPageItems.length && !this.state.fundANeedPageLoading &&
-												<div className="no-items-container text-center">
-													<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
-												</div>}
-												<InfiniteScroll
-													next={this.doGetLoadMoreFundANeedItem}
-													hasMore={this.state.fundANeedPageLoading}
-													loader={<div className="text-center"><span
-                            className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
-													{
-														this.state.fundANeedPageItems.map((item) =>
-															<EventTabCommonBox key={item.id + Math.random().toString()}
-															                   type="fund"
-															                   headerText={item.name}
-															                   itemCode={item.code}
-															                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
-															                   data={
-                                                   [
-                                                     {
-                                                       title: "MINIMUM PLEDGE",
-                                                       value: item.pledgePrice ? item.pledgePrice : 0
-                                                     }
-                                                   ]
-                                                 }
-															                   descText={item.excerpt}
-															                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
-															                   images={item.images}
-															                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "PLEDGing Closed" : "PLEDGE"}
-															                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
+											<InfiniteScroll
+												next={this.doGetLoadMoreAuctionItem}
+												hasMore={this.state.auctionPageLoading}
+												loader={<div className="text-center"><span
+                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+												{
+													this.state.auctionPageItems.map((item) =>
+														<EventTabCommonBox key={item.id + Math.random().toString()}
+														                   type="auction"
+														                   headerText={item.name}
+														                   itemCode={item.code}
+														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
+														                   data={
+                                                 [
+                                                   {
+                                                     title: item.currentBid != 0 ? "CURRENT BID" : "Starting Bid",
+                                                     value: item.currentBid != 0 ? '$' + item.currentBid : '$' + item.startingBid
+                                                   }
+                                                 ]
+                                               }
+														                   descText={item.excerpt}
+														                   images={item.images}
+														                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
+														                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
+														                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
+														                   auctionPurchaseFor={ item.purchased}
+														                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now $" + item.buyItNowPrice : null}
+														                   auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
+														                   auctionBuyNowClassName="item-link btn btn-success actionlinks"
+														                   marketValue={item.marketValue > 0 ? '$' + item.marketValue : null}
+														                   marketValueLabel={item.marketValue > 0 ? 'Market Value' : null}
+														/>
+													)
+												}
+											</InfiniteScroll>
+										</div>
+									</Tab>
+									<Tab label="Raffle" disabled={!this.state.activeRaffle}>
+										<div className="row" id="raffle">
+											{ !this.state.rafflePageItems.length && !this.state.rafflePageLoading &&
+											<div className="no-items-container text-center">
+												<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
+											</div>}
+											<InfiniteScroll
+												next={this.doGetLoadMoreRaffleItem}
+												hasMore={this.state.rafflePageLoading}
+												loader={<div className="text-center"><span
+                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+												{
+													this.state.rafflePageItems.map((item) =>
+														<EventTabCommonBox key={item.id + Math.random().toString()}
+														                   type="raffle"
+														                   headerText={item.name}
+														                   itemCode={item.code}
+														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
+														                   data={
+                                                 [
+                                                   {
+                                                     title: "TICKETS SUBMITTED",
+                                                     value: item.ticketsSubmitted ? item.ticketsSubmitted : 0
+                                                   }
+                                                 ]
+                                               }
+														                   descText={item.excerpt}
+														                   images={item.images}
+														                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
+														                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Raffle Closed" : "SUBMIT TICEKTS"}
+														                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
+														/>
+													)
+												}
+											</InfiniteScroll>
+										</div>
+									</Tab>
+									<Tab label="Fund a Need" disabled={!this.state.activeFund}>
+										<div className="row" id="causeauction">
+											{ !this.state.fundANeedPageItems.length && !this.state.fundANeedPageLoading &&
+											<div className="no-items-container text-center">
+												<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
+											</div>}
+											<InfiniteScroll
+												next={this.doGetLoadMoreFundANeedItem}
+												hasMore={this.state.fundANeedPageLoading}
+												loader={<div className="text-center"><span
+                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+												{
+													this.state.fundANeedPageItems.map((item) =>
+														<EventTabCommonBox key={item.id + Math.random().toString()}
+														                   type="fund"
+														                   headerText={item.name}
+														                   itemCode={item.code}
+														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
+														                   data={
+                                                 [
+                                                   {
+                                                     title: "MINIMUM PLEDGE",
+                                                     value: item.pledgePrice ? item.pledgePrice : 0
+                                                   }
+                                                 ]
+                                               }
+														                   descText={item.excerpt}
+														                   imageUrl={ item.images && item.images.length > 0 ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/' + item.images[0].imageUrl : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-450x300/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg"}
+														                   images={item.images}
+														                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "PLEDGing Closed" : "PLEDGE"}
+														                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 
-															/>
-														)
-													}
-												</InfiniteScroll>
-											</div>
-										</Tab>
-										<Tab label="Donation" disabled={!this.state.activeDonation}>
-											<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
-											</div>
-										</Tab>
-									</Tabs>
-								</div>}
-
-							</div>
+														/>
+													)
+												}
+											</InfiniteScroll>
+										</div>
+									</Tab>
+									<Tab label="Donation" disabled={!this.state.activeDonation}>
+										<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
+										</div>
+									</Tab>
+								</Tabs>
+							</div>}
 
 						</div>
 
