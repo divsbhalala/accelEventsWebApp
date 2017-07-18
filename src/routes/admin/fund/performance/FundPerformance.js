@@ -4,14 +4,56 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './FundPerformance.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
+import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
+import {getPerformancefundANeedItem,getPerformancefundANeedItemCSV} from './action';
+import {connect} from 'react-redux';
 
 class FundPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: null,
+      showPopup: false,
+      loading:false,
+      message:null,
+    }
+  }
+  getPerformancefundANeedItemCSV = () => {
+    this.props.getPerformancefundANeedItemCSV().then((resp) => {
+    });
+  }
+  componentWillMount() {
+    this.props.getPerformancefundANeedItem().then(resp => {
+      console.log("resp", resp);
+      this.setState({
+        items: resp,
+      })
+    }).catch(error => {
+      console.log('error', error)
+    })
+  }
   render() {
+    const options = {
+      page: 1,  // which page you want to show as default
+      sizePerPageList: [ {
+        text: '10', value: 10
+      }, {
+        text: '100', value: 100
+      }], // you can change the dropdown list for size per page
+      sizePerPage: 10,  // which size per page you want to locate as default
+      pageStartIndex: 0, // where to start counting the pages
+      paginationSize: 2,  // the pagination bar size.
+      prePage: 'Prev', // Previous page button text
+      nextPage: 'Next', // Next page button text
+      paginationPosition: 'bottom'  // default is bottom, top and both is all available
+    };
+    function priceFormate(cell, row){
+      return  "$"+ cell.toFixed(2);
+    }
+
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
@@ -31,20 +73,22 @@ class FundPerformance extends React.Component {
                         <div className="page-title">
                           <h1 className="page-header">Cause Item Performance</h1>
                         </div>
-                        <div className="table table-responsive">
-                          <div id="DataTables_Table_0_wrapper" className="dataTables_wrapper no-footer"><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className placeholder="Search" aria-controls="DataTables_Table_0" /></label></div><table className="table item-performance datatable no-footer dataTable" id="DataTables_Table_0" role="grid" style={{width: 1006}}>
-                            <thead className="">
-                            <tr role="row"><th className="show-details sorting_disabled" rowSpan={1} colSpan={1} style={{width: 57}} aria-label /><th className="sorting_asc" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 245}} aria-label="Item Name: activate to sort column descending" aria-sort="ascending">Item Name</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 166}} aria-label="Item Code: activate to sort column ascending">Item Code</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 248}} aria-label="Total Proceeds: activate to sort column ascending">Total Proceeds</th><th className="sorting_disabled" rowSpan={1} colSpan={1} style={{width: 110}} aria-label="Paid ?">Paid ?</th></tr>
-                            </thead>
-                            <tbody>
-                            <tr role="row" className="odd"><td className=" show-details"><span className="fa-stack pointer"><i className="fa fa-circle fa-stack-2x icon-backgroundGreen" /><i className="fa fa-plus fa-stack-1x fa-lg plus-green white" /></span><span className="item-code FAN" data-item-code="FAN" /></td><td className="sorting_1">My Fund a Need Item</td><td>FAN</td><td>0</td><td><ul className="readonly-actions list-inline">  <li>    <i className="fa fa-times red" aria-hidden="true" /></li></ul></td></tr></tbody>
-                          </table></div>
+                        <br/>
+                        <div id="DataTables_Table_1_wrapper" >
+                          {this.state.items &&
+                          <BootstrapTable data={this.state.items} striped hover search  pagination={ true }  tableHeaderClass='item-performance-page' options={ options }>
+                            <TableHeaderColumn  isKey={true} dataField='itemName'>Item Name</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='itemCode' >Item Code</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='processed' >Processed</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='paid'>Paid</TableHeaderColumn>
+                          </BootstrapTable>
+                          }
                         </div>
                         {/* Action Row */}
                         <div className="form-group operations-row">
                           <div className="row">
                             <div className="col-md-4" role="group">
-                              <a href="/AccelEventsWebApp/host/item-performance/download/cause/donor/CSV" className="btn btn-block btn-default mrg-b-md">Download All Fund a Need Data</a>
+                              <a onClick={this.getPerformancefundANeedItemCSV} className="btn btn-block btn-default mrg-b-md">Download All Fund a Need Data</a>
                             </div>
                             {/* <div class="col-md-4" role="group">
                              <button class="btn btn-block btn-default">Download
@@ -64,4 +108,12 @@ class FundPerformance extends React.Component {
   }
 }
 
-export default withStyles(s)(FundPerformance);
+
+const mapDispatchToProps = {
+  getPerformancefundANeedItem: () => getPerformancefundANeedItem(),
+  getPerformancefundANeedItemCSV: () => getPerformancefundANeedItemCSV(),
+};
+
+const mapStateToProps = (state) => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundPerformance));
+

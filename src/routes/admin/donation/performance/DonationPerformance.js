@@ -4,15 +4,59 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './DonationPerformance.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
+import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
+import {getPerformanceDonation,getPerformanceDonationCSV} from './action';
+import {connect} from 'react-redux';
 
 class DonationPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      donation: null,
+      showPopup: false,
+      loading:false,
+      message:null,
+    }
+  }
+  getPerformanceDonationCSV = () => {
+    this.props.getPerformanceDonationCSV().then((resp) => {
+    });
+  }
+  componentWillMount() {
+    this.props.getPerformanceDonation().then(resp => {
+      console.log("resp", resp);
+      this.setState({
+        donation: resp,
+      })
+    }).catch(error => {
+      console.log('error', error)
+    })
+  }
   render() {
+    const options = {
+      page: 1,  // which page you want to show as default
+      sizePerPageList: [ {
+        text: '10', value: 10
+      }, {
+        text: '100', value: 100
+      }], // you can change the dropdown list for size per page
+      sizePerPage: 10,  // which size per page you want to locate as default
+      pageStartIndex: 0, // where to start counting the pages
+      paginationSize: 2,  // the pagination bar size.
+      prePage: 'Prev', // Previous page button text
+      nextPage: 'Next', // Next page button text
+      paginationPosition: 'bottom'  // default is bottom, top and both is all available
+    };
+    function dateFormatter(cell, row){
+      return new Date(1*cell).toUTCString();
+    }
+    function priceFormate(cell, row){
+      return  "$"+ cell;//.toFixed(2);
+    }
+
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
@@ -29,34 +73,24 @@ class DonationPerformance extends React.Component {
                       <div className="page-title">
                         <h1 className="page-header">Donation Performance</h1>
                       </div>
-                      <div className="table table-responsive">
-                        <div id="DataTables_Table_0_wrapper" className="dataTables_wrapper no-footer">
-                          <div id="DataTables_Table_0_filter" className="dataTables_filter">
-                            <input type="search" className="search-input" placeholder="Search" aria-controls="DataTables_Table_0" />
-                          </div>
-                        </div>
+                      <br />
+                      <div id="DataTables_Table_1_wrapper" >
+                        {this.state.donation &&
+                        <BootstrapTable data={this.state.donation} striped hover search  pagination={ true }   options={ options }>
+                          <TableHeaderColumn  isKey={true} dataField='firstName'>First Name</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='email' >Email Address</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
+                          <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormate}>Donation Amount</TableHeaderColumn>
+                        </BootstrapTable>
+                        }
                       </div>
-                      <table className="table item-performance datatable no-footer">
-                        <thead>
-                        <tr>
-                          {/* <th></th> */}
-                          <th>First Name</th>
-                          <th>Last Name</th>
-                          <th>Email Address</th>
-                          <th>Phone Number</th>
-                          <th>Donation Date</th>
-                          <th>Donation Amount</th>
-                          {/* <th>Action</th> */}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                      </table>
-                      {/* Action Row */}
+
                       <div className="form-group operations-row">
                         <div className="row">
                           <div className="col-md-4" role="group">
-                            <a href="/AccelEventsWebApp/host/dashboard/download/donation-performance/CSV" className="btn btn-block btn-default mrg-b-md">Download
+                            <a onClick={this.getPerformanceDonationCSV} className="btn btn-block btn-default mrg-b-md">Download
                               Donation Data</a>
                           </div>
                         </div>
@@ -72,4 +106,11 @@ class DonationPerformance extends React.Component {
   }
 }
 
-export default withStyles(s)(DonationPerformance);
+
+const mapDispatchToProps = {
+  getPerformanceDonation: () => getPerformanceDonation(),
+  getPerformanceDonationCSV: () => getPerformanceDonationCSV(),
+};
+
+const mapStateToProps = (state) => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(DonationPerformance));

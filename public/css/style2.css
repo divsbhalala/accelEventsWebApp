@@ -119,3 +119,6 @@
 /** admn **/
 .theme-turquoise {
 	color: #1abc9c;}
+.ticker span {
+	font-size: 1.5em !important;
+}
