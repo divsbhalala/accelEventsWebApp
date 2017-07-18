@@ -101,7 +101,7 @@ class HeaderNew extends React.Component {
 		}
 		if (this.state.isValidData) {
 			let user = {
-				countryCode: "IN",
+				countryCode: "US",
 				email: this.email.value,
 				password: this.password.value,
 				phoneNumber: this.state.phoneNumber
@@ -158,7 +158,7 @@ class HeaderNew extends React.Component {
 		if (this.phoneNumber.value.trim() == '') {
 			this.setState({
 				phoneNumber: false,
-				errorMsgPhoneNumber: "phoneNumber is Require",
+				errorMsgPhoneNumber: "Phone Number is required",
 			});
 		} else {
 			this.setState({
@@ -358,9 +358,8 @@ class HeaderNew extends React.Component {
 	render() {
 		let event = this.props.params && this.props.params.params;
 		return (
-			<div id="header-navbar" className={cx("content turquoise-bg white")}>
-
-				<Navbar fluid={true} style={ {margin: 0} } className={ cx("turquoise-bg white")}>
+			<div className={cx("top-header-wrap")}>
+				<Navbar fluid={true} style={ {margin: 0} }>
 					<Brand className={cx(this.props.admin && "p-0")}>
             <span >
               { this.props.eventData &&
@@ -374,7 +373,7 @@ class HeaderNew extends React.Component {
           		</a>}
 							{ this.props.admin && <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
-							}} style={{position: 'absolute', right: 0, top: 0}}>
+							}}>
                   <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
@@ -511,7 +510,7 @@ class HeaderNew extends React.Component {
 				>
 					<div className="modal-body">
 						<div id="alertmessage" className="hide"/>
-						<p>Let us know if you have any query. We'll respond as quick as possible.</p>
+						<p>Let us know if you have any query. We&#39;ll respond as quick as possible.</p>
 						<form className="ajax-form validated fv-form fv-form-bootstrap" id="contactForm" method="post"
 									action="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian0/contact"
 									data-onsuccess="contactFormSuccess" noValidate="novalidate">
@@ -621,11 +620,10 @@ class HeaderNew extends React.Component {
 					headerText=""
 					onCloseFunc={this.hideLoginPopup}
 					params={this.props.params }
-					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
+					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
 						this.hideLoginPopup()
-					}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+					}}> </button>}
 				/>
-
 			</div>
 		)
 	};

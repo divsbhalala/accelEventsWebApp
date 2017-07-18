@@ -1,13 +1,1 @@
-
 @import '../../components/variables.css';
-
-.helptext {
-  font-size: 1.5em;
-  padding-top: 15px;
-  line-height: 1.5;
-}
-
-.inner {
-  position: relative;
-  top: -400px;
-}
