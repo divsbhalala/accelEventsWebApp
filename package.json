@@ -50,6 +50,7 @@
     "react-bootstrap-validation": "^0.1.11",
     "react-bootstrap-xeditable": "^0.2.10",
     "react-ckeditor-wrapper": "^1.0.22",
+    "react-date-picker": "^5.3.28",
     "react-dom": "^15.5.4",
     "react-dropzone": "^3.13.3",
     "react-edit-inline": "^1.0.8",

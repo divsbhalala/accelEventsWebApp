@@ -34,3 +34,7 @@
     border: none!important;
     box-shadow: none!important;
 }
+.react-bs-table table td, .react-bs-table table th,.react-bs-container-body{
+    overflow: visible;
+
+}

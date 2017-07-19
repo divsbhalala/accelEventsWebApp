@@ -84,7 +84,7 @@ class Account extends React.Component {
         countryCode: true
       });
     }
-  }
+  };
   cardHolderValidateHandler = (e) => {
 
     this.setState({
@@ -168,7 +168,7 @@ class Account extends React.Component {
 	componentWillMount() {
 		this.props.doGetHostSettings("billing").then(resp => {
 			console.log("resp", resp);
-      let message = ""
+      let message = "";
       if(resp.data.slientAuctionActivated){
         if(message != ''){message +=","}
         message +=" SILENT AUCTION "
