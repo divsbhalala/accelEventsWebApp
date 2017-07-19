@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -7,46 +6,265 @@ import cx from 'classnames';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
+import {getAuctionItems, addAuctionItem, updateAuctionItem} from './../Auction';
+import {connect} from 'react-redux';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
+import CKEditor from 'react-ckeditor-wrapper';
+import {Alert} from 'react-bootstrap';
 
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
+
 class SilentAuctionAddItems extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
-			uploadedFileCloudinaryUrl: ''
+			uploadedFileCloudinaryUrl: '',
+      items:[],
+      alertVisible: false,
+      alertMessage:null,
+      alertType:null,
+      item:{}
 		};
-	}
-	onImageDrop(files) {
-		this.setState({
-			uploadedFile: files[0]
-		});
+	};
 
-		this.handleImageUpload(files[0]);
-	}
-	handleImageUpload(file) {
-		let upload = request.post(CLOUDINARY_UPLOAD_URL)
-			.field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-			.field('file', file);
+  componentWillMount(){
+    this.props.getAuctionItems().then(resp => {
+      if(resp && resp.data && resp.data.items.length){
+        this.setState({items:resp.data.items});
+        console.log(this.state.items);
+      }
+      else{
+        console.log(resp);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
 
-		upload.end((err, response) => {
-			if (err) {
-				console.error(err);
-			}
+  updateContent(value) {
+    console.log(value);
+    if(value){
+      let item = this.state.item;
+      item.description = value;
+      this.setState({item});
+      console.log(this.state.item);
+      this.updateItem(item);
+      return value;
+    }
+  };
 
-			if (response.body.secure_url !== '') {
-				this.setState({
-					uploadedFileCloudinaryUrl: response.body.secure_url
-				});
-			}
-		});
-	}
+  updateCategory = (e) =>{
+    let selected = e.nativeEvent.target;
+    let item = this.state.item;
+    item.category = selected[selected.selectedIndex].text;
+    this.setState({item});
+    this.updateItem(item);
+  };
+  onImageDrop(files) {
+    this.setState({
+      uploadedFile: files[0]
+    });
+
+    this.handleImageUpload(files[0]);
+  };
+
+  buildCategoryDropDown = () => {
+    let items = [];
+    let i;
+    let categories = this.state.item.categories;
+    for (i in categories) {
+      items.push(<option key={categories[i]} value={categories[i]}>{categories[i]}</option>);
+    }
+    return items;
+  };
+
+  handleImageUpload(file) {
+    let upload = request.post(CLOUDINARY_UPLOAD_URL)
+      .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+      .field('file', file);
+
+    upload.end((err, response) => {
+      if (err) {
+        console.error(err);
+      }
+
+      if (response.body.secure_url !== '') {
+        this.setState({
+          uploadedFileCloudinaryUrl: response.body.secure_url
+        });
+      }
+    });
+  };
+
+  handleAlertDismiss = () => {
+    this.setState({alertVisible: false});
+  };
+
+  handleAlertShow = (alertMessage,alertType) => {
+    this.setState({alertVisible: true, alertMessage,alertType});
+    setTimeout(function() { this.setState({alertVisible: false}); }.bind(this), 2000);
+  };
+
   static propTypes = {
     title: PropTypes.string,
   };
 
+  expandColumnComponent = ({isExpanded }) => {
+    return (
+      <div className="flex-col plus-sign-column text-center"> { (isExpanded ? <i className="fa fa-minus edit-item fa-lg" /> : <i className="fa fa-plus edit-item fa-lg" /> ) } </div>
+    );
+  };
+
+  expandComponent = (row) => {
+    this.state.item = row;
+    return (
+      <div className="data-wrap">
+        <div className="data">
+          <div className="item-data">
+            <div className="row">
+              <div className="col-md-8">
+                <CKEditor value={this.state.item.description} onChange={this.updateContent.bind(this)} />
+                <div>
+                  <Dropzone
+                    multiple={true}
+                    accept="image/*"
+                    onDrop={this.onImageDrop.bind(this)}>
+                    <div className="dz-default dz-message">
+                      <span>Drop files here to upload</span>
+                    </div>
+                  </Dropzone>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="row">
+                  <div className="form-group">
+                    <label htmlFor="bidIncrement">Bid Increment</label>
+                    <div className="input-group">
+                      <span className="input-group-addon">$</span>
+                      <input className="form-control" placeholder="Increment (optional)" defaultValue={row.bidIncrement} data-price="true" name="bidIncrement" type="number" />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <select className="form-control" name="itemCategory"  defaultValue={row.category} onChange={this.updateCategory}>
+                      <option value={0} disabled selected>-- Select Category --</option>
+                      {this.buildCategoryDropDown()}
+                    </select>
+                  </div>
+                </div>
+                <br />
+                <div className="row">
+                  <div className="col-md-6">
+                    Hide Item
+                    <div className="help-text">This is will hide item from display page</div>
+                  </div>
+                  <div className="col-md-6">
+                    <ToggleSwitch name="categoryEnabled"
+                                  id="categoryEnabled"
+                                  defaultValue={row.active}
+                                  className="success"
+                                  onChange={()=>{ row.active = !row.active; this.updateItem(row)}}/>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <i className="fa fa-2x fa-trash delete-item red" />
+        </div>
+      </div>);
+  };
+
+  isExpandableRow = (row) => {
+    return true;
+  };
+
+  updateItem = (row, cellName, cellValue) => {
+    console.log(row);
+    if(row && row.id){
+      this.props.updateAuctionItem(row.id ,row).then(resp => {
+        console.log(resp);
+        if(resp && resp.data)
+          this.handleAlertShow(resp.data.message, 'success');
+        else
+          console.log("Invalid response");
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+  };
+
+  addItemButton = (onClick) => {
+    return (
+      <InsertButton
+        btnText=' &nbsp; Add Item &nbsp; '
+        className='btn btn-info add-new-item mrg-b-lg'
+        onClick={ () => this.handleInsertButtonClick(onClick) }/>
+    );
+  };
+
+  handleInsertButtonClick = (onClick) => {
+    console.log('This is my custom function for InserButton click event');
+    //onClick();
+  };
+
+  buyItNowPriceValidator = (value, row) => {
+    const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
+    if (!value) {
+      response.isValid = false;
+      response.notification.type = 'error';
+      response.notification.msg = 'Category name can\'t be empty!';
+      response.notification.title = 'Requested Category Name';
+    }
+    else if(value < row.currentBid){
+      response.isValid = false;
+      response.notification.type = 'error';
+      response.notification.msg = 'Buy it now price must be greater than Starting Bid';
+      response.notification.title = '';
+    }
+    return response;
+  };
+
   render() {
+
+    const options = {
+      page: 1,  // which page you want to show as default
+      sizePerPageList: [ {
+        text: '5', value: 5
+      }, {
+        text: '10', value: 10
+      }, {
+        text: 'All', value: 100
+      } ],
+      sizePerPage: 10,
+      pageStartIndex: 0,
+      paginationSize: 5,
+      prePage: 'Prev',
+      nextPage: 'Next',
+      paginationPosition: 'bottom' ,
+      onAddRow: this.onInsertRow,
+      insertBtn: this.addItemButton,
+      expandBy: 'column'
+    };
+    function indexN(cell, row, enumObject, index) {
+      return (<div>{index+1}</div>)
+    };
+
+    const editItem = {
+      mode: 'click',
+      afterSaveCell: this.updateItem
+    };
+
+    function actionCell(cell, row, enumObject, index) {
+      return (<div className="flex-col text-center item-actions-column">
+        <ul className="list-inline">
+          <li><i className="fa fa-2x fa-image red edit-item" /></li>
+          <li><i className="fa fa-2x fa-file-o red edit-item" /></li>
+        </ul>
+      </div>)
+    };
+
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
           <div className="row">
@@ -60,7 +278,7 @@ class SilentAuctionAddItems extends React.Component {
                             <div className>
                               <h1>
                                 Add Silent Auction Items
-                                <span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>
+                                <span className="item-count-wrap xpull-right"> (<span className="item-count">{this.state.items.length}</span>)</span>
                                 <div className="pull-right">
                                   <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                                 </div>
@@ -81,222 +299,41 @@ class SilentAuctionAddItems extends React.Component {
                                 item. After their first bid they will be asked to confirm their
                                 bid by replying to the text message with their first and last
                                 name.</p>
-	                            <Dropzone
+	                            {/*<Dropzone
 		                            multiple={true}
 		                            accept="image/*"
 		                            onDrop={this.onImageDrop.bind(this)}>
 		                            <p>Drop an image or click to select a file to upload.</p>
-	                            </Dropzone>
-                              <div className="text-left mrg-t-md">
-                                <button className="btn btn-info add-new-item mrg-t-lg"> &nbsp; Add Item &nbsp; </button>
+	                            </Dropzone>*/}
+
+                              <div className="ajax-wrap text-center">
+                                { this.state.alertVisible &&
+                                  <Alert bsStyle={this.state.alertType} onDismiss={this.handleAlertDismiss}>
+                                    <h4>{this.state.alertMessage}</h4>
+                                  </Alert>
+                                }
                               </div>
-                              <div className="ajax-wrap">
-                                <div className="ajax-msg-box text-center" style={{display: 'none'}}>
-                                  <span className="fa fa-spinner fa-pulse fa-fw" />
-                                  <span className="resp-message" />
-                                </div>
-                              </div>
+
                               <div className="table prizes-table">
-                                <div className="table-header">
-                                  <div className="flex-row">
-                                    <div className="flex-col plus-sign-column" />
-                                    <div className="flex-col item-name-column"><span>Item name</span></div>
-                                    <div className="flex-col item-code-column"><span>Item code</span></div>
-                                    <div className="flex-col item-starting-bid-column"><span>Starting Bid</span></div>
-                                    <div className="flex-col item-buy-now-price-column"><span>Buy It Now Price</span></div>
-                                    <div className="flex-col item-actions-column"><span>Actions</span></div>
-                                  </div>
-                                </div>
-                                <div className="table-body prize-items ui-sortable">
-                                  <div className="item-row dummy ui-sortable-handle">
-                                    <div className="flex-row">
-                                      <div className="flex-col plus-sign-column"><i className="fa fa-plus edit-item fa-lg" /></div>
-                                      <div className="flex-col item-name-column">
-                                        <input type="hidden" name="id" defaultValue={0} />
-                                        <input type="text" className="form-control item-name" name="name" maxLength="255/" />
-                                      </div>
-                                      <div className="flex-col item-code-column">
-                                        <input type="text" className="form-control item-code alpha-only" name="code" maxLength={3} />
-                                      </div>
-                                      <div className="flex-col item-starting-bid-column">
-                                        <div className="input-group">
-                                          <span className="input-group-addon">$</span>
-                                          <input type="number" className="form-control item-bid" name="startingBid" />
-                                        </div>
-                                      </div>
-                                      <div className="flex-col item-buy-now-price-column">
-                                        <div className="input-group">
-                                          <span className="input-group-addon">$</span>
-                                          <input type="number" className="form-control item-buy-now-price" name="buyItNowPrice" placeholder="or leave blank" />
-                                        </div>
-                                      </div>
-                                      <div className="flex-col text-center item-actions-column">
-                                        <ul className="list-inline">
-                                          <li>
-                                            <i className="fa fa-2x fa-image edit-item" />
-                                          </li>
-                                          <li>
-                                            <i className="fa fa-2x fa-file-o edit-item" />
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                    <div className="data-wrap">
-                                      <div className="data">
-                                        <div className="item-data">
-                                          <div className="row">
-                                            <div className="col-md-8">
-                                              <textarea rows={3} className="form-control" placeholder="Item description" name="description" defaultValue={""} />
-                                              <div>
-                                                <div id className="dropzone dz-clickable" action="/AccelEventsWebApp/host/upload">
-                                                  <div className="dz-default dz-message">
-                                                    <span>Drop files here to upload</span>
-                                                  </div>
-                                                </div>
-	                                              <Dropzone
-		                                              multiple={true}
-		                                              accept="image/*"
-		                                              onDrop={this.onImageDrop.bind(this)}>
-		                                              <p>Drop an image or click to select a file to upload.</p>
-	                                              </Dropzone>
-                                              </div>
-                                            </div>
-                                            <div className="col-md-4">
-                                              <div className="row">
-                                                <div className="form-group">
-                                                  <label htmlFor="bidIncrement">Bid Increment</label>
-                                                  <div className="input-group">
-                                                    <span className="input-group-addon">$</span>
-                                                    <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" />
-                                                  </div>
-                                                </div>
-                                                <div className="form-group">
-                                                  <select className="form-control" name="itemCategory">
-                                                    <option value={0} disabled selected>-- Select Category --</option>
-                                                    <option value={3508}>Travel</option>
-                                                    <option value={3509}>Experiences</option>
-                                                    <option value={3510}>Memorabilia</option>
-                                                    <option value={3511}>Music</option>
-                                                  </select>
-                                                </div>
-                                              </div>
-                                              <br />
-                                              <div className="row">
-                                                <div className="col-md-6">
-                                                  Hide Item
-                                                  <div className="help-text">This is will hide item from display page</div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                  <div className="onoffswitch onoffswitch-success activeswitch">
-                                                    <input type="checkbox" name="activeEnabled" className="onoffswitch-checkbox" id="active" />
-                                                    <label className="onoffswitch-label" htmlFor="active">
-                                                      <div className="onoffswitch-inner" />
-                                                      <div className="onoffswitch-switch" />
-                                                    </label>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <input type="hidden" name defaultValue />
-                                        <i className="fa fa-trash delete-item red" />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div data-id={2127} className="item-row ui-sortable-handle">
-                                    <div className="flex-row">
-                                      <div className="flex-col plus-sign-column"><i className="fa fa-plus edit-item fa-lg" /></div>
-                                      <div className="flex-col item-name-column">
-                                        <input type="hidden" name="id" defaultValue={2127} />
-                                        <input type="text" className="form-control item-name" name="name" maxLength={255} defaultValue="My First Auction Item" />
-                                      </div>
-                                      <div className="flex-col item-code-column">
-                                        <input type="text" className="form-control item-code alpha-only" name="code" defaultValue="AUC" maxLength={3} />
-                                      </div>
-                                      <div className="flex-col item-starting-bid-column">
-                                        <div className="input-group">
-                                          <span className="input-group-addon">$</span>
-                                          <input type="text" className="form-control item-bid" name="startingBid" defaultValue={300} />
-                                        </div>
-                                      </div>
-                                      <div className="flex-col item-buy-now-price-column">
-                                        <div className="input-group ">
-                                          <span className="input-group-addon">$</span>
-                                          <input type="number" className="form-control item-bid" name="buyItNowPrice" placeholder="or leave blank" defaultValue />
-                                        </div>
-                                      </div>
-                                      <div className="flex-col text-center item-actions-column">
-                                        <ul className="list-inline">
-                                          <li>
-                                            <i className="fa fa-2x fa-image edit-item" />
-                                          </li>
-                                          <li>
-                                            <i className="fa fa-2x fa-file-o edit-item" />
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    </div>
-                                    <div className="data-wrap">
-                                      <div className="data">
-                                        <div className="item-data">
-                                          <div className="row">
-                                            <div className="col-md-8">
-                                              <textarea rows={3} className="form-control summernote" placeholder="Item description" name="description" defaultValue={""} />
-                                              <div>
-                                                <div id className="dropzone dz-clickable" action="/AccelEventsWebApp/host/upload">
-                                                  <div className="dz-default dz-message">
-                                                    <span>Drop files here to upload</span>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                            <div className="col-md-4">
-                                              <div className="row">
-                                                <div className="form-group">
-                                                  <label htmlFor="bidIncrement">Bid Increment</label>
-                                                  <div className="input-group">
-                                                    <span className="input-group-addon">$</span>
-                                                    <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={75} />
-                                                  </div>
-                                                </div>
-                                                <div className="form-group">
-                                                  <select className="form-control" name="itemCategory">
-                                                    <option value={0} disabled="disabled" selected>-- Select Category --</option>
-                                                    <option value={3508}>Travel</option>
-                                                    <option value={3509}>Experiences</option>
-                                                    <option value={3510}>Memorabilia</option>
-                                                    <option value={3511}>Music</option>
-                                                  </select>
-                                                </div>
-                                              </div>
-                                              <br />
-                                              <div className="row">
-                                                <div className="col-md-6">
-                                                  Hide Item
-                                                  <div className="help-text">This is will hide item from display page</div>
-                                                </div>
-                                                <div className="col-md-6">
-                                                  <div className="onoffswitch onoffswitch-success activeswitch">
-                                                    <input type="checkbox" name="activeEnabled" className="onoffswitch-checkbox" id="active2127" />
-                                                    <label className="onoffswitch-label" htmlFor="active2127">
-                                                      <div className="onoffswitch-inner" />
-                                                      <div className="onoffswitch-switch" />
-                                                    </label>
-                                                    <input type="hidden" name="activeEnabled" defaultValue="off" />
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <input type="hidden" name defaultValue />
-                                        <i className="fa fa-2x fa-trash delete-item red" data-has-bids="false" />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                              { this.state.items && this.state.items.length &&
+                              <BootstrapTable data={ this.state.items } pagination={ true }
+                                              insertRow={ true } options={ options }
+                                              expandableRow={ this.isExpandableRow }
+                                              expandComponent={ this.expandComponent }
+                                              cellEdit={ editItem }
+                                              expandColumnOptions={{
+                                                expandColumnVisible: true,
+                                                expandColumnComponent: this.expandColumnComponent
+                                              }}>
+                                <TableHeaderColumn isKey dataField='id' dataFormat={indexN}>No</TableHeaderColumn>
+                                <TableHeaderColumn dataField='name' expandable={ false }>Item Name</TableHeaderColumn>
+                                <TableHeaderColumn dataField='code' expandable={ false }>Item Code</TableHeaderColumn>
+                                <TableHeaderColumn dataField='startingBid' expandable={ false }>Starting Bid</TableHeaderColumn>
+                                <TableHeaderColumn dataField='buyItNowPrice' expandable={ false } editable={{validator : this.buyItNowPriceValidator}}>Buy It Now Price</TableHeaderColumn>
+                                <TableHeaderColumn dataField='' editable={ false } dataFormat={actionCell}>Action</TableHeaderColumn>
+                              </BootstrapTable>}
                               </div>
+
                               <div className="form-group operations-row">
                                 <div className="row">
                                   <div className="col-md-3" role="group">
@@ -327,4 +364,13 @@ class SilentAuctionAddItems extends React.Component {
   }
 }
 
-export default withStyles(s)(SilentAuctionAddItems);
+
+const mapDispatchToProps = {
+  getAuctionItems : () => getAuctionItems(),
+  addAuctionItem : (auctionDTO) => getAuctionItems(auctionDTO),
+  updateAuctionItem : (id, auctionDTO) => updateAuctionItem(id, auctionDTO)
+};
+
+const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(SilentAuctionAddItems));

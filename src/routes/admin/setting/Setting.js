@@ -6,6 +6,9 @@ import s from './Setting.css';
 import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 
 import {doGetHostSettings, putGetHostSettings} from './action';
+import Button from 'react-bootstrap-button-loader';
+import cx from 'classnames';
+
 let regOnlyNumber = new RegExp('^[0-9]*$');
 class Setting extends React.Component {
 	static propTypes = {
@@ -21,7 +24,10 @@ class Setting extends React.Component {
 			raffleEnabled: false,
 			causeAuctionEnabled: false,
 			donationEnabled: false,
-			ticketingEnabled: false
+			ticketingEnabled: false,
+      loading:false,
+      isError:false,
+      message:null,
 		};
 		this.submitSettings = this.submitSettings.bind(this);
 	};
@@ -39,14 +45,16 @@ class Setting extends React.Component {
 
 	submitSettings = (e) => {
 		e.preventDefault();
+    this.setState({loading:true})
 		let settings = this.state.settings;
 		delete settings.allCurrencies;
 		this.props.putGetHostSettings("general", settings).then(resp =>{
-
-		}).catch(error=>{
-
+      this.setState({loading:false,message:resp.data.message,isError:false})
+ 		}).catch(error=>{
+      this.setState({loading:false,message:"Something wrong",isError:true})
 		});
 		console.log(e, e.target, this.state.settings)
+
 	};
 	changeGoalStartingAmount = (event) => {
 		if(this.goalStartingAmount && this.goalStartingAmount.value){
@@ -144,18 +152,20 @@ class Setting extends React.Component {
 											<h1>
 												General Settings
 												<div className="pull-right">
-													<button className="btn btn-info" id="save-settings" onClick={this.submitSettings}
-																	type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
+													<Button className="btn btn-info" loading={this.state.loading} id="save-settings" onClick={this.submitSettings}
+																	type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
 												</div>
 											</h1>
 										</div>
 									</div>
 								</div>
-								<div className="row">
+								{ this.state.settings && <div className="row">
 									<div className>
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
 												<form id="form">
+                          <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                            { this.state.message }</div>
 													<div className="form-group row">
 														<div className="col-md-4">
 															<label>Select Currency</label>
@@ -304,8 +314,8 @@ class Setting extends React.Component {
 													</div>
 													<div className="row">
 														<div className="col-md-3">
-															<button className="btn btn-info" id="submitForm" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;
-																Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
+															<Button loading={this.state.loading} className="btn btn-info" id="submitForm" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;
+																Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
 														</div>
 													</div>
 													<div>
@@ -314,7 +324,7 @@ class Setting extends React.Component {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div>}
 							</div>
 						</div>
 					</div>
