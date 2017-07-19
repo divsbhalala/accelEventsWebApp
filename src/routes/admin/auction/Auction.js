@@ -160,5 +160,46 @@ export function updateAuctionItem(id, auctionDTO) {
     })
   }
 }
+export function getGeneralSettings() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/settings/general',
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+}
+
+export function getItemCatalog() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/auction/export/itemCatalog/pdf',
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+}
+
+export function removeItem(id) {
+  return (dispatch) => {
+    return axios({
+      method: 'delete',
+      url: API_URL + 'host/auction/item/'+ id,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+}
 
 export default withStyles(s)(Auction);
