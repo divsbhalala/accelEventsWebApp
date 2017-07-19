@@ -55,18 +55,14 @@ class Layout extends React.Component {
       <div className={(this.props.class)}>
         <LoadingBar />
         <HeaderNew user={this.state.user} admin={this.state.isAdmin} params={this.props.params}/>
-        <div className="page-wrapper" id={this.state.isAdmin && "page-wrapper" }>
           {/*{this.state.user && <Sidebar className="w-20" user={this.state.user} />}*/}
           {/*<div className="w-80">
            {this.props.children}
            {<Feedback />}
            </div>*/}
-          <div className="row">
-            <div className="col-lg-12">
-              {this.props.children}
-            </div>
+          <div className="display">
+            {this.props.children}
           </div>
-        </div>
         <Footer />
       </div>
     );

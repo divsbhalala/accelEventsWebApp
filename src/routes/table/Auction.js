@@ -37,44 +37,40 @@ class Auction extends React.Component {
   }
   render() {
     return (
-      <div>
-        <div className="row">
-          <div className="col-lg-12">
-            <div id="content-wrapper">
-              <div className="row">
-                <div className="col-lg-3 col-md-4 col-sm-4">
-                  <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.eventSettings}
-                              eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
-                              showMapPopup={this.showMapPopup} activeCategory={false}/>
-                </div>
-                <div className="col-lg-9 col-md-8 col-sm-8">
-                  <div className="main-box no-header clearfix">
-                    <div className="main-box-body">
-                      <div className="table white-bg ">
-												{ this.state.settings && this.state.settings.displayText && <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center")}>
-													{this.state.settings.displayText}
-                        </p>}
-                        <div id="scroller" className="">
-                          <table className={("table datatables scrollingtable" )}>
-                            <thead className="turquoise-bg white">
-                            <tr>
-                              <th>Item</th>
-                              <th>Item Code</th>
-                              <th>{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
-															{ this.state.settings && !this.state.settings.highestBidderHidden &&
-															!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
-                            </tr>
-                            </thead>
-                            <tbody>
-														{this.state.settings && this.state.settings.items &&
-														this.state.settings.items.map((item, index) =>
-                              <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
-														)
-														}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+      <div className="table-view-wrap">
+        <div id="content-wrapper">
+          <div className="row">
+            <div className="col-lg-3 col-md-4 col-sm-4">
+              <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.eventSettings}
+                          eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
+                          showMapPopup={this.showMapPopup} activeCategory={false}/>
+            </div>
+            <div className="col-lg-9 col-md-8 col-sm-8">
+              <div className="main-box no-header clearfix">
+                <div className="main-box-body">
+                  <div className="table white-bg ">
+										{ this.state.settings && this.state.settings.displayText && <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center")}>
+											{this.state.settings.displayText}
+                    </p>}
+                    <div id="scroller" className="">
+                      <table className={("table datatables scrollingtable" )}>
+                        <thead className="turquoise-bg white">
+                        <tr>
+                          <th>Item</th>
+                          <th>Item Code</th>
+                          <th>{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
+													{ this.state.settings && !this.state.settings.highestBidderHidden &&
+													!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
+                        </tr>
+                        </thead>
+                        <tbody>
+												{this.state.settings && this.state.settings.items &&
+												this.state.settings.items.map((item, index) =>
+                          <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+												)
+												}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
