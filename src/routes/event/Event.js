@@ -906,7 +906,7 @@ class Event extends React.Component {
 				<PopupModel
 					id="bookingPopup"
 					showModal={this.state.showBookingTicketPopup}
-					headerText={<h4>Register</h4>}
+					headerText={<h4>Buy Tickets</h4>}
 					modelBody=''
 					onCloseFunc={this.hideBookingPopup}
 				>
@@ -920,17 +920,16 @@ class Event extends React.Component {
 												<div className="type-name"><strong>{item.name}</strong>
 													(<span className="type-cost txt-sm gray"> ${item.price}</span>)
 													<div className="pull-right">
-														<div className="col-md-7">No. Of Tickets</div>
-														{ item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
+														{ item.remaniningTickets && item.remaniningTickets > 0 ?
 															<select className="form-control" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
 																{makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
 															</select>
-														</div> : ''}
+															: ''}
 														{
-															!item.remaniningTickets && <div className="col-md-5"> SOLD OUT </div>
+															!item.remaniningTickets && <span class="sold-out-text"> SOLD OUT </span>
 														}
 													</div>
 												</div>
@@ -938,8 +937,7 @@ class Event extends React.Component {
 													className="sale-text txt-sm text-uppercase"> {moment(item.endDate).diff(moment()) > 0 ? "Available until " : "Sale Ended on "}
 													<Moment format="MMMM D YYYY">{item.endDate}</Moment></div>
 												{item.ticketsPerTable && item.ticketsPerTable > 0 ?
-													<div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable}
-														tickets</div> : ''}
+													<div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable} tickets</div> : ''}
 												{/*<div className="txt-sm gray type-desc">
 												 sadfw
 												 </div>*/}
@@ -967,7 +965,7 @@ class Event extends React.Component {
 								<div className="pull-left">
 									<span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                   <span
-	                  className="total-price">{this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
+	                  className="total-price">{this.state.totalTicketPrice ? '$' + this.state.totalTicketPrice : 'FREE'}</span>
 								</div>
 								<div className="pull-right">
 									<button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>

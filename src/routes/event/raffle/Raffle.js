@@ -715,7 +715,7 @@ class Raffle extends React.Component {
           showModal={this.state.isShowLoginModal}
           onCloseFunc={this.hideLoginModal}
           params={this.props.params }
-          modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+          modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
         />
         <BuyRaffleTicketsModal
           showModal={this.state.isshowBuyRaffleTicketsModal}

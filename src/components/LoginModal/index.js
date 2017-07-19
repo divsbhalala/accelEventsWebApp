@@ -216,7 +216,6 @@ class LoginPopup extends React.Component {
             <Modal id="login-user" show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="" >
               <Modal.Body>
                 <div className="login-signup-wrap">
-                  {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
                   { this.state.toggle ?
                     <div className="login-signup-container login  has-cell-number ">
                       <div className="login-form" id="LoginAttempt">
@@ -224,6 +223,7 @@ class LoginPopup extends React.Component {
                         <h4 className="text-center">
                           Or, &nbsp;&nbsp;<a className={s.link} onClick={this.showRegister}>Sign up</a>
                         </h4>
+                        {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
                         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClickLogin}>
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                           <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
@@ -279,7 +279,7 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            <Button  loading={this.state.loading}  type="submit" className="btn btn-square btn-success btn-block btn-lg">Log in</Button>
+                            <Button loading={this.state.loading}  type="submit" bsStyle="link" className="btn-green btn-square btn-block btn-lg">Log in</Button>
                           </div>
                           <div className="mrg-t-sm ">
                             <div className="form-group">
@@ -291,12 +291,13 @@ class LoginPopup extends React.Component {
                         </form>
                       </div>
                     </div> :
-                    <div className="login-signup-container login  has-cell-number ">
+                    <div className="login-signup-container login has-cell-number ">
                       <div className="login-form" id="LoginAttempt">
                         <h1 className="text-center">Signup</h1>
                         <h4 className="text-center">
                           Or Already have an account? &nbsp;&nbsp;<a className={s.link} onClick={this.showLogin}> Log in</a>
                         </h4>
+                        {this.state.error && <div id="alertmessage" className="js-notification notification-signup mrg-t-md">{this.state.error}</div>}
                         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick}>
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                           <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
@@ -375,10 +376,10 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            <Button  loading={this.state.loading}  type="submit" className="btn btn-square btn-success btn-block btn-lg">SIGN UP</Button>
+                            <Button theme='' loading={this.state.loading}  type="submit" bsStyle="link" className="btn-green btn-square btn-block btn-lg"> SIGN UP </Button>
                           </div>
                           <p className="mrg-t-md small text-center">
-                            By signing up, I agree to Accelevent's <a href="/AccelEventsWebApp/tos" target="_blank">terms of
+                            By signing up, I agree to Accelevent&#39;s <a href="/AccelEventsWebApp/tos" target="_blank">terms of
                             service</a>, <a href="/AccelEventsWebApp/privacypolicy" target="_blank">privacy policy</a>, and <a
                             href="/AccelEventsWebApp/cookies" target="_blank">cookie policy</a>.
                           </p>
