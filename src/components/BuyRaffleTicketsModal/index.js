@@ -870,7 +870,7 @@ componentDidMount() {
 
 										</div>
 										{ this.state.passwordFeedBack && !this.state.password &&
-										<small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
+										<small className="help-block" data-fv-result="NOT_VALIDATED">Password can&#39;t be empty.</small>}
 
 									</div>}
 									<div className="form-group has-feedback">

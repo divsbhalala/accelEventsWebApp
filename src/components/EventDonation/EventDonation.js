@@ -825,7 +825,7 @@ class EventDonation extends React.Component {
         <PopupModel
           id="mapPopup"
           showModal={this.state.showDonationConfirmation}
-          headerText={<h4>Confirm</h4>}
+          headerText={<p>Confirm</p>}
           onCloseFunc={this.hideDonationConfirmationPopup}
           modelFooter = {<div>
           <button className="btn btn-success" onClick={()=>{this.doDonationConfirmation()}}>Confirm</button>

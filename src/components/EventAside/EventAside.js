@@ -119,7 +119,7 @@ class EventAside extends React.Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="sidebar-wrap">
 				<BuyRaffleTicketsModal
           showModal={this.state.isHowBuyRaffleTicketsModal}
           headerText=""
@@ -169,50 +169,48 @@ class EventAside extends React.Component {
 							</div>
 						</div> }
 						{ !this.props.isBidInstructionHidden && this.props.settings && this.props.settings.instruction && this.props.activeTab && this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.txtMsgBidInstShown &&
-						<div className={cx("card bidinfo")}>
-							<div dangerouslySetInnerHTML={{"__html": this.props.settings.instruction}} />
+						<div className={cx("project-box bidinfo")}>
+							<div className={cx("project-box-content")}>
+								<div dangerouslySetInnerHTML={{"__html": this.props.settings.instruction}} />
+							</div>
 						</div>}
 						{ this.props.activeTab
 						&& !(this.props.activeTab === 'The Event' || this.props.activeTab === 'Donation' )
 						&& (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.countDownTimeHidden )
-						&& <div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-							<div className={cx("main-box-body clearfix")}>
-								<div className={cx("project-box-header gray-bg")}>
-									<div className={cx("name text-center")}>
-										<a href="#">Time Until Event Ends</a>
+						&& <div id="countdownTimer" className={cx("project-box gray-box")}>
+							<div className={cx("project-box-header gray-bg")}>
+								<div className={cx("name")}>
+									<a href="#">Time Until Event Ends</a>
+								</div>
+							</div>
+							{ this.props.settings && this.props.settings.endDate && <div className={cx("project-box-content")}>
+								<div className={cx("ticker")}>
+									<div className={cx("row timer")}>
+										{ this.state.days > 0 && <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.days}</span></div>}
+										{ <div className={cx("col-xs-4")}><span className={cx("hours")}>{this.state.hours}</span></div>}
+										{ <div className={cx("col-xs-4")}><span className={cx("minutes")}>{this.state.minute}</span></div>}
+										{ this.state.days <= 0 && <div className={cx("col-xs-4")}><span className={cx("seconds")}>{this.state.seconds}</span></div>}
+
+									</div>
+									<div className={cx("row tiny text-center")}>
+										{ this.state.days > 0 && <div className={cx("col-xs-4")}><span className={cx("days")}>DAYS</span></div> }
+										<div className={cx("col-xs-4")}><span className={cx("hours")}>HOURS</span></div>
+										<div className={cx("col-xs-4")}><span className={cx("minutes")}>MINUTES</span></div>
+										{ this.state.days <= 0 && <div className={cx("col-xs-4")} ><span className={cx("seconds")}>SECONDS</span></div>}
 									</div>
 								</div>
-								{ this.props.settings && this.props.settings.endDate && <div className={cx("project-box-content")}>
-									<div className={cx("ticker")}>
-										<div className={cx("row timer")}>
-											{ this.state.days > 0 && <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.days}</span></div>}
-											{ <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.hours}</span></div>}
-											{ <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.minute}</span></div>}
-											{ this.state.days <= 0 && <div className={cx("col-xs-4")}><span className={cx("days")}>{this.state.seconds}</span></div>}
-
-										</div>
-										<div className={cx("row tiny text-center")}>
-											{ this.state.days > 0 && <div className={cx("col-xs-4")}><span className={cx("days")}>DAYS</span></div> }
-											<div className={cx("col-xs-4")}><span className={cx("hours")}>HOURS</span></div>
-											<div className={cx("col-xs-4")}><span className={cx("minutes")}>MINUTES</span></div>
-											{ this.state.days <= 0 && <div className={cx("col-xs-4")} ><span className={cx("seconds")}>SECONDS</span></div>}
-										</div>
-									</div>
-								</div>}
-							</div>
+							</div>}
 						</div> }
 						{ this.props.activeTab && !(this.props.activeTab === 'The Event') && (this.props.eventData && (this.props.eventData.silentAuctionEnabled || this.props.eventData.causeAuctionEnabled || this.props.eventData.raffleEnabled) && this.props.eventData.eventDesignDetail && !this.props.eventData.eventDesignDetail.totalFundRaisedHidden ) &&
-						<div className={cx("main-box clearfix project-box gray-box card funds-raised-container")}>
-							<div className={cx("main-box-body clearfix")}>
-								<div className={cx("project-box-header gray-bg")}>
-									<div className={cx("name text-center")}>
-										<a href="#">Total Funds Raised</a>
-									</div>
+						<div className={cx("project-box gray-box funds-raised-container")}>
+							<div className={cx("project-box-header gray-bg")}>
+								<div className={cx("name text-center")}>
+									<a href="#">Total Funds Raised</a>
 								</div>
-								<div className={cx("project-box-content")}>
-									<div className={cx("funds-raised")}>$<span
-										className={cx("total-funds-raised")}>{ this.props.settings && this.props.settings.totalFundRaised ? this.props.settings.totalFundRaised : "0"}</span>
-									</div>
+							</div>
+							<div className={cx("project-box-content")}>
+								<div className={cx("funds-raised")}>$<span
+									className={cx("total-funds-raised")}>{ this.props.settings && this.props.settings.totalFundRaised ? this.props.settings.totalFundRaised : "0"}</span>
 								</div>
 							</div>
 						</div> }

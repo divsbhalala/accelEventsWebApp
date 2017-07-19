@@ -35,6 +35,16 @@ export function updateAuctionSettings(auctionDTO) {
   }
 }
 
+export function resetAuctionSettings() {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'host/auction/reset',
+      headers: {Authorization: localStorage.getItem('token')}
+    })
+  }
+}
+
 export function getAuctionSettings() {
   return (dispatch) => {
     return axios({

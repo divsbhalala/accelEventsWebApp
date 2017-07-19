@@ -159,7 +159,7 @@ class Setting extends React.Component {
 										</div>
 									</div>
 								</div>
-								<div className="row">
+								{ this.state.settings && <div className="row">
 									<div className>
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
@@ -324,7 +324,7 @@ class Setting extends React.Component {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div>}
 							</div>
 						</div>
 					</div>
