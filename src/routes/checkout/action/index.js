@@ -84,12 +84,12 @@ export function orderTicket(eventurl, orderid, ticketBookingDto) {
 		})
 	}
 }
-export function confirmAuctionBid(eventurl, itemIds, stripeToken) {
+export function confirmAuctionBid(eventurl, confirmBidDto) {
 	return (dispatch) => {
 		return axios({
 			method: 'post',
-			url: API_URL + '/checkout/' + eventurl + '/auction/confirmBid?itemIds=' + itemIds + '&stripeToken=' + stripeToken,
-			data: ticketBookingDto,
+			url: API_URL + '/checkout/' + eventurl + '/auction/confirmBid',
+			data: confirmBidDto,
 			headers: {Authorization: localStorage.getItem('token')}
 		})
 	}
@@ -99,7 +99,67 @@ export function getBidConfirmation(eventurl, userId, itemId) {
 	return (dispatch) => {
 		return axios({
 			method: 'get',
-			url: API_URL + '/checkout/' + eventurl + '/auction/confirmBid/user/' + userId + 'item/' + itemId,
+			url: API_URL + 'u/checkout/' + eventurl + '/auction/confirmBid/user/' + userId + '/item/' + itemId,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}
+export function confirmRaffleCheckout(eventurl, raffleCheckoutDto) {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + '/checkout/' + eventurl + '/raffle/buy/tickets',
+			data: raffleCheckoutDto,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}
+
+export function getRaffleCheckout(eventurl, userId) {
+	return (dispatch) => {
+		return axios({
+			method: 'get',
+			url: API_URL + 'u/checkout/' + eventurl + '/raffle/user/' + userId ,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}
+export function confirmfundANeedCheckout(eventurl, pledgeCheckoutDto) {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + '/checkout/' + eventurl + '/fundANeed/payment',
+			data: pledgeCheckoutDto,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}
+
+export function getfundANeedCheckout(eventurl, userId) {
+	return (dispatch) => {
+		return axios({
+			method: 'get',
+			url: API_URL + 'u/checkout/' + eventurl + '/fundANeed/user/' + userId ,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}
+export function confirmDonationCheckout(eventurl, donationPurchaseDto) {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + '/checkout/' + eventurl + '/donation/donate',
+			data: donationPurchaseDto,
+			headers: {Authorization: localStorage.getItem('token')}
+		})
+	}
+}
+
+export function getdDonationCheckout(eventurl, userId) {
+	return (dispatch) => {
+		return axios({
+			method: 'get',
+			url: API_URL + 'u/checkout/' + eventurl + '/donation/user/' + userId ,
 			headers: {Authorization: localStorage.getItem('token')}
 		})
 	}

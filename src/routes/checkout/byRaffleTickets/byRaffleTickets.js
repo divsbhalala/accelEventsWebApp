@@ -2,10 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './ConfirmBid.css';
+import s from './byRaffleTickets.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {confirmAuctionBid,createCardToken, orderTicket, getBidConfirmation} from './../action/index';
+import {confirmRaffleCheckout, getRaffleCheckout} from './../action/index';
 import { doValidateMobileNumber} from './../../event/action/index';
 
 import Button from 'react-bootstrap-button-loader';
@@ -13,7 +13,7 @@ import Link from '../../../components/Link';
 import IntlTelInput from 'react-intl-tel-input';
 import PopupModel from './../../../components/PopupModal/index';
 
-class ConfirmBid extends React.Component {
+class ByRaffleTickets extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
   };
@@ -75,7 +75,9 @@ class ConfirmBid extends React.Component {
       phone:null,
       settings: {},
       isError:false,
-
+      raffleTicketFeedBack:false,
+      raffleTicketValue:null,
+      raffleTicket:false
     }
   }
   emailValidateHandler = (e) => {
@@ -235,6 +237,22 @@ class ConfirmBid extends React.Component {
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
+  raffleTicketValidateHandler = (e) => {
+    this.setState({
+      raffleTicketFeedBack: true,
+      raffleTicketValue: this.raffleTicket.value.trim(),
+    });
+    if (this.raffleTicket.value.trim() == '') {
+      this.setState({
+        raffleTicket: false,
+        errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
+      });
+    }  else {
+      this.setState({
+        raffleTicket: true
+      });
+    }
+  };
   showPopup = () => {
     this.setState({
       showMapPopup: true
@@ -304,8 +322,8 @@ class ConfirmBid extends React.Component {
       }
     }
   };
-  doConfirmAuctionBid = (confirmBidDto) =>{
-    this.props.confirmAuctionBid(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
+  confirmRaffleCheckout = (confirmBidDto) =>{
+    this.props.confirmRaffleCheckout(this.props.params &&  this.props.params.params ,raffleCheckoutDto).then(resp => {
 
     }).catch((error) => {
 
@@ -313,15 +331,14 @@ class ConfirmBid extends React.Component {
   };
   componentDidMount(){
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    this.props.getBidConfirmation(this.props.params &&  this.props.params.params , this.props && this.props.params.userId, this.props.params &&  this.props.params.ItemCode).then(resp => {
+    this.props.confirmRaffleCheckout(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId).then(resp => {
       console.log(resp)
-      this.setState({settings:resp,
-      //  phone:resp.userInfo.phonenumber
-      })
+      this.setState({settings:resp,phone:resp.userInfo.phonenumber})
     }).catch((error) => {
 
     })
   };
+
   render() {
     return (
       <div className="container">
@@ -331,31 +348,10 @@ class ConfirmBid extends React.Component {
               <div className="col-lg-12">
                 <div className="main-box clearfix">
                   <header className="main-box-header clearfix">
-                    <h1>Confirm Bid</h1>
+                    <h1>Buy Raffle Tickets</h1>
                   </header>
                   <div className="main-box-body clearfix">
-                    <div className={cx("collapse ", !this.state.isVisibleConfirmBid && 'in' )}>
-                      <div className>
-                        <table className="table items-table">
-                          <thead>
-                          <tr>
-                            <th />
-                            <th className="text-left"><span>Item Name</span></th>
-                            <th className="text-right"><span>Your Bid</span></th>
-                            {/*                             <th></th> */}
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                            <td colSpan={4} className="text-right">
-                              <button className="btn btn-info checkout" onClick={this.showConfirmBid}> Confirm Bid </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className={cx(" payment-area collapse", this.state.isVisibleConfirmBid && 'in')}  >
+                    <div className={cx(" payment-area collapse",'in')}  >
                       <form className="ajax-form validated fv-form fv-form-bootstrap" data-onsuccess="handleBidConfirmSuccess" noValidate="novalidate">
                         <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
                         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
@@ -416,6 +412,35 @@ class ConfirmBid extends React.Component {
                             </div>
                           </div>
                         </div> }
+                        <div className="form-group has-feedback">
+                          <label className="control-label">Number of tickets</label>
+                          <select className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs" ref={ref => {
+                            this.raffleTicket = ref;
+                          }} onChange={this.raffleTicketValidateHandler}>
+                            <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
+                            <option value={847} data-ticket={1} data-price={5}>
+                              1 Ticket For $ 5
+                            </option>
+                            <option value={848} data-ticket={2} data-price={10}>
+                              2 Ticket For $ 10
+                            </option>
+                            <option value={849} data-ticket={6} data-price={20}>
+                              6 Ticket For $ 20
+                            </option>
+                            <option value={850} data-ticket={15} data-price={40}>
+                              15 Ticket For $ 40
+                            </option>
+                            <option value={851} data-ticket={20} data-price={50}>
+                              20 Ticket For $ 50
+                            </option>
+                            <option value={852} data-ticket={50} data-price={100}>
+                              50 Ticket For $ 100
+                            </option>
+                          </select>
+
+                          { this.state.raffleTicketFeedBack && !this.state.raffleTicket &&
+                          <small className="help-block" data-fv-result="NOT_VALIDATED"> Raffle Ticket required.</small>}
+                        </div>
                         { //this.state.setting.creditCardRequired
                          1 && <div>
                             <style
@@ -569,14 +594,14 @@ class ConfirmBid extends React.Component {
         <PopupModel
           id="mapPopup"
           showModal={this.state.showMapPopup}
-          headerText= {<p>{this.state.popupHeader}</p>}
+          headerText= {<h4>{this.state.popupHeader}</h4>}
           modelBody='<div><h1>Location</h1></div>'
           onCloseFunc={this.hidePopup} >
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.doConfirmAuctionBid} >Confirm</Button> : ""}
+              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.confirmRaffleCheckout} >Confirm</Button> : ""}
               <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
@@ -588,11 +613,11 @@ class ConfirmBid extends React.Component {
 }
 
 const mapDispatchToProps = {
-  confirmAuctionBid : (eventurl, confirmBidDto)  => confirmAuctionBid(eventurl,confirmBidDto),
-  getBidConfirmation : (eventurl, userId, itemIds)  => getBidConfirmation(eventurl, userId, itemIds),
+  confirmRaffleCheckout : (eventurl, raffleCheckoutDto)  => confirmRaffleCheckout(eventurl,raffleCheckoutDto),
+  getRaffleCheckout : (eventurl, userId)  => getRaffleCheckout(eventurl, userId),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 const mapStateToProps = (state) => ({});
 
-export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(ConfirmBid));
+export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(ByRaffleTickets));
 

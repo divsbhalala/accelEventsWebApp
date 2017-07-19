@@ -2,10 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './ConfirmBid.css';
+import s from './fundANeed.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {confirmAuctionBid,createCardToken, orderTicket, getBidConfirmation} from './../action/index';
+import {confirmfundANeedCheckout,getfundANeedCheckout} from './../action/index';
 import { doValidateMobileNumber} from './../../event/action/index';
 
 import Button from 'react-bootstrap-button-loader';
@@ -13,7 +13,7 @@ import Link from '../../../components/Link';
 import IntlTelInput from 'react-intl-tel-input';
 import PopupModel from './../../../components/PopupModal/index';
 
-class ConfirmBid extends React.Component {
+class FundANeed extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
   };
@@ -75,7 +75,9 @@ class ConfirmBid extends React.Component {
       phone:null,
       settings: {},
       isError:false,
-
+      raffleTicketFeedBack:false,
+      raffleTicketValue:null,
+      raffleTicket:false
     }
   }
   emailValidateHandler = (e) => {
@@ -304,8 +306,8 @@ class ConfirmBid extends React.Component {
       }
     }
   };
-  doConfirmAuctionBid = (confirmBidDto) =>{
-    this.props.confirmAuctionBid(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
+  confirmfundANeedCheckout = (donationPurchaseDto) =>{
+    this.props.confirmfundANeedCheckout(this.props.params &&  this.props.params.params ,donationPurchaseDto).then(resp => {
 
     }).catch((error) => {
 
@@ -313,49 +315,27 @@ class ConfirmBid extends React.Component {
   };
   componentDidMount(){
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    this.props.getBidConfirmation(this.props.params &&  this.props.params.params , this.props && this.props.params.userId, this.props.params &&  this.props.params.ItemCode).then(resp => {
-      console.log(resp)
-      this.setState({settings:resp,
-      //  phone:resp.userInfo.phonenumber
-      })
+    this.props.getfundANeedCheckout(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId).then(resp => {
+      this.setState({settings:resp.data,phone:resp.data.userInfo.phonenumber})
+      console.log("resp",resp)
     }).catch((error) => {
-
+      console.log("resp",error)
     })
   };
+
   render() {
     return (
       <div className="container">
-        {this.state.setting &&  <div className="row">
+        {this.state.settings &&  <div className="row">
           <div className="col-lg-8 col-md-10 col-lg-offset-2 col-md-offset-1 mrg-t-lg">
             <div className="row">
               <div className="col-lg-12">
                 <div className="main-box clearfix">
                   <header className="main-box-header clearfix">
-                    <h1>Confirm Bid</h1>
+                    <h1>Pledge Item To Checkout</h1>
                   </header>
                   <div className="main-box-body clearfix">
-                    <div className={cx("collapse ", !this.state.isVisibleConfirmBid && 'in' )}>
-                      <div className>
-                        <table className="table items-table">
-                          <thead>
-                          <tr>
-                            <th />
-                            <th className="text-left"><span>Item Name</span></th>
-                            <th className="text-right"><span>Your Bid</span></th>
-                            {/*                             <th></th> */}
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                            <td colSpan={4} className="text-right">
-                              <button className="btn btn-info checkout" onClick={this.showConfirmBid}> Confirm Bid </button>
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                    <div className={cx(" payment-area collapse", this.state.isVisibleConfirmBid && 'in')}  >
+                    <div className={cx(" payment-area collapse",'in')}  >
                       <form className="ajax-form validated fv-form fv-form-bootstrap" data-onsuccess="handleBidConfirmSuccess" noValidate="novalidate">
                         <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
                         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
@@ -372,7 +352,7 @@ class ConfirmBid extends React.Component {
                               <div className="input-group-addon">
                                 <i className="fa fa-envelope" aria-hidden="true"/>
                               </div>
-                              <input type="email" className="form-control login-email" name="email" placeholder="Email" value={this.state.settings.userInfo.email}
+                              <input type="email" className="form-control login-email" name="email" placeholder="Email"
                                      data-fv-field="email"
                                      ref={ref => {
                                        this.email = ref;
@@ -390,7 +370,7 @@ class ConfirmBid extends React.Component {
                           </div>
                         </div> }
                         { <div className="row">
-                          <div className="col-md-8">
+                          <div className="col-md-12">
                             <div
                               className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                               <label className="control-label">Cell Number</label>
@@ -416,6 +396,7 @@ class ConfirmBid extends React.Component {
                             </div>
                           </div>
                         </div> }
+
                         { //this.state.setting.creditCardRequired
                          1 && <div>
                             <style
@@ -576,7 +557,7 @@ class ConfirmBid extends React.Component {
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.doConfirmAuctionBid} >Confirm</Button> : ""}
+              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.confirmfundANeedCheckout} >Confirm</Button> : ""}
               <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
@@ -588,11 +569,11 @@ class ConfirmBid extends React.Component {
 }
 
 const mapDispatchToProps = {
-  confirmAuctionBid : (eventurl, confirmBidDto)  => confirmAuctionBid(eventurl,confirmBidDto),
-  getBidConfirmation : (eventurl, userId, itemIds)  => getBidConfirmation(eventurl, userId, itemIds),
+  confirmfundANeedCheckout : (eventurl, confirmBidDto)  => confirmfundANeedCheckout(eventurl,confirmBidDto),
+  getfundANeedCheckout : (eventurl, userId)  => getfundANeedCheckout(eventurl, userId),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 const mapStateToProps = (state) => ({});
 
-export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(ConfirmBid));
+export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundANeed));
 
