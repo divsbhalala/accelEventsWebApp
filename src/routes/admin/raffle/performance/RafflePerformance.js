@@ -4,13 +4,54 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './RafflePerformance.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
-  
+import {getPerformanceRaffleItem,
+  getPerformanceRaffleItemByItemCode,
+  getPerformanceRafflePurchasedTicketCSV,
+  getPerformanceRaffleParticipantTicketCSV,
+  getPerformanceRaffleWinnerCSV} from './action';
+import {connect} from 'react-redux';
+import RaffleItemTable from '../../../../components/RafflePerformance/RaffleItemTable';
+
 class RafflePerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: null,
+      showPopup: false,
+      loading:false,
+      message:null,
+    }
+  }
+  getPerformanceRafflePurchasedTicketCSV = () => {
+    this.props.getPerformanceRafflePurchasedTicketCSV().then((resp) => {
+    });
+  };
+  getPerformanceAuctionBidderCSV = () => {
+    this.props.getPerformanceAuctionBidderCSV().then((resp) => {
+    });
+  };
+  getPerformanceRaffleParticipantTicketCSV = () => {
+    this.props.getPerformanceRaffleParticipantTicketCSV().then((resp) => {
+    });
+  };
+  getPerformanceRaffleWinnerCSV = () => {
+    this.props.getPerformanceRaffleWinnerCSV().then((resp) => {
+      this.setState({items:resp})
+    });
+  };
+  componentWillMount() {
+    this.props.getPerformanceRaffleItem().then(resp => {
+      console.log("resp", resp);
+      this.setState({
+        items: resp,
+      })
+    }).catch(error => {
+      console.log('error', error)
+    })
+  }
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -27,29 +68,19 @@ class RafflePerformance extends React.Component {
                   <div className="col-lg-12">
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
-                        <div className="page-title">
-                          <h1 className="page-header">Raffle Item Performance</h1>
-                        </div>
-                        <div className="table table-responsive">
-                          <div id="DataTables_Table_0_wrapper" className="dataTables_wrapper no-footer"><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className placeholder="Search" aria-controls="DataTables_Table_0" /></label></div><table className="table item-performance datatable no-footer dataTable" id="DataTables_Table_0" role="grid" style={{width: 990}}>
-                            <thead className="">
-                            <tr role="row"><th className="show-details sorting_disabled" rowSpan={1} colSpan={1} style={{width: 58}} aria-label /><th className="sorting_asc" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 226}} aria-label="Item Name: activate to sort column descending" aria-sort="ascending">Item Name</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 168}} aria-label="Item Code: activate to sort column ascending">Item Code</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 136}} aria-label="Winner: activate to sort column ascending">Winner</th><th className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} style={{width: 222}} aria-label="Total Tickets: activate to sort column ascending">Total Tickets</th></tr>
-                            </thead>
-                            <tbody>
-                            <tr role="row" className="odd"><td className=" show-details"><span className="fa-stack pointer"><i className="fa fa-circle fa-stack-2x icon-backgroundGreen" /><i className="fa fa-plus fa-stack-1x fa-lg plus-green white" /></span><span className="item-code RAF" data-item-code="RAF" /></td><td className="sorting_1">My First Raffle Item</td><td>RAF</td><td /><td>0</td></tr></tbody>
-                          </table></div>
-                        </div>
+                        <RaffleItemTable items={this.state.items} />
+
                         {/* Action Row */}
                         <div className="form-group operations-row">
                           <div className="row">
                             <div className="col-md-3" role="group">
-                              <a href="/AccelEventsWebApp/host/item-performance/download/raffle/ticket/CSV" className="btn btn-block btn-default mrg-b-md">Download All Participant Data</a>
+                              <a onClick={this.getPerformanceRaffleParticipantTicketCSV} className="btn btn-block btn-default mrg-b-md">Download All Participant Data</a>
                             </div>
                             <div className="col-md-3" role="group">
-                              <a href="/AccelEventsWebApp/host/item-performance/download/raffle/winner/CSV" className="btn btn-block btn-default mrg-b-md">Download Winner Data</a>
+                              <a onClick={this.getPerformanceRaffleWinnerCSV} className="btn btn-block btn-default mrg-b-md">Download Winner Data</a>
                             </div>
                             <div className="col-md-3" role="group">
-                              <a href="/AccelEventsWebApp/host/item-performance/download/raffle/purchased/ticket/CSV" className="btn btn-block btn-default mrg-b-md">Download Raffle Purchased Data</a>
+                              <a onClick={this.getPerformanceRafflePurchasedTicketCSV} className="btn btn-block btn-default mrg-b-md">Download Raffle Purchased Data</a>
                             </div>
                           </div>
                         </div>
@@ -65,4 +96,14 @@ class RafflePerformance extends React.Component {
   }
 }
 
-export default withStyles(s)(RafflePerformance);
+const mapDispatchToProps = {
+  getPerformanceRaffleItem: () => getPerformanceRaffleItem(),
+  getPerformanceRaffleItemByItemCode: (ItemCode) => getPerformanceRaffleItemByItemCode(ItemCode),
+  getPerformanceRafflePurchasedTicketCSV: () => getPerformanceRafflePurchasedTicketCSV(),
+  getPerformanceRaffleParticipantTicketCSV: () => getPerformanceRaffleParticipantTicketCSV(),
+  getPerformanceRaffleWinnerCSV: () => getPerformanceRaffleWinnerCSV(),
+
+};
+
+const mapStateToProps = (state) => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(RafflePerformance));

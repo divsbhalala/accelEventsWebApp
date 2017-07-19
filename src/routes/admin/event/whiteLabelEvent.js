@@ -7,7 +7,7 @@ import {SplitButton, MenuItem} from 'react-bootstrap';
 import {whitLableEeventsList,whiteLabelUrl,setWhiteLabelUrlEvents} from './action/index';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
-
+import Link from "../../../components/Link/Link";
 class WhiteLabelEventList extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -77,14 +77,10 @@ class WhiteLabelEventList extends React.Component {
           <h1 className="text-center">All Events</h1>
           <div className="row">
             <div className="col-md-2" role="group">
-              <a href="#addwhitelabel" role="button" data-toggle="modal" className="btn btn-block btn-default mrg-b-md">
-                <span className="hidden-xs">Create New Event</span>
-              </a>
+              <Link className="btn btn-block btn-default mrg-b-md" to={"wl-settings"}> <span className="hidden-xs">Create New Event</span> </Link>
             </div>
             <div className="col-md-2" role="group">
-              <a href="#addwhitelabel" role="button" data-toggle="modal" className="btn btn-block btn-default mrg-b-md">
-                <span className="hidden-xs">Users</span>
-              </a>
+                <Link className="btn btn-block btn-default mrg-b-md" to={"wl-settings"}> <span className="hidden-xs">Users</span> </Link>
             </div>
             <div className="col-md-2" role="group">
               <a href="#addwhitelabel" role="button" data-toggle="modal" className="btn btn-block btn-default mrg-b-md">
