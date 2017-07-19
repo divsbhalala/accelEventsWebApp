@@ -26,7 +26,7 @@ import DonationPerformance from './donation/performance/DonationPerformance';
 import UserManagement from './usermanagement/UserManagement';
 import EventsList from './event/index';
 import WhiteLabelEventList from './event/whiteLabelEvent';
-import OrganizationSettings from './event/OrganizationSettings';
+//import OrganizationSettings from './event/OrganizationSettings';
 
 
 const title = 'Admin Page';
@@ -286,15 +286,15 @@ export default {
         };
       }
     },
-    {
-      path: '/u/:params/wl-settings',
-      async action(props) {
-        return {
-          title: "Organization Settings",
-          component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
-        };
-      }
-    }
+    // {
+    //   path: '/u/:params/wl-settings',
+    //   async action(props) {
+    //     return {
+    //       title: "Organization Settings",
+    //       component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
+    //     };
+    //   }
+    // }
 	]
 
 };
