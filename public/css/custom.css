@@ -36,5 +36,10 @@
 }
 .react-bs-table table td, .react-bs-table table th,.react-bs-container-body{
     overflow: visible;
-
+}
+.order-actions .dropdown .btn.dropdown-toggle .caret, .order-panel-body .dropdown .btn.dropdown-toggle .caret{
+    color: black;
+}
+.box-shadow-none{
+    box-shadow: none;
 }

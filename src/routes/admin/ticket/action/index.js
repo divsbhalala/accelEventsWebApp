@@ -75,3 +75,35 @@ export function doDeleteCouponCode(code) {
 		})
 	}
 }
+
+export function doGetOrderDetails() {
+	return (dispatch) => {
+		return axios({
+			method: "get",
+			url: API_URL + "host/ticketing/orders" ,
+			data: {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+export function doGetHolderData(method, id, data) {
+	return (dispatch) => {
+		return axios({
+			method: method ? method : "get",
+			url: API_URL + "host/ticketing/holderData/holder/" + id ,
+			data: data ? data : {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+
+export function doGetRefundByOrderId(method, orderId, data) {
+	return (dispatch) => {
+		return axios({
+			method: method ? method : "get",
+			url: API_URL + "host/ticketing/refund/order/" + orderId ,
+			data: data ? data : {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}

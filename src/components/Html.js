@@ -65,7 +65,7 @@ class Html extends React.Component {
 
           <link rel="stylesheet" href="/css/style.min.css"/>
           <link rel="stylesheet" href="/css/theme.min.css"/>
-          {/* <link rel="stylesheet" href="/css/admin-style.min.css"/> */}
+          {<link rel="stylesheet" href="/css/admin-style.min.css"/>}
           <link rel="stylesheet" href="/css/display.min.css"/>
 
           {/* for temporary changes */}
