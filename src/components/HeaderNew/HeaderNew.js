@@ -622,7 +622,7 @@ class HeaderNew extends React.Component {
 					params={this.props.params }
 					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
 						this.hideLoginPopup()
-					}}> </button>}
+					}}> Close </button>}
 				/>
 			</div>
 		)
