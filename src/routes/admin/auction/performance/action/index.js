@@ -66,3 +66,51 @@ export function getPerformanceAuctionWinnerCSV() {
     });
   }
 }
+export function deleteAuctionbid(bid) {
+  return (dispatch) => {
+    return axios({
+      method: 'DELETE',
+      url: API_URL + 'host/performance/auction/bid/'+ bid ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function markAsPaidBid(bid) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'host/performance/auction/manuallyPay/bid/'+ bid ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function requestPaymentBid(bid) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'host/performance/auction/notify/bid/'+ bid ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}

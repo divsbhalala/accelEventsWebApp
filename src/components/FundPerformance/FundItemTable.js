@@ -4,7 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 //import s from './AuctionPerformance.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {getPerformanceAuctionItemByItemCode} from './../../routes/admin/auction/performance/action';
+import {getPerformancefundANeedItemByItemCode} from './../../routes/admin/fund/performance/action';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import  SubItemList  from './SubItemList';
 
@@ -37,7 +37,7 @@ class FundItemTable extends React.Component {
 	}
   addAsyncProduct(row) {
     if(!row['bidList']){
-    this.props.getPerformanceAuctionItemByItemCode(row.itemCode).then((resp) => {
+    this.props.getPerformancefundANeedItemByItemCode(row.itemCode).then((resp) => {
       row['bidList']=resp
       this.setState({event:1})
     });}
@@ -61,7 +61,7 @@ class FundItemTable extends React.Component {
   return (
 	<div>
 		<div className="page-title">
-			<h1 className="page-header">Auction Item Performance</h1>
+			<h1 className="page-header">Cause Item Performance</h1>
 		</div>
     <br/>
 		<BootstrapTable data={ this.props.items }
@@ -75,8 +75,8 @@ class FundItemTable extends React.Component {
           columnWidth: 50
         } } search>
 
-				<TableHeaderColumn dataField='itemName' isKey={ true }>Item Name</TableHeaderColumn>
-				<TableHeaderColumn dataField='itemCode'>Item Code</TableHeaderColumn>
+				<TableHeaderColumn dataField='itemName' >Item Name</TableHeaderColumn>
+				<TableHeaderColumn dataField='itemCode' isKey={ true }>Item Code</TableHeaderColumn>
 				<TableHeaderColumn dataField='bid'>Highest Bidder</TableHeaderColumn>
 				<TableHeaderColumn dataField='bidder'>Current Bid</TableHeaderColumn>
 				<TableHeaderColumn dataField='paid' dataFormat={formtPaid}>Paid ?</TableHeaderColumn>
@@ -88,7 +88,7 @@ class FundItemTable extends React.Component {
 }
 
 const mapDispatchToProps = {
-  getPerformanceAuctionItemByItemCode: (ItemCode) => getPerformanceAuctionItemByItemCode(ItemCode),
+  getPerformancefundANeedItemByItemCode: (ItemCode) => getPerformancefundANeedItemByItemCode(ItemCode),
 };
 
 const mapStateToProps = (state) => ({});

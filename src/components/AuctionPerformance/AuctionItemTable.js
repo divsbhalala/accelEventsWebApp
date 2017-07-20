@@ -75,8 +75,8 @@ class AuctionItemTable extends React.Component {
           columnWidth: 50
         } } search>
 
-				<TableHeaderColumn dataField='itemName' isKey={ true }>Item Name</TableHeaderColumn>
-				<TableHeaderColumn dataField='itemCode'>Item Code</TableHeaderColumn>
+				<TableHeaderColumn dataField='itemName' width="50%" >Item Name</TableHeaderColumn>
+				<TableHeaderColumn dataField='itemCode' isKey={ true }>Item Code</TableHeaderColumn>
 				<TableHeaderColumn dataField='bid'>Highest Bidder</TableHeaderColumn>
 				<TableHeaderColumn dataField='bidder'>Current Bid</TableHeaderColumn>
 				<TableHeaderColumn dataField='paid' dataFormat={formtPaid}>Paid ?</TableHeaderColumn>
