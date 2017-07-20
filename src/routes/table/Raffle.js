@@ -30,7 +30,7 @@ class Raffle extends React.Component {
 				eventSettings: resp && resp.data
       });
     });
-		th00is.props.getScrollData(this.props.params && this.props.params.params, 'raffle').then(resp => {
+		this.props.getScrollData(this.props.params && this.props.params.params, 'raffle').then(resp => {
 			this.setState({
 				settings: resp
 			});

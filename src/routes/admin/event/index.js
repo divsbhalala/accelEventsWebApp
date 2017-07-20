@@ -42,6 +42,9 @@ class EventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
+
+      window.location = "/admin";
+       // this.props.router.push('/some/location');
       {/*<Link to="/admin" >*/}
       {/*</Link>*/}
      //this.context.router.push('/admin');
