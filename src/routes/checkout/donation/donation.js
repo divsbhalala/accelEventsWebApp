@@ -272,7 +272,7 @@ class Donation extends React.Component {
       showPopup: false,
     })
     if(this.state.popupHeader == "Success"){
-      window.location = "/admin";
+      window.location = "/event";
     }
   };
 
