@@ -259,7 +259,10 @@ class ByRaffleTickets extends React.Component {
     this.setState({
       showPopup: false,
     })
-   };
+    if(this.state.popupHeader == "Success"){
+      window.location = "/admin";
+    }
+  };
 
   showConfirmBid = () =>{
     this.setState({

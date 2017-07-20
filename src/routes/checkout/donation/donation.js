@@ -271,6 +271,9 @@ class Donation extends React.Component {
     this.setState({
       showPopup: false,
     })
+    if(this.state.popupHeader == "Success"){
+      window.location = "/admin";
+    }
   };
 
   onFormClick = (e) => {
