@@ -522,7 +522,7 @@ class EventDonation extends React.Component {
         <PopupModel
           id="mapPopup"
           showModal={this.state.showDonationPopup}
-          headerText={<h4>Submit Donation</h4>}
+          headerText={<p>Submit Donation</p>}
           onCloseFunc={this.hideDonationPopup}
         >
           <div className="main-box-body clearfix">
