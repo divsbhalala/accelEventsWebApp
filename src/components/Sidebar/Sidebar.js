@@ -23,16 +23,10 @@ import {gavel} from 'react-icons-kit/fa/gavel';
 
 const Icon20 = (props) => (<SvgIcon size={props.size || 20} icon={props.icon}/>);
 
-const BaseContainer = props => <div style={{
-  display: 'inline-block',
-  paddingTop: 16,
-  paddingBottom: 16,
-  fontFamily: 'Roboto',
-  width: 240, ...props.style
-}}>{props.children}</div>;
+const BaseContainer = props => <div class="sidebar">{props.children}</div>;
 
 const Title = styled.div`
-    padding: 12px;    
+    padding: 12px;
 `;
 
 const Separator = styled.div`
@@ -69,71 +63,70 @@ const BasicSideNav = (props) => (
 			<Nav id='dashboard'>
 				<NavIcon><Icon20 icon={ic_people}/></NavIcon>
 				<NavText>
-					<Link to="/admin" style={{color: "#333"}}>
+					<Link to="/admin">
 						Dashboard </Link>
 				</NavText>
 				<Nav id='silent_auction_performance'>
 					<NavIcon><Icon20 size={16} icon={ic_aspect_ratio}/></NavIcon>
 					<NavText>
-						<Link to="/admin/auction-performance" style={{color: "#333"}}>Silent Auction Performance</Link>
+						<Link to="/admin/auction-performance" >Silent Auction Performance</Link>
 					</NavText>
 				</Nav>
 				<Nav id='raffle_performance'>
 					<NavIcon><Icon20 size={16} icon={ic_business}/></NavIcon>
-					<NavText> <Link to="/admin/raffle-performance" style={{color: "#333"}}>Raffle Performance</Link> </NavText>
+					<NavText> <Link to="/admin/raffle-performance" >Raffle Performance</Link> </NavText>
 				</Nav>
 				<Nav id='fund_a_need_performance'>
 					<NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
-					<NavText> <Link to="/admin/fund-performance" style={{color: "#333"}}>Fund A Need Performance</Link> </NavText>
+					<NavText> <Link to="/admin/fund-performance" >Fund A Need Performance</Link> </NavText>
 				</Nav>
 				<Nav id='donation_performance'>
 					<NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
-					<NavText> <Link to="/admin/donation-performance" style={{color: "#333"}}>Donation Performance</Link>
+					<NavText> <Link to="/admin/donation-performance" >Donation Performance</Link>
 					</NavText>
 				</Nav>
 				<Nav id='ticket_sales_performance'>
 					<NavIcon><Icon20 size={16} icon={ic_business_center}/></NavIcon>
-					<NavText> <Link to="/admin/ticket-performance" style={{color: "#333"}}>Ticket Sales Performance</Link>
+					<NavText> <Link to="/admin/ticket-performance" >Ticket Sales Performance</Link>
 					</NavText>
 				</Nav>
 			</Nav>
 
 			<Nav id='design'>
 				<NavIcon><Icon20 icon={paintBrush}/></NavIcon>
-				<NavText> <Link to="/admin/design" style={{color: "#333"}}>
+				<NavText> <Link to="/admin/design" >
 					Design </Link>
 				</NavText>
 			</Nav>
 
 			<Nav id='ticketing'>
 				<NavIcon><Icon20 icon={ticket}/></NavIcon>
-				<NavText> <Link to="/admin/ticket" style={{color: "#333"}}>
+				<NavText> <Link to="/admin/ticket" >
 					Ticketing </Link> </NavText>
 			</Nav>
 
 			<Nav id='silent_auction'>
-				<NavIcon><Icon20 icon={gavel}/></NavIcon><NavText> <Link to="/admin/auction" style={{color: "#333"}}>Silent
+				<NavIcon><Icon20 icon={gavel}/></NavIcon><NavText> <Link to="/admin/auction" >Silent
 				Auction</Link> </NavText>
 			</Nav>
 
 			<Nav id='raffle'>
 				<NavIcon><Icon20 icon={ic_business_center}/></NavIcon>
-				<NavText> <Link to="/admin/raffle" style={{color: "#333"}}>Raffle</Link> </NavText>
+				<NavText> <Link to="/admin/raffle" >Raffle</Link> </NavText>
 			</Nav>
 
 			<Nav id='fund_a_need'>
 				<NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText>
-				<Link to="/admin/fund" style={{color: "#333"}}>Fund A Need</Link> </NavText>
+				<Link to="/admin/fund" >Fund A Need</Link> </NavText>
 			</Nav>
 
 			<Nav id='user_management'>
-				<NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/users" style={{color: "#333"}}>User
+				<NavIcon><Icon20 icon={ic_business_center}/></NavIcon><NavText> <Link to="/admin/users">User
 				Management</Link> </NavText>
 			</Nav>
 
 			<Nav id='settings'>
-				<NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> <Link to="/admin/setting"
-				                                                        style={{color: "#333"}}>Settings</Link> </NavText>
+				<NavIcon><Icon20 icon={cogs}/></NavIcon><NavText> <Link to="/admin/setting">Settings</Link> </NavText>
 			</Nav>
 		</SideNav>
 	</div>
@@ -144,7 +137,7 @@ class Sidebar extends React.Component {
 
 	render() {
 		return (
-			<div className={cx(s.root, this.props.className) } style={this.props.style}>
+			<div className={cx(s.root, this.props.className) }>
 				<BasicSideNav selected="dashboard"/>
 			</div>
 		);
