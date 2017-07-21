@@ -102,7 +102,7 @@ export function requestPaymentBid(bid) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'host/performance/auction/notify/bid/'+ bid ,
+      url: API_URL + 'host/performance/auction/notify/payment/confirm/bid/'+ bid ,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){

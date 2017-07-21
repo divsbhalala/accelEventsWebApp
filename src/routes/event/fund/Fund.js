@@ -708,9 +708,9 @@ class Fund extends React.Component {
                                      this.firstName = ref;
                                    }}
                                    onKeyUp={this.firstNameValidateHandler}/>
-                            { this.state.firstNameFeedBack && this.state.email &&
+                            { this.state.firstNameFeedBack && this.state.firstName &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                            { this.state.firstNameFeedBack && !this.state.email &&
+                            { this.state.firstNameFeedBack && !this.state.firstName &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                           </div>
                           { this.state.firstNameFeedBack && !this.state.firstName &&
