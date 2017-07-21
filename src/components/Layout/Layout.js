@@ -60,9 +60,7 @@ class Layout extends React.Component {
            {this.props.children}
            {<Feedback />}
            </div>*/}
-          <div className="display">
             {this.props.children}
-          </div>
         <Footer />
       </div>
     );

@@ -1018,7 +1018,7 @@ class Fund extends React.Component {
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.submiteFundForm} >Confirm</Button> : ""}
-              <button className="btn badge-danger" onClick={this.hidePopup}> Close </button>
+              <button className="btn btn-danger" onClick={this.hidePopup}> Close </button>
             </div>
           </div>
         </PopupModel>
