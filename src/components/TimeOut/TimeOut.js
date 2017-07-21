@@ -13,7 +13,6 @@ class TimeOut extends React.Component {
   render() {
     return (
       <div className="container">
-        <style dangerouslySetInnerHTML={{__html: "\n      body {\n        background-color: #eeeeee;\n        font-family: 'Open Sans',sans-serif;\n        font-weight: 300;\n      }\n      #error-box {\n          min-width: 280px;\n          text-align: center;\n          margin: 40px auto 20px;\n      }\n      \n      #error-box h1 {\n          margin-top: 40px;\n          color: #605f5f;\n          padding: 0;\n      }\n      \n      #error-box p {\n          margin: 20px 0;\n      }\n            \n    " }} />
         <div className="row">
           <div className="col-xs-12">
             <div id="error-box">

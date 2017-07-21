@@ -14,7 +14,7 @@ export default {
   action() {
     return {
       title,
-      component: <Layout class="eventPage" title={title}><MyProfile title={title}/></Layout>,
+      component: <Layout class="eventPage" title={title} class="my-profile"><MyProfile title={title}/></Layout>,
     };
   }}]
 

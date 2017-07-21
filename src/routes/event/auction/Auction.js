@@ -1255,7 +1255,7 @@ class Auction extends React.Component {
                                                              loading={this.state.loading}>Confirm</Button> : ""}
               {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
                                                              loading={this.state.loading}>Confirm</Button> : ""}
-              <button className="btn badge-danger" onClick={this.hidePopup}>Close</button>
+              <button className="btn btn-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
         </PopupModel>

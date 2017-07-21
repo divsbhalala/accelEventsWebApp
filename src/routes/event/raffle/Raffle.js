@@ -707,7 +707,7 @@ class Raffle extends React.Component {
             <div className="modal-footer">
               {/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.buyTicket} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <Button loading={this.state.loading} className="btn btn-success" onClick={this.purchaseTicket} >Confirm</Button> : ""}
-              <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
+              <button className="btn btn-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>
           </div>
         </PopupModel>

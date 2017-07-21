@@ -412,7 +412,7 @@ class HeaderNew extends React.Component {
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
-						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
+						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> <span className="hidden-xs">Views</span></span> } id='navDropdown3'>
 
 							<MenuItem eventKey="5" onClick={() => {
 								history.push("/scroll/" + event + "/auction")
@@ -486,8 +486,8 @@ class HeaderNew extends React.Component {
 
 						{
 							this.props.authenticated && <NavDropdown className=" profile-dropdown pointer" title={<span><img
-								src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png"
-								alt="Jon"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+								src="/images/user-icon-placeholder.png"
+								alt="{this.props.user.firstName}"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
 							</span>} id='navDropdown4'>
 								<MenuItem eventKey="2">
 									<Link to="my-profile"> <span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
