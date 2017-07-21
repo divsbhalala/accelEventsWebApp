@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import moment from 'moment';
 import Link from '../../../../components/Link';
+import NumericInput from 'react-numeric-input';
 import {doGetTicketingSettings,
 	doGetRefundByOrderId
 } from '../action';
@@ -133,7 +134,7 @@ class TicketRefund extends React.Component {
 													<td>{item.qty}</td>
 													<td>${item.paid}</td>
 													<td>
-														<select className="form-control ticket-qty" style={{maxWidth: 80}}>
+														<select className="form-control ticket-qty" style={{maxWidth: 80}} defaultValue={item.qty}>
 															<option value={0} selected="selected">0</option>
 															<option value={1} selected="selected">1</option>
 														</select>
@@ -142,7 +143,8 @@ class TicketRefund extends React.Component {
 													<td>
 														<div className="input-group">
 															<span className="input-group-addon">$</span>
-															<input type="number" max={this.state.orderData.refundedAmount} className="form-control ticket-refund-amount" data-paid-amount="105.36" data-ticket-price={this.state.orderData.ticketPrice} name="refundamount" defaultValue={this.state.orderData.refundedAmount} data-allow-decimals="true" min={0.00} step="0.01" />
+															<NumericInput className="form-control ticket-refund-amount" step={0.01} precision={2} min={0.00} max={item.paid - item.refundedAmount} value={item.paid - item.refundedAmount}/>
+															{/*<input  name="refundamount" defaultValue={} data-allow-decimals="true" min={0.00} step="0.01" />*/}
 														</div>
 													</td>
 												</tr>) : ""}
@@ -151,7 +153,7 @@ class TicketRefund extends React.Component {
 											<input type="hidden" name defaultValue />
 											<button className="btn btn-info saveSetting" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Refund">&nbsp;
 												&nbsp; &nbsp; Refund &nbsp; &nbsp; &nbsp;</button>
-											<a className="btn btn-info back-to-order" href="/admin/event-ticketing-orders">&nbsp; &nbsp; &nbsp; Back &nbsp; &nbsp; &nbsp;</a> <span className="amount-to-display" style={{color: 'red'}} />
+											<Link className="btn btn-info back-to-order" to="/admin/event-ticketing-orders">&nbsp; &nbsp; &nbsp; Back &nbsp; &nbsp; &nbsp;</Link> <span className="amount-to-display" style={{color: 'red'}} />
 										</form>
 									</div>
 								</div>
