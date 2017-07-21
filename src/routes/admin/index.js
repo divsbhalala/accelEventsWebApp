@@ -100,11 +100,11 @@ export default {
 			}
 		},
 		{
-			path: '/event-ticketing-orders/edit-holder-data/:holderId',
+			path: '/event-ticketing-orders/edit-holder-data/:ticketId',
 			async action(props) {
 				return {
 					title: "Event ticketing Orders",
-					component: <AdminLayout><TicketHolderData holderId={props.params && props.params.holderId} title="Event ticketing edit holder data"/></AdminLayout>,
+					component: <AdminLayout><TicketHolderData ticketId={props.params && props.params.ticketId} title="Event ticketing edit holder data"/></AdminLayout>,
 				};
 			}
 		},

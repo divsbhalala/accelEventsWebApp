@@ -107,3 +107,14 @@ export function doGetRefundByOrderId(method, orderId, data) {
 		});
 	}
 }
+export function doTicketHolderDataById(method, ticketId, data) {
+	return (dispatch) => {
+		return axios({
+			method: method ? method : "get",
+			url: API_URL + "host/ticketing/holderData/ticket/" + ticketId ,
+			data: data ? data : {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+

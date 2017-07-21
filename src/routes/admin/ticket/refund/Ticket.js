@@ -5,11 +5,9 @@ import cx from 'classnames';
 import moment from 'moment';
 import Link from '../../../../components/Link';
 import PopupModel from '../../../../components/PopupModal';
-
 import history from '../../../../history';
 import NumericInput from 'react-numeric-input';
 import {
-	doGetTicketingSettings,
 	doGetRefundByOrderId,
 } from '../action';
 import {connect} from 'react-redux';
@@ -68,15 +66,34 @@ class TicketRefund extends React.Component {
 		}
 	};
 	componentWillMount(){
-		this.props.doGetRefundByOrderId('get', this.props.ticketId).then(resp=>{
-			console.log("item", resp);
+		if(this.props.ticketId){
+			this.props.doGetRefundByOrderId('get', this.props.ticketId).then(resp=>{
+				console.log("item", resp);
+				this.setState({
+					orderData: resp && resp.data
+				});
+				console.log(resp && resp.data)
+			}).catch(error=>{
+				let orderRefundError = error && error.response && error.response.data;
+				this.setState({
+					dialogTitle : "Error",
+					dialogMessage : orderRefundError.errorMessage
+				});
+				setTimeout(()=>{
+					this.toggleDialog();
+				},10);
+			})
+		}
+		else {
 			this.setState({
-				orderData: resp && resp.data
+				dialogTitle : "Not Found",
+				dialogMessage : "TicketId not found. Please try again later."
 			});
-			console.log(resp && resp.data)
-		}).catch(error=>{
-			console.log("error", error);
-		})
+			setTimeout(()=>{
+				this.toggleDialog();
+			},10);
+		}
+
 	}
 	handleSubmit = (e)=>{
 		e.preventDefault();
@@ -108,7 +125,6 @@ class TicketRefund extends React.Component {
 	};
 	doRefund = (orderRefundData)=>{
 		this.props.doGetRefundByOrderId('post', this.props.ticketId, orderRefundData).then(resp=>{
-			console.log("orderRefund", resp && resp.data);
 			this.setState({
 				dialogTitle : "Refund success",
 				dialogMessage : "Refund successfully."
@@ -117,7 +133,6 @@ class TicketRefund extends React.Component {
 				this.toggleDialog();
 			},10);
 		}).catch(error=>{
-			console.log("Error", error);
 			let orderRefundError = error && error.response && error.response.data;
 			this.setState({
 				dialogTitle : "Refund Error",
@@ -126,7 +141,6 @@ class TicketRefund extends React.Component {
 			setTimeout(()=>{
 				this.toggleDialog();
 			},10);
-			//alert("Error in refund")
 		})
 	};
 	orderRefundInit = ()=>{
