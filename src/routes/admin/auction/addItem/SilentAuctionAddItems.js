@@ -4,12 +4,13 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './SilentAuctionAddItems.css';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
-import {getAuctionItems, addAuctionItem, updateAuctionItem, getAuctionCategories, getGeneralSettings, getItemCatalog, removeItem} from './../Auction';
+import {getAuctionItems, addAuctionItem, updateAuctionItem, getAuctionCategories, getGeneralSettings, getItemCatalog, removeItem, getItemsPDF, getItemsCSV} from './../Auction';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import CKEditor from 'react-ckeditor-wrapper';
 import {Modal ,Button, Alert} from 'react-bootstrap';
+import {apiUrl as API_URL} from './../../../../clientConfig';
 
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
@@ -26,14 +27,20 @@ class SilentAuctionAddItems extends React.Component {
       item:{},
       itemCategories : [],
       settings:{},
-      showModal : false
+      showModal : false,
+      showDeleteModal : false,
+      itemToDelete : {},
+      currentPage : 1,
+      sizePerPage : 5,
+      showLoader : false
 		};
 	};
 
-	getItems = () => {
-    this.props.getAuctionItems().then(resp => {
-      if(resp && resp.data && resp.data.items.length){
-        this.setState({items:resp.data.items});
+	getItems = (page, size) => {
+    this.props.getAuctionItems(page, size).then(resp => {
+      if(resp && resp.data){
+        this.setState({items:resp.data.items, showLoader:false});
+        console.log(this.state.items);
       }
       else{
         console.log(resp);
@@ -69,17 +76,42 @@ class SilentAuctionAddItems extends React.Component {
       console.log(error);
     })
   };
+  deleteItem = (id) => {
+    if(id) {
+      this.props.removeItem(id).then(resp => {
+        if (resp && resp.data) {
+          this.closeDeleteItemModal();
+          this.onPageChange(this.state.currentPage, this.state.sizePerPage);
+          this.handleAlertShow(resp.data.message, 'success');
+        }
+        else {
+          console.log(resp);
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    } else {
+      console.log("id is undefined");
+    }
+  };
   openUploadItemModal = () => {
     this.setState({ showModal: true });
   };
   closeUploadItemModal = () => {
     this.setState({ showModal: false });
   };
-  componentDidMount() {
+  openDeleteItemModal = (row) => {
+    this.setState({ showDeleteModal: true, itemToDelete:row });
+  };
+  closeDeleteItemModal = () => {
+    this.setState({ showDeleteModal: false, itemToDelete:{}});
+  };
+  componentWillMount() {
     this.getSettings();
-    this.getItems();
+    const currentIndex = (this.state.currentPage - 1) * this.state.sizePerPage;
+    this.getItems(currentIndex, currentIndex + this.state.sizePerPage);
     this.getItemCategories();
-  }
+  };
   updateContent = (row, value) => {
     if(value){
       row.description = value;
@@ -101,6 +133,13 @@ class SilentAuctionAddItems extends React.Component {
     });
 
     this.handleImageUpload(files[0]);
+  };
+
+  onItemCSVDrop(files) {
+    this.setState({
+      uploadedCSV: files[0]
+    });
+    this.handleItemUpload(files[0]);
   };
 
   buildCategoryDropDown = (row) => {
@@ -129,6 +168,20 @@ class SilentAuctionAddItems extends React.Component {
     });
   };
 
+  handleItemUpload(file) {
+    let upload = request.post(API_URL,{Authorization: localStorage.getItem('token')})
+      //.field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+      .field('file', file);
+    upload.end((err, response) => {
+      if (err) {
+        console.error(err);
+      }
+      else{
+        console.log(response);
+      }
+    });
+  };
+
   handleAlertDismiss = () => {
     this.setState({alertVisible: false});
   };
@@ -140,6 +193,19 @@ class SilentAuctionAddItems extends React.Component {
 
   static propTypes = {
     title: PropTypes.string,
+  };
+
+  onPageChange = (page, sizePerPage) => {
+    const currentIndex = (page - 1) * sizePerPage;
+    this.setState({ currentPage: page, showLoader:true });
+    this.getItems(currentIndex, currentIndex + sizePerPage);
+  }
+
+  onSizePerPageList = (sizePerPage) => {
+    const currentIndex = (this.state.currentPage - 1) * sizePerPage;
+    this.setState({ sizePerPage: sizePerPage, showLoader:true });
+    this.getItems(currentIndex, currentIndex + sizePerPage);
+
   };
 
   expandColumnComponent = ({isExpanded }) => {
@@ -172,7 +238,7 @@ class SilentAuctionAddItems extends React.Component {
                   <div className="form-group">
                     <label htmlFor="bidIncrement">Bid Increment</label>
                     <div className="input-group">
-                      <span className="input-group-addon">{this.state.settings.currency}</span>
+                      <span className="input-group-addon">{this.state.settings.currencySymbol}</span>
                       <input className="form-control" placeholder="Increment (optional)" defaultValue={row.bidIncrement} data-price="true" name="bidIncrement" type="number" />
                     </div>
                   </div>
@@ -198,7 +264,7 @@ class SilentAuctionAddItems extends React.Component {
               </div>
             </div>
           </div>
-          <i className="fa fa-2x fa-trash delete-item red" onClick={() => this.props.removeItem(row.id)}/>
+          <i className="fa fa-2x fa-trash delete-item red" onClick={() => this.openDeleteItemModal(row)}/>
         </div>
       </div>);
   };
@@ -208,6 +274,7 @@ class SilentAuctionAddItems extends React.Component {
   };
 
   updateItem = (row, cellName, cellValue) => {
+    row[cellName] = cellValue;
     console.log(row);
     if(row && row.id){
       this.props.updateAuctionItem(row.id ,row).then(resp => {
@@ -311,8 +378,8 @@ class SilentAuctionAddItems extends React.Component {
   };
 
   currencyFormatter = (cell) => {
-    return <p> {this.state.settings.currency} {cell}</p>;
-  }
+    return <p> {this.state.settings.currencySymbol} {cell}</p>;
+  };
 
   addNewItem = (columns, validateState, ignoreEditable) => {
     return (
@@ -342,19 +409,15 @@ class SilentAuctionAddItems extends React.Component {
     row.categories = this.getCategories;
     console.log(row);
     this.props.addAuctionItem(row).then(resp => {
-      console.log(resp);
-      this.getItems();
+      this.onPageChange(this.state.currentPage, this.state.sizePerPage);
     }).catch((error) => {
       console.log(error);
     });
 
   };
 
-  beforeSave = (e) => {
-    //alert(`[Custom Event]: Modal save event triggered!`);
-  };
   createCustomModalFooter = (closeModal, save) => {
-    return (<InsertModalFooter beforeSave={ this.beforeSave } />);
+    return (<InsertModalFooter beforeSave={ this.beforeSave }/>);
   };
   createCustomModalHeader = (closeModal, save) => {
     return (
@@ -364,15 +427,10 @@ class SilentAuctionAddItems extends React.Component {
   render() {
 
     const options = {
-      page: 1,  // which page you want to show as default
-      sizePerPageList: [
-        {text: '5', value: 5},
-        {text: '10', value: 10},
-        {text: 'All', value: 100}
-      ],
-      sizePerPage: 100,
-      pageStartIndex: 0,
-      paginationSize: 5,
+      page: this.state.currentPage,  // which page you want to show as default
+      sizePerPageList: [{text: '5', value: 5},{text: '10', value: 10},{text: 'All', value: 100}],
+      sizePerPage: this.state.sizePerPage,
+      pageStartIndex: 1,
       prePage: 'Prev',
       nextPage: 'Next',
       paginationPosition: 'bottom',
@@ -380,7 +438,9 @@ class SilentAuctionAddItems extends React.Component {
       expandBy: 'column',
       afterInsertRow: this.onAfterInsertRow,
       insertModalFooter: this.createCustomModalFooter,
-      insertModalHeader: this.createCustomModalHeader
+      insertModalHeader: this.createCustomModalHeader,
+      onPageChange: this.onPageChange,
+      onSizePerPageList: this.onSizePerPageList
     };
     function indexN(cell, row, enumObject, index) {
       return (<div>{index+1}</div>)
@@ -441,6 +501,7 @@ class SilentAuctionAddItems extends React.Component {
 		                            <p>Drop an image or click to select a file to upload.</p>
 	                            </Dropzone>*/}
                               <div className="ajax-wrap text-center">
+                                {this.state.showLoader && <i className="fa fa-3x fa-spinner fa-spin"></i>}
                                 { this.state.alertVisible &&
                                   <Alert bsStyle={this.state.alertType} onDismiss={this.handleAlertDismiss}>
                                     <h4>{this.state.alertMessage}</h4>
@@ -448,16 +509,13 @@ class SilentAuctionAddItems extends React.Component {
                                 }
                               </div>
                               <div className="table prizes-table">
-                              { this.state.items && this.state.items.length &&
+
+                              { this.state.items &&
                               <BootstrapTable data={ this.state.items } pagination={ true }
-                                              insertRow={ true } options={ options }
-                                              expandableRow={ this.isExpandableRow }
-                                              expandComponent={ this.expandComponent }
-                                              cellEdit={ editItem }
-                                              expandColumnOptions={{
-                                                expandColumnVisible: true,
-                                                expandColumnComponent: this.expandColumnComponent
-                                              }}>
+                                              insertRow={ true } options={ options } expandableRow={ this.isExpandableRow }
+                                              expandComponent={ this.expandComponent } fetchInfo={ { dataTotalSize: 500 } }
+                                              cellEdit={ editItem } remote={true}
+                                              expandColumnOptions={{ expandColumnVisible: true, expandColumnComponent: this.expandColumnComponent }}>
                                 <TableHeaderColumn isKey dataField='id'  editable={false} hiddenOnInsert={true}  dataFormat={indexN} autoValue = {true}>No</TableHeaderColumn>
                                 <TableHeaderColumn dataField='name' expandable={ false } editable={{validator:this.itemNameValidator}}>Item Name</TableHeaderColumn>
                                 <TableHeaderColumn dataField='code' expandable={ false } editable={{validator:this.itemCodeValidator}}>Item Code</TableHeaderColumn>
@@ -470,18 +528,19 @@ class SilentAuctionAddItems extends React.Component {
                                 <TableHeaderColumn dataField='bidIncrement' hidden={true} editable={ { type: 'number'}}>Bid Increment</TableHeaderColumn>
                                 <TableHeaderColumn dataField='description' hidden={true} editable={ { type: 'textarea'}}>Description</TableHeaderColumn>
                               </BootstrapTable>}
+                                {/*<RemoteStorePaging sizePerPage={ 5 }/>*/}
                               </div>
 
                               <div className="form-group operations-row">
                                 <div className="row">
                                   <div className="col-md-3" role="group">
-                                    <a data-toggle="tooltip" title="Download a PDF with a picture, description, and instructions on how to bid for each item. One item per page." href="/AccelEventsWebApp/host/silent-auction/export/items/PDF" className="btn btn-block btn-default mrg-b-md">Download Item Sheet PDF</a>
+                                    <a data-toggle="tooltip" title="Download a PDF with a picture, description, and instructions on how to bid for each item. One item per page." href="javascript:;" onClick={ this.props.getItemsPDF} className="btn btn-block btn-default mrg-b-md">Download Item Sheet PDF</a>
                                   </div>
                                   <div className="col-md-3" role="group">
                                     <a data-toggle="tooltip" title="Download a PDF with a small picture, description, and instructions on how to bid for each item. 6 items per page." href="javascript:;" onClick={this.props.getItemCatalog} className="btn btn-block btn-default mrg-b-md">Download Item Catalog</a>
                                   </div>
                                   <div className="col-md-3" role="group">
-                                    <a data-toggle="tooltip" title="Download a CSV file of all of your items." href="/AccelEventsWebApp/host/silent-auction/download/item/CSV" className="btn btn-block btn-default mrg-b-md">Download Item List</a>
+                                    <a data-toggle="tooltip" title="Download a CSV file of all of your items." href="javascript:;" onClick={this.props.getItemsCSV} className="btn btn-block btn-default mrg-b-md">Download Item List</a>
                                   </div>
                                   <div className="col-md-3" role="group">
                                     <a title="Click here for instructions on how to upload items from a CSV file." role="button" href="javascript:;" className="btn btn-block btn-default mrg-b-md" onClick={this.openUploadItemModal}>Upload Items</a>
@@ -492,6 +551,7 @@ class SilentAuctionAddItems extends React.Component {
                           </div>
                         </div>
                       </div>
+
                       <Modal show={this.state.showModal} onHide={this.closeUploadItemModal}>
                         <Modal.Header closeButton>
                           <Modal.Title>Upload Items</Modal.Title>
@@ -499,17 +559,32 @@ class SilentAuctionAddItems extends React.Component {
                         <Modal.Body>
                           <div id="alert-message" class="alert hidden"></div>
                           Please click <a href="http://support.accelevents.com/event-setup/management/uploading-items-from-a-csv" class="help-link" target="_blank" >here</a> for instructions and a csv upload template.
-                          <form id="item-csv-upload-form" class="dropzone dz-clickable" enctype="multipart/form-data" data-mode="single">
-                          <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
-                          <div class="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                        </form>
+                          <Dropzone
+                            multiple={true}
+                            accept="image/*"
+                            onDrop={this.onItemCSVDrop.bind(this)}>
+                            <div className="dz-default dz-message">
+                              <span>Drop files here to upload</span>
+                            </div>
+                          </Dropzone>
                         </Modal.Body>
                         <Modal.Footer>
                           <Button onClick={this.closeUploadItemModal}>Close</Button>
                         </Modal.Footer>
                       </Modal>
+
+                      <Modal show={this.state.showDeleteModal} onHide={this.closeDeleteItemModal}>
+                          <Modal.Header closeButton>
+                            <Modal.Title>Delete Confirmation</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            Are you sure, You want to delete Item : {this.state.itemToDelete.name} ?
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button bsStyle="danger" onClick={() => this.deleteItem(this.state.itemToDelete.id)}>Delete</Button>
+                            <Button onClick={this.closeDeleteItemModal}>Close</Button>
+                          </Modal.Footer>
+                        </Modal>
                     </div>
                   </div>
                 </div>
@@ -521,9 +596,11 @@ class SilentAuctionAddItems extends React.Component {
 }
 
 const mapDispatchToProps = {
-  getAuctionItems : () => getAuctionItems(),
+  getAuctionItems : (page, size) => getAuctionItems(page, size),
   getAuctionCategories : () => getAuctionCategories(),
   getItemCatalog : () => getItemCatalog(),
+  getItemsPDF : () => getItemsPDF(),
+  getItemsCSV : () => getItemsCSV(),
   getGeneralSettings : () => getGeneralSettings(),
   addAuctionItem : (auctionDTO) => getAuctionItems(auctionDTO),
   updateAuctionItem : (id, auctionDTO) => updateAuctionItem(id, auctionDTO),
