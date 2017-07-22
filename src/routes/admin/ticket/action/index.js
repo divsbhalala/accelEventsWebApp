@@ -76,11 +76,13 @@ export function doDeleteCouponCode(code) {
 	}
 }
 
-export function doGetOrderDetails() {
+export function doGetOrderDetails(limit, offset) {
+	offset = offset ? offset : 0;
+	limit = limit ? limit : 10;
 	return (dispatch) => {
 		return axios({
 			method: "get",
-			url: API_URL + "host/ticketing/orders" ,
+			url: API_URL + "host/ticketing/orders?page=" + offset + "&size=" + limit ,
 			data: {},
 			headers: {Authorization: localStorage.getItem("token")}
 		});
