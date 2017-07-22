@@ -150,7 +150,7 @@ export function addUserManagementStaff(staff,whiteLabelURL) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/staff',
+      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staff',
       data: staff,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{

@@ -28,7 +28,7 @@ import EventsList from './event/index';
 import WhiteLabelEventList from './event/whiteLabelEvent';
 import OrganizationSettings from './event/OrganizationSettings';
 import WhiteLabelUserManagement from './event/WhiteLabelUserManagement';
-
+import EditEvent from './event/editEvent';
 
 const title = 'Admin Page';
 const isAdmin = false;
@@ -309,8 +309,8 @@ export default {
     	path: '/superadmin/edit/:params',
       async action(props) {
         return {
-          title: "WhiteLabel User Management",
-          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+          title: "EditEvent",
+          component: <EditEvent params={props.params} title="EditEvent"/>,
         };
       }
     }
