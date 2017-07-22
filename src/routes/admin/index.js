@@ -297,7 +297,16 @@ export default {
       }
     },
     {
-      path: '/u/:params/user',
+    	path: '/u/:params/user',
+      async action(props) {
+        return {
+          title: "WhiteLabel User Management",
+          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+        };
+      }
+    },
+    {
+    	path: '/superadmin/edit/:params',
       async action(props) {
         return {
           title: "WhiteLabel User Management",
