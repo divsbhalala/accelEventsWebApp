@@ -61,20 +61,20 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/Tel/main.css" />
           <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
           <link rel="stylesheet" href="/css/bootstrap-editable.css" />
+          <link rel="stylesheet" href="/css/color-picker.css" />
+          <link rel="stylesheet" href="/css/react-bootstrap-date-picker.css" />
           {/* end plugins */}
 
           <link rel="stylesheet" href="/css/style.min.css"/>
           <link rel="stylesheet" href="/css/theme.min.css"/>
-          {<link rel="stylesheet" href="/css/admin-style.min.css"/>}
+           <link rel="stylesheet" href="/css/admin-style.min.css"/>
           <link rel="stylesheet" href="/css/display.min.css"/>
 
           {/* for temporary changes */}
-          {<link rel="stylesheet" href="/css/style2.css"/>}
+          <link rel="stylesheet" href="/css/style2.css"/>
+          {/*<link rel="stylesheet" href="/css/custom.css" />*/}
 
-          <link rel="stylesheet" href="/css/color-picker.css" />
-        <link rel="stylesheet" href="/css/react-bootstrap-date-picker.css" />
-        <link rel="stylesheet" href="/css/custom.css" />
-        <script src="/css/Tel/libphonenumber.js"></script>
+          <script src="/css/Tel/libphonenumber.js"></script>
           {styles.map(style =>
             <style
               key={style.id}

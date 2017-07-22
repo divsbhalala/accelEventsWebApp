@@ -15,7 +15,7 @@ class SubItemList extends React.Component {
 	render() {
   return (
 		<div>
-      {this.props.itemList ?
+      { this.props.itemList ? this.props.itemList.length ?
 				<table className="table item-data">
 					<tbody>
           {this.props.itemList.map((item,index) =>
@@ -29,7 +29,7 @@ class SubItemList extends React.Component {
 						</tr> ) }
 					</tbody>
 				</table>
-        : "Nobody has bid on this item."
+				: "Nobody has bid on this item." :<span className="sr-only"><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"> </i>Loading...</span>
       }
 		</div>
 		);

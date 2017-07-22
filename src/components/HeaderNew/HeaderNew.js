@@ -366,7 +366,7 @@ class HeaderNew extends React.Component {
 							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
 							{ this.props.admin && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
-								 className="navbar-brand" style={{paddingLeft: "22"}}>
+								 className="navbar-brand" >
             		<img
 									src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
 									alt className="normal-logo logo-white has-custom"/>
@@ -489,8 +489,10 @@ class HeaderNew extends React.Component {
 								src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png"
 								alt="Jon"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
 							</span>} id='navDropdown4'>
-								<MenuItem eventKey="2">
-									<Link to="my-profile"> <span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
+								<MenuItem eventKey="2" onClick={() => {
+                  history.push("/my-profile")
+                }}>
+                  <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
 								</MenuItem>
 								<MenuItem divider/>
 								<MenuItem eventKey="4" onClick={this.logout}>
@@ -617,12 +619,12 @@ class HeaderNew extends React.Component {
 				</PopupModel> }
 				<LoginModal
 					showModal={this.state.showLoginPopup}
-					headerText=""
+					headerText={<p/>}
 					onCloseFunc={this.hideLoginPopup}
 					params={this.props.params }
 					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
 						this.hideLoginPopup()
-					}}> </button>}
+					}}> Close </button>}
 				/>
 			</div>
 		)
