@@ -906,7 +906,7 @@ class Event extends React.Component {
 				<PopupModel
 					id="bookingPopup"
 					showModal={this.state.showBookingTicketPopup}
-					headerText={<h4>Buy Tickets</h4>}
+					headerText={<p>Buy Tickets</p>}
 					modelBody=''
 					onCloseFunc={this.hideBookingPopup}
 				>
@@ -980,7 +980,7 @@ class Event extends React.Component {
 				<PopupModel
 					id="mapPopup"
 					showModal={this.state.showMapPopup}
-					headerText={<h4>Event Location</h4>}
+					headerText={<p>Event Location</p>}
 					onCloseFunc={this.hideMapPopup}
 				>
 					<div><h1>Location</h1></div>
@@ -989,7 +989,7 @@ class Event extends React.Component {
 				<PopupModel
 					id="mapPopup"
 					showModal={this.state.showFormError}
-					headerText={<h4>No Ticket Selected</h4>}
+					headerText={<p>No Ticket Selected</p>}
 					onCloseFunc={this.hideFormError}
 					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormError()}}>Close</button>}
 				>
@@ -998,7 +998,7 @@ class Event extends React.Component {
 				<PopupModel
 					id="mapPopup"
 					showModal={false}
-					headerText={<h4>No Ticket Selected</h4>}
+					headerText={<p>No Ticket Selected</p>}
 					onCloseFunc={this.hideFormError}
 					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hideFormError()}}>Close</button>}
 				>

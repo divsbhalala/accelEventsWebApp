@@ -134,3 +134,85 @@ export function setOrganizationSettings(whiteLabelURL,data) {
   }
 }
 
+//****** White Label user ******/
+
+export function getUserManagementStaff(whiteLabelURL) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staffs',
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+    })
+  }
+}
+export function addUserManagementStaff(staff,whiteLabelURL) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/staff',
+      data: staff,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+export function deleteUserManagementStaff(staffId,whiteLabelURL) {
+  return (dispatch) => {
+    return axios({
+      method: 'DELETE',
+      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staff/'+staffId,
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+
+export function updatedUserManagementStaff(staffId,staff,whiteLabelURL) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staff/'+staffId,
+      data: staff,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
+
+export function resendInvitationUserManagementStaff(staffId,whiteLabelURL) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/resendConfirmation/staff/'+staffId,
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}

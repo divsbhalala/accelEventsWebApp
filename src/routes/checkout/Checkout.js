@@ -1478,7 +1478,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="alertPopup"
 							showModal={this.state.showMapPopup}
-							headerText={<h4>{this.state.popupAlertHeader}</h4>}
+							headerText={<p>{this.state.popupAlertHeader}</p>}
 							modelBody=''
 							onCloseFunc={this.hidePopup}>
 							<div className="ticket-type-container">
@@ -1491,7 +1491,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="ticketPurchaseSuccessPopup"
 							showModal={ this.state.ticketPurchaseSuccessPopup}
-							headerText={<h4>Success</h4>}
+							headerText={<p>Success</p>}
 							modelBody={<p>Thank you for supporting the event. Please check your inbox for your tickets.</p>}
 							onCloseFunc={this.hideSuccessAlertPopup}>
 							<div className="ticket-type-container">
@@ -1506,7 +1506,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="showFormErroralertPopup"
 							showModal={ this.state.showFormError}
-							headerText={<h4>Faild</h4>}
+							headerText={<p>Faild</p>}
 							modelBody={<p>{ this.state.formError || "Invalid Data"}</p>}
 							onCloseFunc={this.hideformErrorPopup}>
 							<div className="ticket-type-container">

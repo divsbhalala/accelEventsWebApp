@@ -28,7 +28,8 @@ import DonationPerformance from './donation/performance/DonationPerformance';
 import UserManagement from './usermanagement/UserManagement';
 import EventsList from './event/index';
 import WhiteLabelEventList from './event/whiteLabelEvent';
-//import OrganizationSettings from './event/OrganizationSettings';
+import OrganizationSettings from './event/OrganizationSettings';
+import WhiteLabelUserManagement from './event/WhiteLabelUserManagement';
 
 
 const title = 'Admin Page';
@@ -315,15 +316,33 @@ export default {
         };
       }
     },
-    // {
-    //   path: '/u/:params/wl-settings',
-    //   async action(props) {
-    //     return {
-    //       title: "Organization Settings",
-    //       component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
-    //     };
-    //   }
-    // }
+    {
+      path: '/u/:params/wl-settings',
+      async action(props) {
+        return {
+          title: "Organization Settings",
+          component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
+        };
+      }
+    },
+    {
+    	path: '/u/:params/user',
+      async action(props) {
+        return {
+          title: "WhiteLabel User Management",
+          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+        };
+      }
+    },
+    {
+    	path: '/superadmin/edit/:params',
+      async action(props) {
+        return {
+          title: "WhiteLabel User Management",
+          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+        };
+      }
+    }
 	]
 
 };
