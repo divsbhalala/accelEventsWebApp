@@ -117,31 +117,6 @@ class AuctionSetting extends React.Component {
 
   };
 
-  cvvValidateHandler = (e) => {
-    this.cvv.value=this.cvv.value.substr(0,4);
-    this.setState({
-      cvvFeedBack: true,
-      ccvValue:this.cvv.value.trim(),
-    });
-
-    if (this.cvv.value.trim() == '') {
-
-      this.setState({
-        cvv: false,
-        errorMsgcvv: "The CVV is required and can't be empty",
-      });
-    } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
-      this.setState({
-        cvv: false,
-        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
-      });
-    } else {
-      this.setState({
-        cvv: true
-      });
-    }
-  };
-
   bidHandler = (e) => {
     const settings = this.state.settings;
     if (this.defaultBidIncrement.value.trim() == '' || isNaN(this.defaultBidIncrement.value) ) {
@@ -336,7 +311,7 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3 col-md-offset-1">
                               Hide Auction Tab
                             </div>
-                            <div className="col-md-3">{this.state.settings && this.state.settings.activated &&
+                            <div className="col-md-3">{this.state.settings &&
                               <ToggleSwitch name="activated"
                                             id="activated"
                                             defaultValue={this.state.settings.activated}
@@ -368,9 +343,7 @@ class AuctionSetting extends React.Component {
                                             onChange={()=>{ this.state.settings.enableMarketValue = !this.state.settings.enableMarketValue}}/>}
                             </div>
                           </div>
-                          <input type="hidden" name defaultValue />
-                          <div>
-                          </div></form>
+                        </form>
 
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
