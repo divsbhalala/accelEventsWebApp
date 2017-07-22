@@ -23,11 +23,11 @@ class TicketRefund extends React.Component {
 			orderData: {},
 			orderRefundData: {
 				"clientDate" : "",
-				"refunds":[],
-				"dialogMessage" : "",
-				"dialogTitle" : "",
-				"showDialog" : false
+				"refunds":[]
 			},
+			"dialogMessage" : "",
+			"dialogTitle" : "",
+			"showDialog" : false
 		};
 		this.validateForm = this.validateForm.bind(this);
 		this.validateEmail = this.validateEmail.bind(this);
@@ -77,7 +77,7 @@ class TicketRefund extends React.Component {
 				let orderRefundError = error && error.response && error.response.data;
 				this.setState({
 					dialogTitle : "Error",
-					dialogMessage : orderRefundError.errorMessage
+					dialogMessage : orderRefundError && orderRefundError.errorMessage
 				});
 				setTimeout(()=>{
 					this.toggleDialog();
@@ -105,7 +105,7 @@ class TicketRefund extends React.Component {
 				this.state.orderData.attendee.map((item, key)=>{
 					orderRefundData.refunds[key]={
 						"eventTicketingId": item.eventTicketingId,
-						"qty": item.eventTicketingId,
+						"qty": item.qty,
 						"refundAmount": item.paid - item.refundedAmount
 					};
 					setTimeout(()=>{
@@ -113,13 +113,38 @@ class TicketRefund extends React.Component {
 							orderRefundData: orderRefundData
 						});
 						this.doRefund(orderRefundData);
-						console.log(orderRefundData)
 					},100)
 				});
 			}
 		}
 		else{
-			this.doRefund(orderRefundData);
+			this.state.orderData.attendee.map((item, key)=>{
+				if(!orderRefundData.refunds[key]){
+					orderRefundData.refunds[key]={
+						"eventTicketingId": item.eventTicketingId,
+						"qty": item.qty,
+						"refundAmount": item.paid - item.refundedAmount
+					};
+				}
+				else {
+					if(!orderRefundData.refunds[key].eventTicketingId){
+						orderRefundData.refunds[key].eventTicketingId = item.eventTicketingId;
+					}
+					if(!orderRefundData.refunds[key].qty){
+						orderRefundData.refunds[key].qty = item.qty;
+					}
+					if(!orderRefundData.refunds[key].refundAmount){
+						orderRefundData.refunds[key].eventTicketingId = item.paid - item.refundedAmount;
+					}
+				}
+
+				setTimeout(()=>{
+					this.setState({
+						orderRefundData: orderRefundData
+					});
+					this.doRefund(orderRefundData);
+				},1000)
+			});
 		}
 		return false;
 	};
@@ -296,7 +321,7 @@ class TicketRefund extends React.Component {
 				</div>
 				<PopupModel
 					id="popupDialog"
-					showModal={this.state.showDialog && this.state.dialogMessage.length > 0}
+					showModal={this.state.showDialog && this.state.dialogMessage && this.state.dialogMessage.length > 0}
 					headerText={<p>{this.state.dialogTitle}</p>}
 					onCloseFunc={this.toggleDialog}
 					modelFooter = {<div>

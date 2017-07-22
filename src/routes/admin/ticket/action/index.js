@@ -118,3 +118,24 @@ export function doTicketHolderDataById(method, ticketId, data) {
 	}
 }
 
+export function doResendOrderMailByOrderId(orderId) {
+	return (dispatch) => {
+		return axios({
+			method: "get",
+			url: API_URL + "host/ticketing/resendmail/order/" + orderId ,
+			data: {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+export function doResendOrderMailByOrderIdByTicketId(orderId, ticketId) {
+	return (dispatch) => {
+		return axios({
+			method: "get",
+			url: API_URL + "host/ticketing/resendmail/order/" + orderId + "ticketing" +  ticketId,
+			data: {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+
