@@ -7,11 +7,13 @@ import {SplitButton, MenuItem} from 'react-bootstrap';
 import {eventsList,whiteLabelUrl,setEvents,createWhiteLabelUrl} from './action/index';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
+import {DropdownButton} from 'react-bootstrap';
 import PopupModel from './../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
 import {browserHistory} from 'react-router';
 import Link from "../../../components/Link/Link";
+import EditEvent from "./editEvent";
 
 class EventList extends React.Component {
   static propTypes = {
@@ -30,6 +32,7 @@ class EventList extends React.Component {
       whiteLabelUrlValue:null,
       whiteLabelUrl:false,
       whiteLabelUrlList:null,
+      isEdit:false,
     }
   }
   getEventsList = () => {
@@ -42,6 +45,9 @@ class EventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
+
+      window.location = "/admin";
+       // this.props.router.push('/some/location');
       {/*<Link to="/admin" >*/}
       {/*</Link>*/}
      //this.context.router.push('/admin');
@@ -113,6 +119,9 @@ class EventList extends React.Component {
       message:null,
     });
   };
+  editMode =(row) =>{
+    this.setState({isEdit:true})
+  }
   render() {
     var self = this;
     const options = {
@@ -138,7 +147,10 @@ class EventList extends React.Component {
       // withFirstAndLast: false > Hide the going to First and Last page button
     };
     function buttonFormatter(cell, row){
-      return '<ul class="readonly-actions list-inline"><li><a href="edit/7" ><i class="fa fa-cog blue" aria-hidden="true"></i></a></li><li><a href="/AccelEventsWebApp/auctions/admin/events/delete/" ><i class="fa fa-trash red" aria-hidden="true"></i></a></li></ul>';
+      return (<ul className="readonly-actions list-inline">
+        <li><Link to={"edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
+        <li><Link ><i className="fa fa-trash red" ></i></Link></li>
+      </ul>);
     }
     function dateFormatter(cell, row){
       return new Date(1*cell).toUTCString();
@@ -164,11 +176,11 @@ class EventList extends React.Component {
               </a>
             </div>
             <div className="col-md-2" role="group">
-              <SplitButton title="Access White Label" pullRight id="split-button-pull-right">
+              <DropdownButton title="Access White Label" pullRight id="split-button-pull-right">
                 {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.map((value,index)=>
                   <WhiteLabelUrlList key={index} item={value} />
                 )}
-              </SplitButton>
+              </DropdownButton>
             </div>
           </div>
           <div className="row">

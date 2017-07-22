@@ -2975,7 +2975,7 @@ class Volunteer extends React.Component {
 				<PopupModel
 					id="bookingPopup"
 					showModal={this.state.showPopup}
-					headerText={<h4>{this.state.popupHeader}</h4>}
+					headerText={<p>{this.state.popupHeader}</p>}
 					modelBody=''
 					onCloseFunc={this.hidePopup}
 				>

@@ -1067,7 +1067,7 @@ componentDidMount() {
 				<PopupModel
 					id="alertPopup"
 					showModal={this.state.isShowAlertPopup}
-					headerText={<h4>{this.state.popupHeader}</h4>}
+					headerText={<p>{this.state.popupHeader}</p>}
 					//onCloseFunc={this.hideAlertPopup}
 					>
 					<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>

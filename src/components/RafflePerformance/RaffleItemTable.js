@@ -75,8 +75,8 @@ class RaffleItemTable extends React.Component {
           columnWidth: 50
         } } search>
 
-				<TableHeaderColumn dataField='itemName' isKey={ true }>Item Name</TableHeaderColumn>
-				<TableHeaderColumn dataField='itemCode'>Item Code</TableHeaderColumn>
+				<TableHeaderColumn dataField='itemName' >Item Name</TableHeaderColumn>
+				<TableHeaderColumn dataField='itemCode' isKey={ true }>Item Code</TableHeaderColumn>
 				<TableHeaderColumn dataField='winner'>WINNER</TableHeaderColumn>
 				<TableHeaderColumn dataField='totalTickets'>TOTAL TICKETS</TableHeaderColumn>
 			</BootstrapTable>

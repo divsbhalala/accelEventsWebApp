@@ -316,7 +316,7 @@ class EventAside extends React.Component {
 				<PopupModel
 					id="buyRaffleTicketPopup"
 					showModal={this.state.showBuyRaffleTicketPopup}
-					headerText={<h4>Buy Raffle Ticket</h4>}
+					headerText={<p>Buy Raffle Ticket</p>}
 					onCloseFuncc={this.hideBuyRaffleTicketPopup}
 				>
 					<div className="main-box-body clearfix">

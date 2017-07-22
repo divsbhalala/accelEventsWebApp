@@ -43,7 +43,7 @@ export default {
       }
     },
     {
-      path: '/donation/:userId',
+      path: '/donation/:userId/:amount',
       async action(props) {
         return {
           title: "Submit Donation",
