@@ -33,12 +33,12 @@ export function doGetTicketingCouponCodes() {
 	}
 }
 
-export function doGetTicketTypes() {
+export function doGetTicketTypes(method, data) {
 	return (dispatch) => {
 		return axios({
-			method: "get",
+			method: method ? method : "get",
 			url: API_URL + "host/ticketing/ticketTypes",
-			data: {},
+			data: data ? data : {},
 			headers: {Authorization: localStorage.getItem("token")}
 		})
 	}
