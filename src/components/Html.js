@@ -71,7 +71,7 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/display.min.css"/>
 
           {/* for temporary changes */}
-          {/*<link rel="stylesheet" href="/css/style2.css"/>*/}
+          <link rel="stylesheet" href="/css/style2.css"/>
           {/*<link rel="stylesheet" href="/css/custom.css" />*/}
 
           <script src="/css/Tel/libphonenumber.js"></script>

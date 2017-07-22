@@ -46,7 +46,6 @@ class UserList extends React.Component {
     };
 	};
 	componentWillMount() {
-    console.log("componentWillMount 2")
     this.setState({
       userData:this.props.userData,
       isEdit:false,
@@ -59,7 +58,6 @@ class UserList extends React.Component {
     }
 	};
 	componentWillReceiveProps() {
-    console.log("componentWillReceiveProps 2 ",this.props.userData)
     this.setState({
       userData:this.props.userData,
       isEdit:false,
@@ -72,7 +70,6 @@ class UserList extends React.Component {
     }
 	};
   componentDidMount() {
-    console.log("componentDidMount 2")
     this.setState({
       userData:this.props.userData,
       isEdit:false,
@@ -83,7 +80,6 @@ class UserList extends React.Component {
         action:"Edit",
       })
     }
-
   this.firstName.value=this.props.userData.firstName;
   this.lastName.value=this.props.userData.lastName;
   this.email.value=this.props.userData.email;
@@ -206,7 +202,6 @@ class UserList extends React.Component {
       errorMsg: "Are you sure you want to send a payment link to  "+ bid.bidderEmail +" ? ",
       popupHeader:"Please Confirm" ,
       popupType:"Please-Confirm" ,
-      bid:bid.bidId,
     })
   };
   invitationAction = () =>{
@@ -215,16 +210,14 @@ class UserList extends React.Component {
       errorMsg: "Are you sure you want to Mark As Paid ",
       popupHeader:"Mark As Paid Confirmation" ,
       popupType:"MarkAsPaid-Confirmation" ,
-      bid:bid.bidId,
     })
   };
   deleteAction = () =>{
     this.setState({
       showPopup: true,
-      errorMsg: "Are you sure you want to delete Auction Bid of $"+ bid.bidAmount +" from "+ bid.bidderEmail +" ? ",
+      errorMsg: "Are you sure you want to delete User ? ",
       popupHeader:"Delete Confirmation" ,
       popupType:"Delete-Confirmation" ,
-      bid:bid.bidId,
     })
   };
 
@@ -245,21 +238,21 @@ class UserList extends React.Component {
 	  this.props.addUserManagementStaff(staff).then(resp=>{
       if (resp.errorMessage) {
         this.setState({
-          loading:false,
-          showPopup: true,
-          errorMsg: "Bidder has been notified.",
-          popupHeader:"Failed",
-          popupType:"Delete-Confirmation-Failed",
+          // loading:false,
+          // showPopup: true,
+          // errorMsg: "Bidder has been notified.",
+          // popupHeader:"Failed",
+          // popupType:"Delete-Confirmation-Failed",
           isEdit:!this.state.isEdit,
         });
         this.props.actionResult("add","Failed","Something is Wrong");
       } else {
         this.setState({
-          loading:false,
-          showPopup: true,
-          errorMsg: resp.message ,
-          popupHeader:"Success",
-          popupType:"Delete-Confirmation-Success",
+          // loading:false,
+          // showPopup: true,
+          // errorMsg: resp.message ,
+          // popupHeader:"Success",
+          // popupType:"Delete-Confirmation-Success",
           isEdit:!this.state.isEdit,
         })
         this.props.actionResult("Add","Success",resp.message);
@@ -270,21 +263,21 @@ class UserList extends React.Component {
 	  this.props.updatedUserManagementStaff(this.state.userData.id,staff).then(resp=>{
       if (resp.errorMessage) {
         this.setState({
-          loading:false,
-          showPopup: true,
-          errorMsg: "Bidder has been notified.",
-          popupHeader:"Failed",
-          popupType:"Delete-Confirmation-Failed",
+          // loading:false,
+          // showPopup: true,
+          // errorMsg: "Bidder has been notified.",
+          // popupHeader:"Failed",
+          // popupType:"Delete-Confirmation-Failed",
           isEdit:!this.state.isEdit,
         });
         this.props.actionResult("Update","Failed","Something is Wrong");
       } else {
         this.setState({
-          loading:false,
-          showPopup: true,
-          errorMsg: resp.message ,
-          popupHeader:"Success",
-          popupType:"Delete-Confirmation-Success",
+          // loading:false,
+          // showPopup: true,
+          // errorMsg: resp.message ,
+          // popupHeader:"Success",
+          // popupType:"Delete-Confirmation-Success",
           isEdit:!this.state.isEdit,
         })
         this.props.actionResult("Update","Success",resp.message);
@@ -296,25 +289,26 @@ class UserList extends React.Component {
       if (resp.errorMessage) {
         this.props.actionResult("resendInvitation","Failed","Something is Wrong");
         this.setState({
-          loading:false,
-          showPopup: true,
-          errorMsg: "Bidder has been notified.",
-          popupHeader:"Failed",
+          // loading:false,
+          // showPopup: true,
+          // errorMsg: "Bidder has been notified.",
+          // popupHeader:"Failed",
           popupType:"Delete-Confirmation-Failed",
         });
       } else {
         this.props.actionResult("resendInvitation","Success", resp.message);
         this.setState({
-          loading:false,
-          showPopup: true,
-          errorMsg: resp.message ,
-          popupHeader:"Success",
+          // loading:false,
+          // showPopup: true,
+          // errorMsg: resp.message ,
+          // popupHeader:"Success",
           popupType:"Delete-Confirmation-Success",
         })
       }
     })
   };
   deleteUserManagementStaff = () =>{
+    this.setState({loading:true})
 	  this.props.deleteUserManagementStaff(this.state.userData.id).then(resp=>{
       if (resp.errorMessage) {
         this.setState({
@@ -337,33 +331,43 @@ class UserList extends React.Component {
       }
     })
   };
+  showPopup = () => {
+    this.setState({
+      showPopup: true
+    })
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+    })
+  };
 render() {
 	return (
-    <tr className={cx(this.state.isEdit || this.state.userData.id==0 ? "edit" : "")}>
+    <tr className={cx(this.state.isEdit || this.props.userData.id==0 ? "edit" : "")}>
       <td>
         <input name="name" type="text" className="form-control first-name"
                ref={ref => { this.firstName = ref; }} onKeyUp={this.firstNameValidateHandler}/>
-        <span className="value" >{this.state.userData.firstName}</span>
+        <span className="value" >{this.props.userData.firstName}</span>
       </td>
       <td>
         <input name="lastName" type="text" className="form-control last-name"
                ref={ref => { this.lastName = ref; }} onKeyUp={this.lastNameValidateHandler} />
-        <span className="value" >{this.state.userData.lastName}</span>
+        <span className="value" >{this.props.userData.lastName}</span>
       </td>
       <td className="email">
         <input name="email" type="email" className="form-control email" defaultValue={this.state.emailValue} ref={ref => {
           this.email = ref;
         }} onKeyUp={this.emailValidateHandler} />
-        <span className="value" >{this.state.userData.email}</span>
+        <span className="value" >{this.props.userData.email}</span>
       </td>
       <td>
-        <select className="form-control permissions" name="permissions" defaultValue={this.state.roleValue} ref={ref => {
+        <select className="form-control permissions" name="permissions" defaultValue="admin" ref={ref => {
           this.role = ref;
         }} onChange={this.roleValidateHandler} >
           <option value="admin">Admin</option>
           <option value="volunteer">Volunteer</option>
         </select>
-        <span className="value" >{this.state.userData.role}</span>
+        <span className="value" >{this.props.userData.role}</span>
       </td>
       <td className="text-center">
       <ul className="readonly-actions list-inline">
@@ -374,7 +378,7 @@ render() {
           <a className="edit-item" onClick={()=>this.clickAction("Edit")}>Edit</a>
         </li>
         <li>
-          <a className="delete-item" onClick={()=>this.clickAction("Delete")}>Delete</a>
+          <a className="delete-item" onClick={this.deleteAction}>Delete</a>
         </li>
       </ul>
       <input type="hidden" name="id" defaultValue={0} />
@@ -386,23 +390,23 @@ render() {
           <button className="btn btn-default btn-cancel" onClick={this.editToggle}>Cancel</button>
         </li>
       </ul>
+        <PopupModel
+          id="mapPopup"
+          showModal={this.state.showPopup}
+          headerText= {<p>{this.state.popupHeader}</p>}
+          modelBody='<div><h1>Location</h1></div>'
+          onCloseFunc={this.hidePopup} >
+          <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+            { this.state && this.state.errorMsg }
+            <div className="modal-footer">
+              {/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
+              {/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
+              {this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteUserManagementStaff} >Confirm</Button> : ""}
+              <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
+            </div>
+          </div>
+        </PopupModel>
     </td>
-      {/*<PopupModel*/}
-        {/*id="mapPopup"*/}
-        {/*showModal={this.state.showPopup}*/}
-        {/*headerText= {<p>{this.state.popupHeader}</p>}*/}
-        {/*modelBody='<div><h1>Location</h1></div>'*/}
-        {/*onCloseFunc={this.hidePopup} >*/}
-        {/*<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>*/}
-          {/*{ this.state && this.state.errorMsg }*/}
-          {/*<div className="modal-footer">*/}
-            {/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
-            {/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
-            {/*{this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteUserManagementStaff} >Confirm</Button> : ""}*/}
-            {/*<button className="btn btn-primary" onClick={this.hidePopup}>Close</button>*/}
-          {/*</div>*/}
-        {/*</div>*/}
-      {/*</PopupModel>*/}
     </tr>
 		)
 	};

@@ -83,9 +83,9 @@ class WhiteLabelEventList extends React.Component {
                 <Link className="btn btn-block btn-default mrg-b-md" to={"wl-settings"}> <span className="hidden-xs">Users</span> </Link>
             </div>
             <div className="col-md-2" role="group">
-              <a href="#addwhitelabel" role="button" data-toggle="modal" className="btn btn-block btn-default mrg-b-md">
+              <Link className="btn btn-block btn-default mrg-b-md" to={"wl-settings"}>
                 <span className="hidden-xs">Settings</span>
-              </a>
+              </Link>
             </div>
 
           </div>

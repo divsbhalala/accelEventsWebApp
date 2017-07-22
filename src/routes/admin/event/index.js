@@ -7,6 +7,7 @@ import {SplitButton, MenuItem} from 'react-bootstrap';
 import {eventsList,whiteLabelUrl,setEvents,createWhiteLabelUrl} from './action/index';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
+import {DropdownButton} from 'react-bootstrap';
 import PopupModel from './../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
@@ -167,11 +168,11 @@ class EventList extends React.Component {
               </a>
             </div>
             <div className="col-md-2" role="group">
-              <SplitButton title="Access White Label" pullRight id="split-button-pull-right">
+              <DropdownButton title="Access White Label" pullRight id="split-button-pull-right">
                 {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.map((value,index)=>
                   <WhiteLabelUrlList key={index} item={value} />
                 )}
-              </SplitButton>
+              </DropdownButton>
             </div>
           </div>
           <div className="row">
