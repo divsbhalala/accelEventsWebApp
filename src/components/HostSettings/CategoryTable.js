@@ -1,66 +1,114 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import {getHostCategories} from './RestActions';
+import RemoteTable from './RemoteTable';
+import {Alert} from 'react-bootstrap';
+import PopupModal from '../PopupModal/index'
 
 export default class CategoryTable extends React.Component {
   constructor(props) {
     super(props);
     this.categories = this.props.data;
     this.state = {
-      sizePerPage: 5,
+      tableData:this.categories.slice(0, this.props.sizePerPage),
+      totalDataSize: this.categories.length,
+      sizePerPage: this.props.sizePerPage,
       currentPage: 1,
-      categories : []
+      categoryAlertVisible:false,
+      categoryMessage : ''
     };
   }
 
-  onPageChange = (page, sizePerPage) => {
+  addItemCategory(categoryDTO){
+      console.log(categoryDTO);
+      if(categoryDTO){
+        this.props.addHostCategory(this.props.moduleType, categoryDTO).then(resp => {
+          this.props.getHostCategories(this.props.moduleType).then(resp=> {
+            if(resp && resp.data){
+              this.categories = resp.data.itemCategories;
+              this.setState({tableData : this.categories.slice(0, this.props.sizePerPage),totalDataSize: this.categories.length});
+            }
+          }).catch(error=>{
+            console.log(error);
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
+  };
+
+  deleteItemCategory(ids){
+      for (let id in ids) {
+        this.props.removeHostCategory(this.props.moduleType, ids[id]).then(resp => {
+          this.props.getHostCategories(this.props.moduleType).then(resp=> {
+            if(resp && resp.data){
+              this.categories = resp.data.itemCategories;
+              this.setState({tableData : this.categories.slice(0, this.props.sizePerPage),totalDataSize: this.categories.length});
+            }
+          }).catch(error=>{
+            console.log(error);
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
+  };
+
+  updateItemCategory(row, cellName, cellValue) {
+    if(row && row.id){
+      let tempVal = row[cellName];
+      row[cellName] = cellValue;
+      this.props.updateHostCategory(this.props.moduleType, row.id ,row).then(resp => {
+        if(resp && resp.status == 200){
+          this.showCategoryAlert(resp.data.message,'success');
+        } else {
+          row[cellName] = tempVal;
+        }
+      }).catch(error => {
+        row[cellName] = tempVal;
+        if(error && error.response && error.response.status==406){
+          this.showCategoryAlert(error.response.data.errorMessage,'danger');
+        }
+      });
+    }
+  };
+
+  onPageChange(page, sizePerPage) {
     const currentIndex = (page - 1) * sizePerPage;
-    console.log(currentIndex +  "    " + this.categories);
     this.setState({
-      data: this.categories.slice(currentIndex, currentIndex + sizePerPage),
+      tableData: this.categories.slice(currentIndex, currentIndex + sizePerPage),
       currentPage: page
     });
   };
 
-  onSizePerPageList = (sizePerPage) => {
+  onSizePerPageList(sizePerPage) {
     const currentIndex = (this.state.currentPage - 1) * sizePerPage;
-    console.log(currentIndex);
     this.setState({
-      data: this.categories.slice(currentIndex, currentIndex + sizePerPage),
+      tableData: this.categories.slice(currentIndex, currentIndex + sizePerPage),
       sizePerPage: sizePerPage
     });
   };
 
+  dismissCategoryAlert = () => {
+    this.setState({categoryAlertVisible:false});
+  };
+
+  showCategoryAlert = (categoryMessage,alertType) => {
+    this.setState({categoryAlertVisible:true, categoryMessage,alertType});
+    setTimeout(function() { this.setState({categoryAlertVisible: false}); }.bind(this), 2000);
+  };
+
   render() {
-    function indexN(cell, row, enumObject, index) {
-      return (<div>{index+1}</div>)
-    };
-
-    const options = {
-      sizePerPageList: [{ text: '5', value: 5 }, { text: '10', value: 10 }, { text: 'All', value: 100 }],
-      sizePerPage: 5,
-      prePage: 'Prev',
-      nextPage: 'Next',
-      paginationPosition: 'bottom' ,
-      onAddRow: this.props.onInsertRow,
-      onDeleteRow: this.props.onDeleteRow,
-      page: this.currentPage,
-      onSizePerPageList: this.onSizePerPageList,
-      onPageChange: this.onPageChange,
-    };
-
-    const editCategory = {
-      mode: 'click',
-      afterSaveCell: this.updateItemCategory
-    };
-
     return (
-      <BootstrapTable data={ this.props.data } striped hover pagination={ true } fetchInfo={ { dataTotalSize: this.categories.length } }
-            insertRow={ true } remote = { true} cellEdit={ editCategory } deleteRow={ true } options={ options }>
-          <TableHeaderColumn isKey dataField='id' dataFormat={indexN}>No</TableHeaderColumn>
-          <TableHeaderColumn dataSort dataField='name' editable={{validator : this.categoryNameValidator}}>Name</TableHeaderColumn>
-      </BootstrapTable>
+      <div className="col-md-8">
+            { this.state.categoryAlertVisible &&
+              <Alert bsStyle={ this.state.alertType } onDismiss={this.dismissCategoryAlert}>
+                <h4>{this.state.categoryMessage}</h4>
+              </Alert>
+            }
+          <RemoteTable onPageChange={ this.onPageChange.bind(this) } onSizePerPageList={ this.onSizePerPageList.bind(this) } { ...this.state }
+            updateItemCategory = {this.updateItemCategory.bind(this)} addItemCategory = {this.addItemCategory.bind(this)}
+            deleteItemCategory = {this.deleteItemCategory.bind(this)}/>
+      </div>
     );
   }
 }

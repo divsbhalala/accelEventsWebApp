@@ -11,6 +11,7 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import {Modal ,Button, Alert} from 'react-bootstrap';
+import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
 
 class FundSetting extends React.Component {
   static propTypes = {
@@ -24,7 +25,6 @@ class FundSetting extends React.Component {
       settings: {},
       title: props['title'],
       bidIncrement:false,
-      itemCategories:[],
       isValidData : false,
       alert : null,
       showModal: false,
@@ -35,17 +35,6 @@ class FundSetting extends React.Component {
     };
   };
 
-  categoryNameValidator = (value, row) => {
-    const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-    if (!value) {
-      response.isValid = false;
-      response.notification.type = 'error';
-      response.notification.msg = 'Category name can\'t be empty!';
-      response.notification.title = 'Requested Category Name';
-    }
-    return response;
-  };
-
   handleAlertDismiss = () => {
     this.setState({alertVisible: false, categoryAlertVisible:false});
   };
@@ -53,31 +42,6 @@ class FundSetting extends React.Component {
   handleAlertShow = (alertMessage,alertType) => {
     this.setState({categoryAlertVisible:true,alertVisible: true, alertMessage,alertType});
     setTimeout(function() { this.setState({alertVisible: false}); }.bind(this), 2000);
-  };
-
-  onInsertRow = (row) => {
-    console.log(row);
-  };
-
-  onDeleteRow = (rowKeys) => {
-    console.log(rowKeys);
-    this.props.removeHostCategory(this.state.moduleType, rowKeys).then(resp => {
-      console.log(resp);
-    }).catch((error) => {
-      console.log(error);
-    });
-  };
-
-  updateItemCategory = (row, cellName, cellValue) => {
-    if(row && row.id){
-      this.props.updateHostCategory(this.state.moduleType, row.id ,row).then(resp => {
-        if(resp && resp.status == 200)
-          this.handleAlertShow(resp.data.message,'success');
-      }).catch(error => {
-        if(error && error.response && error.response.status==406);
-          this.handleAlertShow(error.response.data.errorMessage,'danger');
-      });
-    }
   };
 
   closeResetModal = () => {
@@ -101,14 +65,7 @@ class FundSetting extends React.Component {
       console.log(error);
     });
   };
-  createSelectItems = () => {
-    let items = [];
-    let timezones = this.state.settings.timeZones;
-    for (let i in timezones) {
-      items.push(<option key={timezones[i].name} value={timezones[i].name}>{timezones[i].name}</option>);
-    }
-    return items;
-  };
+
   updateTimezone = (e) =>{
     let selected = e.nativeEvent.target;
     let settings = this.state.settings;
@@ -134,7 +91,7 @@ class FundSetting extends React.Component {
       }
     }).catch((error) => {
       console.log(error);
-    })
+    });
   };
 
   componentWillMount(){
@@ -153,42 +110,10 @@ class FundSetting extends React.Component {
       }
     }).catch(error=>{
       console.log(error);
-    })
-
+    });
   };
 
-  render() {
-
-    const options = {
-      page: 1,  // which page you want to show as default
-      sizePerPageList: [ {
-        text: '5', value: 5
-      }, {
-        text: '10', value: 10
-      }, {
-        text: 'All', value: 100
-      } ],
-      sizePerPage: 10,
-      pageStartIndex: 0,
-      paginationSize: 5,
-      prePage: 'Prev',
-      nextPage: 'Next',
-      paginationPosition: 'bottom' ,
-      onAddRow: this.onInsertRow,
-      onDeleteRow: this.onDeleteRow
-    };
-    function indexN(cell, row, enumObject, index) {
-      return (<div>{index+1}</div>)
-    };
-    const selectCategory = {
-      mode: 'checkbox'
-    };
-    const editCategory = {
-      mode: 'click',
-      afterSaveCell: this.updateItemCategory
-    };
-
-    return (
+  render() { return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
           <div className="col-sm-12">
@@ -224,7 +149,7 @@ class FundSetting extends React.Component {
                               <div className="help-text" />
                             </div>
                             <div className="col-md-3">
-                              <DateTimeField inputFormat="DD-MM-YYYY" dateTime={this.state.settings.userTime}/>
+                              <DateTimeField inputFormat="DD-MM-YYYY" id="dateTime" dateTime={this.state.settings.userTime}/>
                             </div>
                           </div>
                           <div className="row form-group">
@@ -233,10 +158,8 @@ class FundSetting extends React.Component {
                               <div className="help-text" />
                             </div>
                             <div className="col-md-3">
-                              {this.state.settings.eventTimeZone &&
-                              <select name="timezone" className="form-control" defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone}>
-                                {this.createSelectItems()}
-                              </select>}
+                            { this.state.settings.eventTimeZone && <TimeZoneSelector id="timeZone" name="timeZone" className="form-control"
+                            defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone} timeZoneList={this.state.settings.timeZones} /> }
                             </div>
                           </div>
                           <div className="row form-group">
@@ -286,14 +209,12 @@ class FundSetting extends React.Component {
                           <div className="col-md-3 col-md-offset-1">
                             Category Management
                           </div>
-                          <div className="col-md-8">
-                            <CategoryTable data={this.state.itemCategories}/>
-                          </div>
+                          {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
                         </div>
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-info mrg-t-lg" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
                         </div>
-                      </div> {/* /.form */}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -318,9 +239,9 @@ class FundSetting extends React.Component {
 }
 
 const mapDispatchToProps = {
-  updateHostSettings : (moduleType, auctionDTO)  => updateHostSettings(moduleType, auctionDTO),
-  getHostSettings : (moduleType) => getHostSettings(moduleType, ),
-  getHostCategories : (moduleType) => getHostCategories(moduleType, ),
+  updateHostSettings : (moduleType, settingsDTO)  => updateHostSettings(moduleType, settingsDTO),
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
+  getHostCategories : (moduleType) => getHostCategories(moduleType),
   removeHostCategory : (moduleType, id) => removeHostCategory(moduleType, id),
   addHostCategory : (moduleType, itemCategory) => addHostCategory (moduleType, itemCategory),
   updateHostCategory : (moduleType, id, itemCategory) => updateHostCategory(moduleType, id, itemCategory),
