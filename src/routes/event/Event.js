@@ -131,7 +131,7 @@ class Event extends React.Component {
 				})
 			} else {
 				this.setState({
-					tab: 'Donation'
+					tab: 'Donate'
 				})
 			}
 			this.setActiveTabState(this.state.tab)
