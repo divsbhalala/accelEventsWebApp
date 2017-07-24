@@ -35,7 +35,7 @@ pipelines:
            - npm run deploy
            - cd build
            - aws --region us-west-2 s3 sync . s3://ae-frontend-application/ --acl public-read --exclude ".vscode/*" --exclude "*/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules/*" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml" --include "*"
-    state-auto-deploy:
+    stage-auto-deploy:
       - step:
           script:
            - apt-get update
