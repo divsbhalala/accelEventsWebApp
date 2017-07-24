@@ -47,7 +47,7 @@ actionResult = (method,status,message) =>{
   if(status == "Failed"){ this.setState({status,message});}
   else{
     this.setState({status,message,userData : ""});
-    this.props.getUserManagementStaff(this.props.params.params).then(resp =>{
+    this.props.getUserManagementStaff().then(resp =>{
       if(resp && resp.data){
         this.setState({
           userData : resp.data,

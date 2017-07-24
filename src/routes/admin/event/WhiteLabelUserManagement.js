@@ -8,7 +8,7 @@ import s from './event.css';
 import cx from 'classnames';
 import {getUserManagementStaff} from './action';
 import WhiteLabelUser from './../../../components/WhiteLabelUser/index';
-
+import  history from './../../../history';
 
 class WhiteLabelUserManagement extends React.Component {
   static propTypes = {
@@ -17,7 +17,9 @@ class WhiteLabelUserManagement extends React.Component {
 	constructor() {
 		super();
 	};
-
+goBack = () =>{
+  history.push('/');
+}
 	componentWillMount(){
 	}
   render() {
@@ -30,6 +32,9 @@ class WhiteLabelUserManagement extends React.Component {
                   <div className="row">
                     <div className="col-lg-12">
                       <h1 className="text-center">Users</h1>
+                      <div className="pull-right" style={{marginBottom: 10}}>
+                        <a  onClick={this.goBack} className="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                      </div>
                     </div>
                   </div>
                   <div className="row">
