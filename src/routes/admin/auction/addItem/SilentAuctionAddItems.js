@@ -181,7 +181,6 @@ class SilentAuctionAddItems extends React.Component {
                     />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

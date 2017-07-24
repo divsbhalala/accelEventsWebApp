@@ -68,33 +68,3 @@ export function dashboardRafflePurchaseTicket(countryCode,phoneNumber) {
     });
   }
 }
-export function getAuctionItems() {
-  return (dispatch) => {
-    return axios({
-      method: 'get',
-      url: API_URL + 'host/auction/items',
-      headers: {Authorization: localStorage.getItem('token')}
-    }).then(resp => {
-      return resp;
-    }).catch(error => {
-      console.log(error);
-    })
-  }
-}
-export function updateAuctionItemsPosition(item,topItem,topBottom) {
-  return (dispatch) => {
-    return axios({
-      method: 'post',
-      url: API_URL + 'host/auction/item/'+item+'/topItem/'+topItem+'/topBottom/'+topBottom  ,
-      headers: {Authorization: localStorage.getItem('token')}
-    }).then(resp=>{
-      if(resp && resp.data){
-        return resp.data;
-      }
-      return resp;
-    }).catch((error, code, status)=>{
-      return error && error.response && error.response.data;
-    });
-  }
-}
-

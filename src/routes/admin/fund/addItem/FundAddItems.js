@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './FundAddItems.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import { connect } from 'react-redux';
 import { getItemSheetPdf, getItemCatalogPdf, getItemListCsv } from './action';
+import FundNeedAddItem from './../../../../components/FundAddItem'
 
-import Drag from './drag'
 class FundAddItems extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -55,24 +54,12 @@ class FundAddItems extends React.Component {
                     <div className="col-lg-12">
                       <div className="main-box no-header">
                         <div className="main-box-body clearfix">
-                          <p>In Fund a Need, any number of people can submit a 'bid' for a fund a need item. The price
-                            of the item does not increase with each subsequent bid.</p>
-                          <div className="text-left mrg-t-md">
-                            <button className="btn btn-info add-new-item mrg-t-lg"> &nbsp; Add Item &nbsp; </button>
-                          </div>
+
                           <div className="row">
                             <div className="table prizes-table">
-                              <div className="table-header">
-                                <div className="flex-row">
-                                  <div className="flex-col plus-sign-column" />
-                                  <div className="flex-col item-name-column"><span>Item name</span></div>
-                                  <div className="flex-col item-code-column"><span>Item code</span></div>
-                                  <div className="flex-col item-starting-bid-column"><span>Amount ($)</span></div>
-                                  <div className="flex-col item-actions-column"><span>Actions</span></div>
-                                </div>
-                              </div>
+
                               <div className="table-body prize-items ui-sortable">
-                                <Drag/>
+                                <FundNeedAddItem />
                               </div>
                               <div className="form-group operations-row">
                                 <div className="row">
@@ -92,7 +79,6 @@ class FundAddItems extends React.Component {
                               </div>
                               </div>
                             </div>
-
                           </div>
                         </div>
                       </div>
@@ -101,9 +87,8 @@ class FundAddItems extends React.Component {
                 </div>
               </div>
             </div>
-
-              </div>
-            </div>
+        </div>
+      </div>
     );
   }
 }
