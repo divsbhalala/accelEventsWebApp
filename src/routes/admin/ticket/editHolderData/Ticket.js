@@ -43,7 +43,7 @@ class TicketHolderData extends React.Component {
 					holderData : item && item.data
 				})
 			}).catch(error=>{
-				console.log(error)
+				console.log(error);
 				let orderRefundError = error && error.response && error.response.data;
 				this.setState({
 					dialogTitle : "Error",
@@ -165,8 +165,6 @@ class TicketHolderData extends React.Component {
 		TicketHolderQuestions = object;
 	};
 	updateHolderAttributes = ()=>{
-		console.log("ticketHolder", ticketHolder);
-		console.log("TicketHolderQuestions", TicketHolderQuestions);
 		if(this.state.holderData ){
 			if(this.state.holderData.attendees && this.state.holderData.attendees.attributes){
 				this.state.holderData.attendees.attributes.map((field, key) => {
@@ -207,8 +205,6 @@ class TicketHolderData extends React.Component {
 				if (isValidData) {
 					let holder = [];
 					let holderQuestions = [];
-					console.log("TicketHolderQuestions", TicketHolderQuestions);
-					console.log("ticketHolder", ticketHolder)
 					if (ticketHolder) {
 						let keys = _.keys(ticketHolder);
 						keys.map(keyItem => {
@@ -232,8 +228,30 @@ class TicketHolderData extends React.Component {
 							}
 						})
 					}
-					console.log("TicketHolderQuestions", TicketHolderQuestions, holderQuestions);
-					console.log("ticketHolder", ticketHolder, holder)
+					let holderData = this.state.holderData.attendees;
+					holderData.attributes = holder;
+					holderData.questions = holderQuestions;
+
+					console.log("TicketHolderQuestions", holderData);
+					this.props.doTicketHolderDataById('put', this.props.ticketId, holderData).then(item=>{
+						this.setState({
+							dialogTitle : "Success",
+							dialogMessage : "Ticket Holder information updated successfully "
+						});
+						setTimeout(()=>{
+							this.toggleDialog();
+						},10);
+					}).catch(error=>{
+						console.log(error);
+						let orderRefundError = error && error.response && error.response.data;
+						this.setState({
+							dialogTitle : "Error",
+							dialogMessage : (orderRefundError && orderRefundError.errorMessage) || "Oops something went wrong, Try again later"
+						});
+						setTimeout(()=>{
+							this.toggleDialog();
+						},10);
+					})
 					// this.doCheckout(ticketAttribute, orderData);
 				}
 				else {

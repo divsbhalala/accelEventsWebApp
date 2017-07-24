@@ -20,7 +20,6 @@ pipelines:
            - git reset --hard
            - npm install
            - npm run deploy
-           - aws --region us-west-2 s3 sync . s3://ae-frontend-auto/ --acl public-read --exclude ".vscode/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules/*" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml"
     develop:
       - step:
           script:
@@ -36,3 +35,4 @@ pipelines:
            - npm run deploy
            - cd build
            - aws --region us-west-2 s3 sync . s3://ae-frontend-auto/ --acl public-read --exclude ".vscode/*" --exclude "*/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules/*" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml" --include "*"
+           - aws --region us-west-2 s3 sync . s3://ae-frontend-application/ --acl public-read --exclude ".vscode/*" --exclude "*/*" --exclude ".git/*" --exclude ".gitattributes" --exclude ".gitignore" --exclude ".editorconfig" --exclude "node_modules/*" --exclude "yarn.lock" --exclude "package.json" --exclude "bitbucket-pipelines.yml" --include "*"

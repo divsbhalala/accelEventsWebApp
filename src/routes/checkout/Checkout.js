@@ -774,6 +774,7 @@ class Checkout extends React.Component {
 									<div className="col-lg-9 col-md-8 col-sm-8 ">
 										<div className="main-box clearfix">
 											<Timer
+												class="time-left"
 												time={this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.remainingSeconds}
 												onEnd={this.ticketTimeOut}/>
 											<form className="validated fv-form fv-form-bootstrap" noValidate="novalidate"

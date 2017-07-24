@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import s from './TicketSetting.css';
 import {connect} from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -16,26 +17,49 @@ class TicketSetting extends React.Component {
 		this.state = {
 			isModuleActive: true,
 			isLoaded: false,
-			orderData: []
+			auctionPageLoading: true,
+			orderData: [],
+			orderLimit: 10,
+			orderOffset: 0,
 		};
 		this.getOrderDetails = this.getOrderDetails.bind();
 	}
 
 	getOrderDetails = ()=>{
-		this.props.doGetOrderDetails().then(resp=>{
-			this.setState({
-				orderData: resp && resp.data && resp.data.orders,
-				isLoaded: true
-			});
+		this.props.doGetOrderDetails(this.state.orderLimit, this.state.orderOffset).then(resp=>{
+			if (resp && resp.data) {
+				if (resp.data && resp.data.orders.length < this.state.orderLimit) {
+					this.setState({
+						auctionPageLoading: false
+					})
+				}
+				this.setState({
+					orderData: _.uniq(this.state.orderData.concat(resp.data && resp.data.orders)) ,
+					orderOffset: this.state.orderOffset + 1,
+					isLoaded: true
+				});
+			}
+			else{
+				this.setState({
+					auctionPageLoading: false
+				})
+			}
+
 			console.log(resp);
 		}).catch(error=>{
 			let orderError = error && error.response && error.response.data;
 			this.setState({
+				auctionPageLoading: false,
 				isLoaded: true,
 				developerMessage:	"Please activate Event Ticketing to start selling tickets."
 			});
 			console.log(orderError)
 		})
+		setTimeout(() => {
+			this.setState({
+				totalAuction: []
+			})
+		}, 500);
 	};
 	componentWillMount(){
 		this.getOrderDetails();
@@ -74,13 +98,19 @@ class TicketSetting extends React.Component {
 											<div>
 												<div className="main-box no-header">
 
-													<div className="all-orders">
+													<InfiniteScroll
+														next={this.getOrderDetails}
+														hasMore={this.state.auctionPageLoading}
+														loader={<div className="text-center"><span
+															className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+														<div className="all-orders">
 
-														{
-															this.state.orderData.map((item, key)=><OrderPenal order={item} key={key} />)
-														}
+															{
+																this.state.orderData.map((item, key)=><OrderPenal order={item} key={key} />)
+															}
 
-													</div>
+														</div>
+													</InfiniteScroll>
 												</div>
 
 											</div>
@@ -98,7 +128,7 @@ class TicketSetting extends React.Component {
 
 
 const mapDispatchToProps = {
-	doGetOrderDetails: () => doGetOrderDetails(),
+	doGetOrderDetails: (limit, offset) => doGetOrderDetails(limit, offset),
 	doGetHostSettings: (type) => doGetHostSettings(type),
 	makePyment: (data) => makePyment(data),
 	getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),

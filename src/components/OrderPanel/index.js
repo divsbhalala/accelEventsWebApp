@@ -1,10 +1,16 @@
 import React from 'react';
-import   PropTypes   from 'prop-types';
+import PropTypes   from 'prop-types';
 import Link from '../Link';
+import history from '../../history';
+import PopupModel from '../PopupModal';
 import cx from 'classnames';
 import {DropdownButton, MenuItem} from 'react-bootstrap';
 import moment from 'moment';
 import {connect} from 'react-redux';
+import {
+	doResendOrderMailByOrderIdByTicketId,
+	doResendOrderMailByOrderId,
+} from '../../routes/admin/ticket/action';
 let total = 0;
 class OrderPenal extends React.Component { // eslint-disable-line
 	static propTypes = {
@@ -18,7 +24,17 @@ class OrderPenal extends React.Component { // eslint-disable-line
 
 	constructor(props) {
 		super(props);
+		this.state = {
+			"dialogMessage" : "",
+			"dialogTitle" : "",
+			"showDialog" : false
+		};
 		this.openDropDown = this.openDropDown.bind(this);
+		this.toggleDialog = this.toggleDialog.bind(this);
+		this.throwError = this.throwError.bind(this);
+		this.onError = this.onError.bind(this);
+		this.doResendOrderMailByOrderId = this.doResendOrderMailByOrderId.bind(this);
+		this.doResendOrderMailByOrderIdByTicketId = this.doResendOrderMailByOrderIdByTicketId.bind(this);
 	}
 	openDropDown = (event)=>{
 			// e.target.
@@ -29,6 +45,58 @@ class OrderPenal extends React.Component { // eslint-disable-line
 		});
 		event.target.parentElement.classList.add('open');
 	};
+
+	toggleDialog = ()=>{
+		this.setState({
+			showDialog: !this.state.showDialog
+		})
+	};
+	throwError = (title, message)=>{
+		this.setState({
+			dialogTitle : title || "Not found",
+			dialogMessage : message || "Your order details not found. Please try again later."
+		});
+		setTimeout(()=>{
+			this.toggleDialog();
+		},10);
+	};
+
+	onError = (error)=>{
+		let resendMailError = error && error.response && error.response.data;
+		this.throwError("Error", resendMailError && resendMailError.errorMessage);
+	};
+
+	doResendOrderMailByOrderId = (orderId)=>{
+		if(!orderId){
+			this.props.doResendOrderMailByOrderId(orderId).then(resp=>{
+				this.throwError("Resend Successful", "Email has been successfully sent.");
+			}).catch(error=>{
+				this.onError(error);
+			})
+		}
+		else {
+			this.throwError("Not found", "Your order details not found. Please try again later.");
+		}
+	};
+
+	doResendOrderMailByOrderIdByTicketId = (orderId, ticketId)=>{
+		if(!orderId || !ticketId){
+			if(orderId){
+				this.props.doResendOrderMailByOrderId(orderId, ticketId).then(resp=>{
+					this.throwError("Resend Successful", "Email has been successfully sent.");
+				}).catch(error=>{
+					this.onError(error);
+				})
+			}
+			else {
+				this.throwError("Not found", "Your order details not found. Please try again later.");
+			}
+		}
+		else {
+			this.throwError("Not found", "Your order details not found. Please try again later.");
+		}
+	};
+
 	render() {
 		return (
 			<div className="order-panel">
@@ -37,12 +105,13 @@ class OrderPenal extends React.Component { // eslint-disable-line
 						Order #{this.props.order.id} - ${this.props.order.totalAmount}<br />
 						<strong>{this.props.order.status}</strong>
 					</div>
+					{this.props.order.status && this.props.order.status.toLowerCase() !== "refunded" ?
 					<div className="order-actions">
 						<DropdownButton bsSize={"sm"} title={"Actions"}  id={`dropdown-basic`}>
-							<MenuItem eventKey="1"><Link to={"/admin/event-ticketing-orders/get-refund/" + this.props.order.id }>Refund</Link></MenuItem>
-							<MenuItem eventKey="2" className="resend-order-email" data-orderid={this.props.order.id}>Resend Email</MenuItem>
+							<MenuItem eventKey="1"onClick={()=>{history.push("/admin/event-ticketing-orders/get-refund/" + this.props.order.id)}} >Refund</MenuItem>
+							<MenuItem eventKey="2" className="resend-order-email" onClick={()=>{ this.doResendOrderMailByOrderIdByTicketId(this.props.order.id)}}>Resend Email</MenuItem>
 						</DropdownButton>
-					</div>
+					</div> : "" }
 				</div>
 				<div className="order-panel-body">
 					{this.props.order.purchaser ? <p> Purchased by {this.props.order.purchaser.firstName}&nbsp;{this.props.order.purchaser.lastName}  ({this.props.order.purchaser.email}) on {moment().format('MMM Do YYYY [at] hh:mm A')} {this.props.order.purchaser.timezoneId}</p>  : ""}
@@ -69,14 +138,18 @@ class OrderPenal extends React.Component { // eslint-disable-line
 								<td>{item.ticketType}</td>
 								<td>{this.props.order.currency || "$"}{item.paidAmount} {<p className="hide">{ total += item.paidAmount}</p>}</td>
 								<td width="1px" className="text-center">
-									<DropdownButton bsSize={"sm"} title={"Actions"}  id={`dropdown-basic`}>
-										<MenuItem eventKey="1"><Link to={"/admin/event-ticketing-orders/get-refund/" + this.props.order.id + "/" + item.eventTicketingId}>Refund</Link></MenuItem>
-										<MenuItem eventKey="2" className="resend-attendee-email" data-orderid={this.props.order.id}
-															data-attendeeid={item.id}>Resend Email</MenuItem>
-										<MenuItem eventKey="1">
-											<Link to={"/admin/event-ticketing-orders/edit-holder-data/" + item.eventTicketingId}>Edit</Link>
-										</MenuItem>
-									</DropdownButton>
+									{this.props.order.status && this.props.order.status.toLowerCase() == "refunded" ?
+										this.props.order.status : 	<DropdownButton bsSize={"sm"} title={"Actions"}  id={`dropdown-basic`}>
+											<MenuItem eventKey="1" onClick={()=>{history.push("/admin/event-ticketing-orders/get-refund/" + this.props.order.id + "/" + item.eventTicketingId )}}>Refund</MenuItem>
+											<MenuItem eventKey="2" className="resend-attendee-email"  onClick={()=>{ this.doResendOrderMailByOrderIdByTicketId(this.props.order.id, item.id)}}
+																data-attendeeid={item.id}>Resend Email</MenuItem>
+											<MenuItem eventKey="1" onClick={()=>{history.push("/admin/event-ticketing-orders/edit-holder-data/" + item.eventTicketingId)}}>
+												Edit
+											</MenuItem>
+										</DropdownButton>
+
+									}
+
 								</td>
 							</tr>)
 						}
@@ -88,11 +161,24 @@ class OrderPenal extends React.Component { // eslint-disable-line
 						</tbody>
 					</table>
 				</div>
+				<PopupModel
+					id="popupDialog"
+					showModal={this.state.showDialog && this.state.dialogMessage && this.state.dialogMessage.length > 0}
+					headerText={<p>{this.state.dialogTitle}</p>}
+					onCloseFunc={this.toggleDialog}
+					modelFooter = {<div>
+						<button className="btn btn-green" onClick={()=>{this.toggleDialog()}}>Close</button></div>}
+				>
+					<div>{this.state.dialogMessage}</div>
+				</PopupModel>
 			</div>
 		);
 	}
 }
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+	doResendOrderMailByOrderId: (orderId) => doResendOrderMailByOrderId(orderId),
+	doResendOrderMailByOrderIdByTicketId: (orderId, ticketId) => doResendOrderMailByOrderIdByTicketId(orderId, ticketId),
+};
 
 const mapStateToProps = (state) => ({});
 export default connect(mapStateToProps, mapDispatchToProps)((OrderPenal));

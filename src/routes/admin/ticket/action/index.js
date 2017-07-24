@@ -76,11 +76,13 @@ export function doDeleteCouponCode(code) {
 	}
 }
 
-export function doGetOrderDetails() {
+export function doGetOrderDetails(limit, offset) {
+	offset = offset ? offset : 0;
+	limit = limit ? limit : 10;
 	return (dispatch) => {
 		return axios({
 			method: "get",
-			url: API_URL + "host/ticketing/orders" ,
+			url: API_URL + "host/ticketing/orders?page=" + offset + "&size=" + limit ,
 			data: {},
 			headers: {Authorization: localStorage.getItem("token")}
 		});
@@ -113,6 +115,27 @@ export function doTicketHolderDataById(method, ticketId, data) {
 			method: method ? method : "get",
 			url: API_URL + "host/ticketing/holderData/ticket/" + ticketId ,
 			data: data ? data : {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+
+export function doResendOrderMailByOrderId(orderId) {
+	return (dispatch) => {
+		return axios({
+			method: "get",
+			url: API_URL + "host/ticketing/resendmail/order/" + orderId ,
+			data: {},
+			headers: {Authorization: localStorage.getItem("token")}
+		});
+	}
+}
+export function doResendOrderMailByOrderIdByTicketId(orderId, ticketId) {
+	return (dispatch) => {
+		return axios({
+			method: "get",
+			url: API_URL + "host/ticketing/resendmail/order/" + orderId + "ticketing" +  ticketId,
+			data: {},
 			headers: {Authorization: localStorage.getItem("token")}
 		});
 	}
