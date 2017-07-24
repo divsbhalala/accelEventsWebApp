@@ -6,6 +6,8 @@ import CreateTicket from './ticket/create/CreateTicket';
 import TicketSetting from './ticket/settings/TicketSetting';
 import TicketPerformance from './ticket/performance/TicketPerformance';
 import TicketOrders from './ticket/ticketorders/TicketSetting';
+import TicketHolderData from './ticket/editHolderData/Ticket';
+import TicketRefund from './ticket/refund/Ticket';
 import Auction from './auction/Auction';
 import SilentAuctionAddItems from './auction/addItem/SilentAuctionAddItems';
 import SilentAuctionSettings from './auction/settings/AuctionSetting';
@@ -95,6 +97,33 @@ export default {
 				return {
 					title: "Event ticketing Orders",
 					component: <AdminLayout><TicketOrders title="Event ticketing Orders"/></AdminLayout>,
+				};
+			}
+		},
+		{
+			path: '/event-ticketing-orders/edit-holder-data/:ticketId',
+			async action(props) {
+				return {
+					title: "Event ticketing Orders",
+					component: <AdminLayout><TicketHolderData ticketId={props.params && props.params.ticketId} title="Event ticketing edit holder data"/></AdminLayout>,
+				};
+			}
+		},
+		{
+			path: '/event-ticketing-orders/get-refund/:ticketId',
+			async action(props) {
+				return {
+					title: "Event ticketing Orders",
+					component: <AdminLayout><TicketRefund ticketId={props.params && props.params.ticketId} title="Event ticket refund"/></AdminLayout>,
+				};
+			}
+		},
+		{
+			path: '/event-ticketing-orders/get-refund/:ticketId/:holderId',
+			async action(props) {
+				return {
+					title: "Event ticketing Orders",
+					component: <AdminLayout><TicketRefund ticketId={props.params && props.params.ticketId} holderId={props.params && props.params.holderId} title="Event ticket refund"/></AdminLayout>,
 				};
 			}
 		},

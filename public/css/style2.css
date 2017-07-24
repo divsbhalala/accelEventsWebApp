@@ -114,6 +114,9 @@
 	max-height: 51px !important;
 }
 .form-group .glyphicon-ok, .form-group .glyphicon-remove {
+	display: none;
+}
+.form-group.has-feedback.has-error .glyphicon-remove, .form-group.has-feedback.has-success .glyphicon-ok {
 	display: block;
 }
 /** adimn **/
