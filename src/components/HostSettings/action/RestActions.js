@@ -1,4 +1,4 @@
-import {apiUrl as API_URL} from './../../clientConfig';
+import {apiUrl as API_URL} from './../../../clientConfig';
 import axios from 'axios';
 
 export function updateHostSettings(moduleType, auctionDTO) {

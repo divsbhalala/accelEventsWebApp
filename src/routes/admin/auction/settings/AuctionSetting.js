@@ -6,7 +6,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import {EditableTextField} from 'react-bootstrap-xeditable';
 import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory, resetAuctionSettings} from './../Auction';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/RestActions';
+import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
@@ -23,27 +23,15 @@ class AuctionSetting extends React.Component {
     super(props);
     this.state = {
       moduleType: 'auction',
-      settings: {},
       title: props['title'],
       bidIncrement:false,
       isValidData : false,
-      alert : null,
       showModal: false,
       alertVisible: false,
       alertMessage:null,
-      alertType:null
+      alertType:null,
+      settings:{}
     };
-  };
-
-  categoryNameValidator = (value, row) => {
-      const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-      if (!value) {
-        response.isValid = false;
-        response.notification.type = 'error';
-        response.notification.msg = 'Category name can\'t be empty!';
-        response.notification.title = 'Requested Category Name';
-      }
-      return response;
   };
 
   handleAlertDismiss = () => {
@@ -127,7 +115,6 @@ class AuctionSetting extends React.Component {
     settings.moduleHidden = this.state.settings.moduleHidden;
     settings.socialSharingEnabled = this.state.settings.socialSharingEnabled;
     settings.userTime = this.state.settings.userTime;
-    console.log(settings);
     this.props.updateHostSettings(this.state.moduleType, settings).then(resp => {
       if(resp && resp.data){
         this.handleAlertShow(resp.data.message,'success');
@@ -165,7 +152,6 @@ class AuctionSetting extends React.Component {
                   </div>
                   <div className="row">
                     <div className>
-                      {this.state.alert}
                       <div className="main-box no-header">
                         <div className="ajax-wrap text-center">
                           { this.state.alertVisible &&
@@ -186,8 +172,7 @@ class AuctionSetting extends React.Component {
                                      className="form-control datetimepicker white-bg"
                                      name="newEndDate"
                                      id="newEndDate"
-                                     defaultValue="2017/07/23 02:30"
-                                     value={this.state.settings.userTime}
+                                     defaultValue={this.state.settings.userTime}
                                      readOnly="readonly" />
                             </div>
                           </div>

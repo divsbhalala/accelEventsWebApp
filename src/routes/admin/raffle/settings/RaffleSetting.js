@@ -5,13 +5,14 @@ import s from './RaffleSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/RestActions';
+import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
 import DateTimeField from "react-bootstrap-datetimepicker";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
 import {Modal ,Button, Alert} from 'react-bootstrap';
+
 class RaffleSetting extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -21,8 +22,8 @@ class RaffleSetting extends React.Component {
     super(props);
     this.state = {
       moduleType: 'raffle',
-      settings: {},
       title: props['title'],
+      settings : {},
       bidIncrement:false,
       isValidData : false,
       alert : null,
@@ -30,8 +31,25 @@ class RaffleSetting extends React.Component {
       alertVisible: false,
       alertMessage:null,
       alertType:null,
-      categoryAlertVisible:false
+      loading: false
     };
+  };
+
+  handleAlertDismiss = () => {
+    this.setState({alertVisible: false, categoryAlertVisible:false});
+  };
+
+  handleAlertShow = (alertMessage,alertType) => {
+    this.setState({categoryAlertVisible:true,alertVisible: true, alertMessage,alertType});
+    setTimeout(function() { this.setState({alertVisible: false}); }.bind(this), 2000);
+  };
+
+  closeResetModal = () => {
+    this.setState({ showModal: false });
+  };
+
+  openResetModal = () => {
+    this.setState({ showModal: true });
   };
 
   componentWillMount(){
@@ -53,6 +71,47 @@ class RaffleSetting extends React.Component {
     });
   };
 
+  updateTimezone = (e) =>{
+    let selected = e.nativeEvent.target;
+    let settings = this.state.settings;
+    settings.eventTimeZone = selected[selected.selectedIndex].text;
+    this.setState({settings});
+  };
+
+  updateCompTicket = (e) =>{
+    let settings = this.state.settings;
+    settings.compTicketCode = e.target.value;
+    console.log(settings);
+    this.setState({settings});
+  };
+
+  onSaveSetting = () =>{
+    this.setState({loading:true});
+    const settings = {};
+    settings.activated = this.state.settings.activated;
+    settings.categoryEnabled = this.state.settings.categoryEnabled;
+    settings.eventTimeZone = this.state.settings.eventTimeZone;
+    settings.moduleHidden = this.state.settings.moduleHidden;
+    settings.socialSharingEnabled = this.state.settings.socialSharingEnabled;
+    settings.userTime = this.state.settings.userTime;
+    settings.compTicketCode = this.state.settings.compTicketCode;
+    settings.limiteTotalTicket = this.state.settings.limiteTotalTicket,
+	  settings.autoSubmitOnPurchase = this.state.settings.autoSubmitOnPurchase,
+    console.log(settings);
+    this.props.updateHostSettings(this.state.moduleType, settings).then(resp => {
+      if(resp && resp.data){
+        this.handleAlertShow(resp.data.message,'success');
+      }
+      else{
+        console.log(resp);
+      }
+      this.setState({loading:false});
+    }).catch((error) => {
+      this.setState({loading:false});
+      console.log(error);
+    });
+  };
+
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -66,7 +125,11 @@ class RaffleSetting extends React.Component {
                         <h1>
                           Raffle Settings
                           <div className="pull-right">
-                            <button className="btn btn-info btn-block" type="submit" onclick="$('.main-box > .form').submit();" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
+
+                            <button className={cx("btn btn-info btn-block save-settings", (this.state.settings.userTime || this.state.settings.compTicketCode) && 'disabled')}
+                              role="button" onClick={this.onSaveSetting}>
+                              {this.state.loading ? <div><i className='fa fa-spinner fa-spin'></i> Saving Settings..</div> : 'Save Settings' }
+                            </button>
                           </div>
                         </h1>
                       </div>
@@ -75,16 +138,17 @@ class RaffleSetting extends React.Component {
                   <div className="row">
                     <div className>
                       <div className="main-box no-header">
-                        <div id="formmessage" />
+                      <div className="ajax-wrap text-center">
+                        { this.state.alertVisible && <Alert bsStyle={this.state.alertType} onDismiss={this.handleAlertDismiss}><h4>{this.state.alertMessage}</h4></Alert> }
+                      </div>
                         <form id="command" className="form" action="update" method="POST">
-                          <input type="hidden" name="id" defaultValue={283} />
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Raffle end time
                               <div className="help-text" />
                             </div>
                             <div className="col-md-3">
-                              <input type="text" className="form-control datetimepicker white-bg" name="newEndDate" id="newEndDate" defaultValue="2017/07/23 02:30" readOnly="readonly" />
+                              <input type="text" className="form-control datetimepicker white-bg" name="newEndDate" id="newEndDate" defaultValue="2017/07/23 02:30" />
                             </div>
                           </div>
                           <div className="row form-group">
@@ -93,7 +157,7 @@ class RaffleSetting extends React.Component {
                               <div className="help-text" />
                             </div>
                             <div className="col-md-3">
-                              {this.state.settings.eventTimeZone && <TimeZoneSelector id="timeZone" name="timeZone" className="form-control"
+                              {this.state.settings.eventTimeZone && this.state.settings.timeZones && <TimeZoneSelector id="timeZone" name="timeZone" className="form-control"
                                 defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone} timeZoneList={this.state.settings.timeZones} /> }
                             </div>
                           </div>
@@ -103,7 +167,8 @@ class RaffleSetting extends React.Component {
                               <div className="help-text">Enter a comma separated list of codes that you wish to accept.</div>
                             </div>
                             <div className="col-md-3">
-                              <input type="text" className="form-control" name="compTicketCode" defaultValue />
+                              {this.state.settings && <input type="text" className="form-control" name="compTicketCode" value={this.state.settings.compTicketCode}
+                              onChange={this.updateCompTicket}/> }
                             </div>
                           </div>
                           <div className="row form-group">
@@ -112,29 +177,19 @@ class RaffleSetting extends React.Component {
                               <div className="help-text">This is popup text for enable social sharing</div>
                             </div>
                             <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="socialSharingEnabled" className="onoffswitch-checkbox" id="social" defaultChecked />
-                                <label className="onoffswitch-label" htmlFor="social">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                              { this.state.settings && <ToggleSwitch name="socialSharingEnabled" id="socialSharingEnabled"
+                                defaultValue={this.state.settings.socialSharingEnabled} className="success"
+                                onChange={()=>{ this.state.settings.socialSharingEnabled = !this.state.settings.socialSharingEnabled}}/> }
                             </div>
-                            <input type="hidden" name="socialSharingEnabled" defaultValue="off" />
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Enable Item Categories
                             </div>
-                            <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="categoryEnabled" className="onoffswitch-checkbox" id="categories" defaultChecked />
-                                <label className="onoffswitch-label" htmlFor="categories">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
-                              <input type="hidden" name="categoryEnabled" defaultValue="off" />
+                            <div className="col-md-3">{this.state.settings &&
+                              <ToggleSwitch name="categoryEnabled" id="categoryEnabled"
+                                  defaultValue={this.state.settings.categoryEnabled} className="success"
+                                  onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/> }
                             </div>
                           </div>
                           <div className="row form-group">
@@ -142,33 +197,32 @@ class RaffleSetting extends React.Component {
                               Hide Raffle Tab
                             </div>
                             <div className="col-md-3">
-                              <div className="onoffswitch onoffswitch-success">
-                                <input type="checkbox" name="moduleHidden" className="onoffswitch-checkbox" id="hidden" />
-                                <label className="onoffswitch-label" htmlFor="hidden">
-                                  <div className="onoffswitch-inner" />
-                                  <div className="onoffswitch-switch" />
-                                </label>
-                              </div>
+                              <ToggleSwitch name="activated" id="activated"
+                                  defaultValue={this.state.settings.activated} className="success"
+                                  onChange={()=>{ this.state.settings.activated = !this.state.settings.activated}}/>
                             </div>
                           </div>
-                          {/*-<div class="row form-group">
-                           <div class="col-md-3 col-md-offset-1">
-                           Sweepstakes
-                           </div>
-                           <div class="col-md-3">
-                           <div class="onoffswitch onoffswitch-success">
-                           <input type="checkbox" name="sweepstakes" class="onoffswitch-checkbox" id="sweepstakes" >
-                           <label class="onoffswitch-label" for="sweepstakes">
-                           <div class="onoffswitch-inner"></div>
-                           <div class="onoffswitch-switch"></div>
-                           </label>
-                           </div>
-                           <input type="hidden" name="sweepstakes" value="off" />
-                           </div>
-                           </div> -*/}
-                          <input type="hidden" name defaultValue />
-                          <div>
-                          </div></form>
+                          <div className="row form-group">
+                            <div className="col-md-3 col-md-offset-1">
+                              Auto Submit On Purchase
+                            </div>
+                            <div className="col-md-3">
+                              <ToggleSwitch name="autoSubmitOnPurchase" id="autoSubmitOnPurchase"
+                                  defaultValue={this.state.settings.autoSubmitOnPurchase} className="success"
+                                  onChange={()=>{ this.state.settings.autoSubmitOnPurchase = !this.state.settings.autoSubmitOnPurchase}}/>
+                            </div>
+                          </div>
+                          <div className="row form-group">
+                            <div className="col-md-3 col-md-offset-1">
+                              Limit Total Ticket
+                            </div>
+                            <div className="col-md-3">
+                              <ToggleSwitch name="limiteTotalTicket" id="limiteTotalTicket"
+                                  defaultValue={this.state.settings.limiteTotalTicket} className="success"
+                                  onChange={()=>{ this.state.settings.limiteTotalTicket = !this.state.settings.limiteTotalTicket}}/>
+                            </div>
+                          </div>
+                        </form>
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" data-toggle="modal" data-target="#resetModuleConfirm">Reset</button>
                         </div>
@@ -438,9 +492,12 @@ class RaffleSetting extends React.Component {
                           {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
                         </div>
                         <div className="form-group operations-row text-center">
-                          <button className="btn btn-info mrg-t-lg" type="submit" onclick="$('.main-box > .form').submit();" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
+                          <button className={cx("btn btn-info btn-block save-settings", ( (this.state.emailFeedBack && !this.state.email) || (this.state.passwordFeedBack && !this.state.password)) && 'disabled')}
+                            role="button" onClick={this.onSaveSetting}>
+                            {this.state.loading ? <div><i className='fa fa-spinner fa-spin'></i> Saving Settings..</div> : 'Save Settings' }
+                          </button>
                         </div>
-                      </div> {/* /.form */}
+                      </div>
                     </div>
                   </div>
                 </div>

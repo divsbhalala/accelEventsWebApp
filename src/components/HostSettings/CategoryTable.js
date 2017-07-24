@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import RemoteTable from './RemoteTable';
 import {Alert} from 'react-bootstrap';
-import PopupModal from '../PopupModal/index'
 
 export default class CategoryTable extends React.Component {
   constructor(props) {
@@ -16,7 +15,7 @@ export default class CategoryTable extends React.Component {
       categoryAlertVisible:false,
       categoryMessage : ''
     };
-  }
+  };
 
   addItemCategory(categoryDTO){
       console.log(categoryDTO);
@@ -110,7 +109,7 @@ export default class CategoryTable extends React.Component {
             deleteItemCategory = {this.deleteItemCategory.bind(this)}/>
       </div>
     );
-  }
+  };
 }
 CategoryTable.propTypes = {
   data: PropTypes.array.isRequired

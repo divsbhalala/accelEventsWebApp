@@ -5,7 +5,7 @@ import s from './FundSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/RestActions';
+import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
 import DateTimeField from "react-bootstrap-datetimepicker";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';

@@ -17,20 +17,17 @@ export default class TimeZoneSelector extends React.Component {
 
   render() {
     return (<select id={this.props.id} name={this.props.name} className={this.props.className}
-      defaultValue={this.props.defaultValue} onChange={()=>{ if(this.props.onChange){this.props.onChange()}}}>
+      defaultValue={this.props.defaultValue} onChange={(e)=>{ if(this.props.onChange){this.props.onChange(e)}}}>
       {this.createTimeZones()}
     </select>);
   };
 }
 
 TimeZoneSelector.propTypes = {
-  settings: PropTypes.object.isRequired
-};
-TimeZoneSelector.propTypes = {
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	defaultValue: PropTypes.string.isRequired,
 	className: PropTypes.string.isRequired,
 	onChange: PropTypes.func.isRequired,
-  timeZoneList: PropTypes.object.isRequired
+  timeZoneList: PropTypes.array.isRequired
 };
