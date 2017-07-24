@@ -121,7 +121,7 @@ class FundAddItems extends React.Component {
                                             <div className="col-md-6">
 																		              Hide Item
 																		              <div className="help-text">This is will hide item from display page</div>
-                                      </div>
+                                             </div>
                                             <div className="col-md-6">
                                         <div className="onoffswitch onoffswitch-success activeswitch">
                                                   <input type="checkbox" name="activeEnabled" className="onoffswitch-checkbox" id="active" />

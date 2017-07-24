@@ -61,7 +61,8 @@ class AuctionPerformance extends React.Component {
                   <div className="main-box no-header">
                     <div className="main-box-body clearfix">
                       <div id="alertmessage" />
-                      <AuctionItemTable items={this.state.items} />
+                      {this.state.items?
+                      <AuctionItemTable items={this.state.items} />: <div id="app" className="loader" /> }
                       <div className="form-group operations-row mrg-t-lg">
                         <div className="row">
                           <div className="col-md-3" role="group">
