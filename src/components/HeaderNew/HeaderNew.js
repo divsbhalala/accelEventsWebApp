@@ -613,7 +613,7 @@ class HeaderNew extends React.Component {
 					onCloseFunc={this.hideFormMessagePopup}
 					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={() => {
 						this.hideFormMessagePopup()
-					}}>Close</button>}
+					}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
 				>
 					<center>{ this.state.formMessage }</center>
 				</PopupModel> }
@@ -624,7 +624,7 @@ class HeaderNew extends React.Component {
 					params={this.props.params }
 					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
 						this.hideLoginPopup()
-					}}> Close </button>}
+					}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
 				/>
 			</div>
 		)
