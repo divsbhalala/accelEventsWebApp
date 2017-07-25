@@ -166,7 +166,7 @@ class Checkout extends React.Component {
 		else if (this.cardHolderName.value && (this.cardHolderName.value.length <= 6 || this.cardHolderName.value.length > 70)) {
 			this.setState({
 				cardHolderName: false,
-				cardHolderNameFeedBackMsg: "TThe card holder name must be more than 6 and less than 70 characters long"
+				cardHolderNameFeedBackMsg: "The card holder name must be more than 6 and less than 70 characters long"
 			});
 		}
 		else {

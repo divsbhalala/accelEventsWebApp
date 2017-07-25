@@ -65,7 +65,7 @@ class Auction extends React.Component {
                     </tr>
                   </thead>
                 </table>
-                <div id="scroller" className="scrollingpage microsoft scroll-container container" height={ "500px"}>
+                <div id="scroller" className="scrollingpage microsoft scroll-container" height={ "500px"}>
                   {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <p  className="marquee" >
                     <table className={cx("table datatables scrollingtable" , s.inner)}>
                       <tbody>
