@@ -63,7 +63,7 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
           <link rel="stylesheet" href="/css/bootstrap-editable.css" />
           <link rel="stylesheet" href="/css/color-picker.css" />
-          <link rel="stylesheet" href="/css/react-bootstrap-date-picker.css" />
+          <link rel="stylesheet" href="/css/daterangepicker.css" />
           {/* end plugins */}
 
           <link rel="stylesheet" href="/css/style.min.css"/>

@@ -33,7 +33,7 @@ export function doGetTicketingCouponCodes() {
 	}
 }
 
-export function doGetTicketTypes(method, data) {
+export function doTicketTypes(method, data) {
 	return (dispatch) => {
 		return axios({
 			method: method ? method : "get",

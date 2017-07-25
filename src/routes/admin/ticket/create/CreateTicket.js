@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import moment from 'moment';
 import {connect} from 'react-redux';
+import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
 import PopupModel from '../../../../components/PopupModal';
 import TicketRow from '../../../../components/TicketRow';
 import history from '../../../../history';
 import s from './CreateTicket.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {doGetTicketTypes} from '../action';
+import {doTicketTypes} from '../action';
 
 class CreateTicket extends React.Component {
 	static propTypes = {
@@ -27,21 +28,24 @@ class CreateTicket extends React.Component {
 			orderOffset: 0,
 			dialogMessage: "",
 			dialogTitle: "",
-			showDialog: false
+			showDialog: false,
+			startDate: moment(),
+			endDate: moment().add(1, 'days'),
 		};
-		this.doGetTicketTypes = this.doGetTicketTypes.bind();
-		this.addNewTicket = this.addNewTicket.bind();
+		this.doTicketTypes = this.doTicketTypes.bind(this);
+		this.addNewTicket = this.addNewTicket.bind(this);
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.throwError = this.throwError.bind(this);
 		this.onError = this.onError.bind(this);
+		this.updateEventData = this.updateEventData.bind(this);
 	}
 
 	componentWillMount() {
-		this.doGetTicketTypes();
+		this.doTicketTypes();
 	}
 
-	doGetTicketTypes = () => {
-		this.props.doGetTicketTypes().then(resp => {
+	doTicketTypes = () => {
+		this.props.doTicketTypes().then(resp => {
 			this.setState({
 				eventData: resp && resp.data
 			})
@@ -67,7 +71,6 @@ class CreateTicket extends React.Component {
 		let resendMailError = error && error.response && error.response.data;
 		this.throwError("Error", resendMailError && resendMailError.errorMessage);
 	};
-
 	addNewTicket = ()=>{
 		let eventData = this.state.eventData;
 		if(!eventData.ticketTypes){
@@ -76,16 +79,16 @@ class CreateTicket extends React.Component {
 		eventData.ticketTypes.push({
 			"chnageToTabel": false,
 			"enableTicketDescription": false,
-			"endDate": "2017-07-24T05:11:55.186Z",
+			"endDate": moment().add(1, 'days'),
 			"hidden": false,
 			"isTable": false,
-			"maxTickerPerBuyer": 0,
+			"maxTickerPerBuyer": 1,
 			"minTickerPerBuyer": 0,
 			"name": "string",
 			"numberOfTicket": 0,
 			"passfeetobuyer": false,
 			"price": 0,
-			"startDate": "2017-07-24T05:11:55.186Z",
+			"startDate": moment(),
 			"ticketTypeDescription": "",
 			"ticketsPerTable": 0,
 			"typeId": 0
@@ -96,7 +99,65 @@ class CreateTicket extends React.Component {
 		})
 
 	};
+	updateEventData = (event)=>{
+		event.preventDefault();
+		let eventData = this.state.eventData;
+		delete eventData.availableTimeZone;
+		delete eventData.ticketingFee;
+		eventData.ticketingFee = eventData.eventAddress ? eventData.eventAddress : "" ;
+		this.props.doTicketTypes('post', this.state.eventData).then(resp => {
+			console.log("resp", resp);
+		}).catch(error => {
+			this.onError(error);
+		});
+		return false;
+	};
+
+	handleDateRangeApply = (event, picker)=> {
+		let ticket= this.state.eventData;
+		ticket.eventEndDate = picker.endDate;
+		ticket.eventStartDate = picker.startDate;
+		this.setState({
+			eventData: ticket
+		});
+		this.updateTicketState(ticket, this.props.index);
+	};
+
+	updateTicketState = (data, key)=>{
+		console.log(data, key);
+		let eventData = this.state.eventData;
+		if(!eventData.ticketTypes){
+			eventData.ticketTypes = [];
+		}
+		if(!eventData.ticketTypes[key]){
+			eventData.ticketTypes[key] = {};
+		}
+		eventData.ticketTypes[key]=data;
+		this.setState({
+			eventData: eventData
+		})
+	};
+
 	render() {
+		let start = this.state.startDate.format('YYYY-MM-DD HH:mm:ss');
+		let end = this.state.endDate.format('YYYY-MM-DD HH:mm:ss');
+		let label = start + ' - ' + end;
+		if (start === end) {
+			label = start;
+		}
+
+		let locale = {
+			format: 'YYYY-MM-DD HH:mm:ss',
+			separator: ' - ',
+			applyLabel: 'Apply',
+			cancelLabel: 'Cancel',
+			weekLabel: 'W',
+			customRangeLabel: 'Custom Range',
+			daysOfWeek: moment.weekdaysMin(),
+			monthNames: moment.monthsShort(),
+			firstDay: moment.localeData().firstDayOfWeek(),
+		};
+
 		return (
 			<div id="content-wrapper" className="admin-content-wrapper">
 				<style
@@ -129,7 +190,7 @@ class CreateTicket extends React.Component {
 									different ticket types, prices, selling dates, and number of
 									tickets available at each desired level.
 								</p>
-								<form method="POST" className="create-event form mrg-t-lg">
+								<form method="POST" className="create-event form mrg-t-lg" onSubmit={this.updateEventData}>
 									<div className="row">
 										<div className="col-md-6">
 											<div className="form-group">
@@ -149,7 +210,21 @@ class CreateTicket extends React.Component {
 													<div className="form-group mrg-b-0">
 														<label>Starts<span className="red"/></label>
 														<div className="row">
-															<div className="col-md-6">
+															<div className="col-md-12">
+																<DatetimeRangePicker
+																	timePicker
+																	timePicker24Hour
+																	showDropdowns
+																	timePickerSeconds
+																	locale={locale}
+																	startDate={this.state.startDate}
+																	endDate={this.state.endDate}
+																	onApply={this.handleDateRangeApply}
+																>
+																	<div className="form-group">
+																		<input type="text" className="form-control" value={label}/>
+																	</div>
+																</DatetimeRangePicker>
 																<input type="text" className="form-control white-bg" name="eventStartDate"
 																			 id="eventStartDate" defaultValue={this.state.eventData.eventStartDate}/>
 															</div>
@@ -243,7 +318,7 @@ class CreateTicket extends React.Component {
 										</div>
 										<div className="table-body event-tickets">
 											{
-												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} ticket={item} />) : ""}
+												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} index={key} ticket={item} updateTicketState={this.updateTicketState} />) : ""}
 										</div>
 									</div>
 
@@ -275,7 +350,7 @@ class CreateTicket extends React.Component {
 	}
 }
 const mapDispatchToProps = {
-	doGetTicketTypes: (method, data) => doGetTicketTypes(method, data),
+	doTicketTypes: (method, data) => doTicketTypes(method, data),
 };
 
 const mapStateToProps = (state) => ({});
