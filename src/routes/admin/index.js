@@ -51,7 +51,7 @@ export default {
 				return {
 					title,
 					chunk: 'admin',
-					component: <AdminLayout><Admin title={title}/></AdminLayout>,
+					component: <AdminLayout class="host dashboard"><Admin title={title}/></AdminLayout>,
 				};
 			}
 		},
@@ -60,7 +60,7 @@ export default {
 			async action() {
 				return {
 					title: "Design Page",
-					component: <AdminLayout><Design title="Design Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><Design title="Design Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -69,7 +69,7 @@ export default {
 			async action() {
 				return {
 					title: "Ticket Page",
-					component: <AdminLayout><Ticket title="Ticket Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><Ticket title="Ticket Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -78,7 +78,7 @@ export default {
 			async  action() {
 				return {
 					title: "Create Ticket",
-					component: <AdminLayout><CreateTicket title="Create Ticket"/></AdminLayout>,
+					component: <AdminLayout class="host "><CreateTicket title="Create Ticket"/></AdminLayout>,
 				};
 			}
 		},
@@ -87,7 +87,7 @@ export default {
 			async  action() {
 				return {
 					title: "Event ticketing settings",
-					component: <AdminLayout><TicketSetting title="Event ticketing settings"/></AdminLayout>,
+					component: <AdminLayout class="host "><TicketSetting title="Event ticketing settings"/></AdminLayout>,
 				};
 			}
 		},
@@ -96,7 +96,7 @@ export default {
 			async action() {
 				return {
 					title: "Event ticketing Orders",
-					component: <AdminLayout><TicketOrders title="Event ticketing Orders"/></AdminLayout>,
+					component: <AdminLayout class="host "><TicketOrders title="Event ticketing Orders"/></AdminLayout>,
 				};
 			}
 		},
@@ -105,7 +105,7 @@ export default {
 			async action(props) {
 				return {
 					title: "Event ticketing Orders",
-					component: <AdminLayout><TicketHolderData ticketId={props.params && props.params.ticketId} title="Event ticketing edit holder data"/></AdminLayout>,
+					component: <AdminLayout class="host "><TicketHolderData ticketId={props.params && props.params.ticketId} title="Event ticketing edit holder data"/></AdminLayout>,
 				};
 			}
 		},
@@ -114,7 +114,7 @@ export default {
 			async action(props) {
 				return {
 					title: "Event ticketing Orders",
-					component: <AdminLayout><TicketRefund ticketId={props.params && props.params.ticketId} title="Event ticket refund"/></AdminLayout>,
+					component: <AdminLayout class="host "><TicketRefund ticketId={props.params && props.params.ticketId} title="Event ticket refund"/></AdminLayout>,
 				};
 			}
 		},
@@ -123,7 +123,7 @@ export default {
 			async action(props) {
 				return {
 					title: "Event ticketing Orders",
-					component: <AdminLayout><TicketRefund ticketId={props.params && props.params.ticketId} holderId={props.params && props.params.holderId} title="Event ticket refund"/></AdminLayout>,
+					component: <AdminLayout class="host "><TicketRefund ticketId={props.params && props.params.ticketId} holderId={props.params && props.params.holderId} title="Event ticket refund"/></AdminLayout>,
 				};
 			}
 		},
@@ -132,7 +132,7 @@ export default {
 			async action() {
 				return {
 					title: "Ticket Performance",
-					component: <AdminLayout><TicketPerformance title="Ticket Performance Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><TicketPerformance title="Ticket Performance Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -141,7 +141,7 @@ export default {
 			async action() {
 				return {
 					title: "Raffle Page",
-					component: <AdminLayout><Raffle title="Raffle Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><Raffle title="Raffle Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -150,7 +150,7 @@ export default {
 			async action() {
 				return {
 					title: "Raffle performance Page",
-					component: <AdminLayout><RafflePerformance title="Raffle performance Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><RafflePerformance title="Raffle performance Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -159,7 +159,7 @@ export default {
 			async action() {
 				return {
 					title: "Raffle Add Item Page",
-					component: <AdminLayout><RaffleAddItems title="Raffle Add Item"/></AdminLayout>,
+					component: <AdminLayout class="host "><RaffleAddItems title="Raffle Add Item"/></AdminLayout>,
 				};
 			}
 		},
@@ -168,7 +168,7 @@ export default {
 			async action() {
 				return {
 					title: "Raffle Setting",
-					component: <AdminLayout><RaffleSetting title="Raffle Setting "/></AdminLayout>,
+					component: <AdminLayout class="host "><RaffleSetting title="Raffle Setting "/></AdminLayout>,
 				};
 			}
 		},
@@ -177,7 +177,7 @@ export default {
 			async action() {
 				return {
 					title: "Silent Auction Page",
-					component: <AdminLayout><Auction title="Silent Auction Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><Auction title="Silent Auction Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -186,7 +186,7 @@ export default {
 			async action() {
 				return {
 					title: "Silent Auction performance Page",
-					component: <AdminLayout><AuctionPerformance title="Silent Auction performance Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><AuctionPerformance title="Silent Auction performance Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -195,7 +195,7 @@ export default {
 			async action() {
 				return {
 					title: "Silent Auction Add Item",
-					component: <AdminLayout><SilentAuctionAddItems title="Silent Auction Add item"/></AdminLayout>,
+					component: <AdminLayout class="host "><SilentAuctionAddItems title="Silent Auction Add item"/></AdminLayout>,
 				};
 			}
 		},
@@ -204,7 +204,7 @@ export default {
 			async action() {
 				return {
 					title: "Silent Auction Setting",
-					component: <AdminLayout><SilentAuctionSettings title="Silent Auction Setting"/></AdminLayout>,
+					component: <AdminLayout class="host "><SilentAuctionSettings title="Silent Auction Setting"/></AdminLayout>,
 				};
 			}
 		},
@@ -213,7 +213,7 @@ export default {
 			async  action() {
 				return {
 					title: "Setting Page",
-					component: <AdminLayout><SettingsGeneral title="Setting Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><SettingsGeneral title="Setting Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -222,7 +222,7 @@ export default {
 			async action() {
 				return {
 					title: "Users Page",
-					component: <AdminLayout><Users title="Users Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><Users title="Users Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -231,7 +231,7 @@ export default {
 			async action() {
 				return {
 					title: "Fund Page",
-					component: <AdminLayout><Fund title="Fund Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><Fund title="Fund Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -240,7 +240,7 @@ export default {
 			async action() {
 				return {
 					title: "Fund Page",
-					component: <AdminLayout><FundAddItems title="Fund Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><FundAddItems title="Fund Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -249,7 +249,7 @@ export default {
 			async action() {
 				return {
 					title: "Fund Page",
-					component: <AdminLayout><FundSetting title="Fund Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><FundSetting title="Fund Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -258,7 +258,7 @@ export default {
 			async action() {
 				return {
 					title: "Fund performance Page",
-					component: <AdminLayout><FundPerformance title="Fund performance Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><FundPerformance title="Fund performance Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -267,7 +267,7 @@ export default {
 			async action() {
 				return {
 					title: "Donation performance Page",
-					component: <AdminLayout><DonationPerformance title="Donation performance Page"/></AdminLayout>,
+					component: <AdminLayout class="host "><DonationPerformance title="Donation performance Page"/></AdminLayout>,
 				};
 			}
 		},
@@ -276,7 +276,7 @@ export default {
 			async action() {
 				return {
 					title: "settings credit card",
-					component: <AdminLayout><SettingsCreditCard title="settings credit card"/></AdminLayout>,
+					component: <AdminLayout class="host "><SettingsCreditCard title="settings credit card"/></AdminLayout>,
 				};
 			}
 		},
@@ -285,7 +285,7 @@ export default {
 			async action() {
 				return {
 					title: "settings account",
-					component: <AdminLayout><SettingsAccount title="Settings Account"/></AdminLayout>,
+					component: <AdminLayout class="host "><SettingsAccount title="Settings Account"/></AdminLayout>,
 				};
 			}
 		},
@@ -294,7 +294,7 @@ export default {
 			async action() {
 				return {
 					title: "user management volunteers",
-					component: <AdminLayout><UserManagement title="user management volunteers"/></AdminLayout>,
+					component: <AdminLayout class="host "><UserManagement title="user management volunteers"/></AdminLayout>,
 				};
 			}
 		},

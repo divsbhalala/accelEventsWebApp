@@ -37,7 +37,7 @@ class AdminSiderbar extends React.Component {
 
 	render() {
 		return (
-			<div className="nav-small-id" >
+			<div className="admin-sidebar-wrap" >
 				<div id="nav-col">
 					<section id="col-left" className="col-left-nano has-scrollbar">
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
@@ -45,7 +45,7 @@ class AdminSiderbar extends React.Component {
 								<div className="event-logo">
 									<img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png" alt className="img-responsive" />
 									<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
-										<img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
+										<img src="/images/photo-camera.png" /> Change Logo
 									</a>
 								</div>
 							</div>
