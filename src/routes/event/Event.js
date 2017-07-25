@@ -131,7 +131,7 @@ class Event extends React.Component {
 				})
 			} else {
 				this.setState({
-					tab: 'Donation'
+					tab: 'donation'
 				})
 			}
 			this.setActiveTabState(this.state.tab)
@@ -357,7 +357,7 @@ class Event extends React.Component {
 	setActiveTabState = (label) => {
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
 
-		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donation' )) {
+		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donate' )) {
 			if (label == 'Auction') {
 				label = 'auction';
 				this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
@@ -372,7 +372,7 @@ class Event extends React.Component {
 
 			} else if (label == 'The Event') {
 				label = 'ticketing';
-			} else if (label == 'Donation') {
+			} else if (label == 'Donate') {
 				label = 'donation';
 			}
 			this.setState({tab: label});
@@ -892,7 +892,7 @@ class Event extends React.Component {
 											</InfiniteScroll>
 										</div>
 									</Tab>
-									<Tab label="Donation" disabled={!this.state.activeDonation}>
+									<Tab label="Donate" disabled={!this.state.activeDonation}>
 										<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
 										</div>
 									</Tab>
