@@ -14,7 +14,7 @@ class AdminLayout extends React.Component {
 
   render() {
     return (
-      <div className="container nav-small-class p-0"  >
+      <div className={(this.props.class)}>
         <HeaderNew admin={true}/>
         <AdminSiderbar />
         {this.props.children}

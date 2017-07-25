@@ -360,7 +360,7 @@ class HeaderNew extends React.Component {
 		return (
 			<div className={cx("top-header-wrap")}>
 				<Navbar fluid={true} style={ {margin: 0} }>
-					<Brand className={cx(this.props.admin && "p-0")}>
+					<Brand className={cx(this.props.admin)}>
             <span >
               { this.props.eventData &&
 							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
