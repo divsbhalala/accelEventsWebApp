@@ -148,6 +148,11 @@ class Checkout extends React.Component {
 				coupon: this.coupon.value
 			});
 	};
+	addressZipValidateHandler = (e) => {
+		if ([69, 187, 188, 189, 190].includes(e.keyCode)) {
+		    e.preventDefault();
+		  }
+	};
 	cardHolderNameValidateHandler = (e) => {
 
 		this.setState({
@@ -1334,7 +1339,10 @@ class Checkout extends React.Component {
 																							</div>
 																							<input type="number" className="form-control" size={6}
 																										 data-stripe="address_zip" name="address_zip"
-																										 data-fv-field="address_zip"/>
+																										 data-fv-field="address_zip" ref={ref => {
+																												 this.address_zip = ref;
+																											 }}
+																											 onKeyDown={this.addressZipValidateHandler} />
 																						</div>
 																						<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																							 data-fv-icon-for="address_zip"/>
