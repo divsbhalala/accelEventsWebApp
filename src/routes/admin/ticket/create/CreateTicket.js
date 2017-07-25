@@ -1,3 +1,10 @@
+/**
+ * @Author: Dharmesh Rajodiya <dev1>
+ * @Date:   2017-07-25 06:46:02
+ * @Last modified by:   dev1
+ * @Last modified time: 2017-07-25 09:10:43
+ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
@@ -206,48 +213,23 @@ class CreateTicket extends React.Component {
 															 autoComplete="off"/>
 											</div>
 											<div className="row">
-												<div className="col-md-6">
+												<div className="col-md-12">
 													<div className="form-group mrg-b-0">
-														<label>Starts<span className="red"/></label>
-														<div className="row">
-															<div className="col-md-12">
-																<DatetimeRangePicker
-																	timePicker
-																	timePicker24Hour
-																	showDropdowns
-																	timePickerSeconds
-																	locale={locale}
-																	startDate={this.state.startDate}
-																	endDate={this.state.endDate}
-																	onApply={this.handleDateRangeApply}
-																>
-																	<div className="form-group">
-																		<input type="text" className="form-control" value={label}/>
-																	</div>
-																</DatetimeRangePicker>
-																<input type="text" className="form-control white-bg" name="eventStartDate"
-																			 id="eventStartDate" defaultValue={this.state.eventData.eventStartDate}/>
-															</div>
-															<div className="col-md-4">
-																<input type="text" className="form-control white-bg" name="eventStartTime"
-																			 id="eventStartTime" defaultValue={this.state.eventData.eventStartDate}/>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div className="col-md-6">
-													<div className="form-group mrg-b-0">
-														<label>Ends<span className="red"/></label>
-														<div className="row">
-															<div className="col-md-6">
-																<input type="text" className="form-control white-bg" name="eventEndDate"
-																			 id="eventEndDate" defaultValue={this.state.eventData.eventStartDate}/>
-															</div>
-															<div className="col-md-4">
-																<input type="text" className="form-control white-bg" name="eventEndTime"
-																			 id="eventEndTime" defaultValue={this.state.eventData.eventStartDate}/>
-															</div>
-														</div>
+														<label>Event Starts and End duration<span className="red"/></label>
+                            <DatetimeRangePicker
+                              timePicker
+                              timePicker24Hour
+                              showDropdowns
+                              timePickerSeconds
+                              locale={locale}
+                              startDate={this.state.startDate}
+                              endDate={this.state.endDate}
+                              onApply={this.handleDateRangeApply}
+                            >
+                              <div className="form-group">
+                                <input type="text" className="form-control" value={label}/>
+                              </div>
+                            </DatetimeRangePicker>
 													</div>
 												</div>
 											</div>
