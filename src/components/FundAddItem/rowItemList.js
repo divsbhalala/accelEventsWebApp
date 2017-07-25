@@ -52,28 +52,49 @@ handleImageUpload(file) {
     let item=this.state.item;
     item.description=this.description.value;
       this.setState({item})
+    this.autoAddData();
   }
   itemNameHandlerChange = (e) =>{
     let item=this.state.item;
     item.name=this.itemName.value;
       this.setState({item})
+    this.autoAddData();
   }
   itemCodeHandlerChange = (e) =>{
     let item=this.state.item;
     item.code=this.itemCode.value;
       this.setState({item})
+    this.autoAddData();
   }
-  pledgePriceHandlerChange = (e) =>{
+  startingBidHandlerChange = (e) =>{
     let item=this.state.item;
-    item.code=this.itemCode.value;
+    item.startingBid=this.startingBid.value;
       this.setState({item})
+    this.autoAddData();
   }
+  autoAddData =() => {
+  console.log("---><><><",this.state)
+  if(this.state.item.name && this.state.item.name &&  this.state.item.startingBid ){
+    if (this.state.item.id ) {
+      this.props.updateItemList('fundANeed', this.state.item.id, this.state.item).then(resp => {
+        console.log("Updated ")
+      })
+    } else {
+      this.props.addItemList('fundANeed', this.state.item).then(resp => {
+        let item = this.state.item;
+        item.id=100000
+        this.setState({item})
+        console.log("Insert ")
+      })
+    }
+  }
+}
   getDragHeight() { return 60; };
   doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };
   showPanel = () =>{ this.setState({ toggle:true }) };
 
 render() {
-  const {item, itemSelected, dragHandle} = this.props.item;
+ // const {item, itemSelected, dragHandle} = this.props.item;
   return (
     <div data-id={36} className={ cx("item-row  ui-sortable-handle",this.state.toggle && "open", this.props.item.images && this.props.item.images.length  ? "has-image" : "",this.props.item.images && this.props.item.description ? "has-description" : "")} >
       <div className="flex-row">
@@ -90,8 +111,8 @@ render() {
         <div className="flex-col item-starting-bid-column">
           <div className="input-group">
             <span className="input-group-addon">$</span>
-            <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.pledgePrice}  onFocus={this.showPanel}
-                   ref={ref=> {this.pledgePrice=ref;}} onKeyUp={this.pledgePriceHandlerChange} />
+            <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
+                   ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} />
           </div>
         </div>
         <div className="flex-col text-center item-actions-column">
@@ -179,8 +200,8 @@ render() {
 
 const mapDispatchToProps = {
   getItemList : (type) => getItemList(type),
-  addItemList : (type) => addItemList(type,id,data),
-  updateItemList : (type,id, auctionDTO) => updateItemList(type,id, data),
+  addItemList : (type,data) => addItemList(type,data),
+  updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
 };
 

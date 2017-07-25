@@ -90,7 +90,7 @@ export function updateItemList(type,id,data) {
     return axios({
       method: 'put',
       url: API_URL + 'host/'+type+'/item/' + id,
-      data : auctionDTO,
+      data : data,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp => {
       return resp;

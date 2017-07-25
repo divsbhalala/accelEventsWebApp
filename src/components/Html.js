@@ -75,7 +75,7 @@ class Html extends React.Component {
           {/* for temporary changes */}
           <link rel="stylesheet" href="/css/style2.css"/>
           {/*<link rel="stylesheet" href="/css/custom.css" />*/}
-          <link rel="stylesheet" href="http://www.stagingaccel.com:8080/AccelEventsWebApp/css/add-items.css" />
+          <link rel="stylesheet" href="/css/add-items.css" />
 
           <script src="/css/Tel/libphonenumber.js"></script>
           {styles.map(style =>

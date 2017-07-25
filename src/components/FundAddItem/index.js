@@ -75,7 +75,20 @@ class PlanetItem extends React.Component {
    addNewRow = () =>{
     if(this.state.list[0].id){
        const list = this.state.list;
-       list.unshift({});
+      let data={
+         "active": false,
+         "category": "",
+         "code": "",
+         "description": "",
+         "images": [
+           {
+             "imageUrl": ""
+           }
+         ],
+         "name": "",
+         "startingBid": 0
+       }
+       list.unshift(data);
        this.setState({list})
     }
    }
@@ -116,8 +129,8 @@ class PlanetItem extends React.Component {
 
 const mapDispatchToProps = {
   getItemList : (type) => getItemList(type),
-  addItemList : (type) => addItemList(type,id,data),
-  updateItemList : (type,id, auctionDTO) => updateItemList(type,id, data),
+  addItemList : (type,data) => addItemList(type,data),
+  updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
 };
 
