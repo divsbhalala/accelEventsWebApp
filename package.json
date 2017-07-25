@@ -73,6 +73,8 @@
     "react-router-dom": "^4.1.2",
     "react-save-refs": "^1.0.2",
     "react-sidenav": "^2.1.1",
+    "react-sortable-hoc": "^0.6.5",
+    "react-summernote": "^2.0.0",
     "react-telephone-input": "^4.0.1",
     "react-transform-hmr": "^1.0.4",
     "redux": "^3.6.0",

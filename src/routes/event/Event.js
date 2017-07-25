@@ -1121,7 +1121,7 @@ class GMap extends React.Component {
 			'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
 			'    </div>' +
 			'    <div class="form-group">' +
-			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick="getDirections()">' +
+			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onClick="getDirections()">' +
 			'    </div>' +
 			'    <div class="form-group">' +
 			'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +

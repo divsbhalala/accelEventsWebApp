@@ -1,10 +1,10 @@
 import React from 'react';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {getItemList, addItemList, updateItemList,updateItemListPosition} from './../../routes/admin/fund/addItem/action';
+import {getItemList, addItemList, updateItemList,updateItemListPosition,deleteItemList} from './../../routes/admin/action';
 import ToggleSwitch from '../Widget/ToggleSwitch';
 import Dropzone from 'react-dropzone';
-
+import CKEditor from 'react-ckeditor-wrapper';
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
 
@@ -13,6 +13,7 @@ class RowItemList extends React.Component {
     value: 0,
     toggle:false,
     uploadedFileCloudinaryUrl: '',
+    isDataUpdate:false,
   };
 componentWillReceiveProps() {
     this.setState({
@@ -48,71 +49,84 @@ handleImageUpload(file) {
   });
 }
 
-  descriptionChangeHandler = (e) =>{
+  descriptionChangeHandler = (value) =>{
     let item=this.state.item;
-    item.description=this.description.value;
-      this.setState({item})
-    this.autoAddData();
+    item.description=value;
+      this.setState({item,isDataUpdate:true})
   }
   itemNameHandlerChange = (e) =>{
     let item=this.state.item;
     item.name=this.itemName.value;
-      this.setState({item})
-    this.autoAddData();
+      this.setState({item,isDataUpdate:true})
   }
   itemCodeHandlerChange = (e) =>{
     let item=this.state.item;
     item.code=this.itemCode.value;
-      this.setState({item})
-    this.autoAddData();
+      this.setState({item,isDataUpdate:true})
   }
   startingBidHandlerChange = (e) =>{
     let item=this.state.item;
     item.startingBid=this.startingBid.value;
-      this.setState({item})
-    this.autoAddData();
+      this.setState({item,isDataUpdate:true})
   }
   autoAddData =() => {
   console.log("---><><><",this.state)
-  if(this.state.item.name && this.state.item.name &&  this.state.item.startingBid ){
+    setTimeout(()=>{
+    if(this.state.item.name && this.state.item.name &&  this.state.item.startingBid && this.state.isDataUpdate ){
+      if (this.state.item.id ) {
+        this.props.updateItemList('fundANeed', this.state.item.id, this.state.item).then(resp => {
+          console.log("Updated ",this.props.isItemAdded)
+        })
+      } else {
+        this.props.addItemList('fundANeed', this.state.item).then(resp => {
+          console.log("Insert ",this.props.isItemAdded)
+        })
+      }
+      this.setState({isDataUpdate:false})
+  }},100)
+}
+deleteItemList =() => {
     if (this.state.item.id ) {
-      this.props.updateItemList('fundANeed', this.state.item.id, this.state.item).then(resp => {
-        console.log("Updated ")
-      })
-    } else {
-      this.props.addItemList('fundANeed', this.state.item).then(resp => {
-        let item = this.state.item;
-        item.id=100000
-        this.setState({item})
-        console.log("Insert ")
+      this.props.deleteItemList('fundANeed', this.state.item.id ).then(resp => {
+        console.log("Detete")
       })
     }
-  }
 }
+  hideItemChangeHandler =()=>{
+  console.log("dffff")
+    let item=this.state.item;
+    item.active=!item.active;
+    this.setState({item,isDataUpdate:true},function stateChange() {
+      this.autoAddData();
+    })
+  }
+
   getDragHeight() { return 60; };
   doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };
   showPanel = () =>{ this.setState({ toggle:true }) };
-
+  updateContent(value) {
+    this.setState({content:value})
+  }
 render() {
  // const {item, itemSelected, dragHandle} = this.props.item;
   return (
-    <div data-id={36} className={ cx("item-row  ui-sortable-handle",this.state.toggle && "open", this.props.item.images && this.props.item.images.length  ? "has-image" : "",this.props.item.images && this.props.item.description ? "has-description" : "")} >
+    <div data-id={36} className={ cx("item-row  ui-sortable-handle",this.state.toggle && "open", this.props.item.images && this.props.item.images[0].imageUrl  ? "has-image" : "",this.props.item && this.props.item.description ? "has-description" : "")} >
       <div className="flex-row">
         <div className="flex-col plus-sign-column"><i className="fa fa-plus edit-item fa-lg" onClick={this.doToggle} /></div>
         <div className="flex-col item-name-column">
           <input type="hidden" name="id" defaultValue={36} />
           <input type="text" className="form-control item-name" name="name" maxLength={255} defaultValue={this.props.item.name} onFocus={this.showPanel}
-                 ref={ref=> {this.itemName=ref;}} onKeyUp={this.itemNameHandlerChange} />
+                 ref={ref=> {this.itemName=ref;}} onKeyUp={this.itemNameHandlerChange} onBlur={this.autoAddData} />
         </div>
         <div className="flex-col item-code-column">
           <input type="text" className="form-control item-code alpha-only" name="code" defaultValue={this.props.item.code} maxLength={3} onFocus={this.showPanel}
-                 ref={ref=> {this.itemCode=ref;}} onKeyUp={this.itemCodeHandlerChange}/>
+                 ref={ref=> {this.itemCode=ref;}} onKeyUp={this.itemCodeHandlerChange} onBlur={this.autoAddData}/>
         </div>
         <div className="flex-col item-starting-bid-column">
           <div className="input-group">
             <span className="input-group-addon">$</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
-                   ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} />
+                   ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>
           </div>
         </div>
         <div className="flex-col text-center item-actions-column">
@@ -131,8 +145,15 @@ render() {
             <div className="item-data">
               <div className="row">
                 <div className="col-md-8">
-                  <textarea rows={3} className="form-control summernote" placeholder="Item description" name="description" defaultValue={this.props.item.description}
-                  ref={ref=> {this.description=ref;}} onKeyUp={this.descriptionChangeHandler}/>
+                  <CKEditor
+                    value={this.props.item.description}
+                    onChange={this.descriptionChangeHandler.bind(this)}
+                    config={{toolbarGroups:[
+                      { name: 'links', groups: [ 'links' ] },
+                      { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                      { name: 'styles', groups: [ 'styles' ] },
+                      { name: 'colors', groups: [ 'colors' ] },
+                    ]}} onBlur={this.autoAddData}/>
                   <div>
                     <div id className="dropzone dz-clickable" action="/AccelEventsWebApp/host/upload">
                       <div className="dz-default dz-message">
@@ -178,18 +199,16 @@ render() {
                     <div className="help-text">This is will hide item from display page</div>
                   </div>
                   <div className="col-md-6">
-                    <ToggleSwitch name="requireBidderAddress" id="logoEnabled"
+                    <ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
                                   defaultValue={ (this.state.item && this.state.item.active)}
-                                  className="success activeswitch" onChange={() => {
-                      this.state.item.active= ! this.state.item.active
-                    }}/>
+                                  className="success activeswitch" onChange={this.hideItemChangeHandler}/>
                   </div>
                 </div>
               </div>
               </div>
             </div>
-            <input type="hidden" name defaultValue />
-            <i className="fa fa-trash delete-item red" />
+            <input type="hidden" name defaultValue  />
+            <i className="fa fa-trash delete-item red"  onClick={this.deleteItemList}/>
           </div>
         </div>
       </div>
@@ -203,8 +222,11 @@ const mapDispatchToProps = {
   addItemList : (type,data) => addItemList(type,data),
   updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
+  deleteItemList : (type,id) => deleteItemList(type,id),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(RowItemList);

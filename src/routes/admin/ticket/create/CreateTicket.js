@@ -21,7 +21,7 @@ class CreateTicket extends React.Component {
                 Create Event Registration
                 {/*  onclick="$('.main-box > .form').submit();" */}
                 <div className="pull-right">
-                  <button className="btn btn-info btn-block saveSetting" type="submit" onclick="$('.form').submit()" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">
+                  <button className="btn btn-info btn-block saveSetting" type="submit"  data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">
                     Save Settings
                   </button>
                 </div>

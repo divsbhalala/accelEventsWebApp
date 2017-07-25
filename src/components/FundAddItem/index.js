@@ -3,13 +3,15 @@ import cx from 'classnames';
 import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
-import {getItemList, addItemList, updateItemList,updateItemListPosition} from './../../routes/admin/fund/addItem/action';
+import {getItemList, addItemList, updateItemList,updateItemListPosition} from './../../routes/admin/action';
 
 
 class PlanetItem extends React.Component {
   state: Object = {
     value: 0,
-    toggle:false
+    toggle:false,
+    message:"",
+    status:"",
   };
 
   getDragHeight() { return 60; }
@@ -25,7 +27,7 @@ class PlanetItem extends React.Component {
     return (
       <div className={cx('item', {dragged})} >
         {dragHandle(<div className="dragHandle"  />)}
-        <RowItemList item={this.props.item} />
+        <RowItemList item={this.props.item}  />
       </div>
     );
   }
@@ -36,9 +38,25 @@ class PlanetItem extends React.Component {
 
   state: Object = {
     useContainer: false,
-    list: []
+    list: [],
+    actionChange:this.actionChange,
   };
-  componentWillMount(){
+   componentWillReceiveProps(){
+     setTimeout(()=>{
+     let message="";
+    console.log("main",this.props.isItemAdded)
+     if(this.props.isItemAdded.type == "Updated"){message="Item Updated"}
+     if(this.props.isItemAdded.type == "PositionChange"){message="Item PositionChange Updated"}
+     if(this.props.isItemAdded.type == "Inserted"){message="Item Inserted";this.getItemList()}
+     if(this.props.isItemAdded.type == "Deleted"){message="Item deleted";this.getItemList()}
+     if(this.props.isItemAdded.type == "getList"){message="Item Listed"}
+     this.setState({
+       message,
+       status:this.props.isItemAdded.status
+     })},500)
+     setTimeout(()=>{ this.setState({message:""}) },4000)
+  }
+  getItemList =()=> {
     this.props.getItemList("fundANeed").then(resp => {
       if(resp && resp.data && resp.data.items.length){
         this.setState({list:resp.data.items});
@@ -50,6 +68,9 @@ class PlanetItem extends React.Component {
     }).catch((error) => {
       console.log(error);
     });
+  }
+  componentWillMount(){
+    this.getItemList()
   };
   onListChange(newList: Array<Object>,movedItem: Array<Object>, oldIndex: number, newIndex: number) {
     this.setState({list: newList});
@@ -92,13 +113,14 @@ class PlanetItem extends React.Component {
        this.setState({list})
     }
    }
+
   render() {
     const {useContainer} = this.state;
-
     return (
       <div>
         <p>In Fund a Need, any number of people can submit a 'bid' for a fund a need item. The price
           of the item does not increase with each subsequent bid.</p>
+        {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
         <div className="text-left mrg-t-md">
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
         </div>
@@ -134,6 +156,8 @@ const mapDispatchToProps = {
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(FundNeedAddItem);

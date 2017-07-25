@@ -39,8 +39,7 @@ class FundAddItems extends React.Component {
                       <div id className="clearfix">
                         <div className>
                           <h1>Add Fund a Need Items
-                            <span className="item-count-wrap xpull-right"> (<span
-                              className="item-count">1</span>)</span>
+                            <span className="item-count-wrap xpull-right"> </span>
                             <div className="pull-right">
                               <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save
                                 Items &nbsp; &nbsp; </button>
