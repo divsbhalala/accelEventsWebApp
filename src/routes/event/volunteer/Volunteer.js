@@ -1209,7 +1209,7 @@ class Volunteer extends React.Component {
 							    className={ this.state.itemStatusMsg ? this.state.itemStatusMsg.message :'text-danger'}> { this.state.itemStatusMsg ? this.state.itemStatusMsg.message : this.state.itemStatusFeedBack && "Invalid Item Code" } </h5>
 						</div>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -1571,7 +1571,7 @@ class Volunteer extends React.Component {
 							</div>
 						</form>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -1926,7 +1926,7 @@ class Volunteer extends React.Component {
 							</div>
 						</form>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2289,7 +2289,7 @@ class Volunteer extends React.Component {
 							</div>
 						</form>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2493,7 +2493,7 @@ class Volunteer extends React.Component {
 							</div>
 						</form>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
               </button>
@@ -2578,7 +2578,7 @@ class Volunteer extends React.Component {
               </div>
             </div>
             <div className="form-group text-center">
-              <button className="btn btn-white" onClick={() => {
+              <button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2589,7 +2589,7 @@ class Volunteer extends React.Component {
 					      className={cx(this.state.activeViews === 'ticket-checkout-tickets' && s.active)}>
 						<div className="tickts"/>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2612,7 +2612,7 @@ class Volunteer extends React.Component {
 							}
 						</ul>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2962,7 +2962,7 @@ class Volunteer extends React.Component {
 							</div>
 						</form>
 						<div className="form-group text-center">
-							<button className="btn btn-white" onClick={() => {
+							<button className="btn btn-default" onClick={() => {
                 this.setActiveView('select-action')
               }}>Back
 							</button>
@@ -2975,7 +2975,7 @@ class Volunteer extends React.Component {
 				<PopupModel
 					id="bookingPopup"
 					showModal={this.state.showPopup}
-					headerText={<h4>{this.state.popupHeader}</h4>}
+					headerText={<p>{this.state.popupHeader}</p>}
 					modelBody=''
 					onCloseFunc={this.hidePopup}
 				>

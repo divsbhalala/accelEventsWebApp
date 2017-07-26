@@ -31,6 +31,15 @@
 #sidebar-nav .nav li .submenu>li.active{
     background: #ddd !important;
     font-weight: 700;
-    border: none;
+    border: none!important;
+    box-shadow: none!important;
+}
+.react-bs-table table td, .react-bs-table table th,.react-bs-container-body{
+    overflow: visible;
+}
+.order-actions .dropdown .btn.dropdown-toggle .caret, .order-panel-body .dropdown .btn.dropdown-toggle .caret{
+    color: black;
+}
+.box-shadow-none{
     box-shadow: none;
 }

@@ -21,3 +21,20 @@ export function putGetHostSettings(type, data) {
 		})
 	}
 }
+export function makePyment(data) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'settings/billing' ,
+      data:data,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}

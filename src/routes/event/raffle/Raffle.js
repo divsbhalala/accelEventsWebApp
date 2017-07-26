@@ -699,7 +699,7 @@ class Raffle extends React.Component {
         <PopupModel
           id="alertPopup"
           showModal={this.state.showAlertPopup}
-          headerText={<h4>{this.state.popupHeader}</h4>}
+          headerText={<p>{this.state.popupHeader}</p>}
           modelBody=''
           onCloseFunc={this.hidePopup}>
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
@@ -707,7 +707,7 @@ class Raffle extends React.Component {
             <div className="modal-footer">
               {/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.buyTicket} >Confirm</button> : ""}*/}
               {this.state.popupHeader == "Confirm" ? <Button loading={this.state.loading} className="btn btn-success" onClick={this.purchaseTicket} >Confirm</Button> : ""}
-              <button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
+              <button className="btn btn-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>
           </div>
         </PopupModel>
@@ -715,7 +715,7 @@ class Raffle extends React.Component {
           showModal={this.state.isShowLoginModal}
           onCloseFunc={this.hideLoginModal}
           params={this.props.params }
-          modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+          modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
         />
         <BuyRaffleTicketsModal
           showModal={this.state.isshowBuyRaffleTicketsModal}

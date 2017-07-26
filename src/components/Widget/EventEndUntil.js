@@ -69,42 +69,40 @@ class EventEndUntil extends Component { // eslint-disable-line
 
 	render() {
 		return (
-			<div id="countdownTimer" className={cx("main-box clearfix project-box gray-box card")}>
-				{this.props.settings &&
-				<div className={cx("main-box-body clearfix")}>
-					<div className={cx("project-box-header", this.props.className || "emerald-bg")}>
-						<div className={cx("name")}>
-							<a href="#">{ this.props.headerText || "Time Until Event Ends"}</a>
-						</div>
+			this.props.settings &&
+			<div id="countdownTimer" className={cx("project-box")}>
+				<div className={cx("project-box-header", this.props.className || "emerald-bg")}>
+					<div className={cx("name")}>
+						<a href="#">{ this.props.headerText || "Time Until Event Ends"}</a>
 					</div>
-					<div className={cx("project-box-content ticker-box")}>
-						<div className={cx("ticker", this.props.isBig && "big")}>
-							<div className={cx("flex-row timer")}>
+				</div>
+				<div className={cx("project-box-content")}>
+					<div className={cx("ticker", this.props.isBig && "big")}>
+						<div className={cx("flex-row timer")}>
 
-								<div className={cx("flex-col")}><span className={cx("days")}>{
-									moment(this.props.settings.moduleEndDate).diff(moment(), 'days') > 0
-									&& ( moment(this.props.settings.moduleEndDate).diff(moment(), 'days')) || '00'
-								}</span></div>
-								<div className={cx("flex-col")}><span className={cx("hours")}>{
-									moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-									&& moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
-									&& ('0' + moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours')).slice(-2) || '00'
-								}</span></div>
-								<div className={cx("flex-col")}><span className={cx("minutes")}>{
-									moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
-									&& ( "0" + moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')).slice(-2)
-									|| '00'}</span></div>
-								<div className={cx("flex-col hide")}><span className={cx("seconds")}>00</span></div>
-							</div>
-							<div className={cx("flex-row tiny text-center")}>
-								<div className={cx("flex-col")}><span className={cx("days")}>DAYS</span></div>
-								<div className={cx("flex-col")}><span className={cx("hours")}>HOURS</span></div>
-								<div className={cx("flex-col")}><span className={cx("minutes")}>MINUTES</span></div>
-								<div className={cx("flex-col hide")}><span className={cx("seconds")}>SECONDS</span></div>
-							</div>
+							<div className={cx("flex-col")}><span className={cx("days")}>{
+								moment(this.props.settings.moduleEndDate).diff(moment(), 'days') > 0
+								&& ( moment(this.props.settings.moduleEndDate).diff(moment(), 'days')) || '00'
+							}</span></div>
+							<div className={cx("flex-col")}><span className={cx("hours")}>{
+								moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+								&& moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours') > 0
+								&& ('0' + moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours')).slice(-2) || '00'
+							}</span></div>
+							<div className={cx("flex-col")}><span className={cx("minutes")}>{
+								moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes') > 0
+								&& ( "0" + moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').add(-moment(this.props.settings.moduleEndDate).add(-moment(this.props.settings.moduleEndDate).diff(moment(), 'days'), 'days').diff(moment(), 'hours'), 'hours').diff(moment(), 'minutes')).slice(-2)
+								|| '00'}</span></div>
+							<div className={cx("flex-col hide")}><span className={cx("seconds")}>00</span></div>
+						</div>
+						<div className={cx("flex-row tiny text-center")}>
+							<div className={cx("flex-col")}><span className={cx("days")}>DAYS</span></div>
+							<div className={cx("flex-col")}><span className={cx("hours")}>HOURS</span></div>
+							<div className={cx("flex-col")}><span className={cx("minutes")}>MINUTES</span></div>
+							<div className={cx("flex-col hide")}><span className={cx("seconds")}>SECONDS</span></div>
 						</div>
 					</div>
-				</div> }
+				</div> 
 			</div>
 		);
 	}
