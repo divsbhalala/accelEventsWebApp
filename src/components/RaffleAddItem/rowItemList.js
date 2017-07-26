@@ -64,21 +64,21 @@ handleImageUpload(file) {
     item.code=this.itemCode.value;
       this.setState({item,isDataUpdate:true})
   }
-  startingBidHandlerChange = (e) =>{
-    let item=this.state.item;
-    item.startingBid=this.startingBid.value;
-      this.setState({item,isDataUpdate:true})
-  }
+  // startingBidHandlerChange = (e) =>{
+  //   let item=this.state.item;
+  //   item.startingBid=this.startingBid.value;
+  //     this.setState({item,isDataUpdate:true})
+  // }
   autoAddData =() => {
   console.log("---><><><",this.state)
     setTimeout(()=>{
-    if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate ){
+    if(this.state.item.name && this.state.item.code  && this.state.isDataUpdate ){
       if (this.state.item.id ) {
-        this.props.updateItemList('fundANeed', this.state.item.id, this.state.item).then(resp => {
+        this.props.updateItemList('raffle', this.state.item.id, this.state.item).then(resp => {
           console.log("Updated ",this.props.isItemAdded)
         })
       } else {
-        this.props.addItemList('fundANeed', this.state.item).then(resp => {
+        this.props.addItemList('raffle', this.state.item).then(resp => {
           console.log("Insert ",this.props.isItemAdded)
         })
       }
@@ -87,7 +87,7 @@ handleImageUpload(file) {
 }
 deleteItemList =() => {
     this.state.item && this.state.item.id &&
-      this.props.deleteItemList('fundANeed', this.state.item.id ).then(resp => {
+      this.props.deleteItemList('raffle', this.state.item.id ).then(resp => {
         console.log("Detete")
       })
 
@@ -119,13 +119,13 @@ render() {
           <input type="text" className="form-control item-code alpha-only" name="code" defaultValue={this.props.item.code} maxLength={3} onFocus={this.showPanel}
                  ref={ref=> {this.itemCode=ref;}} onKeyUp={this.itemCodeHandlerChange} onBlur={this.autoAddData}/>
         </div>
-        <div className="flex-col item-starting-bid-column">
-          <div className="input-group">
-            <span className="input-group-addon">$</span>
-            <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
-                   ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>
-          </div>
-        </div>
+        {/*<div className="flex-col item-starting-bid-column">*/}
+          {/*<div className="input-group">*/}
+            {/*<span className="input-group-addon">$</span>*/}
+            {/*<input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}*/}
+                   {/*ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>*/}
+          {/*</div>*/}
+        {/*</div>*/}
         <div className="flex-col text-center item-actions-column">
           <ul className="list-inline">
             <li>

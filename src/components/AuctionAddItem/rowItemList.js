@@ -69,16 +69,37 @@ handleImageUpload(file) {
     item.startingBid=this.startingBid.value;
       this.setState({item,isDataUpdate:true})
   }
+  buyItNowPriceHandlerChange = (e) =>{
+    let item=this.state.item;
+    item.buyItNowPrice=this.buyItNowPrice.value;
+      this.setState({item,isDataUpdate:true})
+  }
+  bidIncrementHandlerChange = (e) =>{
+    let item=this.state.item;
+    item.bidIncrement=this.bidIncrement.value;
+      this.setState({item,isDataUpdate:true})
+  }
+  marketValueHandlerChange = (e) =>{
+    let item=this.state.item;
+    item.marketValue=this.marketValue.value;
+      this.setState({item,isDataUpdate:true})
+  }
+  categoryHandlerChange = (e) =>{
+    let item=this.state.item;
+    item.category=this.category.value;
+      this.setState({item,isDataUpdate:true})
+  }
+
   autoAddData =() => {
   console.log("---><><><",this.state)
     setTimeout(()=>{
     if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate ){
       if (this.state.item.id ) {
-        this.props.updateItemList('fundANeed', this.state.item.id, this.state.item).then(resp => {
+        this.props.updateItemList('auction', this.state.item.id, this.state.item).then(resp => {
           console.log("Updated ",this.props.isItemAdded)
         })
       } else {
-        this.props.addItemList('fundANeed', this.state.item).then(resp => {
+        this.props.addItemList('auction', this.state.item).then(resp => {
           console.log("Insert ",this.props.isItemAdded)
         })
       }
@@ -87,7 +108,7 @@ handleImageUpload(file) {
 }
 deleteItemList =() => {
     this.state.item && this.state.item.id &&
-      this.props.deleteItemList('fundANeed', this.state.item.id ).then(resp => {
+      this.props.deleteItemList('auction', this.state.item.id ).then(resp => {
         console.log("Detete")
       })
 
@@ -124,6 +145,13 @@ render() {
             <span className="input-group-addon">$</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
                    ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>
+          </div>
+        </div>
+        <div className="flex-col item-starting-bid-column">
+          <div className="input-group">
+            <span className="input-group-addon">$</span>
+            <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.buyItNowPrice}  onFocus={this.showPanel}
+                   ref={ref=> {this.buyItNowPrice=ref;}} onKeyUp={this.buyItNowPriceHandlerChange} onBlur={this.autoAddData}/>
           </div>
         </div>
         <div className="flex-col text-center item-actions-column">
@@ -167,28 +195,34 @@ render() {
                   </div>
                 </div>
                 <div className="col-md-4">
-                  {/*<div className="row">*/}
-                    {/*<div className="form-group">*/}
-                      {/*<label htmlFor="bidIncrement">Bid Increment</label>*/}
-                      {/*<div className="input-group">*/}
-                        {/*<span className="input-group-addon">$</span>*/}
-                        {/*<input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={this.props.item.code} />*/}
-                      {/*</div>*/}
-                    {/*</div>*/}
-                    {/*<div className="form-group">*/}
-                      {/*<select className="form-control" name="itemCategory">*/}
-                        {/*<option value={0} disabled selected>-- Select Category --</option>*/}
-                        {/*<option value={2288}>(final cat)</option>*/}
-                      {/*</select>*/}
-                    {/*</div>*/}
-                  {/*<div className="form-group">*/}
-                    {/*<label htmlFor="marketValue">Market Value</label>*/}
-                    {/*<div className="input-group">*/}
-                      {/*<span className="input-group-addon">$</span>*/}
-                      {/*<input className="form-control" placeholder="Market Value (optional)" data-price="true" name="marketValue" type="number" />*/}
-                    {/*</div>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
+                  <div className="row">
+                    <div className="form-group">
+                      <label htmlFor="bidIncrement">Bid Increment</label>
+                      <div className="input-group">
+                        <span className="input-group-addon">$</span>
+                        <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={this.props.item.bidIncrement}
+                               ref={ref=> {this.bidIncrement=ref;}} onKeyUp={this.bidIncrementHandlerChange} onBlur={this.autoAddData}/>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
+                              ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
+                        <option value={0} disabled selected>-- Select Category --</option>
+                        {this.props.item.categories.map((value,index)=>
+                          <option value={value} key={index}>{value}</option>
+                        )}
+                      </select>
+                    </div>
+                  <div className="form-group">
+                    <label htmlFor="marketValue">Market Value</label>
+                    <div className="input-group">
+                      <span className="input-group-addon">$</span>
+                      <input className="form-control" placeholder="Market Value (optional)" data-price="true" name="marketValue" type="number"
+                             defaultValue={this.props.item.marketValue}
+                             ref={ref=> {this.marketValue=ref;}} onKeyUp={this.marketValueHandlerChange} onBlur={this.autoAddData}/>
+                    </div>
+                  </div>
+                </div>
                 <br />
                 <div className="row">
                   <div className="col-md-6">

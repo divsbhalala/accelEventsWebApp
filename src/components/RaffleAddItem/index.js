@@ -33,7 +33,7 @@ class PlanetItem extends React.Component {
   }
 }
 
- class FundNeedAddItem extends React.Component {
+ class RaffleAddItem extends React.Component {
   _container: HTMLElement;
 
   state: Object = {
@@ -61,7 +61,7 @@ class PlanetItem extends React.Component {
      setTimeout(()=>{ this.setState({message:""}) },4000)
   }
   getItemList =()=> {
-    this.props.getItemList("fundANeed").then(resp => {
+    this.props.getItemList("raffle").then(resp => {
       if(resp && resp.data && resp.data.items.length){
        this.setState({list:resp.data.items});
         console.log(this.state.items);
@@ -85,7 +85,7 @@ class PlanetItem extends React.Component {
     let bottomItem =  newIndex ==  newList.length-1  ? newIndex : newIndex + 1
     if(newList[newIndex].id && newList[newIndex].id && newList[topItem].id && newList[bottomItem].id ){
       console.log("--->",newList[newIndex].id, newList[topItem].id, newList[bottomItem].id)
-      this.props.updateItemListPosition('fundANeed',newList[newIndex].id, newList[topItem].id, newList[bottomItem].id).then(resp => {
+      this.props.updateItemListPosition('raffle',newList[newIndex].id, newList[topItem].id, newList[bottomItem].id).then(resp => {
         if(resp && resp.data && resp.data.items.length){
           this.setState({list:resp.data.items});
           console.log(this.state.items);
@@ -118,7 +118,6 @@ addEmptyRow =()=>{
       }
     ],
     "name": "",
-    "startingBid": 0
   }
   list.unshift(data);
   this.setState({list})
@@ -127,8 +126,7 @@ addEmptyRow =()=>{
     const {useContainer} = this.state;
     return (
       <div>
-        <p>In Fund a Need, any number of people can submit a 'bid' for a fund a need item. The price
-          of the item does not increase with each subsequent bid.</p>
+        <p></p>
         {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
         <div className="text-left mrg-t-md">
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
@@ -138,7 +136,7 @@ addEmptyRow =()=>{
             <div className="flex-col plus-sign-column" />
             <div className="flex-col item-name-column"><span>Item name</span></div>
             <div className="flex-col item-code-column"><span>Item code</span></div>
-            <div className="flex-col item-starting-bid-column"><span>Amount ($)</span></div>
+            {/*<div className="flex-col item-starting-bid-column"><span>Amount ($)</span></div>*/}
             <div className="flex-col item-actions-column"><span>Actions</span></div>
           </div>
         </div>
@@ -169,4 +167,4 @@ const mapStateToProps = (state) => ({
   isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FundNeedAddItem);
+export default connect(mapStateToProps, mapDispatchToProps)(RaffleAddItem);
