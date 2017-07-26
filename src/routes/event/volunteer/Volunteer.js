@@ -2514,7 +2514,6 @@ class Volunteer extends React.Component {
                             <div className="type-name"><strong>{item.name}</strong>
                               (<span className="type-cost txt-sm gray"> ${item.price}</span>)
                               <div className="pull-right">
-                                <div className="col-md-7">No Of Tickets</div>
                                 { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
                                   <select className="form-control" name={item.typeId} data-price={item.price}
                                           disabled = {moment(item.endDate).diff(moment()) <= 0}
@@ -2524,7 +2523,7 @@ class Volunteer extends React.Component {
                                   </select>
                                 </div> : ''}
                                 {
-                                  !item.remaniningTickets && <div className="col-md-5"> SOLD OUT </div>
+                                  (!item.remaniningTickets || item.remaniningTickets <= 0) && <span class="sold-out-text"> SOLD OUT </span>
                                 }
                               </div>
                             </div>
@@ -2534,9 +2533,9 @@ class Volunteer extends React.Component {
                             {item.ticketsPerTable && item.ticketsPerTable > 0 ?
                               <div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable}
                                 tickets</div> : ''}
-                            {/*<div className="txt-sm gray type-desc">
-                             sadfw
-                             </div>*/}
+                              {<div className="txt-sm gray type-desc">
+      												 TODO: Item desctiption goes here
+      												 </div>}
                           </div>
                         </div>
                       </div>
