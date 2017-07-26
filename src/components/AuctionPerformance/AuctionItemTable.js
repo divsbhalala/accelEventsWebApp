@@ -63,7 +63,6 @@ class AuctionItemTable extends React.Component {
         <div className="page-title">
           <h1 className="page-header">Auction Item Performance</h1>
         </div>
-        <br />
         <BootstrapTable
           data={this.props.items}
           options={options}

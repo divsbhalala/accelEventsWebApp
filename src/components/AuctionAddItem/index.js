@@ -140,9 +140,11 @@ console.log(data)
           ADD ITEM
         </p>
         {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
+
         <div className="text-left mrg-t-md">
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
         </div>
+        <div className="ajax-wrap"></div>
         <div className="table-header">
           <div className="flex-row">
             <div className="flex-col plus-sign-column" />

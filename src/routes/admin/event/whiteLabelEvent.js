@@ -32,6 +32,7 @@ class WhiteLabelEventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setWhiteLabelUrlEvents(row.eventId,this.props.params && this.props.params.params).then((resp) => {
+      window.location = "/host/dashboard";
       {/*<Link to="/admin/settings-account" >*/}
       {/*</Link>*/}
     });

@@ -14,6 +14,11 @@ class RowItemList extends React.Component {
     toggle:false,
     uploadedFileCloudinaryUrl: '',
     isDataUpdate:false,
+
+    itemNameFeedBack:false,
+    itemName:false,
+    itemCodeFeedBack:false,
+    itemCode:false,
   };
 componentWillReceiveProps() {
     this.setState({
@@ -55,14 +60,24 @@ handleImageUpload(file) {
       this.setState({item,isDataUpdate:true})
   }
   itemNameHandlerChange = (e) =>{
+    this.setState({ itemNameFeedBack: true,});
+    if (this.itemName.value.trim() == '') {
+      this.setState({ itemName: false });
+    } else { this.setState({itemName: true}); }
+
     let item=this.state.item;
     item.name=this.itemName.value;
-      this.setState({item,isDataUpdate:true})
+    this.setState({item,isDataUpdate:true})
   }
   itemCodeHandlerChange = (e) =>{
+    this.setState({ itemCodeFeedBack: true,});
+    if (this.itemCode.value.trim() == '') {
+      this.setState({ itemCode: false });
+    } else { this.setState({itemCode: true}); }
+
     let item=this.state.item;
     item.code=this.itemCode.value;
-      this.setState({item,isDataUpdate:true})
+    this.setState({item,isDataUpdate:true})
   }
   // startingBidHandlerChange = (e) =>{
   //   let item=this.state.item;
@@ -114,10 +129,12 @@ render() {
           <input type="hidden" name="id" defaultValue={36} />
           <input type="text" className="form-control item-name" name="name" maxLength={255} defaultValue={this.props.item.name} onFocus={this.showPanel}
                  ref={ref=> {this.itemName=ref;}} onKeyUp={this.itemNameHandlerChange} onBlur={this.autoAddData} />
+          { this.state.itemNameFeedBack && !this.state.itemName && <small className="error red"> Name is Required.</small>}
         </div>
         <div className="flex-col item-code-column">
           <input type="text" className="form-control item-code alpha-only" name="code" defaultValue={this.props.item.code} maxLength={3} onFocus={this.showPanel}
                  ref={ref=> {this.itemCode=ref;}} onKeyUp={this.itemCodeHandlerChange} onBlur={this.autoAddData}/>
+          { this.state.itemCodeFeedBack && !this.state.itemCode && <small className="error red"> Item Code is Required.</small>}
         </div>
         {/*<div className="flex-col item-starting-bid-column">*/}
           {/*<div className="input-group">*/}

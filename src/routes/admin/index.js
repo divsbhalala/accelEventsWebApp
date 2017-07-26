@@ -37,10 +37,10 @@ const isAdmin = false;
 
 export default {
 
-	path: '/admin',
+	path: '/host',
 	children: [
 		{
-			path: '/',
+			path: '/dashboard',
 			async action() {
 				/*  if (!isAdmin) {
 				 return { redirect: '/login' };
@@ -50,13 +50,13 @@ export default {
 
 				return {
 					title,
-					chunk: 'admin',
+					chunk: 'host',
 					component: <AdminLayout><Admin title={title}/></AdminLayout>,
 				};
 			}
 		},
 		{
-			path: '/design',
+			path: '/event-management/design',
 			async action() {
 				return {
 					title: "Design Page",
@@ -74,7 +74,7 @@ export default {
 			}
 		},
 		{
-			path: '/event-ticket-create',
+			path: '/event-ticketing/create',
 			async  action() {
 				return {
 					title: "Create Ticket",
@@ -83,7 +83,7 @@ export default {
 			}
 		},
 		{
-			path: '/event-ticketing-settings',
+			path: '/event-ticketing/settings',
 			async  action() {
 				return {
 					title: "Event ticketing settings",
@@ -92,7 +92,7 @@ export default {
 			}
 		},
 		{
-			path: '/event-ticketing-orders',
+			path: '/event-ticketing/orders',
 			async action() {
 				return {
 					title: "Event ticketing Orders",
@@ -128,7 +128,7 @@ export default {
 			}
 		},
 		{
-			path: '/ticket-performance',
+			path: '/dashboard/ticket-sales-performance',
 			async action() {
 				return {
 					title: "Ticket Performance",
@@ -146,7 +146,7 @@ export default {
 			}
 		},
 		{
-			path: '/raffle-performance',
+			path: '/dashboard/raffle-item-performance',
 			async action() {
 				return {
 					title: "Raffle performance Page",
@@ -155,7 +155,7 @@ export default {
 			}
 		},
 		{
-			path: '/raffle-add-items',
+			path: '/raffle/add-items',
 			async action() {
 				return {
 					title: "Raffle Add Item Page",
@@ -164,7 +164,7 @@ export default {
 			}
 		},
 		{
-			path: '/raffle-settings',
+			path: '/raffle/settings',
 			async action() {
 				return {
 					title: "Raffle Setting",
@@ -173,7 +173,7 @@ export default {
 			}
 		},
 		{
-			path: '/auction',
+			path: '/dashboard/auction',
 			async action() {
 				return {
 					title: "Silent Auction Page",
@@ -182,7 +182,7 @@ export default {
 			}
 		},
 		{
-			path: '/auction-performance',
+			path: '/dashboard/auction-item-performance',
 			async action() {
 				return {
 					title: "Silent Auction performance Page",
@@ -191,7 +191,7 @@ export default {
 			}
 		},
 		{
-			path: '/silent-auction-add-items',
+			path: '/silent-auction/add-items',
 			async action() {
 				return {
 					title: "Silent Auction Add Item",
@@ -200,7 +200,7 @@ export default {
 			}
 		},
 		{
-			path: '/silent-auction-settings',
+			path: '/silent-auction/settings',
 			async action() {
 				return {
 					title: "Silent Auction Setting",
@@ -209,7 +209,7 @@ export default {
 			}
 		},
 		{
-			path: '/settings-general',
+			path: '/settings/general',
 			async  action() {
 				return {
 					title: "Setting Page",
@@ -236,7 +236,7 @@ export default {
 			}
 		},
 		{
-			path: '/cause-auction-add-items',
+			path: '/cause-auction/add-items',
 			async action() {
 				return {
 					title: "Fund Page",
@@ -245,7 +245,7 @@ export default {
 			}
 		},
 		{
-			path: '/cause-auction-settings',
+			path: '/cause-auction/settings',
 			async action() {
 				return {
 					title: "Fund Page",
@@ -254,7 +254,7 @@ export default {
 			}
 		},
 		{
-			path: '/fund-performance',
+			path: '/dashboard/cause-item-performance',
 			async action() {
 				return {
 					title: "Fund performance Page",
@@ -263,7 +263,7 @@ export default {
 			}
 		},
 		{
-			path: '/donation-performance',
+			path: '/dashboard/donation-performance',
 			async action() {
 				return {
 					title: "Donation performance Page",
@@ -272,7 +272,7 @@ export default {
 			}
 		},
 		{
-			path: '/settings-credit-card',
+			path: '/settings/credit-card',
 			async action() {
 				return {
 					title: "settings credit card",
@@ -281,7 +281,7 @@ export default {
 			}
 		},
 		{
-			path: '/settings-account',
+			path: '/settings/account',
 			async action() {
 				return {
 					title: "settings account",
@@ -290,7 +290,7 @@ export default {
 			}
 		},
 		{
-			path: '/user-management-volunteers',
+			path: '/user-management/volunteers',
 			async action() {
 				return {
 					title: "user management volunteers",

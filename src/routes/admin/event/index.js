@@ -46,7 +46,7 @@ class EventList extends React.Component {
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
 
-      window.location = "/admin";
+      window.location = "/host/dashboard";
        // this.props.router.push('/some/location');
       {/*<Link to="/admin" >*/}
       {/*</Link>*/}
@@ -207,8 +207,8 @@ class EventList extends React.Component {
             onCloseFunc={this.hidePopup}>
             <div className="ticket-type-container">
               <form id="contactform">
-                <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                  { this.state.message }</div>
+                { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                  { this.state.message }</div> }
                 <div    className={cx("form-group", this.state.whiteLabelUrlFeedBack && 'has-feedback', this.state.whiteLabelUrlFeedBack && this.state.whiteLabelUrl && 'has-success', this.state.whiteLabelUrlFeedBack && (!this.state.whiteLabelUrl) && 'has-error')}>
                   <label className="control-label">Enter White Label Url</label><br />
                   <label id="alert-modal-whitelabelurl" className="modal-title alert-danger" />

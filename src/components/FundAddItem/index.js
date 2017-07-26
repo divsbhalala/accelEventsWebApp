@@ -133,6 +133,7 @@ addEmptyRow =()=>{
         <div className="text-left mrg-t-md">
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
         </div>
+        <div className="ajax-wrap"></div>
         <div className="table-header">
           <div className="flex-row">
             <div className="flex-col plus-sign-column" />

@@ -164,8 +164,8 @@ class Setting extends React.Component {
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
 												<form id="form">
-                          <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                            { this.state.message }</div>
+                          { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                            { this.state.message }</div> }
 													<div className="form-group row">
 														<div className="col-md-4">
 															<label>Select Currency</label>

@@ -41,8 +41,8 @@ class FundAddItems extends React.Component {
                           <h1>Add Fund a Need Items
                             <span className="item-count-wrap xpull-right"> </span>
                             <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save
-                                Items &nbsp; &nbsp; </button>
+                              {/*<button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save*/}
+                                {/*Items &nbsp; &nbsp; </button>*/}
                             </div>
                           </h1>
                         </div>

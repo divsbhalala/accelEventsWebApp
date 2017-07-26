@@ -327,8 +327,8 @@ class Account extends React.Component {
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
 												<div className="form">
-                          <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                            { this.state.message }</div>
+                          { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                            { this.state.message }</div> }
 													<form id="payment-form" method="post"
 																className="ajax-form validated fv-form fv-form-bootstrap">
 														<button type="submit" className="fv-hidden-submit"

@@ -145,7 +145,7 @@ class Admin extends React.Component {
                   <div className="main-box-body clearfix">
                     <ul className="widget-todo">
                       {  this.state.data &&  this.state.data.checkList.map((value,index)=>
-                        <EventChecklist checkList={value} />
+                        <EventChecklist checkList={value} phone={ this.state.data && this.state.data.eventPhoneNumber} />
                       )}
                     </ul>
                   </div>

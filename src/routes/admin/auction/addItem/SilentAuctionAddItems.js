@@ -46,7 +46,7 @@ class SilentAuctionAddItems extends React.Component {
                                 Add Silent Auction Items
                                 {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">{this.state.items.length}</span>)</span>*/}
                             <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              {/*<button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>*/}
                             </div>
                           </h1>
                         </div>

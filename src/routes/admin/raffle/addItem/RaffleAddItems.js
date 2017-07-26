@@ -41,7 +41,7 @@ class RaffleAddItems extends React.Component {
                         <h1>Add Raffle Items
                               {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>*/}
                           <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              {/*<button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>*/}
                             </div>
                         </h1>
                       </div>
