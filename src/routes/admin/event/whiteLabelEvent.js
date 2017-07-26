@@ -91,13 +91,13 @@ class WhiteLabelEventList extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-12">
-              {this.state.event &&
+              {this.state.event ?
               <BootstrapTable data={this.state.event} striped hover   options={ options }>
                 <TableHeaderColumn  isKey={true} dataField='eventName'>EVENT NAME</TableHeaderColumn>
                 <TableHeaderColumn  dataField='eventEndDate' width="15%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
                 <TableHeaderColumn columnClassName='theme-turquoise' dataFormat={urlFormate}  dataField='eventURL' >URL</TableHeaderColumn>
-               </BootstrapTable>
-               }
+               </BootstrapTable> :<div id="app" className="loader" />
+              }
             </div>
           </div>
         </div>

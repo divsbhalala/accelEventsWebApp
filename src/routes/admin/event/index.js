@@ -185,7 +185,7 @@ class EventList extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-12">
-              {this.state.event &&
+              {this.state.event ?
               <BootstrapTable data={this.state.event} striped hover search  pagination={ true }  options={ options }>
                 <TableHeaderColumn dataSort isKey dataField='eventName' dataFormat={indexN}>No</TableHeaderColumn>
                 <TableHeaderColumn dataSort  dataField='eventName'>EVENT NAME</TableHeaderColumn>
@@ -196,7 +196,7 @@ class EventList extends React.Component {
                 <TableHeaderColumn dataSort dataField='price'># Particaipants</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Last Login</TableHeaderColumn>
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
-             </BootstrapTable> }
+             </BootstrapTable>: <div id="app" className="loader" />  }
             </div>
           </div>
           <PopupModel

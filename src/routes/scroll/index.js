@@ -14,42 +14,48 @@ export default {
       async action(props) {
         return {
           title,
-          component: <Layout params={props.params}><Auction title={title} params={props.params}/></Layout>,
+          component: <Layout params={props.params}><Auction title={title} params={props.params} /></Layout>,
         };
-      }
+      },
     },
     {
       path: '/auction',
       async action(props) {
         return {
-          title: "Auction Page",
-          component: <Layout params={props.params}><Auction params={props.params}
-                                                            itemCode={props.params && props.params.ItemCode}
-                                                            title={title}/></Layout>,
+          title: 'Auction Page',
+          component: <Layout params={props.params}><Auction
+            params={props.params}
+            itemCode={props.params && props.params.ItemCode}
+            title={title}
+          /></Layout>,
         };
-      }
+      },
     },
     {
       path: '/fund',
       async action(props) {
         return {
-          title: "Fund Page",
-          component: <Layout params={props.params}><Fund params={props.params}
-                                                         itemCode={props.params && props.params.ItemCode}
-                                                         title={title}/></Layout>,
+          title: 'Fund Page',
+          component: <Layout params={props.params}><Fund
+            params={props.params}
+            itemCode={props.params && props.params.ItemCode}
+            title={title}
+          /></Layout>,
         };
-      }
+      },
     },
     {
       path: '/raffle',
       async action(props) {
         return {
-          title: "Raffle Page",
-          component: <Layout params={props.params}><Raffle params={props.params}
-                                                           itemCode={props.params && props.params.ItemCode}
-                                                           title={title}/></Layout>,
+          title: 'Raffle Page',
+          component: <Layout params={props.params}><Raffle
+            params={props.params}
+            itemCode={props.params && props.params.ItemCode}
+            title={title}
+          /></Layout>,
         };
-      }
-    }
-  ]
+      },
+    },
+  ],
 };

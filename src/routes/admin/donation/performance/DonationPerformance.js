@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -56,8 +55,7 @@ class DonationPerformance extends React.Component {
     function priceFormate(cell, row){
       return  "$"+ cell;//.toFixed(2);
     }
-
-    return (
+   return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
           <div className="col-sm-12">
@@ -75,7 +73,7 @@ class DonationPerformance extends React.Component {
                       </div>
                       <br />
                       <div id="DataTables_Table_1_wrapper" >
-                        {this.state.donation &&
+                        {this.state.donation ?
                         <BootstrapTable data={this.state.donation} striped hover search  pagination={ true }   options={ options }>
                           <TableHeaderColumn  isKey={true} dataField='firstName'>First Name</TableHeaderColumn>
                           <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
@@ -83,7 +81,7 @@ class DonationPerformance extends React.Component {
                           <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
                           <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
                           <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormate}>Donation Amount</TableHeaderColumn>
-                        </BootstrapTable>
+                        </BootstrapTable>: <div id="app" className="loader" />
                         }
                       </div>
 

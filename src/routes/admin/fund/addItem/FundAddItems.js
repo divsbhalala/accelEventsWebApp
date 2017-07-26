@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -18,14 +17,12 @@ class FundAddItems extends React.Component {
   }
   getItemCatalogPdf= () => {
     this.props.getItemCatalogPdf().then((resp) => {
-
     });
   };
   getItemListCsv=() => {
     this.props.getItemListCsv().then((resp) => {
     });
   }
-
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -39,7 +36,7 @@ class FundAddItems extends React.Component {
                       <div id className="clearfix">
                         <div className>
                           <h1>Add Fund a Need Items
-									              <span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>
+								              <span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>
                             <div className="pull-right">
                               <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
@@ -188,7 +185,7 @@ class FundAddItems extends React.Component {
                                             <div className="col-md-6">
 																		              Hide Item
 																		              <div className="help-text">This is will hide item from display page</div>
-                                      </div>
+0                                      </div>
                                             <div className="col-md-6">
                                         <div className="onoffswitch onoffswitch-success activeswitch">
                                                   <input type="checkbox" name="activeEnabled" className="onoffswitch-checkbox" id="active2128" />
@@ -233,7 +230,6 @@ class FundAddItems extends React.Component {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -246,8 +242,6 @@ const mapDispatchToProps = {
   getItemSheetPdf: () => getItemSheetPdf(),
 
 };
-
 const mapStateToProps = state => ({});
-
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundAddItems));
 

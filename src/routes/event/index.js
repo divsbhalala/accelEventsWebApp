@@ -5,7 +5,6 @@ import Fund from './fund/Fund';
 import Raffle from './raffle/Raffle';
 import Auction from './auction/Auction';
 import Volunteer from './volunteer/Volunteer';
-
 const title = 'AccelEvents | Event Page';
 export default {
   path: '/event/:params',
