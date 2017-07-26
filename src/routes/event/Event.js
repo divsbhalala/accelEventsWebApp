@@ -488,7 +488,18 @@ class Event extends React.Component {
 				}
 				this.setState({
 					rafflePageItems: resp.data.items,
-				})
+				},function changeAfter(){
+		          let seenNames = {};
+		          let array = this.state.rafflePageItems.filter(function(currentObject) {
+		            if (currentObject.id in seenNames) {
+		              return false;
+		            } else {
+		              seenNames[currentObject.id] = true;
+		              return true;
+		            }
+		          });
+		          this.setState({rafflePageItems:array})
+		        })
 			}
 			else {
 				this.setState({
