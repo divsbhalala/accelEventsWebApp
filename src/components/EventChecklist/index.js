@@ -151,18 +151,18 @@ dashboardRafflePurchaseTicket = () => {
       <li className="clearfix">
         <div className="name">
           <div className="checkbox-nice">
-            <input type="checkbox" disabled="disabled"  defaultChecked={this.props.checkList.active ? "checked" :""} />
+            <input type="checkbox" disabled="disabled"  defaultChecked={this.props.checkList.complete ? "checked" :""} />
               <label>{this.props.checkList.label}</label>
           </div>
           <div className="desc">{this.props.checkList.description}</div>
         </div>
         <div className="actions">
           {this.props.checkList.dialog  ?
-          <a onClick={this.showPopup}  className={cx("table-link btn btn-xs",!this.props.checkList.active ? "btn-danger" :"btn-success")}  >
-            <span className={cx("label",!this.props.checkList.active ? "btn-danger" :"btn-success")}  dangerouslySetInnerHTML={{__html: this.props.checkList.todoButtonText}}></span>
+          <a onClick={this.showPopup}  className={cx("table-link btn btn-xs",!this.props.checkList.complete ? "btn-danger" :"btn-success")}  >
+            <span className={cx("label",!this.props.checkList.complete ? "btn-danger" :"btn-success")}  dangerouslySetInnerHTML={{__html: this.props.checkList.todoButtonText}}></span>
           </a>
-          : <Link to={this.props.checkList.todoLink}  className={cx("table-link btn btn-xs",!this.props.checkList.active ? "btn-danger" :"btn-success")}  >
-            <span className={cx("label",!this.props.checkList.active ? "btn-danger" :"btn-success")}  dangerouslySetInnerHTML={{__html: this.props.checkList.todoButtonText}}></span>
+          : <Link to={this.props.checkList.todoLink}  className={cx("table-link btn btn-xs",!this.props.checkList.complete ? "btn-danger" :"btn-success")}  >
+            <span className={cx("label",!this.props.checkList.complete ? "btn-danger" :"btn-success")}  dangerouslySetInnerHTML={{__html: this.props.checkList.todoButtonText}}></span>
           </Link>
           }
         </div>
@@ -205,10 +205,7 @@ dashboardRafflePurchaseTicket = () => {
                 <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.hidePopup}>Cancel</button>
               </div>
             </form>
-
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
-          </div>
+         </div>
         </PopupModel>
       </li>
     );

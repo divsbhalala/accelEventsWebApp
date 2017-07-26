@@ -14,7 +14,7 @@ export default {
       async action(props) {
         return {
           title,
-          component: <Layout params={props.params}><Auction title={title} params={props.params}/></Layout>,
+          component: <Layout params={props.params} class="display goal"><Auction title={title} params={props.params}/></Layout>,
         };
       }
     },
@@ -23,7 +23,7 @@ export default {
       async action(props) {
         return {
           title: "AccelEvents | Auction Page",
-          component: <Layout params={props.params}><Auction params={props.params}
+          component: <Layout params={props.params} class="display goal-auction"><Auction params={props.params}
                                                             itemCode={props.params && props.params.ItemCode}
                                                             title={title}/></Layout>,
         };
@@ -34,7 +34,7 @@ export default {
       async action(props) {
         return {
           title: "AccelEvents | Fund Page",
-          component: <Layout params={props.params}><Fund params={props.params}
+          component: <Layout params={props.params} class="display goal-fan"><Fund params={props.params}
                                                          itemCode={props.params && props.params.ItemCode}
                                                          title={title}/></Layout>,
         };
@@ -45,7 +45,7 @@ export default {
       async action(props) {
         return {
           title: "AccelEvents | Raffle Page",
-          component: <Layout params={props.params}><Raffle params={props.params}
+          component: <Layout params={props.params} class="display goal-raffle"><Raffle params={props.params}
                                                            itemCode={props.params && props.params.ItemCode}
                                                            title={title}/></Layout>,
         };

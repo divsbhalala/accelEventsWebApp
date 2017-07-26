@@ -25,7 +25,7 @@ class PopupModal extends Component { // eslint-disable-line
     return (
       <div className="static-modal" id={this.props.id + '-containter'}>
         <div>
-          <Modal show={this.props.showModal ? true : false} onHide={this.props.onCloseFunc}>
+          <Modal show={this.props.showModal ? true : false} onHide={this.props.onCloseFunc} id={this.props.id}>
             <Modal.Header closeButton>
               <Modal.Title>{this.props.headerText}</Modal.Title>
             </Modal.Header>

@@ -870,7 +870,7 @@ componentDidMount() {
 
 										</div>
 										{ this.state.passwordFeedBack && !this.state.password &&
-										<small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
+										<small className="help-block" data-fv-result="NOT_VALIDATED">Password can&#39;t be empty.</small>}
 
 									</div>}
 									<div className="form-group has-feedback">
@@ -1067,7 +1067,7 @@ componentDidMount() {
 				<PopupModel
 					id="alertPopup"
 					showModal={this.state.isShowAlertPopup}
-					headerText={<h4>{this.state.popupHeader}</h4>}
+					headerText={<p>{this.state.popupHeader}</p>}
 					//onCloseFunc={this.hideAlertPopup}
 					>
 					<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
@@ -1084,7 +1084,7 @@ componentDidMount() {
 					showModal={this.state.isShowLoginModal}
 					onCloseFunc={this.hideLoginModal}
 					params={this.props.params }
-					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
 				/>
 			</div>
 		)

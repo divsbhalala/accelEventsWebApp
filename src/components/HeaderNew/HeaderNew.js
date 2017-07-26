@@ -101,7 +101,7 @@ class HeaderNew extends React.Component {
 		}
 		if (this.state.isValidData) {
 			let user = {
-				countryCode: "IN",
+				countryCode: "US",
 				email: this.email.value,
 				password: this.password.value,
 				phoneNumber: this.state.phoneNumber
@@ -158,7 +158,7 @@ class HeaderNew extends React.Component {
 		if (this.phoneNumber.value.trim() == '') {
 			this.setState({
 				phoneNumber: false,
-				errorMsgPhoneNumber: "phoneNumber is Require",
+				errorMsgPhoneNumber: "Phone Number is required",
 			});
 		} else {
 			this.setState({
@@ -358,23 +358,22 @@ class HeaderNew extends React.Component {
 	render() {
 		let event = this.props.params && this.props.params.params;
 		return (
-			<div id="header-navbar" className={cx("content turquoise-bg white")}>
-
-				<Navbar fluid={true} style={ {margin: 0} } className={ cx("turquoise-bg white")}>
+			<div className={cx("top-header-wrap")}>
+				<Navbar fluid={true} style={ {margin: 0} }>
 					<Brand className={cx(this.props.admin && "p-0")}>
             <span >
               { this.props.eventData &&
 							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
 							{ this.props.admin && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
-								 className="navbar-brand" style={{paddingLeft: "22"}}>
+								 className="navbar-brand" >
             		<img
 									src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
 									alt className="normal-logo logo-white has-custom"/>
           		</a>}
 							{ this.props.admin && <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
-							}} style={{position: 'absolute', right: 0, top: 0}}>
+							}}>
                   <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>
                   <span className="icon-bar"></span>
@@ -413,7 +412,7 @@ class HeaderNew extends React.Component {
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
-						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> Views</span> } id='navDropdown3'>
+						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> <span className="hidden-xs">Views</span></span> } id='navDropdown3'>
 
 							<MenuItem eventKey="5" onClick={() => {
 								history.push("/scroll/" + event + "/auction")
@@ -487,11 +486,13 @@ class HeaderNew extends React.Component {
 
 						{
 							this.props.authenticated && <NavDropdown className=" profile-dropdown pointer" title={<span><img
-								src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/user-icon-placeholder.png"
-								alt="Jon"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+								src="/images/user-icon-placeholder.png"
+								alt="{this.props.user.firstName}"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
 							</span>} id='navDropdown4'>
-								<MenuItem eventKey="2">
-									<Link to="my-profile"> <span> <i className="fa fa-user fa-fw"></i> User Profile </span></Link>
+								<MenuItem eventKey="2" onClick={() => {
+                  history.push("/my-profile")
+                }}>
+                  <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
 								</MenuItem>
 								<MenuItem divider/>
 								<MenuItem eventKey="4" onClick={this.logout}>
@@ -511,7 +512,7 @@ class HeaderNew extends React.Component {
 				>
 					<div className="modal-body">
 						<div id="alertmessage" className="hide"/>
-						<p>Let us know if you have any query. We'll respond as quick as possible.</p>
+						<p>Let us know if you have any query. We&#39;ll respond as quick as possible.</p>
 						<form className="ajax-form validated fv-form fv-form-bootstrap" id="contactForm" method="post"
 									action="http://www.stagingaccel.com:8080/AccelEventsWebApp/events/jkazarian0/contact"
 									data-onsuccess="contactFormSuccess" noValidate="novalidate">
@@ -618,14 +619,13 @@ class HeaderNew extends React.Component {
 				</PopupModel> }
 				<LoginModal
 					showModal={this.state.showLoginPopup}
-					headerText=""
+					headerText={<p/>}
 					onCloseFunc={this.hideLoginPopup}
 					params={this.props.params }
-					modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
+					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
 						this.hideLoginPopup()
-					}}>&nbsp; &nbsp; &nbsp; Close&nbsp; &nbsp; &nbsp; </button>}
+					}}> Close </button>}
 				/>
-
 			</div>
 		)
 	};

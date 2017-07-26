@@ -84,7 +84,7 @@ class Admin extends React.Component {
                   firstTitle="Time Until Event Starts:"
                   firstData= {this.state.data.ticketingDetail.startDate}
                   secondTitle="Total Collection from ticket sales"
-                  secondData={ "$"+this.state.data.ticketingDetail.collectedAmout}
+                  secondData={ this.state.data.ticketingDetail.collectedAmout}
                   thirdTitle="Total tickets sold"
                   thirdData={ this.state.data.ticketingDetail.numberOfTicketSold}
                   active={this.state.data.ticketingDetail.active}
@@ -97,11 +97,11 @@ class Admin extends React.Component {
                   badgeLink="/host/settings/account"
                   badgeClass="white text-uppercase pull-right badge badge-danger"
                   firstTitle="Ends In"
-                  firstData={this.state.data && this.state.data.auctionDetail.endDate}
+                  firstData={this.state.data.auctionDetail.endDate}
                   secondTitle="Proceeds"
-                  secondData={this.state.data && "$"+this.state.data.auctionDetail.collectedAmout}
+                  secondData={this.state.data.auctionDetail.collectedAmout}
                   thirdTitle="Bidders"
-                  thirdData={this.state.data && this.state.data.auctionDetail.numberOfBidder}
+                  thirdData={this.state.data.auctionDetail.numberOfBidder}
                   active={this.state.data.auctionDetail.active}
                 /> }
               </div>
@@ -114,7 +114,7 @@ class Admin extends React.Component {
                   firstTitle="Ends In"
                   firstData={ this.state.data.raffleDetail.endDate}
                   secondTitle="Proceeds"
-                  secondData={ "$"+this.state.data.raffleDetail.collectedAmout}
+                  secondData={ this.state.data.raffleDetail.collectedAmout}
                   thirdTitle="Ticket Purchasers"
                   thirdData={ this.state.data.raffleDetail.numberOfTicketPurchased}
                   active={this.state.data.raffleDetail.active}
@@ -129,7 +129,7 @@ class Admin extends React.Component {
                   firstTitle="Ends In"
                   firstData={this.state.data.fundANeedDetail.endDate}
                   secondTitle="Proceeds"
-                  secondData={ "$"+this.state.data.fundANeedDetail.collectedAmout}
+                  secondData={ this.state.data.fundANeedDetail.collectedAmout}
                   thirdTitle="Donors"
                   thirdData={this.state.data.fundANeedDetail.donors}
                   active={this.state.data.fundANeedDetail.active}

@@ -6,7 +6,8 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import s from './Setting.css';
 import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 import PopupModel from '../../../components/PopupModal';
-
+import Button from 'react-bootstrap-button-loader';
+import cx from 'classnames';
 import {doGetHostSettings, putGetHostSettings} from './action';
 
 
@@ -23,6 +24,9 @@ class CreditCard extends React.Component {
 			ccRequiredForBidConfirm: false,
 			showItemTransactions: false,
 			transactions: [],
+      loading:false,
+      isError:false,
+      message:null,
 		};
 		this.toggleItemTransactionsPopup = this.toggleItemTransactionsPopup.bind(this);
 		this.submitSettings = this.submitSettings.bind(this);
@@ -41,12 +45,13 @@ class CreditCard extends React.Component {
 
 	submitSettings = (e) => {
 		e.preventDefault();
+    this.setState({loading:true})
 		let settings = this.state.settings;
 		delete settings.allCurrencies;
 		this.props.putGetHostSettings("creditCard", settings).then(resp =>{
-
+      this.setState({loading:false,message:resp.data.message,isError:false})
 		}).catch(error=>{
-
+      this.setState({loading:false,message:"Something wrong",isError:true})
 		});
 		console.log(e, e.target, this.state.settings)
 	};
@@ -135,8 +140,8 @@ class CreditCard extends React.Component {
 											<h1>
 												Credit Card Processing
 												<div className="pull-right">
-													<button className="btn btn-info mrg-b-md" type="button" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;Save
-														Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
+													<Button loading={this.state.loading} className="btn btn-info mrg-b-md" type="button" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;Save
+														Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
 												</div>
 											</h1>
 										</div>
@@ -145,6 +150,8 @@ class CreditCard extends React.Component {
 								<div className="row">
 									<div className>
 										<div className="main-box no-header">
+                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                        { this.state.message }</div>
 											<div className="main-box-body clearfix">
 												<p>If you would like to accept credit cards through Accelevents please set up a Stripe account.
 													There is a link below with a step-by-step guide on how to quickly (5-10 minutes) create your
@@ -219,8 +226,8 @@ class CreditCard extends React.Component {
 													</div>
 													<div className="form-group row mrg-t-lg">
 														<div className="col-md-3">
-															<button className="btn btn-info" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;Save
-																Settings&nbsp;&nbsp;&nbsp;&nbsp;</button>
+															<Button loading={this.state.loading} className="btn btn-info" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;Save
+																Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
 														</div>
 													</div>
 													<div className="form-group row mrg-t-lg">

@@ -60,40 +60,35 @@ class Timer extends React.Component {
 
   render() {
     return (
-      <div className={cx(s.root, this.props.className) } style={this.props.style}>{}
-        <div className={cx(s.timeLeft)}>
-          <div className={cx(s.ticker, s.timeLeftTicker)}>
-            <div className={cx(s.timer, 'flex-row')}>
-              <div className="flex-col hide">
-                <span className="days">{this.state.days}</span>
-              </div>
-              <div className="flex-col hide">
-                <span className="hours">{this.state.hours}</span>
-              </div>
-              <div className="flex-col">
-                <span className="minutes">{this.state.minute}</span>
-              </div>
-              <div className="flex-col">
-                <span className="seconds">{this.state.seconds}</span>
-              </div>
-            </div>
-            <div className={cx(s.tiny, 'flex-row', 'text-center')}>
-              <div className="flex-col hide">
-                <span className="days">DAYS</span>
-              </div>
-              <div className="flex-col hide">
-                <span className="hours">HOURS</span>
-              </div>
-              <div className="flex-col">
-                <span className="minutes">MINUTES</span>
-              </div>
-              <div className="flex-col">
-                <span className="seconds">SECONDS</span>
-              </div>
-            </div>
+      <div className={cx('ticker', this.props.class) } style={this.props.style}>{}
+        <div className={cx('flex-row')}>
+          <div className="flex-col hide">
+            <span className="days">{this.state.days}</span>
+          </div>
+          <div className="flex-col hide">
+            <span className="hours">{this.state.hours}</span>
+          </div>
+          <div className="flex-col">
+            <span className="minutes">{this.state.minute}</span>
+          </div>
+          <div className="flex-col">
+            <span className="seconds">{this.state.seconds}</span>
           </div>
         </div>
-
+        <div className={cx('tiny', 'flex-row')}>
+          <div className="flex-col hide">
+            <span className="days">DAYS</span>
+          </div>
+          <div className="flex-col hide">
+            <span className="hours">HOURS</span>
+          </div>
+          <div className="flex-col">
+            <span className="minutes">MINUTES</span>
+          </div>
+          <div className="flex-col">
+            <span className="seconds">SECONDS</span>
+          </div>
+        </div>
       </div>
     );
   }

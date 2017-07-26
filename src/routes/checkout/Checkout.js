@@ -166,7 +166,7 @@ class Checkout extends React.Component {
 		else if (this.cardHolderName.value && (this.cardHolderName.value.length <= 6 || this.cardHolderName.value.length > 70)) {
 			this.setState({
 				cardHolderName: false,
-				cardHolderNameFeedBackMsg: "TThe card holder name must be more than 6 and less than 70 characters long"
+				cardHolderNameFeedBackMsg: "The card holder name must be more than 6 and less than 70 characters long"
 			});
 		}
 		else {
@@ -774,6 +774,7 @@ class Checkout extends React.Component {
 									<div className="col-lg-9 col-md-8 col-sm-8 ">
 										<div className="main-box clearfix">
 											<Timer
+												class="time-left"
 												time={this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.remainingSeconds}
 												onEnd={this.ticketTimeOut}/>
 											<form className="validated fv-form fv-form-bootstrap" noValidate="novalidate"
@@ -1477,7 +1478,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="alertPopup"
 							showModal={this.state.showMapPopup}
-							headerText={<h4>{this.state.popupAlertHeader}</h4>}
+							headerText={<p>{this.state.popupAlertHeader}</p>}
 							modelBody=''
 							onCloseFunc={this.hidePopup}>
 							<div className="ticket-type-container">
@@ -1490,7 +1491,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="ticketPurchaseSuccessPopup"
 							showModal={ this.state.ticketPurchaseSuccessPopup}
-							headerText={<h4>Success</h4>}
+							headerText={<p>Success</p>}
 							modelBody={<p>Thank you for supporting the event. Please check your inbox for your tickets.</p>}
 							onCloseFunc={this.hideSuccessAlertPopup}>
 							<div className="ticket-type-container">
@@ -1505,7 +1506,7 @@ class Checkout extends React.Component {
 						<PopupModel
 							id="showFormErroralertPopup"
 							showModal={ this.state.showFormError}
-							headerText={<h4>Faild</h4>}
+							headerText={<p>Faild</p>}
 							modelBody={<p>{ this.state.formError || "Invalid Data"}</p>}
 							onCloseFunc={this.hideformErrorPopup}>
 							<div className="ticket-type-container">
