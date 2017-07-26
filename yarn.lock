@@ -988,6 +988,12 @@ babel-runtime@6.x, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
+babel-runtime@^5.8.38:
+  version "5.8.38"
+  resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-5.8.38.tgz#1c0b02eb63312f5f087ff20450827b425c9d4c19"
+  dependencies:
+    core-js "^1.0.0"
+
 babel-template@^6.24.1, babel-template@^6.7.0:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/babel-template/-/babel-template-6.24.1.tgz#04ae514f1f93b3a2537f2a0f60a5a45fb8308333"
@@ -1132,9 +1138,12 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
-bootstrap@^3.3.7:
-  version "3.3.7"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
+bootstrap-daterangepicker@^2.1.25:
+  version "2.1.25"
+  resolved "https://registry.yarnpkg.com/bootstrap-daterangepicker/-/bootstrap-daterangepicker-2.1.25.tgz#fcd8ba0b755a054d330d7a3b7c4dd8bb855cffb7"
+  dependencies:
+    jquery ">=1.10"
+    moment "^2.9.0"
 
 bowser@^1.0.0:
   version "1.6.1"
@@ -3933,10 +3942,6 @@ joi@^6.10.1:
     moment "2.x.x"
     topo "1.x.x"
 
-jquery@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
-
 jquery@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
@@ -4785,7 +4790,7 @@ moment-timezone@^0.5.13, moment-timezone@^0.5.4:
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x.x, "moment@>= 2.9.0", moment@^2.11.2, moment@^2.13.0, moment@^2.18.1:
+moment@2.x.x, "moment@>= 2.9.0", moment@^2.11.2, moment@^2.13.0, moment@^2.18.1, moment@^2.9.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
@@ -6100,6 +6105,13 @@ react-bootstrap-button-loader@^1.0.8:
   dependencies:
     prop-types "^15.5.10"
     react-loader "^2.4.0"
+
+react-bootstrap-datetimerangepicker@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-datetimerangepicker/-/react-bootstrap-datetimerangepicker-2.0.4.tgz#ef167d66178ba75a2640bfa189526229f046aef3"
+  dependencies:
+    babel-runtime "^5.8.38"
+    classnames "^2.2.3"
 
 react-bootstrap-sweetalert@^3.0.0:
   version "3.0.0"

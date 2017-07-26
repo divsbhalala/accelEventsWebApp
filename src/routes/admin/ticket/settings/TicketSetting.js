@@ -9,7 +9,7 @@ import {Tabs, Tab} from 'react-bootstrap-tabs';
 import {doGetTicketingSettings,
 	doPostTicketingSettings,
 	doGetTicketingCouponCodes,
-	doGetTicketTypes,
+	doTicketTypes,
 	doCreateCouponCode,
 	doUpdateCouponCode,
 	doDeleteCouponCode,
@@ -72,7 +72,7 @@ class TicketSetting extends React.Component {
 	};
 	toggleCouponCodePopup = (e) => {
 		if(!this.state.isShowCouponModel){
-			this.props.doGetTicketTypes().then(resp=>{
+			this.props.doTicketTypes().then(resp=>{
 				this.setState({
 					ticketData: resp && resp.data
 				})
@@ -863,7 +863,7 @@ const mapDispatchToProps = {
 	doGetTicketingSettings: (type) => doGetTicketingSettings(type),
 	doPostTicketingSettings: (type, data) => doPostTicketingSettings(type, data),
 	doGetTicketingCouponCodes: () => doGetTicketingCouponCodes(),
-	doGetTicketTypes: () => doGetTicketTypes(),
+	doTicketTypes: () => doTicketTypes(),
 	doCreateCouponCode: (data, code) => doCreateCouponCode(data, code),
 	doDeleteCouponCode: (data) => doDeleteCouponCode(data),
 	doUpdateCouponCode: (code, data) => doUpdateCouponCode(code, data),
