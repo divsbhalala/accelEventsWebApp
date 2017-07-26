@@ -2514,14 +2514,13 @@ class Volunteer extends React.Component {
                             <div className="type-name"><strong>{item.name}</strong>
                               (<span className="type-cost txt-sm gray"> ${item.price}</span>)
                               <div className="pull-right">
-                                { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
+                                { item.remaniningTickets && item.remaniningTickets > 0 ?
                                   <select className="form-control" name={item.typeId} data-price={item.price}
                                           disabled = {moment(item.endDate).diff(moment()) <= 0}
                                           onChange={this.selectHandle}
                                           value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
                                     {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
-                                  </select>
-                                </div> : ''}
+                                  </select> : ''}
                                 {
                                   (!item.remaniningTickets || item.remaniningTickets <= 0) && <span class="sold-out-text"> SOLD OUT </span>
                                 }
