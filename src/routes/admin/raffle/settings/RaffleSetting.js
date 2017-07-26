@@ -5,13 +5,15 @@ import s from './RaffleSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
-import DateTimeField from "react-bootstrap-datetimepicker";
+import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings, getHostTickets} from '../../../../components/HostSettings/action/RestActions';
+import TicketList from '../../../../components/HostSettings/TicketList';
+import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
 import {Modal ,Button, Alert} from 'react-bootstrap';
+import moment from 'moment';
 
 class RaffleSetting extends React.Component {
   static propTypes = {
@@ -31,7 +33,10 @@ class RaffleSetting extends React.Component {
       alertVisible: false,
       alertMessage:null,
       alertType:null,
-      loading: false
+      loading: false,
+      tickets : [],
+      startDate: moment()
+
     };
   };
 
@@ -54,7 +59,12 @@ class RaffleSetting extends React.Component {
 
   componentWillMount(){
     this.props.getHostSettings(this.state.moduleType).then(resp => {
-      this.setState({settings:resp.data});
+      this.setState({settings:resp.data, startDate : resp.data.userTime});
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.props.getHostTickets(this.state.moduleType).then(resp => {
+      this.setState({tickets:resp.data});
     }).catch((error) => {
       console.log(error);
     });
@@ -112,7 +122,60 @@ class RaffleSetting extends React.Component {
     });
   };
 
+  handleChange = (newDate) => {
+      console.log("newDate", newDate);
+      return this.setState({date: newDate});
+  };
+
+  handleEvent = (event, picker) => {
+    let settings = this.state.settings;
+    settings['userTime'] = picker.startDate.format('YYYY/MM/DD HH:mm');
+    this.setState({
+      startDate: picker.startDate,
+      settings
+    });
+  };
+
+  addRow =() =>{
+  let tickets = this.state.tickets;
+  let newRow = {numberOfTickets:1,price:0,id:0,complementary:false};
+  tickets.push(newRow);
+  this.setState({
+    tickets
+  })
+}
+removeRow =(index) =>{
+  let tickets = this.state.tickets;
+  tickets.splice(index,1)
+  this.setState({
+    tickets
+  })
+}
+actionResult = (method,status,message) =>{
+  if(status == "Failed"){ this.setState({status,message});}
+  else{
+    this.setState({status,message,tickets : ""});
+    this.props.getHostTickets(this.state.moduleType).then(resp => {
+      if(resp && resp.data){
+        this.setState({tickets:resp.data});
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+}
+
   render() {
+
+        let locale = {
+          format: 'YYYY/MM/DD HH:mm',
+          separator: ' - ',
+          weekLabel: 'W',
+          customRangeLabel: 'Custom Range',
+          daysOfWeek: moment.weekdaysMin(),
+          monthNames: moment.monthsShort(),
+          firstDay: moment.localeData().firstDayOfWeek(),
+        };
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
@@ -147,9 +210,27 @@ class RaffleSetting extends React.Component {
                               Raffle end time
                               <div className="help-text" />
                             </div>
-                            <div className="col-md-3">
-                              <input type="text" className="form-control datetimepicker white-bg" name="newEndDate" id="newEndDate" defaultValue="2017/07/23 02:30" />
+                            { this.state.settings.userTime && <div className="col-md-3">
+                              <DatetimeRangePicker
+                                singleDatePicker
+                                timePicker
+                                timePicker24Hour
+                                showDropdowns
+                                locale={locale}
+                                startDate={this.state.startDate}
+                                onEvent={this.handleEvent}
+                              >
+                                <div className="input-group">
+                                  <input type="text" className="form-control" value={this.state.settings.userTime}/>
+                                    <span className="input-group-btn">
+                                        <Button className="default date-range-toggle">
+                                          <i className="fa fa-calendar"/>
+                                        </Button>
+                                    </span>
+                                </div>
+                              </DatetimeRangePicker>
                             </div>
+                          }
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
@@ -226,7 +307,9 @@ class RaffleSetting extends React.Component {
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" data-toggle="modal" data-target="#resetModuleConfirm">Reset</button>
                         </div>
-                        <div className="row form-group ticket-price-settings">
+
+                        {this.state.message && <div className={cx("alert",this.state.status=="Success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
+                        {this.state.tickets ? <div className="row form-group ticket-price-settings">
                           <div className="col-md-3 col-md-offset-1">
                             Raffle Ticket Prices
                           </div>
@@ -241,250 +324,18 @@ class RaffleSetting extends React.Component {
                               </tr>
                               </thead>
                               <tbody>
-                              <tr className="dummy edit">
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" required name="numOfTicket" />
-                                  </div>
-                                  <span className="value numofticket" />
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" required name="price" />
-                                  </div>
-                                  <span className="value ">$<span className="price" /></span>
-                                </td>
-                                <td className="text-center">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" name="numOfTicket" defaultValue={1} required />
-                                  </div>
-                                  <span className="value numofticket">1</span>
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" name="price" defaultValue={5} required />
-                                    <input type="hidden" className="form-control" name="id" defaultValue={1694} required />
-                                  </div>
-                                  <span className="value">$<span className="price">5</span></span>
-                                </td>
-                                <td className="text-center action-items">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" name="numOfTicket" defaultValue={2} required />
-                                  </div>
-                                  <span className="value numofticket">2</span>
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" name="price" defaultValue={10} required />
-                                    <input type="hidden" className="form-control" name="id" defaultValue={1695} required />
-                                  </div>
-                                  <span className="value">$<span className="price">10</span></span>
-                                </td>
-                                <td className="text-center action-items">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" name="numOfTicket" defaultValue={6} required />
-                                  </div>
-                                  <span className="value numofticket">6</span>
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" name="price" defaultValue={20} required />
-                                    <input type="hidden" className="form-control" name="id" defaultValue={1696} required />
-                                  </div>
-                                  <span className="value">$<span className="price">20</span></span>
-                                </td>
-                                <td className="text-center action-items">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" name="numOfTicket" defaultValue={15} required />
-                                  </div>
-                                  <span className="value numofticket">15</span>
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" name="price" defaultValue={40} required />
-                                    <input type="hidden" className="form-control" name="id" defaultValue={1697} required />
-                                  </div>
-                                  <span className="value">$<span className="price">40</span></span>
-                                </td>
-                                <td className="text-center action-items">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" name="numOfTicket" defaultValue={20} required />
-                                  </div>
-                                  <span className="value numofticket">20</span>
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" name="price" defaultValue={50} required />
-                                    <input type="hidden" className="form-control" name="id" defaultValue={1698} required />
-                                  </div>
-                                  <span className="value">$<span className="price">50</span></span>
-                                </td>
-                                <td className="text-center action-items">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <input type="number" className="form-control item-name" name="numOfTicket" defaultValue={50} required />
-                                  </div>
-                                  <span className="value numofticket">50</span>
-                                </td>
-                                <td className="text-center">
-                                  <div className="input-group">
-                                    <span className="input-group-addon">$</span>
-                                    <input type="number" className="form-control item-name" name="price" defaultValue={100} required />
-                                    <input type="hidden" className="form-control" name="id" defaultValue={1699} required />
-                                  </div>
-                                  <span className="value">$<span className="price">100</span></span>
-                                </td>
-                                <td className="text-center action-items">
-                                  <ul className="readonly-actions list-inline">
-                                    <li>
-                                      <a className="edit-item">Edit</a>
-                                    </li>
-                                    <li>
-                                      <a className="delete-item">Delete</a>
-                                    </li>
-                                  </ul>
-                                  <ul className="edit-actions list-inline">
-                                    <li>
-                                      <button className="btn btn-primary btn-submit edit-item">Submit</button>
-                                    </li>
-                                    <li>
-                                      <button className="btn btn-default btn-cancel">Cancel</button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
+                              {this.state.tickets && this.state.tickets.map((value,index)=>
+                                  <TicketList ticket={value} key={index} index={index} removeRow={this.removeRow} actionResult={this.actionResult} />
+                              )}
                               </tbody>
                             </table>
                             <div className="form-group operations-row text-center">
-                              <button className="btn btn-default add-item">Add Ticket Price</button>
+                              <button className="btn btn-default add-item" onClick={this.addRow}>Add Ticket Price</button>
                             </div>
                           </div>
-                        </div>
+                        </div> : <div id="app" className="loader"></div> }
+
+
                         <div className="row form-group category-settings" style={{display : 'block'}}>
                           <div className="col-md-3 col-md-offset-1">
                             Category Management
@@ -492,7 +343,7 @@ class RaffleSetting extends React.Component {
                           {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
                         </div>
                         <div className="form-group operations-row text-center">
-                          <button className={cx("btn btn-info btn-block save-settings", ( (this.state.emailFeedBack && !this.state.email) || (this.state.passwordFeedBack && !this.state.password)) && 'disabled')}
+                          <button className={cx("btn btn-info save-settings", ( (this.state.emailFeedBack && !this.state.email) || (this.state.passwordFeedBack && !this.state.password)) && 'disabled')}
                             role="button" onClick={this.onSaveSetting}>
                             {this.state.loading ? <div><i className='fa fa-spinner fa-spin'></i> Saving Settings..</div> : 'Save Settings' }
                           </button>
@@ -517,7 +368,8 @@ const mapDispatchToProps = {
   removeHostCategory : (moduleType, id) => removeHostCategory(moduleType, id),
   addHostCategory : (moduleType, itemCategory) => addHostCategory (moduleType, itemCategory),
   updateHostCategory : (moduleType, id, itemCategory) => updateHostCategory(moduleType, id, itemCategory),
-  resetHostSettings : (moduleType) => resetHostSettings(moduleType)
+  resetHostSettings : (moduleType) => resetHostSettings(moduleType),
+  getHostTickets : (moduleType) => getHostTickets(moduleType)
 };
 
 const mapStateToProps = (state) => ({});

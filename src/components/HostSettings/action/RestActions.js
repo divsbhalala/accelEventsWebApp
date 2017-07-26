@@ -77,3 +77,45 @@ export function updateHostCategory(moduleType, id, itemCategory) {
     })
   }
 }
+
+export function getHostTickets(moduleType) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/'+moduleType+'/tickets',
+      headers: {Authorization: localStorage.getItem('token')}
+    })
+  }
+}
+
+export function addTicket(moduleType, ticket) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'host/'+moduleType+'/ticket',
+      data: ticket,
+      headers: {Authorization: localStorage.getItem('token')}
+    })
+  }
+}
+
+export function updateTicket(moduleType, ticket) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'host/'+moduleType+'/ticket/'+ticket.id,
+      data: ticket,
+      headers: {Authorization: localStorage.getItem('token')}
+    })
+  }
+}
+
+export function deleteTicket(moduleType, id) {
+  return (dispatch) => {
+    return axios({
+      method: 'delete',
+      url: API_URL + 'host/'+moduleType+'/ticket/' + id,
+      headers: {Authorization: localStorage.getItem('token')}
+    })
+  }
+}
