@@ -917,8 +917,8 @@ class Event extends React.Component {
 									<div className="sale-card" key={item.typeId.toString()}>
 										<div className="flex-row">
 											<div className="flex-col">
-												<div className="type-name"><strong>{item.name}</strong>
-													(<span className="type-cost txt-sm gray">${item.price}</span>)
+												<div className="type-name"><strong style={{"font-weight":700}}>{item.name} </strong>
+													( <span className="type-cost txt-sm gray"> ${item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
 															<select className="form-control" name={item.typeId} data-price={item.price}
