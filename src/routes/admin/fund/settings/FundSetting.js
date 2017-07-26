@@ -6,12 +6,13 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
-import DateTimeField from "react-bootstrap-datetimepicker";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import {Modal ,Button, Alert} from 'react-bootstrap';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
+import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
+import moment from 'moment';
 
 class FundSetting extends React.Component {
   static propTypes = {
@@ -31,7 +32,8 @@ class FundSetting extends React.Component {
       alertVisible: false,
       alertMessage:null,
       alertType:null,
-      categoryAlertVisible:false
+      categoryAlertVisible:false,
+      startDate: moment()
     };
   };
 
@@ -113,7 +115,26 @@ class FundSetting extends React.Component {
     });
   };
 
-  render() { return (
+  handleEvent = (event, picker) => {
+    let settings = this.state.settings;
+    settings['userTime'] = picker.startDate.format('YYYY/MM/DD HH:mm');
+    this.setState({
+      startDate: picker.startDate,
+      settings
+    });
+  };
+
+  render() {
+    let locale = {
+      format: 'YYYY/MM/DD HH:mm',
+      separator: ' - ',
+      weekLabel: 'W',
+      customRangeLabel: 'Custom Range',
+      daysOfWeek: moment.weekdaysMin(),
+      monthNames: moment.monthsShort(),
+      firstDay: moment.localeData().firstDayOfWeek(),
+    };
+    return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
           <div className="col-sm-12">
@@ -148,9 +169,27 @@ class FundSetting extends React.Component {
                               Fund a Need end time
                               <div className="help-text" />
                             </div>
-                            <div className="col-md-3">
-                              <DateTimeField inputFormat="DD-MM-YYYY" id="dateTime" dateTime={this.state.settings.userTime}/>
+                            { this.state.settings.userTime && <div className="col-md-3">
+                              <DatetimeRangePicker
+                                singleDatePicker
+                                timePicker
+                                timePicker24Hour
+                                showDropdowns
+                                locale={locale}
+                                startDate={this.state.startDate}
+                                onEvent={this.handleEvent}
+                              >
+                                <div className="input-group">
+                                  <input type="text" className="form-control" value={this.state.settings.userTime}/>
+                                    <span className="input-group-btn">
+                                        <Button className="default date-range-toggle">
+                                          <i className="fa fa-calendar"/>
+                                        </Button>
+                                    </span>
+                                </div>
+                              </DatetimeRangePicker>
                             </div>
+                          }
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">

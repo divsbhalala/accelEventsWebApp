@@ -13,6 +13,8 @@ import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import {Modal ,Button, Alert} from 'react-bootstrap';
 import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
+import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
+import moment from 'moment';
 
 class AuctionSetting extends React.Component {
   static propTypes = {
@@ -30,7 +32,8 @@ class AuctionSetting extends React.Component {
       alertVisible: false,
       alertMessage:null,
       alertType:null,
-      settings:{}
+      settings:{},
+      startDate: moment()
     };
   };
 
@@ -126,8 +129,25 @@ class AuctionSetting extends React.Component {
       console.log(error);
     });
   };
-
-  render() { return (
+  handleEvent = (event, picker) => {
+    let settings = this.state.settings;
+    settings['userTime'] = picker.startDate.format('YYYY/MM/DD HH:mm');
+    this.setState({
+      startDate: picker.startDate,
+      settings
+    });
+  };
+  render() {
+    let locale = {
+      format: 'YYYY/MM/DD HH:mm',
+      separator: ' - ',
+      weekLabel: 'W',
+      customRangeLabel: 'Custom Range',
+      daysOfWeek: moment.weekdaysMin(),
+      monthNames: moment.monthsShort(),
+      firstDay: moment.localeData().firstDayOfWeek(),
+    };
+    return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
           <div className="col-sm-12">
@@ -167,14 +187,27 @@ class AuctionSetting extends React.Component {
                               Silent Auction end time
                               <div className="help-text" />
                             </div>
-                            <div className="col-md-3">
-                              <input type="text"
-                                     className="form-control datetimepicker white-bg"
-                                     name="newEndDate"
-                                     id="newEndDate"
-                                     defaultValue={this.state.settings.userTime}
-                                     readOnly="readonly" />
+                            { this.state.settings.userTime && <div className="col-md-3">
+                              <DatetimeRangePicker
+                                singleDatePicker
+                                timePicker
+                                timePicker24Hour
+                                showDropdowns
+                                locale={locale}
+                                startDate={this.state.startDate}
+                                onEvent={this.handleEvent}
+                              >
+                                <div className="input-group">
+                                  <input type="text" className="form-control" value={this.state.settings.userTime}/>
+                                    <span className="input-group-btn">
+                                        <Button className="default date-range-toggle">
+                                          <i className="fa fa-calendar"/>
+                                        </Button>
+                                    </span>
+                                </div>
+                              </DatetimeRangePicker>
                             </div>
+                          }
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">

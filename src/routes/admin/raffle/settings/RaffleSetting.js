@@ -167,15 +167,15 @@ actionResult = (method,status,message) =>{
 
   render() {
 
-        let locale = {
-          format: 'YYYY/MM/DD HH:mm',
-          separator: ' - ',
-          weekLabel: 'W',
-          customRangeLabel: 'Custom Range',
-          daysOfWeek: moment.weekdaysMin(),
-          monthNames: moment.monthsShort(),
-          firstDay: moment.localeData().firstDayOfWeek(),
-        };
+    let locale = {
+      format: 'YYYY/MM/DD HH:mm',
+      separator: ' - ',
+      weekLabel: 'W',
+      customRangeLabel: 'Custom Range',
+      daysOfWeek: moment.weekdaysMin(),
+      monthNames: moment.monthsShort(),
+      firstDay: moment.localeData().firstDayOfWeek(),
+    };
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
