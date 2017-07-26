@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Setting.css';
-import {connect} from 'react-redux';
-import {doGetHostSettings,makePyment} from './action';
-import {getCardToken} from './../../checkout/action/index';
+import { connect } from 'react-redux';
+import { doGetHostSettings, makePyment } from './action';
+import { getCardToken } from './../../checkout/action/index';
 import Button from 'react-bootstrap-button-loader';
 import PopupModel from './../../../components/PopupModal';
-//let CKEditor = require('react-ckeditor-wrapper');
+// let CKEditor = require('react-ckeditor-wrapper');
 class Account extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			content: 'content',
-			settings: {},
-			itemSelected:[],
-			totalPrice:0,
+  constructor(props) {
+    super(props);
+    this.state = {
+      content: 'content',
+      settings: null,
+      itemSelected: [],
+      totalPrice: 0,
 
       cardNumberValue: null,
       cardHolderValue: null,
@@ -45,30 +45,29 @@ class Account extends React.Component {
       errorMsgcardHolder: null,
       errorMsgNumber: null,
       errorMsgcvv: null,
-      errorMsgCountryCode:null,
-      slientAuctionActivated:false,
-      causeAuctionActivated:false,
-      raffleActivated:false,
-      ticketingActivated:false,
+      errorMsgCountryCode: null,
+      slientAuctionActivated: false,
+      causeAuctionActivated: false,
+      raffleActivated: false,
+      ticketingActivated: false,
 
-      loading:false,
-      isError:false,
-      message:null,
-      modulActiveMessage:null,
+      loading: false,
+      isError: false,
+      message: null,
+      modulActiveMessage: null,
       showPopup: false,
-		};
-		this.addPackage = this.addPackage.bind(this);
-	}
+    };
+    this.addPackage = this.addPackage.bind(this);
+  }
 
-	updateContent(value) {
-		this.setState({content: value})
-	}
+  updateContent(value) {
+    this.setState({ content: value });
+  }
 
-	static propTypes = {
-		title: PropTypes.string,
-	};
+  static propTypes = {
+    title: PropTypes.string,
+  };
   countryCodeValidateHandler = (e) => {
-
     this.setState({
       countryCodeFeedBack: true,
       countryCodeValue: this.countryCode.value.trim(),
@@ -81,27 +80,25 @@ class Account extends React.Component {
       });
     } else {
       this.setState({
-        countryCode: true
+        countryCode: true,
       });
     }
   };
   cardHolderValidateHandler = (e) => {
-
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue: this.cardHolder.value.trim(),
     });
 
     if (this.cardHolder.value.trim() == '') {
-
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
       });
-    } else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
+    } else if (!(this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70)) {
       this.setState({
         cardHolder: false,
-        errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+        errorMsgcardHolder: 'The card holder name must be more than 6 and less than 70 characters long ',
       });
     } else {
       this.setState({
@@ -315,10 +312,11 @@ class Account extends React.Component {
 		}];
 
 		return (
-			<div id="content-wrapper" className="admin-content-wrapper">
+			<div>
+      {this.state.settings?<div id="content-wrapper" className="admin-content-wrapper">
 				<style
-					dangerouslySetInnerHTML={{__html: ".btn span.glyphicon {opacity: 0;}.btn.active span.glyphicon {opacity: 1;}.packages-check .btn-danger {background-color: #DE564B;}.packages-check .btn-success {background-color: #699e08;}.packages-check .btn-danger.active {background-color: #e44730;}.form-group .glyphicon-ok, .form-group .glyphicon-remove{display:inline-block}"}}/>
-				<div className="row">
+					dangerouslySetInnerHTML={{__html: '.btn span.glyphicon {opacity: 0;}.btn.active span.glyphicon {opacity: 1;}.packages-check .btn-danger {background-color: #DE564B;}.packages-check .btn-success {background-color: #699e08;}.packages-check .btn-danger.active {background-color: #e44730;}.form-group .glyphicon-ok, .form-group .glyphicon-remove{display:inline-block}'}}
+				/><div className="row">
 					<div className="col-sm-12">
 						<div className="row" style={{opacity: 1}}>
 							<div className="col-md-8 col-md-offset-2">
@@ -327,11 +325,11 @@ class Account extends React.Component {
 										<div className="main-box no-header">
 											<div className="main-box-body clearfix">
 												<div className="form">
-                          { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                            { this.state.message }</div> }
+                          { this.state.message &&<div  className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success':'text-danger')} >
+                            { this.state.message }</div>}
 													<form id="payment-form" method="post"
-																className="ajax-form validated fv-form fv-form-bootstrap">
-														<button type="submit" className="fv-hidden-submit"
+																className="ajax-form validated fv-form fv-form-bootstrap"
+														><button type="submit" className="fv-hidden-submit"
 																		style={{display: 'none', width: 0, height: 0}}/>
 														<div className="validation-msg text-danger"><span className="payment-errors"/></div>
 														<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>

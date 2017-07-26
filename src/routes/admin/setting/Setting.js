@@ -133,50 +133,54 @@ class Setting extends React.Component {
 		}
 	};
 
-	render() {
-		return (
-			<div id="content-wrapper" className="admin-content-wrapper">
-				<div className="row">
-					<div className="col-sm-12">
-						<div className="row" style={{opacity: 1}}>
-							<div className="col-lg-12">
-								<div className="row">
-									<div className="col-lg-12">
-										<div id className="clearfix">
-											<div className="pull-left">
-											</div>
-											<ol className="breadcrumb">
-												<li><a href="/AccelEventsWebApp/host/dashboard/home">Home</a></li>
-												<li className="active"><span>General Settings</span></li>
-											</ol>
-											<h1>
-												General Settings
-												<div className="pull-right">
-													<Button className="btn btn-info" loading={this.state.loading} id="save-settings" onClick={this.submitSettings}
-																	type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
-												</div>
-											</h1>
-										</div>
-									</div>
-								</div>
-								{ this.state.settings && <div className="row">
-									<div className>
-										<div className="main-box no-header">
-											<div className="main-box-body clearfix">
-												<form id="form">
-                          { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+  render() {
+    return (
+      <div id="content-wrapper" className="admin-content-wrapper">
+        {this.state.settings ?
+          <div className="row">
+          <div className="col-sm-12">
+            <div className="row" style={{ opacity: 1 }}>
+              <div className="col-lg-12">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div id className="clearfix">
+                      <div className="pull-left" />
+                      <ol className="breadcrumb">
+                        <li><a href="/AccelEventsWebApp/host/dashboard/home">Home</a></li>
+                        <li className="active"><span>General Settings</span></li>
+                      </ol>
+                      <h1>
+                        General Settings
+                        <div className="pull-right">
+                          <Button
+                            className="btn btn-info" loading={this.state.loading} id="save-settings" onClick={this.submitSettings}
+                            type="button"
+                          >&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
+                        </div>
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+                { this.state.settings ? <div className="row">
+                  <div className>
+                    <div className="main-box no-header">
+                      <div className="main-box-body clearfix">
+                        <form id="form">
+                          { this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
                             { this.state.message }</div> }
-													<div className="form-group row">
-														<div className="col-md-4">
-															<label>Select Currency</label>
-														</div>
-														<div className="col-md-4">
-															<select className="form-control" name="currency" id="currency"
-																			ref={(input) => {
-																				this.currency = input;
-																			}}
-																			onChange={this.SelectCurrency}
-																			defaultValue={ (this.state.settings && this.state.settings.currency) || "USD"}>
+                          <div className="form-group row">
+                            <div className="col-md-4">
+                              <label>Select Currency</label>
+                            </div>
+                            <div className="col-md-4">
+                              <select
+                                className="form-control" name="currency" id="currency"
+                                ref={(input) => {
+                                  this.currency = input;
+                                }}
+                                onChange={this.SelectCurrency}
+                                defaultValue={(this.state.settings && this.state.settings.currency) || 'USD'}
+                              >
 
 																{
 																	this.state.settings && this.state.settings.allCurrencies ? this.state.settings.allCurrencies.map(item =>

@@ -246,5 +246,4 @@ const mapStateToProps = (state) => ({
   counter: state.counter,
   USER_DATA: state.USER
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Login));

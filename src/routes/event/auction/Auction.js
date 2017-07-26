@@ -1251,10 +1251,14 @@ class Auction extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsgCard }
             <div className="modal-footer">
-              {this.state.popupHeader == "Success" ? <Button className="btn btn-success" onClick={this.placeBid}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
+              {this.state.popupHeader == 'Success' ? <Button
+                className="btn btn-success" onClick={this.placeBid}
+                loading={this.state.loading}
+              >Confirm</Button> : ''}
+              {this.state.popupHeader == 'Confirm' ? <Button
+                className="btn btn-success" onClick={this.placeBidByAmount}
+                loading={this.state.loading}
+              >Confirm</Button> : ''}
               <button className="btn btn-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>

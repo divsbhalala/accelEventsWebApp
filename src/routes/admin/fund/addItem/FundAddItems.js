@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './FundAddItems.css';
 import cx from 'classnames';
+import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import { connect } from 'react-redux';
 import { getItemSheetPdf, getItemCatalogPdf, getItemListCsv } from './action';
 import FundNeedAddItem from './../../../../components/FundAddItem'
@@ -32,17 +33,16 @@ class FundAddItems extends React.Component {
         <div className="row">
           <div className="col-sm-12">
             <div className="row form-group flexrow">
-              <div className="row" style={{opacity: 1}}>
+              <div className="row" style={{ opacity: 1 }}>
                 <div className="col-lg-12">
                   <div className="row">
                     <div className="col-lg-12">
                       <div id className="clearfix">
                         <div className>
                           <h1>Add Fund a Need Items
-                            <span className="item-count-wrap xpull-right"> </span>
+									              <span className="item-count-wrap xpull-right"> </span >
                             <div className="pull-right">
-                              {/*<button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save*/}
-                                {/*Items &nbsp; &nbsp; </button>*/}
+                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                           </h1>
                         </div>
@@ -76,7 +76,6 @@ class FundAddItems extends React.Component {
                                   </div>
                                 </div>
                               </div>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -86,6 +85,8 @@ class FundAddItems extends React.Component {
                 </div>
               </div>
             </div>
+
+          </div>
         </div>
       </div>
     );

@@ -143,17 +143,17 @@ class CreditCard extends React.Component {
 													<Button loading={this.state.loading} className="btn btn-info mrg-b-md" type="button" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;Save
 														Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
 												</div>
-											</h1>
-										</div>
-									</div>
-								</div>
-								<div className="row">
-									<div className>
-										<div className="main-box no-header">
-                      { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className>
+                    <div className="main-box no-header">
+                      { this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
                         { this.state.message }</div> }
-											<div className="main-box-body clearfix">
-												<p>If you would like to accept credit cards through Accelevents please set up a Stripe account.
+                      <div className="main-box-body clearfix">
+                        <p>If you would like to accept credit cards through Accelevents please set up a Stripe account.
 													There is a link below with a step-by-step guide on how to quickly (5-10 minutes) create your
 													free Stripe account.</p>
 												<form id="form" className="mrg-t-lg">

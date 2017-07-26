@@ -412,7 +412,7 @@ class HeaderNew extends React.Component {
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
-						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> <span className="hidden-xs">Views</span></span> } id='navDropdown3'>
+						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"/> <span className="hidden-xs">Views</span> </span>} id="navDropdown3">
 
 							<MenuItem eventKey="5" onClick={() => {
 								history.push("/scroll/" + event + "/auction")
@@ -484,20 +484,32 @@ class HeaderNew extends React.Component {
 							<i className="fa fa-question-circle"></i>Help
 						</MenuItem> }
 
-						{
-							this.props.authenticated && <NavDropdown className=" profile-dropdown pointer" title={<span><img
-								src="/images/user-icon-placeholder.png"
-								alt="{this.props.user.firstName}"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
-							</span>} id='navDropdown4'>
-								<MenuItem eventKey="2" onClick={() => {
-                  history.push("/my-profile")
-                }}>
-                  <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
-								</MenuItem>
-								<MenuItem divider/>
-								<MenuItem eventKey="4" onClick={this.logout}>
-									<span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
-								</MenuItem>
+            {
+							this.props.authenticated && <NavDropdown
+  className=" profile-dropdown pointer" title={<span><img
+    src="/images/user-icon-placeholder.png"
+    alt="{this.props.user.firstName}"
+  /> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+  </span>} id="navDropdown4"
+							>
+  <MenuItem
+    eventKey="2" onClick={() => {
+      history.push('/my-activity');
+    }}
+  >
+    <span> <i className="fa fa fa-money fa-fw" /> My Activity </span>
+  </MenuItem>
+  <MenuItem
+    eventKey="2" onClick={() => {
+      history.push('/my-profile');
+    }}
+  >
+    <span> <i className="fa fa-user fa-fw" /> User Profile </span>
+  </MenuItem>
+  <MenuItem divider />
+  <MenuItem eventKey="4" onClick={this.logout}>
+    <span> <i className="fa fa-sign-out fa-fw" /> Logout </span>
+  </MenuItem>
 							</NavDropdown>
 						}
 
