@@ -14,6 +14,9 @@ class RowItemList extends React.Component {
     toggle:false,
     uploadedFileCloudinaryUrl: '',
     isDataUpdate:false,
+
+    itemNameFeedBack: false,
+    itemName: false,
   };
 componentWillReceiveProps() {
     this.setState({
@@ -55,6 +58,18 @@ handleImageUpload(file) {
       this.setState({item,isDataUpdate:true})
   }
   itemNameHandlerChange = (e) =>{
+    this.setState({
+      itemNameFeedBack: true,
+    });
+    if (this.itemName.value.trim() == '') {
+      this.setState({
+        itemName: false
+      });
+    } else {
+      this.setState({
+        itemName: true
+      });
+    }
     let item=this.state.item;
     item.name=this.itemName.value;
       this.setState({item,isDataUpdate:true})
@@ -135,6 +150,8 @@ render() {
           <input type="hidden" name="id" defaultValue={36} />
           <input type="text" className="form-control item-name" name="name" maxLength={255} defaultValue={this.props.item.name} onFocus={this.showPanel}
                  ref={ref=> {this.itemName=ref;}} onKeyUp={this.itemNameHandlerChange} onBlur={this.autoAddData} />
+          { this.state.itemNameFeedBack && !this.state.itemName &&
+          <small className="error red"> Name is Required.</small>}
         </div>
         <div className="flex-col item-code-column">
           <input type="text" className="form-control item-code alpha-only" name="code" defaultValue={this.props.item.code} maxLength={3} onFocus={this.showPanel}
@@ -208,7 +225,7 @@ render() {
                       <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
                               ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
                         <option value={0} disabled selected>-- Select Category --</option>
-                        {this.props.item.categories.map((value,index)=>
+                        {this.props.item.categories && this.props.item.categories.map((value,index)=>
                           <option value={value} key={index}>{value}</option>
                         )}
                       </select>

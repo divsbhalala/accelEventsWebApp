@@ -3,7 +3,7 @@ import cx from 'classnames';
 import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
-import {getItemList, addItemList, updateItemList,updateItemListPosition} from './../../routes/admin/action';
+import {getItemList, addItemList, updateItemList,updateItemListPosition,getItemCategories} from './../../routes/admin/action';
 
 
 class PlanetItem extends React.Component {
@@ -12,6 +12,7 @@ class PlanetItem extends React.Component {
     toggle:false,
     message:"",
     status:"",
+    categories:"",
   };
 
   getDragHeight() { return 60; }
@@ -63,11 +64,14 @@ class PlanetItem extends React.Component {
   getItemList =()=> {
     this.props.getItemList("auction").then(resp => {
       if(resp && resp.data && resp.data.items.length){
-       this.setState({list:resp.data.items});
+       this.setState({list:resp.data.items,categories:resp.data.items[0].categories});
         console.log(this.state.items);
       }
       else{
-        this.addEmptyRow()
+        this.props.getItemCategories("auction").then(resp=>{
+          this.setState({categories:resp.data.itemCategories.map((value)=>{ return value.name})})
+          this.addEmptyRow()
+        })
         console.log(resp);
       }
     }).catch((error) => {
@@ -111,8 +115,8 @@ addEmptyRow =()=>{
     "active": false,
     "bidIncrement": 0,
     "buyItNowPrice": 0,
-    "category": "",
-    "code": "string",
+    "categories": this.state.categories,
+    "code": "",
     "description": "",
     "images": [
       {
@@ -120,10 +124,10 @@ addEmptyRow =()=>{
       }
     ],
     "marketValue": 0,
-    "name": "string",
+    "name": "",
     "startingBid": 0
   }
-
+console.log(data)
   list.unshift(data);
   this.setState({list})
 }
@@ -170,6 +174,7 @@ const mapDispatchToProps = {
   addItemList : (type,data) => addItemList(type,data),
   updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
+  getItemCategories : (type) => getItemCategories(type),
 };
 
 const mapStateToProps = (state) => ({

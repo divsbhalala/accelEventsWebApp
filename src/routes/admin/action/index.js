@@ -150,6 +150,19 @@ export function deleteItemList(type,id) {
     })
   }
 }
+export function getItemCategories(type) {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/'+type+'/itemCategories',
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+}
 export function storeItemUpdate(data) {
   return {
     type: 'IS_ITEMADDED',
