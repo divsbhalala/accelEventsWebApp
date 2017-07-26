@@ -2598,7 +2598,7 @@ class Volunteer extends React.Component {
 					{ this.state.activeViews === 'event-ticketing' &&
 					<view name="event-ticketing" className={cx(this.state.activeViews === 'event-ticketing' && s.active)}>
 						<h4 className="text-center"><strong>Check in attendees</strong></h4>
-						<input type="text" className="filter-attendee form-control" placeholder="Search..."
+						<input type="text" className="filter-attendee input-lg form-control" placeholder="Search..."
 						       ref={ref => {
                      this.attendeesFilter = ref;
                    }}
