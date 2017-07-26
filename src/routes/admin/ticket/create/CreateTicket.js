@@ -45,6 +45,7 @@ class CreateTicket extends React.Component {
 		this.throwError = this.throwError.bind(this);
 		this.onError = this.onError.bind(this);
 		this.updateEventData = this.updateEventData.bind(this);
+		this.deleteTicketTypes = this.deleteTicketTypes.bind(this);
 	}
 
 	componentWillMount() {
@@ -68,7 +69,7 @@ class CreateTicket extends React.Component {
 	throwError = (title, message) => {
 		this.setState({
 			dialogTitle: title || "Not found",
-			dialogMessage: message || "Your order details not found. Please try again later."
+			dialogMessage: message || "Opps! Something went wrong, Try again later"
 		});
 		setTimeout(() => {
 			this.toggleDialog();
@@ -91,7 +92,7 @@ class CreateTicket extends React.Component {
 			"isTable": false,
 			"maxTickerPerBuyer": 1,
 			"minTickerPerBuyer": 0,
-			"name": "string",
+			"name": "",
 			"numberOfTicket": 0,
 			"passfeetobuyer": false,
 			"price": 0,
@@ -111,8 +112,8 @@ class CreateTicket extends React.Component {
 		let eventData = this.state.eventData;
 		delete eventData.availableTimeZone;
 		delete eventData.ticketingFee;
-		eventData.ticketingFee = eventData.eventAddress ? eventData.eventAddress : "" ;
-		this.props.doTicketTypes('post', this.state.eventData).then(resp => {
+		eventData.eventAddress = eventData.eventAddress ? eventData.eventAddress : "" ;
+		this.props.doTicketTypes('post', eventData).then(resp => {
 			console.log("resp", resp);
 		}).catch(error => {
 			this.onError(error);
@@ -145,6 +146,20 @@ class CreateTicket extends React.Component {
 		})
 	};
 
+	deleteTicketTypes= (key)=>{
+		let eventData = this.state.eventData;
+		if(!eventData.ticketTypes){
+			eventData.ticketTypes = [];
+		}
+		if(!eventData.ticketTypes[key]){
+			eventData.ticketTypes[key] = {};
+		}
+		eventData.ticketTypes.splice (key, 1);
+		this.setState({
+			eventData: eventData
+		})
+
+	};
 	render() {
 		let start = this.state.startDate.format('YYYY-MM-DD HH:mm:ss');
 		let end = this.state.endDate.format('YYYY-MM-DD HH:mm:ss');
@@ -300,7 +315,7 @@ class CreateTicket extends React.Component {
 										</div>
 										<div className="table-body event-tickets">
 											{
-												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} index={key} ticket={item} updateTicketState={this.updateTicketState} />) : ""}
+												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} index={key} ticket={item} updateTicketState={this.updateTicketState} deleteTicketTypes={this.deleteTicketTypes} />) : ""}
 										</div>
 									</div>
 

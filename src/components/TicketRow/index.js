@@ -23,7 +23,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 			"dialogMessage": "",
 			"dialogTitle": "",
 			"showDialog": false,
-			"ticket": {},
+			"ticket": undefined,
 			startDate: moment(),
 			endDate: moment().add(1, 'days'),
 		};
@@ -36,11 +36,18 @@ class TicketRow extends React.Component { // eslint-disable-line
 		this.setNumberOfTicket = this.setNumberOfTicket.bind(this);
 		this.setMaxTicketsPerBuyer = this.setMaxTicketsPerBuyer.bind(this);
 		this.setMinTicketsPerBuyer = this.setMinTicketsPerBuyer.bind(this);
+		this.deleteTicketTypes = this.deleteTicketTypes.bind(this);
+		this.changeTicketName = this.changeTicketName.bind(this);
 	}
 
 	updateTicketState = (data, key)=>{
 		setTimeout(()=>{
 			this.props.updateTicketState(data, key);
+		}, 100)
+	};
+	deleteTicketTypes = ()=>{
+		setTimeout(()=>{
+			this.props.deleteTicketTypes(this.props.index);
 		}, 100)
 	};
 	toggleTicketSettings = (event) => {
@@ -57,6 +64,21 @@ class TicketRow extends React.Component { // eslint-disable-line
 			event.target.parentElement.closest(".ticket-row").classList.add('open');
 		}
 	};
+	changeTicketName= (event)=>{
+		if(event && event.target){
+			if(event.target.value){
+				event.target.value = event.target.value.trim();
+			}
+			let ticket= this.state.ticket;
+			ticket.name = event.target.value;
+			this.setState({
+				ticket: ticket
+			});
+			this.updateTicketState(ticket, this.props.index);
+
+		}
+	};
+
 	isEnableTicketDescription= (event)=>{
 		if(event && event.target){
 			let ticket= this.state.ticket;
@@ -144,7 +166,9 @@ class TicketRow extends React.Component { // eslint-disable-line
 		this.setState({
 			ticket: ticket
 		});
-		this.updateTicketState(ticket, this.props.index);
+		setTimeout(()=>{
+			this.updateTicketState(ticket, this.props.index);
+		}, 100)
 	};
 
 	setMinTicketsPerBuyer = (value)=>{
@@ -153,7 +177,9 @@ class TicketRow extends React.Component { // eslint-disable-line
 		this.setState({
 			ticket: ticket
 		});
-		this.updateTicketState(ticket, this.props.index);
+		setTimeout(()=>{
+			this.updateTicketState(ticket, this.props.index);
+		}, 100)
 	};
 
 	render() {
@@ -206,7 +232,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 						</ul>
 					</div>
 				</div> : "" }
-				<div className="data-wrap">
+				{ this.state.ticket ? <div className="data-wrap">
 					<div className="data">
 						<div className="ticket-data">
 							Settings for <span className="ticket-type"/>
@@ -278,11 +304,11 @@ class TicketRow extends React.Component { // eslint-disable-line
 												<label className="max-ticket-label">&nbsp;Tickets allowed per order</label>
 												<div className="row">
 													<div className="col-md-6">
-														<NumericInput name="minTicketsPerBuyer" className="form-control minTicket" step={1} precision={0}  min={0} value={this.state.ticket.minTicketsPerBuyer} onClick={this.setMinTicketsPerBuyer} />
+														<NumericInput name="minTicketsPerBuyer" className="form-control minTicket" step={1} precision={0}  min={0} value={this.state.ticket.minTickerPerBuyer} onChange={this.setMinTicketsPerBuyer} />
 
 													</div>
 													<div className="col-md-6">
-														<NumericInput name="maxTicketsPerBuyer" className="form-control maxTicket" step={1} precision={0}  min={0} value={this.state.ticket.maxTicketsPerBuyer} onClick={this.setMaxTicketsPerBuyer}/>
+														<NumericInput name="maxTicketsPerBuyer" className="form-control maxTicket" step={1} precision={0}  min={this.state.ticket.minTickerPerBuyer} value={this.state.ticket.maxTickerPerBuyer} onChange={this.setMaxTicketsPerBuyer}/>
 
 													</div>
 												</div>
@@ -325,7 +351,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 									</div>
 									<div className="row">
 										<div className="col-md-6">
-											<a href="javascript:void(0)" className="btn btn-danger btn-block delete-type"><i
+											<a onClick={this.deleteTicketTypes} className="btn btn-danger btn-block delete-type"><i
 												className="fa fa-trash"/> Delete This Ticket Type</a>
 										</div>
 									</div>
@@ -333,7 +359,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> : "" }
 			</div>
 		);
 	}
