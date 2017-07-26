@@ -24,8 +24,12 @@ class TicketRow extends React.Component { // eslint-disable-line
 			"dialogTitle": "",
 			"showDialog": false,
 			"ticket": undefined,
-			startDate: moment(),
-			endDate: moment().add(1, 'days'),
+			"startDate": moment(),
+			"endDate": moment().add(1, 'days'),
+			"eventEndDate": undefined,
+			"eventStartDate": undefined,
+			"isDateError": false,
+
 		};
 		this.toggleTicketSettings = this.toggleTicketSettings.bind(this);
 		this.isTable = this.isTable.bind(this);
@@ -40,36 +44,36 @@ class TicketRow extends React.Component { // eslint-disable-line
 		this.changeTicketName = this.changeTicketName.bind(this);
 	}
 
-	updateTicketState = (data, key)=>{
-		setTimeout(()=>{
+	updateTicketState = (data, key) => {
+		setTimeout(() => {
 			this.props.updateTicketState(data, key);
 		}, 100)
 	};
-	deleteTicketTypes = ()=>{
-		setTimeout(()=>{
+	deleteTicketTypes = () => {
+		setTimeout(() => {
 			this.props.deleteTicketTypes(this.props.index);
 		}, 100)
 	};
 	toggleTicketSettings = (event) => {
 		// e.target.
 		/*let divs = document.querySelectorAll('.order-panel-header .dropdown-toggle');
-		[].forEach.call(divs, function (div) {
-			// do whatever
-			div.classList.remove('open');
-		});*/
-		if(event.target.parentElement.closest(".ticket-row.open")){
+		 [].forEach.call(divs, function (div) {
+		 // do whatever
+		 div.classList.remove('open');
+		 });*/
+		if (event.target.parentElement.closest(".ticket-row.open")) {
 			event.target.parentElement.closest(".ticket-row").classList.remove('open');
 		}
-		else{
+		else {
 			event.target.parentElement.closest(".ticket-row").classList.add('open');
 		}
 	};
-	changeTicketName= (event)=>{
-		if(event && event.target){
-			if(event.target.value){
+	changeTicketName = (event) => {
+		if (event && event.target) {
+			if (event.target.value) {
 				event.target.value = event.target.value.trim();
 			}
-			let ticket= this.state.ticket;
+			let ticket = this.state.ticket;
 			ticket.name = event.target.value;
 			this.setState({
 				ticket: ticket
@@ -78,10 +82,9 @@ class TicketRow extends React.Component { // eslint-disable-line
 
 		}
 	};
-
-	isEnableTicketDescription= (event)=>{
-		if(event && event.target){
-			let ticket= this.state.ticket;
+	isEnableTicketDescription = (event) => {
+		if (event && event.target) {
+			let ticket = this.state.ticket;
 			ticket.isTenableTicketDescriptionable = event.target.checked;
 			this.setState({
 				ticket: ticket
@@ -90,9 +93,9 @@ class TicketRow extends React.Component { // eslint-disable-line
 
 		}
 	};
-	isTable = (event)=>{
-		if(event && event.target){
-			let ticket= this.state.ticket;
+	isTable = (event) => {
+		if (event && event.target) {
+			let ticket = this.state.ticket;
 			ticket.isTable = event.target.checked;
 			this.setState({
 				ticket: ticket
@@ -100,9 +103,9 @@ class TicketRow extends React.Component { // eslint-disable-line
 			this.updateTicketState(ticket, this.props.index);
 		}
 	};
-	isHideTicketType = (event)=>{
-		if(event && event.target){
-			let ticket= this.state.ticket;
+	isHideTicketType = (event) => {
+		if (event && event.target) {
+			let ticket = this.state.ticket;
 			ticket.hidden = event.target.checked;
 			this.setState({
 				ticket: ticket
@@ -110,9 +113,9 @@ class TicketRow extends React.Component { // eslint-disable-line
 			this.updateTicketState(ticket, this.props.index);
 		}
 	};
-	setPassToBuyer = (event)=>{
-		if(event && event.target){
-			let ticket= this.state.ticket;
+	setPassToBuyer = (event) => {
+		if (event && event.target) {
+			let ticket = this.state.ticket;
 			ticket.passfeetobuyer = event.target.value;
 			this.setState({
 				ticket: ticket
@@ -120,21 +123,11 @@ class TicketRow extends React.Component { // eslint-disable-line
 			this.updateTicketState(ticket, this.props.index);
 		}
 	};
-	componentDidMount(){
-		let self = this;
-		setTimeout(()=>{
-			self.setState({
-				ticket : this.props.ticket,
-				endDate: this.props.ticket && this.props.ticket.endDate ? moment(this.props.ticket.endDate) : moment().add(1, 'days'),
-				startDate: this.props.ticket && this.props.ticket.startDate ? moment(this.props.ticket.startDate) : moment(),
-			})
-		}, 100)
-	}
-
-	handleDateRangeApply = (event, picker)=> {
-		let ticket= this.state.ticket;
+	handleDateRangeApply = (event, picker) => {
+		let ticket = this.state.ticket;
 		ticket.startDate = picker.startDate;
 		ticket.endDate = picker.endDate;
+		console.log("picker", picker);
 		this.setState({
 			startDate: picker.startDate,
 			endDate: picker.endDate,
@@ -142,45 +135,55 @@ class TicketRow extends React.Component { // eslint-disable-line
 		});
 		this.updateTicketState(ticket, this.props.index);
 	};
-
-	updateBidPrice = (value)=>{
-		let ticket= this.state.ticket;
+	updateBidPrice = (value) => {
+		let ticket = this.state.ticket;
 		ticket.price = value;
 		this.setState({
 			ticket: ticket
 		});
 		this.updateTicketState(ticket, this.props.index);
 	};
-	setNumberOfTicket = (value)=>{
-		let ticket= this.state.ticket;
+	setNumberOfTicket = (value) => {
+		let ticket = this.state.ticket;
 		ticket.numberOfTicket = value;
 		this.setState({
 			ticket: ticket
 		});
 		this.updateTicketState(ticket, this.props.index);
 	};
-
-	setMaxTicketsPerBuyer = (value)=>{
-		let ticket= this.state.ticket;
+	setMaxTicketsPerBuyer = (value) => {
+		let ticket = this.state.ticket;
 		ticket.maxTickerPerBuyer = value;
 		this.setState({
 			ticket: ticket
 		});
-		setTimeout(()=>{
+		setTimeout(() => {
 			this.updateTicketState(ticket, this.props.index);
 		}, 100)
 	};
-
-	setMinTicketsPerBuyer = (value)=>{
-		let ticket= this.state.ticket;
+	setMinTicketsPerBuyer = (value) => {
+		let ticket = this.state.ticket;
 		ticket.minTickerPerBuyer = value;
 		this.setState({
 			ticket: ticket
 		});
-		setTimeout(()=>{
+		setTimeout(() => {
 			this.updateTicketState(ticket, this.props.index);
 		}, 100)
 	};
+
+	componentDidMount() {
+		let self = this;
+		setTimeout(() => {
+			self.setState({
+				ticket: this.props.ticket,
+				eventEndDate: moment(this.props.eventEndDate),
+				eventStartDate: moment(this.props.eventStartDate),
+				endDate: this.props.ticket && this.props.ticket.endDate ? moment(this.props.ticket.endDate) : moment().add(1, 'days'),
+				startDate: this.props.ticket && this.props.ticket.startDate ? moment(this.props.ticket.startDate) : moment(),
+			})
+		}, 100);
+	}
 
 	render() {
 		let start = this.state.startDate.format('YYYY-MM-DD HH:mm:ss');
@@ -203,7 +206,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 		};
 		return (
 			<div className="ticket-row">
-				{this.state.ticket ? 	<div className="flex-row">
+				{this.state.ticket ? <div className="flex-row">
 					<div className="flex-col dots-sign-column">
 						<i className="fa fa-ellipsis-v edit-item fa-lg"/><i
 						className="fa fa-ellipsis-v edit-item fa-lg"/>
@@ -213,13 +216,15 @@ class TicketRow extends React.Component { // eslint-disable-line
 									 maxLength={255} defaultValue={this.state.ticket.name}/>
 					</div>
 					<div className="flex-col ticket-quantity-column">
-						<NumericInput name="numberOfTickets" className="form-control ticket-quantity" step={1} precision={0}  min={0} value={this.state.ticket.numberOfTicket} onChange={this.setNumberOfTicket}/>
+						<NumericInput name="numberOfTickets" className="form-control ticket-quantity" step={1} precision={0} min={0}
+													value={this.state.ticket.numberOfTicket} onChange={this.setNumberOfTicket}/>
 
 					</div>
 					<div className="flex-col ticket-price-column">
 						<div className="input-group">
 							<span className="input-group-addon">$</span>
-							<NumericInput name="price" className="form-control ticket-price" step={1} precision={0}  min={0} value={this.state.ticket.price} onChange={this.updateBidPrice}/>
+							<NumericInput name="price" className="form-control ticket-price" step={1} precision={0} min={0}
+														value={this.state.ticket.price} onChange={this.updateBidPrice}/>
 						</div>
 						<div className="tiny">
 							Buyer price: <br /><span className="blue buyer-price">$<span
@@ -245,15 +250,18 @@ class TicketRow extends React.Component { // eslint-disable-line
 															placeholder="Item description" name="ticketTypeDescription"
 															defaultValue={this.state.ticket.ticketTypeDescription}/>
 										<div className="checkbox-nice">
-											<input className="showDescription" type="checkbox" name="enableTicketDescription" defaultChecked={this.state.ticket.enableTicketDescription}
-														 id={"enableTicketDescription--"+ this.props.index} onChange={this.isEnableTicketDescription}/>
-											<label htmlFor={"enableTicketDescription--"+ this.props.index}>Show ticket description on event
+											<input className="showDescription" type="checkbox" name="enableTicketDescription"
+														 defaultChecked={this.state.ticket.enableTicketDescription}
+														 id={"enableTicketDescription--" + this.props.index}
+														 onChange={this.isEnableTicketDescription}/>
+											<label htmlFor={"enableTicketDescription--" + this.props.index}>Show ticket description on event
 												page</label>
 										</div>
 									</div>
 									<div className="form-group">
 										<label>Fees</label>
-										<select className="form-control pass-to-buyer" defaultValue={this.state.ticket.passfeetobuyer} onChange={this.setPassToBuyer}>
+										<select className="form-control pass-to-buyer" defaultValue={this.state.ticket.passfeetobuyer}
+														onChange={this.setPassToBuyer}>
 											<option value={true}>Pass fees on to ticket buyer</option>
 											<option value={false}>Absorb fees</option>
 										</select>
@@ -293,7 +301,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 														<div className="checkbox-nice">
 															<input type="checkbox" name="table" className="hideType" onClick={this.isHideTicketType}
 																		 id={"hideType--" + this.props.index}/>
-															<label htmlFor={"hideType--"+ this.props.index}>&nbsp;Hide this ticket type.</label>
+															<label htmlFor={"hideType--" + this.props.index}>&nbsp;Hide this ticket type.</label>
 														</div>
 													</div>
 												</div>
@@ -304,11 +312,16 @@ class TicketRow extends React.Component { // eslint-disable-line
 												<label className="max-ticket-label">&nbsp;Tickets allowed per order</label>
 												<div className="row">
 													<div className="col-md-6">
-														<NumericInput name="minTicketsPerBuyer" className="form-control minTicket" step={1} precision={0}  min={0} value={this.state.ticket.minTickerPerBuyer} onChange={this.setMinTicketsPerBuyer} />
+														<NumericInput name="minTicketsPerBuyer" className="form-control minTicket" step={1}
+																					precision={0} min={0} value={this.state.ticket.minTickerPerBuyer}
+																					onChange={this.setMinTicketsPerBuyer}/>
 
 													</div>
 													<div className="col-md-6">
-														<NumericInput name="maxTicketsPerBuyer" className="form-control maxTicket" step={1} precision={0}  min={this.state.ticket.minTickerPerBuyer} value={this.state.ticket.maxTickerPerBuyer} onChange={this.setMaxTicketsPerBuyer}/>
+														<NumericInput name="maxTicketsPerBuyer" className="form-control maxTicket" step={1}
+																					precision={0} min={this.state.ticket.minTickerPerBuyer}
+																					value={this.state.ticket.maxTickerPerBuyer}
+																					onChange={this.setMaxTicketsPerBuyer}/>
 
 													</div>
 												</div>
@@ -331,19 +344,22 @@ class TicketRow extends React.Component { // eslint-disable-line
 														<label>Table</label>
 														<div className="checkbox-nice">
 															<input type="checkbox" name="table" className="hideTable"
-																		 id={"hideTable--"+ this.props.index} onChange={this.isTable}/>
-															<label htmlFor={"hideTable--"+ this.props.index}>Table</label>
+																		 id={"hideTable--" + this.props.index} onChange={this.isTable}/>
+															<label htmlFor={"hideTable--" + this.props.index}>Table</label>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-										<div className={cx("col-md-6 number-of-ticket-per-table", !(this.state.ticket && this.state.ticket.isTable) && "hide")}>
+										<div
+											className={cx("col-md-6 number-of-ticket-per-table", !(this.state.ticket && this.state.ticket.isTable) && "hide")}>
 											<div className="form-group">
 												<label>Number of tickets per table</label>
 												<div className="row">
 													<div className="col-md-6">
-														<NumericInput name="numberOfTicketPerTable" className="form-control maxTable" step={1} precision={0}  min={0} defaultValue={this.state.ticket.numberOfTicketPerTable}/>
+														<NumericInput name="numberOfTicketPerTable" className="form-control maxTable" step={1}
+																					precision={0} min={0}
+																					defaultValue={this.state.ticket.numberOfTicketPerTable}/>
 													</div>
 												</div>
 											</div>

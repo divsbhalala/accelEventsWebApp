@@ -16,7 +16,7 @@ import TicketRow from '../../../../components/TicketRow';
 import history from '../../../../history';
 import s from './CreateTicket.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {doTicketTypes} from '../action';
+import {doTicketTypes, doDeleteTicketTypes} from '../action';
 
 class CreateTicket extends React.Component {
 	static propTypes = {
@@ -36,16 +36,21 @@ class CreateTicket extends React.Component {
 			dialogMessage: "",
 			dialogTitle: "",
 			showDialog: false,
+			dialogConfirmationMessage: "Are you sure?",
+			dialogConfirmationTitle: "Confirmation",
+			showConfirmationDialog: false,
 			startDate: moment(),
 			endDate: moment().add(1, 'days'),
 		};
 		this.doTicketTypes = this.doTicketTypes.bind(this);
 		this.addNewTicket = this.addNewTicket.bind(this);
 		this.toggleDialog = this.toggleDialog.bind(this);
+		this.toggleConfirmationDialog = this.toggleConfirmationDialog.bind(this);
 		this.throwError = this.throwError.bind(this);
 		this.onError = this.onError.bind(this);
 		this.updateEventData = this.updateEventData.bind(this);
 		this.deleteTicketTypes = this.deleteTicketTypes.bind(this);
+		this.askDeleteTicketTypes = this.askDeleteTicketTypes.bind(this);
 	}
 
 	componentWillMount() {
@@ -61,6 +66,11 @@ class CreateTicket extends React.Component {
 			this.onError(error);
 		});
 	};
+	toggleConfirmationDialog = () => {
+		this.setState({
+			showConfirmationDialog: !this.state.showConfirmationDialog
+		})
+	};
 	toggleDialog = () => {
 		this.setState({
 			showDialog: !this.state.showDialog
@@ -69,7 +79,7 @@ class CreateTicket extends React.Component {
 	throwError = (title, message) => {
 		this.setState({
 			dialogTitle: title || "Not found",
-			dialogMessage: message || "Opps! Something went wrong, Try again later"
+			dialogMessage: message || "Oops! Something went wrong, Try again later"
 		});
 		setTimeout(() => {
 			this.toggleDialog();
@@ -114,7 +124,7 @@ class CreateTicket extends React.Component {
 		delete eventData.ticketingFee;
 		eventData.eventAddress = eventData.eventAddress ? eventData.eventAddress : "" ;
 		this.props.doTicketTypes('post', eventData).then(resp => {
-			console.log("resp", resp);
+			this.throwError("Success", "Event Data save successfully");
 		}).catch(error => {
 			this.onError(error);
 		});
@@ -145,20 +155,44 @@ class CreateTicket extends React.Component {
 			eventData: eventData
 		})
 	};
-
-	deleteTicketTypes= (key)=>{
-		let eventData = this.state.eventData;
-		if(!eventData.ticketTypes){
-			eventData.ticketTypes = [];
-		}
-		if(!eventData.ticketTypes[key]){
-			eventData.ticketTypes[key] = {};
-		}
-		eventData.ticketTypes.splice (key, 1);
+	askDeleteTicketTypes = (key) => {
 		this.setState({
-			eventData: eventData
-		})
-
+			deleteTicketKey: key,
+			dialogConfirmationMessage: "Are you sure you want to delete this ticketType?"
+		});
+		this.toggleConfirmationDialog();
+	};
+	deleteTicketTypes= (key)=>{
+		if(key){
+			let eventData = this.state.eventData;
+			if(!eventData.ticketTypes){
+				eventData.ticketTypes = [];
+			}
+			if(!eventData.ticketTypes[key]){
+				eventData.ticketTypes[key] = {};
+			}
+			if( !eventData.ticketTypes[key].typeId){
+				eventData.ticketTypes.splice (key, 1);
+				this.setState({
+					eventData: eventData
+				});
+			}
+			else {
+				this.props.doDeleteTicketTypes(eventData.ticketTypes[key].typeId).then(resp=>{
+					this.throwError("Success", eventData.ticketTypes[key].name + " deleted successfully");
+					eventData.ticketTypes.splice (key, 1);
+					this.setState({
+						eventData: eventData,
+						deleteTicketKey: undefined
+					});
+				}).catch(error=>{
+					this.onError(error);
+				});
+			}
+		}
+		else {
+			this.throwError("Not found", " deleted successfully");
+		}
 	};
 	render() {
 		let start = this.state.startDate.format('YYYY-MM-DD HH:mm:ss');
@@ -315,7 +349,7 @@ class CreateTicket extends React.Component {
 										</div>
 										<div className="table-body event-tickets">
 											{
-												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} index={key} ticket={item} updateTicketState={this.updateTicketState} deleteTicketTypes={this.deleteTicketTypes} />) : ""}
+												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} index={key} ticket={item} eventEndDate={this.state.eventData.eventEndDate} eventStartDate={this.state.eventData.eventStartDate} updateTicketState={this.updateTicketState} deleteTicketTypes={this.askDeleteTicketTypes} />) : ""}
 										</div>
 									</div>
 
@@ -342,12 +376,33 @@ class CreateTicket extends React.Component {
 				>
 					<div>{this.state.dialogMessage}</div>
 				</PopupModel>
+
+				<PopupModel
+					id="popupConfirmation"
+					showModal={this.state.showConfirmationDialog}
+					headerText={<p>{this.state.dialogConfirmationTitle}</p>}
+					onCloseFunc={this.toggleConfirmationDialog}
+					modelFooter={<div>
+						<button className="btn btn-danger" onClick={() => {
+							this.toggleConfirmationDialog()
+						}}>No
+						</button>
+						<button className="btn btn-green" onClick={() => {
+							this.deleteTicketTypes(this.state.deleteTicketKey), this.toggleConfirmationDialog()
+						}}>Yes
+						</button>
+					</div>}
+				>
+					<div>{this.state.dialogConfirmationMessage}</div>
+				</PopupModel>
+
 			</div>
 		);
 	}
 }
 const mapDispatchToProps = {
 	doTicketTypes: (method, data) => doTicketTypes(method, data),
+	doDeleteTicketTypes: (id) => doDeleteTicketTypes(id),
 };
 
 const mapStateToProps = (state) => ({});
