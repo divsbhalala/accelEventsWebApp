@@ -102,20 +102,19 @@ class TicketPerformance extends React.Component {
                         <strong><span className="sales">${this.state.total}</span></strong>
                       </div>
                       <div id="DataTables_Table_1_wrapper" >
-                        {this.state.sales &&
+                        {this.state.sales ?
                         <BootstrapTable data={this.state.sales} striped hover search  pagination={ true }   options={ options }>
                           <TableHeaderColumn  isKey={true} dataField='ticketTypeName'>Ticket Type</TableHeaderColumn>
                           <TableHeaderColumn  dataField='ticketPrice' dataFormat={priceFormate}>PRICE</TableHeaderColumn>
                           <TableHeaderColumn  dataField='ticketSold' dataFormat={soldFormate}>SOLD</TableHeaderColumn>
                           <TableHeaderColumn  dataField='status'>STATUS</TableHeaderColumn>
                           <TableHeaderColumn  dataField='endDate'  dataFormat={dateFormatter}>SALES END DATE</TableHeaderColumn>
-                        </BootstrapTable>
-                        }
+                        </BootstrapTable>: <div id="app" className="loader" /> }
                      </div>
                       <div >
                         <h4><strong>Recent Orders</strong></h4>
                         <div id="DataTables_Table_1_wrapper" >
-                          {this.state.order &&
+                          {this.state.order ?
                           <BootstrapTable data={this.state.order} striped hover search  pagination={ true }   options={ options }>
                             <TableHeaderColumn  isKey={true} dataField='orderNo'>#ORDER</TableHeaderColumn>
                             <TableHeaderColumn  dataField='ticketBuyerName'>BUYER</TableHeaderColumn>
@@ -124,8 +123,7 @@ class TicketPerformance extends React.Component {
                             <TableHeaderColumn  dataField='refundedAmount' dataFormat={priceFormate}>REFUNDED</TableHeaderColumn>
                             <TableHeaderColumn  dataField='orderDate' width="20%" dataFormat={dateFormatter}>DATE</TableHeaderColumn>
                             <TableHeaderColumn  dataField='paymentMode'>PAYMENT</TableHeaderColumn>
-                          </BootstrapTable>
-                          }
+                          </BootstrapTable>: <div id="app" className="loader" /> }
                         </div>
                       </div>
                       <div className="form-group operations-row mrg-t-lg">

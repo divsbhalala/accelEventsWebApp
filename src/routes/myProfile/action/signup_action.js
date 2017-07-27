@@ -61,3 +61,14 @@ export function updateProfile(field,value) {
     })
   }
 }
+export function getUserAcivity() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'u/activity',
+      data: {},
+      headers: {Authorization: localStorage.getItem('token')}
+
+    })
+  }
+}

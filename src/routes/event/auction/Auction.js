@@ -1212,8 +1212,8 @@ class Auction extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                        { this.state.errorMsgCard }</div>
+                      {this.state.errorMsgCard  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsgCard }</div> }
                       <div className="row">
                         <div className="col-sm-4">
                           <div className="curr-bid-number">$<span
@@ -1251,10 +1251,14 @@ class Auction extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsgCard }
             <div className="modal-footer">
-              {this.state.popupHeader == "Success" ? <Button className="btn btn-success" onClick={this.placeBid}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
+              {this.state.popupHeader == 'Success' ? <Button
+                className="btn btn-success" onClick={this.placeBid}
+                loading={this.state.loading}
+              >Confirm</Button> : ''}
+              {this.state.popupHeader == 'Confirm' ? <Button
+                className="btn btn-success" onClick={this.placeBidByAmount}
+                loading={this.state.loading}
+              >Confirm</Button> : ''}
               <button className="btn btn-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>

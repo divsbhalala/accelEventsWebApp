@@ -365,13 +365,13 @@ class HeaderNew extends React.Component {
               { this.props.eventData &&
 							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
-							{ this.props.admin && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
+							{ this.props.admin  && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
 								 className="navbar-brand" >
             		<img
 									src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
 									alt className="normal-logo logo-white has-custom"/>
           		</a>}
-							{ this.props.admin && <button type="button" className="navbar-toggle" onClick={() => {
+							{  this.props.admin && !this.props.superAdmin &&  <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}}>
                   <span className="sr-only">Toggle navigation</span>
@@ -383,7 +383,7 @@ class HeaderNew extends React.Component {
             </span>
 
 					</Brand>
-					{ this.props.admin && <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
+					{ this.props.admin && !this.props.superAdmin && <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
 						<ul className="nav navbar-nav pull-left">
 							<li>
 								<a className="btn" id="make-small-nav" onClick={() => {
@@ -412,7 +412,7 @@ class HeaderNew extends React.Component {
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
-						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> <span className="hidden-xs">Views</span></span> } id='navDropdown3'>
+						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"/> <span className="hidden-xs">Views</span> </span>} id="navDropdown3">
 
 							<MenuItem eventKey="5" onClick={() => {
 								history.push("/scroll/" + event + "/auction")
@@ -464,11 +464,11 @@ class HeaderNew extends React.Component {
 
 						</NavDropdown>}
 
-						{ !this.props.authenticated && <MenuItem eventKey="8" onClick={this.showLoginPopup}>
+						{ !this.props.authenticated &&  <MenuItem eventKey="8" onClick={this.showLoginPopup}>
 							<i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
 						</MenuItem>}
 
-						{ !this.props.authenticated && <MenuItem eventKey="9"
+						{ !this.props.authenticated  &&  <MenuItem eventKey="9"
 							// onClick={this.showLoginPopup}
 																										 onClick={(event) => {
 																											 history.push('/signup');
@@ -480,24 +480,39 @@ class HeaderNew extends React.Component {
 						{ !this.props.admin && <MenuItem eventKey="10" className="hidden-xs">
 							<i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
 						</MenuItem> }
-						{ this.props.admin && <MenuItem eventKey="10" className="white">
+						{ this.props.admin && !this.props.superAdmin && <MenuItem eventKey="10" className="white">
 							<i className="fa fa-question-circle"></i>Help
 						</MenuItem> }
+						{ this.props.admin && this.props.superAdmin && <MenuItem eventKey="10" className="white">
+              <span> <i className="fa fa-sign-out fa-fw" /> Logout </span>
+						</MenuItem> }
 
-						{
-							this.props.authenticated && <NavDropdown className=" profile-dropdown pointer" title={<span><img
-								src="/images/user-icon-placeholder.png"
-								alt="{this.props.user.firstName}"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
-							</span>} id='navDropdown4'>
-								<MenuItem eventKey="2" onClick={() => {
-                  history.push("/my-profile")
-                }}>
-                  <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
-								</MenuItem>
-								<MenuItem divider/>
-								<MenuItem eventKey="4" onClick={this.logout}>
-									<span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
-								</MenuItem>
+            {
+							this.props.authenticated && !this.props.superAdmin &&  <NavDropdown
+  className=" profile-dropdown pointer" title={<span><img
+    src="/images/user-icon-placeholder.png"
+    alt="{this.props.user.firstName}"
+  /> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+  </span>} id="navDropdown4"
+							>
+  <MenuItem
+    eventKey="2" onClick={() => {
+      history.push('/my-activity');
+    }}
+  >
+    <span> <i className="fa fa fa-money fa-fw" /> My Activity </span>
+  </MenuItem>
+  <MenuItem
+    eventKey="2" onClick={() => {
+      history.push('/my-profile');
+    }}
+  >
+    <span> <i className="fa fa-user fa-fw" /> User Profile </span>
+  </MenuItem>
+  <MenuItem divider />
+  <MenuItem eventKey="4" onClick={this.logout}>
+    <span> <i className="fa fa-sign-out fa-fw" /> Logout </span>
+  </MenuItem>
 							</NavDropdown>
 						}
 

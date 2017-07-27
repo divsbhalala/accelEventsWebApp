@@ -67,6 +67,7 @@ phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
   };
 componentWillMount() {
   this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+  this.setState({phone:this.props.phone})
 }
 submiteForm = (e) => {
   e.preventDefault();
@@ -84,7 +85,7 @@ submiteForm = (e) => {
   }
 }
 dashboardSubmitBid = () => {
-  this.props.dashboardSubmitBid(this.state.countryPhone, this.state.phone)
+  this.props.dashboardSubmitBid(this.state.countryPhone, this.state.phone.replace( /[^0-9]/g, ''))
     .then(resp => {
       if (resp && resp.message) {
         this.setState({
@@ -105,7 +106,7 @@ dashboardSubmitBid = () => {
     });
 };
 dashboardSubmitPledge = () => {
-  this.props.dashboardSubmitPledge(this.state.countryPhone, this.state.phone)
+  this.props.dashboardSubmitPledge(this.state.countryPhone, this.state.phone.replace( /[^0-9]/g, ''))
     .then(resp => {
       if (resp && resp.message) {
         this.setState({
@@ -126,7 +127,7 @@ dashboardSubmitPledge = () => {
     });
 };
 dashboardRafflePurchaseTicket = () => {
-  this.props.dashboardRafflePurchaseTicket(this.state.countryPhone, this.state.phone)
+  this.props.dashboardRafflePurchaseTicket(this.state.countryPhone, this.state.phone.replace( /[^0-9]/g, ''))
     .then(resp => {
       if (resp && resp.message) {
         this.setState({
@@ -178,8 +179,8 @@ dashboardRafflePurchaseTicket = () => {
               <div
                 className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                 {/*<label className="control-label">Cell Number</label>*/}
-                <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                  { this.state.message }</div>
+                { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                  { this.state.message } </div> }
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true"/>

@@ -54,6 +54,8 @@ class TicketSetting extends React.Component {
 			showDeleteConfirmation: false,
 			message: '',
 			couponToDelete: '',
+			errorMessage:'',
+			isError:false,
 		};
 		this.setActiveScreen = this.setActiveScreen.bind(this);
 		this.setActiveTab = this.setActiveTab.bind(this);
@@ -111,7 +113,7 @@ class TicketSetting extends React.Component {
 			};
 			this.props.doCreateCouponCode(data, this.state.isCouponEdit ? this.state.editingRow.code : null).then(resp=>{
 				console.log('resp', resp);
-				alert(resp && resp.data && resp.data.message);
+			  this.setState({errorMessage:"",isError:false})//resp.data.message
 				this.resetCouponForm();
 				this.toggleCouponCodePopup();
 				this.getCouponCodes();
@@ -121,7 +123,7 @@ class TicketSetting extends React.Component {
 			})
 		}
 		else {
-			alert("Please fill propar information");
+			this.setState({errorMessage:"Please fill All information",isError:true})
 		}
 	};
 	getCouponCodes = () =>{
@@ -371,7 +373,7 @@ class TicketSetting extends React.Component {
 			}], // you can change the dropdown list for size per page
 			sizePerPage: 10,  // which size per page you want to locate as default
 			pageStartIndex: 0, // where to start counting the pages
-			paginationSize: 5,  // the pagination bar size.
+			paginationSize: 10,  // the pagination bar size.
 			prePage: 'Prev', // Previous page button text
 			nextPage: 'Next', // Next page button text
 			// firstPage: 'First', // First page button text
@@ -625,7 +627,9 @@ class TicketSetting extends React.Component {
 																</a>
 																<div className=" discount-codes-table-container">
 																	<div className="text">Event Specific Codes</div>
-																	<BootstrapTable data={this.state.couponCodes} striped hover search  pagination={ true }  options={ options }>
+																	<BootstrapTable data={this.state.couponCodes} striped hover search  pagination={ true }  options={ options }
+																									fetchInfo={{dataTotalSize: 30}}
+																									remote>
 																		<TableHeaderColumn dataSort  isKey={true} dataField='code'>NAME</TableHeaderColumn>
 																		<TableHeaderColumn dataSort  dataField='amount'>AMOUNT</TableHeaderColumn>
 																		<TableHeaderColumn  dataFormat={couponUsageCount}>USES</TableHeaderColumn>
@@ -733,6 +737,7 @@ class TicketSetting extends React.Component {
 								<div className="configure-form">
 									<div className="form-group">
 										<label>Discount Code Name</label>
+                    {this.state.errorMessage && <div className={cx("alert",this.state.isError ? "alert-danger":"alert-success")}>{this.state.errorMessage}</div>}
 										<div className="input-group mrg-b-md" style={{width: '100%'}}>
 											<input type="text"
 														 className="form-control"

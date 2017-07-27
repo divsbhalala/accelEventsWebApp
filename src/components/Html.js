@@ -63,6 +63,7 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/goal-thermometer.min.css" />
           <link rel="stylesheet" href="/css/bootstrap-editable.css" />
           <link rel="stylesheet" href="/css/color-picker.css" />
+          <link rel="stylesheet" href="/css/dragableList/main.css" />
           <link rel="stylesheet" href="/css/daterangepicker.css" />
           {/* end plugins */}
 
@@ -74,6 +75,7 @@ class Html extends React.Component {
           {/* for temporary changes */}
           <link rel="stylesheet" href="/css/style2.css" />
           { /* <link rel="stylesheet" href="/css/custom.css"  />*/}
+          <link rel="stylesheet" href="/css/add-items.css" />
 
           <script src="/css/Tel/libphonenumber.js" />
           {styles.map(style =>

@@ -7,8 +7,8 @@ import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import s from './event.css';
 import cx from 'classnames';
 import {getUserManagementStaff} from './action';
-import WhiteLabelUser from './../../../components/WhiteLabelUser/index';
-
+import WhiteLabelUserList from './../../../components/WhiteLabelUser';
+import  history from './../../../history';
 
 class WhiteLabelUserManagement extends React.Component {
   static propTypes = {
@@ -17,7 +17,9 @@ class WhiteLabelUserManagement extends React.Component {
 	constructor() {
 		super();
 	};
-
+goBack = () =>{
+  history.push('/');
+}
 	componentWillMount(){
 	}
   render() {
@@ -30,6 +32,9 @@ class WhiteLabelUserManagement extends React.Component {
                   <div className="row">
                     <div className="col-lg-12">
                       <h1 className="text-center">Users</h1>
+                      <div className="pull-right" style={{marginBottom: 10}}>
+                        <a  onClick={this.goBack} className="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                      </div>
                     </div>
                   </div>
                   <div className="row">
@@ -39,7 +44,7 @@ class WhiteLabelUserManagement extends React.Component {
                           <p>Volunteers are able to submit bids on behalf of your participants. Anyone you add as an event volunteer will receive an email with login credentials so that they can submit bids for other people online from their phone.
                           </p>
                           <div id="alertmessage" />
-                         <WhiteLabelUser params={this.props.params} />
+                         <WhiteLabelUserList params={this.props.params} />
                           {/*<BootstrapTable containerClass='table volunteer-table' insertRow bordered={ false }  data={this.state.userList} hover  pagination={ this.state.userList.length > 5 }  options={ options }>*/}
                             {/*<TableHeaderColumn columnClassName='text-center' dataSort isKey dataField='firstName'>First Name</TableHeaderColumn>*/}
                             {/*<TableHeaderColumn columnClassName='text-center' dataSort dataField='lastName'>Last Name</TableHeaderColumn>*/}
@@ -65,7 +70,7 @@ class WhiteLabelUserManagement extends React.Component {
 }
 
 const mapDispatchToProps = {
-	getUserManagementStaff: () => getUserManagementStaff()
+	getUserManagementStaff: (whiteLabelURL) => getUserManagementStaff(whiteLabelURL)
 };
 
 const mapStateToProps = (state) => ({

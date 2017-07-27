@@ -77,8 +77,8 @@ class Design extends React.Component {
                             <button className="btn btn-info btn-block" type="submit" loading={this.state.loading}  onClick={this.submitSettings} data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
                           </div>
                         </h1>
-                        <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                          { this.state.message }</div>
+                        { this.state.message && <div  className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success':'text-danger')} >
+                          { this.state.message }</div>}
                       </div>
                     </div>
                   </div>

@@ -52,40 +52,40 @@ class AdminSiderbar extends React.Component {
 							<div className="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
 								<ul className="nav nav-pills nav-stacked">
 									<li className={cx(this.state.nav === "dashboard" && "active")} >
-										<Link to="/admin" className="dropdown-toggle" onClick={()=>{ this.setNav("dashboard", "")}}>
+										<Link to="/host/dashboard" className="dropdown-toggle" onClick={()=>{ this.setNav("dashboard", "")}}>
 											<i className="vt vt-dashboard" />
 											<span>Dashboard</span>
 										</Link>
 										<ul className="submenu">
 											<li className={cx(this.state.subNav === "dashboardSilentAuction" && "active")}>
-												<Link to="/admin/auction-performance" onClick={()=>{ this.setNav("dashboard", "dashboardSilentAuction")}}>
+												<Link to="/host/dashboard/auction-item-performance" onClick={()=>{ this.setNav("dashboard", "dashboardSilentAuction")}}>
 													Silent Auction Performance
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "dashboardRaffle" && "active")}>
-												<Link to="/admin/raffle-performance" onClick={()=>{ this.setNav("dashboard", "dashboardRaffle")}}>
+												<Link to="/host/dashboard/raffle-item-performance" onClick={()=>{ this.setNav("dashboard", "dashboardRaffle")}}>
 													Raffle Performance
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "dashboardFundANeed" && "active")}>
-												<Link to="/admin/fund-performance" onClick={()=>{ this.setNav("dashboard", "dashboardFundANeed")}}>
+												<Link to="/host/dashboard/cause-item-performance" onClick={()=>{ this.setNav("dashboard", "dashboardFundANeed")}}>
 													Fund a Need Performance
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "dashboardDonation" && "active")}>
-												<Link to="/admin/donation-performance" onClick={()=>{ this.setNav("dashboard", "dashboardDonation")}}>
+												<Link to="/host/dashboard/donation-performance" onClick={()=>{ this.setNav("dashboard", "dashboardDonation")}}>
 													Donation Performance
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "ticketSales" && "active")}>
-												<Link to="/admin/ticket-performance" onClick={()=>{ this.setNav("dashboard", "ticketSales")}}>
+												<Link to="/host/dashboard/ticket-sales-performance" onClick={()=>{ this.setNav("dashboard", "ticketSales")}}>
 													Ticket Sales Performance
 												</Link>
 											</li>
 										</ul>
 									</li>
 									<li className={cx(this.state.nav === "design" && "active")}>
-										<Link to="/admin/design" onClick={()=>{ this.setNav("design", "")}}>
+										<Link to="/host/event-management/design" onClick={()=>{ this.setNav("design", "")}}>
 											<i className="vt vt-design" />
 											<span>Design</span>
 										</Link>
@@ -97,17 +97,17 @@ class AdminSiderbar extends React.Component {
 										</Link>
 										<ul className="submenu">
 											<li className={cx(this.state.subNav === "ticketCreateEvent" && "active")} onClick={()=>{ this.setNav("ticketing", "ticketCreateEvent")}}>
-												<Link to="/admin/event-ticket-create">
+												<Link to="/host/event-ticketing/create">
 													Create Event
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "ticketEventRegistration" && "active")} onClick={()=>{ this.setNav("ticketing", "ticketEventRegistration")}}>
-												<Link to="/admin/event-ticketing-settings">
+												<Link to="/host/event-ticketing/settings">
 													Event Registration Settings
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "ticketOrder" && "active")} onClick={()=>{ this.setNav("ticketing", "ticketOrder")}}>
-												<Link to="/admin/event-ticketing-orders">
+												<Link to="/host/event-ticketing/orders">
 													Ticket Orders
 												</Link>
 											</li>
@@ -120,12 +120,12 @@ class AdminSiderbar extends React.Component {
 										</Link>
 										<ul className="submenu" >
 											<li className={cx(this.state.subNav === "silentAuctionAddItem" && "active")}>
-												<Link to="/admin/silent-auction-add-items" onClick={()=>{ this.setNav("silentAuction", "silentAuctionAddItem")}}>
+												<Link to="/host/silent-auction/add-items" onClick={()=>{ this.setNav("silentAuction", "silentAuctionAddItem")}}>
 													Add Items
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "silentAuctionSettings" && "active")}>
-												<Link to="/admin/silent-auction-settings" onClick={()=>{ this.setNav("silentAuction", "silentAuctionSettings")}}>
+												<Link to="/host/silent-auction/settings" onClick={()=>{ this.setNav("silentAuction", "silentAuctionSettings")}}>
 													Settings
 												</Link>
 											</li>
@@ -138,12 +138,12 @@ class AdminSiderbar extends React.Component {
 										</Link>
 										<ul className="submenu" >
 											<li className={cx(this.state.subNav === "raffleAddItem" && "active")}>
-												<Link to="/admin/raffle-add-items" onClick={()=>{ this.setNav("raffle", "raffleAddItem")}}>
+												<Link to="/host/raffle/add-items" onClick={()=>{ this.setNav("raffle", "raffleAddItem")}}>
 													Add Items
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "raffleSettings" && "active")}>
-												<Link to="/admin/raffle-settings" onClick={()=>{ this.setNav("raffle", "raffleSettings")}}>
+												<Link to="/host/raffle/settings" onClick={()=>{ this.setNav("raffle", "raffleSettings")}}>
 													Settings
 												</Link>
 											</li>
@@ -156,19 +156,19 @@ class AdminSiderbar extends React.Component {
 										</Link>
 										<ul className="submenu" >
 											<li className={cx(this.state.subNav === "causeAddItem" && "active")}>
-												<Link to="/admin/cause-auction-add-items" onClick={()=>{ this.setNav("causeAuction", "causeAddItem")}}>
+												<Link to="/host/cause-auction/add-items" onClick={()=>{ this.setNav("causeAuction", "causeAddItem")}}>
 													Add Items
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "causeSettings" && "active")}>
-												<Link to="/admin/cause-auction-settings" onClick={()=>{ this.setNav("causeAuction", "causeSettings")}}>
+												<Link to="/host/cause-auction/settings" onClick={()=>{ this.setNav("causeAuction", "causeSettings")}}>
 													Settings
 												</Link>
 											</li>
 										</ul>
 									</li>
 									<li className={cx(this.state.nav === "userManagement" && "active")}>
-										<Link to="/admin/user-management-volunteers" onClick={()=>{ this.setNav("userManagement", "")}}>
+										<Link to="/host/user-management/volunteers" onClick={()=>{ this.setNav("userManagement", "")}}>
 											<i className="vt vt-user-settings" />
 											<span>User Management</span>
 										</Link>
@@ -180,17 +180,17 @@ class AdminSiderbar extends React.Component {
 										</Link>
 										<ul className="submenu">
 											<li className={cx(this.state.subNav === "generalSettings" && "active")}>
-												<Link to="/admin/settings-general" onClick={()=>{ this.setNav("settings", "generalSettings")}}>
+												<Link to="/host/settings/general" onClick={()=>{ this.setNav("settings", "generalSettings")}}>
 													General Settings
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "cardProcessing" && "active")}>
-												<Link to="/admin/settings-credit-card" onClick={()=>{ this.setNav("settings", "cardProcessing")}}>
+												<Link to="/host/settings/credit-card" onClick={()=>{ this.setNav("settings", "cardProcessing")}}>
 													Credit Card Processing
 												</Link>
 											</li>
 											<li className={cx(this.state.subNav === "billing" && "active")}>
-												<Link to="/admin/settings-account" onClick={()=>{ this.setNav("settings", "billing")}}>
+												<Link to="/host/settings/account" onClick={()=>{ this.setNav("settings", "billing")}}>
 													Billing
 												</Link>
 											</li>

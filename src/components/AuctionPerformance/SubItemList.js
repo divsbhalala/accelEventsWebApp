@@ -92,7 +92,7 @@ class SubItemList extends React.Component {
         this.setState({
           loading:false,
           showPopup: true,
-          errorMsg: "Bidder has been notified.",
+          errorMsg: resp.errorMessage,
           popupHeader:"Failed",
           popupType:"Delete-Confirmation-Failed",
         });
@@ -156,7 +156,7 @@ class SubItemList extends React.Component {
 						</tr> ) }
 					</tbody>
 				</table>
-        : "Nobody has bid on this item." :<span className="sr-only"><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"> </i>Loading...</span>
+        : "Nobody has bid on this item." :<span><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"> </i>Loading...</span>
       }
       <PopupModel
         id="mapPopup"

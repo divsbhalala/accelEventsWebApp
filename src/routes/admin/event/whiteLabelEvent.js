@@ -32,6 +32,11 @@ class WhiteLabelEventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setWhiteLabelUrlEvents(row.eventId,this.props.params && this.props.params.params).then((resp) => {
+      // this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
+      // }).catch(error => {
+      //   console.log('error', error)
+      // })
+      //window.location = "/host/dashboard";
       {/*<Link to="/admin/settings-account" >*/}
       {/*</Link>*/}
     });
@@ -91,13 +96,13 @@ class WhiteLabelEventList extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-12">
-              {this.state.event &&
+              {this.state.event ?
               <BootstrapTable data={this.state.event} striped hover   options={ options }>
                 <TableHeaderColumn  isKey={true} dataField='eventName'>EVENT NAME</TableHeaderColumn>
                 <TableHeaderColumn  dataField='eventEndDate' width="15%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
                 <TableHeaderColumn columnClassName='theme-turquoise' dataFormat={urlFormate}  dataField='eventURL' >URL</TableHeaderColumn>
-               </BootstrapTable>
-               }
+               </BootstrapTable> :<div id="app" className="loader" />
+              }
             </div>
           </div>
         </div>
@@ -107,6 +112,7 @@ class WhiteLabelEventList extends React.Component {
 }
 const mapDispatchToProps = {
   whitLableEeventsList: (label) => whitLableEeventsList(label),
+  getOrganizationSettings: (label) => getOrganizationSettings(label),
   setWhiteLabelUrlEvents: (eventId,whiteLabelURL) => setWhiteLabelUrlEvents(eventId,whiteLabelURL),
   };
 const mapStateToProps = (state) => ({
