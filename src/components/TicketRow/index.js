@@ -43,6 +43,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 		this.deleteTicketTypes = this.deleteTicketTypes.bind(this);
 		this.changeTicketName = this.changeTicketName.bind(this);
 		this.hasInvalidDate = this.hasInvalidDate.bind(this);
+		this.setTicketTypeDate = this.setTicketTypeDate.bind(this);
 	}
 
 	hasInvalidDate = (hasInvalidDate) => {
@@ -184,10 +185,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 		}, 100)
 	};
 
-	componentWillReceiveProps(){
-
-	}
-	componentDidMount() {
+	setTicketTypeDate = ()=>{
 		let self = this;
 		setTimeout(() => {
 			let eventEndDate = this.props.eventEndDate && this.props.eventEndDate._isAMomentObject ? this.props.eventEndDate : moment(this.props.eventEndDate);
@@ -204,6 +202,13 @@ class TicketRow extends React.Component { // eslint-disable-line
 				startDate: startDate,
 			});
 		}, 100);
+	};
+
+	componentWillReceiveProps(){
+		this.setTicketTypeDate();
+	}
+	componentDidMount() {
+		this.setTicketTypeDate();
 	}
 
 	render() {

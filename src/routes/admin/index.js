@@ -29,7 +29,7 @@ import DonationPerformance from './donation/performance/DonationPerformance';
 import UserManagement from './usermanagement/UserManagement';
 import EventsList from './event/index';
 import WhiteLabelEventList from './event/whiteLabelEvent';
-import OrganizationSettings from './event/OrganizationSettings';
+import OrganizationSettings from './event/organizationSettings';
 import WhiteLabelUserManagement from './event/WhiteLabelUserManagement';
 import EditEvent from './event/editEvent';
 
