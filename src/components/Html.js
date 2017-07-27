@@ -45,17 +45,24 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/font-awesome.min.css" />
           <link rel="stylesheet" href="/css/App.css" />
           <link rel="stylesheet" href="/css/carousel.css" />
+          <link rel="stylesheet" href="/css/loader.css"/>
+          <link rel="stylesheet" href="/css/sb-admin.min.css"/>
+          <link rel="stylesheet" href="/css/admin-style.min.css"/>
 
           <link rel="stylesheet" href="/css/transitions.min.css" />
+          <link rel="stylesheet" href="/css/display.min.css"/>
+          <link rel="stylesheet" href="/css/style.min.css"/>
+
+          <link rel="stylesheet" href="/css/react-styles.min.css"/>
 
           {/* AE Icons */}
           <link rel="stylesheet" href="/css/vt-icons.css" />
 
           {/* TODO: to be decided */}
-          {/* <link rel="stylesheet" href="/css/telInput.css" />
+          <link rel="stylesheet" href="/css/telInput.css" />
           <link rel="stylesheet" href="/css/rrui.css" />
           <link rel="stylesheet" href="/css/loader.css" />
-          <link rel="stylesheet" href="/css/host-dashboard.min.css"  />*/}
+          <link rel="stylesheet" href="/css/host-dashboard.css" />
 
           {/* plugins */}
           <link rel="stylesheet" href="/css/Tel/main.css" />
@@ -66,12 +73,12 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/daterangepicker.css" />
           {/* end plugins */}
 
-          <link rel="stylesheet" href="/css/style.min.css"/>
+          {/*<link rel="stylesheet" href="/css/style.min.css"/>*/}
           <link rel="stylesheet" href="/css/theme.min.css"/>
            <link rel="stylesheet"  href="/css/display.min.css"/>
 
           {/* for temporary changes */}
-          {/*<link rel="stylesheet" href="/css/style2.css" />*/}
+          {<link rel="stylesheet" href="/css/style2.css" />}
           { /* <link rel="stylesheet" href="/css/custom.css"  />*/}
           <link rel="stylesheet" href="/css/add-items.css" />
 

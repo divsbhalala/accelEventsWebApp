@@ -185,17 +185,3 @@
     right: 10px;
     bottom: 10px;
 }
-.onoffswitch.activeswitch {
-    width: 110px;
-}
-.onoffswitch.activeswitch .onoffswitch-inner:before {
-    content: "Hidden";
-    padding: 0 0 0 16px;
-}
-.onoffswitch.activeswitch .onoffswitch-inner:after {
-    content: "Hide Item";
-}
-
-.onoffswitch-switch {
-    right: 77px;
-}
