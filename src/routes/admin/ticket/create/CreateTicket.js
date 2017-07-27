@@ -135,6 +135,7 @@ class CreateTicket extends React.Component {
 		let ticket= this.state.eventData;
 		ticket.eventEndDate = picker.endDate;
 		ticket.eventStartDate = picker.startDate;
+		console.log("ticket", ticket);
 		this.setState({
 			eventData: ticket
 		});
@@ -195,8 +196,9 @@ class CreateTicket extends React.Component {
 		}
 	};
 	render() {
-		let start = this.state.startDate.format('YYYY-MM-DD HH:mm:ss');
-		let end = this.state.endDate.format('YYYY-MM-DD HH:mm:ss');
+		let start = this.state.eventData &&  this.state.eventData.eventStartDate ? moment(this.state.eventData.eventStartDate).format('YYYY-MM-DD HH:mm:ss') : this.state.startDate.format('YYYY-MM-DD HH:mm:ss');
+		let end = this.state.eventData &&  this.state.eventData.eventEndDate ? moment(this.state.eventData.eventEndDate).format('YYYY-MM-DD HH:mm:ss') : this.state.endDate.format('YYYY-MM-DD HH:mm:ss');
+		// let end = this.state.endDate.format('YYYY-MM-DD HH:mm:ss');
 		let label = start + ' - ' + end;
 		if (start === end) {
 			label = start;
@@ -265,20 +267,24 @@ class CreateTicket extends React.Component {
 												<div className="col-md-12">
 													<div className="form-group mrg-b-0">
 														<label>Event Starts and End duration<span className="red"/></label>
-                            <DatetimeRangePicker
+														{this.state.eventData && this.state.eventData.eventStartDate && <DatetimeRangePicker
                               timePicker
                               timePicker24Hour
                               showDropdowns
                               timePickerSeconds
                               locale={locale}
-                              startDate={this.state.startDate}
-                              endDate={this.state.endDate}
+                              startDate={this.state.eventData.eventStartDate && this.state.eventData.eventStartDate._isAMomentObject ? this.state.eventData.eventStartDate : moment(this.state.eventData.eventStartDate)}
+															endDate={this.state.eventData.eventEndDate && this.state.eventData.eventEndDate._isAMomentObject ? this.state.eventData.eventEndDate : moment(this.state.eventData.eventEndDate)}
+                              // endDate={this.state.eventData.eventEndDate}
+															isInvalidDate = {(a,b,c)=>{
+																console.log(a,b,c)
+															}}
                               onApply={this.handleDateRangeApply}
                             >
                               <div className="form-group">
                                 <input type="text" className="form-control" value={label}/>
                               </div>
-                            </DatetimeRangePicker>
+                            </DatetimeRangePicker> }
 													</div>
 												</div>
 											</div>
