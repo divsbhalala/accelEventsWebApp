@@ -6,10 +6,15 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import {EditableTextField} from 'react-bootstrap-xeditable';
 import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory, resetAuctionSettings} from './../Auction';
+import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import {Modal ,Button, Alert} from 'react-bootstrap';
+import CategoryTable from '../../../../components/HostSettings/CategoryTable';
+import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
+import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
+import moment from 'moment';
 
 class AuctionSetting extends React.Component {
   static propTypes = {
@@ -19,27 +24,17 @@ class AuctionSetting extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      settings: {},
+      moduleType: 'auction',
       title: props['title'],
       bidIncrement:false,
-      itemCategories:[],
       isValidData : false,
-      alert : null,
       showModal: false,
       alertVisible: false,
       alertMessage:null,
-      alertType:null,};
-  };
-
-  categoryNameValidator = (value, row) => {
-      const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-      if (!value) {
-        response.isValid = false;
-        response.notification.type = 'error';
-        response.notification.msg = 'Category name can\'t be empty!';
-        response.notification.title = 'Requested Category Name';
-      }
-      return response;
+      alertType:null,
+      settings:{},
+      startDate: moment()
+    };
   };
 
   handleAlertDismiss = () => {
@@ -51,30 +46,6 @@ class AuctionSetting extends React.Component {
     setTimeout(function() { this.setState({alertVisible: false}); }.bind(this), 2000);
   };
 
-  onInsertRow = (row) => {
-      console.log(row);
-  };
-
-  onDeleteRow = (rowKeys) => {
-      console.log(rowKeys);
-      this.props.removeAuctionCategory(rowKeys).then(resp => {
-        console.log(resp);
-      }).catch((error) => {
-        console.log(error);
-      });
-  };
-
-  updateItemCategory = (row, cellName, cellValue) => {
-    console.log(row);
-      if(row && row.id){
-        this.props.updateAuctionCategory(row.id ,row).then(resp => {
-          console.log(resp);
-        }).catch((error) => {
-          console.log(error);
-        });
-      }
-  };
-
   closeResetModal = () => {
     this.setState({ showModal: false });
   };
@@ -83,8 +54,8 @@ class AuctionSetting extends React.Component {
     this.setState({ showModal: true });
   };
 
-  resetAuctionSettings = () => {
-    this.props.resetAuctionSettings().then(resp => {
+  resetHostSettings = () => {
+    this.props.resetHostSettings(this.state.moduleType).then(resp => {
       if(resp && resp.data){
         this.closeResetModal();
         this.handleAlertShow(resp.data.message,'success');
@@ -98,13 +69,13 @@ class AuctionSetting extends React.Component {
   };
 
   componentWillMount(){
-    this.props.getAuctionSettings().then(resp => {
+    this.props.getHostSettings(this.state.moduleType).then(resp => {
       this.setState({settings:resp.data});
     }).catch((error) => {
       console.log(error);
     });
 
-    this.props.getAuctionCategories().then(resp=> {
+    this.props.getHostCategories(this.state.moduleType).then(resp=> {
       if(resp){
         this.setState({itemCategories : resp.data.itemCategories});
       }
@@ -113,33 +84,8 @@ class AuctionSetting extends React.Component {
       }
     }).catch(error=>{
       console.log(error);
-    })
-
-  };
-
-  cvvValidateHandler = (e) => {
-    this.cvv.value=this.cvv.value.substr(0,4);
-    this.setState({
-      cvvFeedBack: true,
-      ccvValue:this.cvv.value.trim(),
     });
 
-    if (this.cvv.value.trim() == '') {
-
-      this.setState({
-        cvv: false,
-        errorMsgcvv: "The CVV is required and can't be empty",
-      });
-    } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
-      this.setState({
-        cvv: false,
-        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
-      });
-    } else {
-      this.setState({
-        cvv: true
-      });
-    }
   };
 
   bidHandler = (e) => {
@@ -154,14 +100,6 @@ class AuctionSetting extends React.Component {
     }
   };
 
-  createSelectItems = () => {
-    let items = [];
-    let timezones = this.state.settings.timeZones;
-    for (let i in timezones) {
-        items.push(<option key={timezones[i].name} value={timezones[i].name}>{timezones[i].name}</option>);
-    }
-    return items;
-  };
   updateTimezone = (e) =>{
     let selected = e.nativeEvent.target;
     let settings = this.state.settings;
@@ -180,8 +118,7 @@ class AuctionSetting extends React.Component {
     settings.moduleHidden = this.state.settings.moduleHidden;
     settings.socialSharingEnabled = this.state.settings.socialSharingEnabled;
     settings.userTime = this.state.settings.userTime;
-    console.log(settings);
-    this.props.updateAuctionSettings(settings).then(resp => {
+    this.props.updateHostSettings(this.state.moduleType, settings).then(resp => {
       if(resp && resp.data){
         this.handleAlertShow(resp.data.message,'success');
       }
@@ -190,42 +127,26 @@ class AuctionSetting extends React.Component {
       }
     }).catch((error) => {
       console.log(error);
-    })
+    });
   };
-
+  handleEvent = (event, picker) => {
+    let settings = this.state.settings;
+    settings['userTime'] = picker.startDate.format('YYYY/MM/DD HH:mm');
+    this.setState({
+      startDate: picker.startDate,
+      settings
+    });
+  };
   render() {
-    const options = {
-      page: 1,  // which page you want to show as default
-      sizePerPageList: [ {
-        text: '5', value: 5
-      }, {
-        text: '10', value: 10
-      }, {
-        text: 'All', value: 100
-      } ],
-      sizePerPage: 10,
-      pageStartIndex: 0,
-      paginationSize: 5,
-      prePage: 'Prev',
-      nextPage: 'Next',
-      paginationPosition: 'bottom' ,
-      onAddRow: this.onInsertRow,
-      onDeleteRow: this.onDeleteRow
+    let locale = {
+      format: 'YYYY/MM/DD HH:mm',
+      separator: ' - ',
+      weekLabel: 'W',
+      customRangeLabel: 'Custom Range',
+      daysOfWeek: moment.weekdaysMin(),
+      monthNames: moment.monthsShort(),
+      firstDay: moment.localeData().firstDayOfWeek(),
     };
-    function indexN(cell, row, enumObject, index) {
-      return (<div>{index+1}</div>)
-    };
-    const selectCategory = {
-      mode: 'checkbox'
-    };
-    const editCategory = {
-      mode: 'click',
-      afterSaveCell: this.updateItemCategory
-
-      /*onAddRow: this.onAfterInsertRow,
-      onDeleteRow: this.onAfterDeleteRow*/
-    };
-
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
@@ -251,7 +172,6 @@ class AuctionSetting extends React.Component {
                   </div>
                   <div className="row">
                     <div className>
-                      {this.state.alert}
                       <div className="main-box no-header">
                         <div className="ajax-wrap text-center">
                           { this.state.alertVisible &&
@@ -267,25 +187,36 @@ class AuctionSetting extends React.Component {
                               Silent Auction end time
                               <div className="help-text" />
                             </div>
-                            <div className="col-md-3">
-                              <input type="text"
-                                     className="form-control datetimepicker white-bg"
-                                     name="newEndDate"
-                                     id="newEndDate"
-                                     defaultValue="2017/07/23 02:30"
-                                     value={this.state.settings.userTime}
-                                     readOnly="readonly" />
+                            { this.state.settings.userTime && <div className="col-md-3">
+                              <DatetimeRangePicker
+                                singleDatePicker
+                                timePicker
+                                timePicker24Hour
+                                showDropdowns
+                                locale={locale}
+                                startDate={this.state.startDate}
+                                onEvent={this.handleEvent}
+                              >
+                                <div className="input-group">
+                                  <input type="text" className="form-control" value={this.state.settings.userTime}/>
+                                    <span className="input-group-btn">
+                                        <Button className="default date-range-toggle">
+                                          <i className="fa fa-calendar"/>
+                                        </Button>
+                                    </span>
+                                </div>
+                              </DatetimeRangePicker>
                             </div>
+                          }
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Select Timezone
                               <div className="help-text" />
                             </div>
-                            <div className="col-md-3">{this.state.settings.eventTimeZone &&
-                              <select name="timezone" className="form-control" defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone}>
-                                {this.createSelectItems()}
-                              </select>}
+                            <div className="col-md-3">
+                            { this.state.settings.eventTimeZone && <TimeZoneSelector id="timeZone" name="timeZone" className="form-control"
+                            defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone} timeZoneList={this.state.settings.timeZones} /> }
                             </div>
                           </div>
                           <div className="row form-group">
@@ -336,7 +267,7 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3 col-md-offset-1">
                               Hide Auction Tab
                             </div>
-                            <div className="col-md-3">{this.state.settings && this.state.settings.activated &&
+                            <div className="col-md-3">{this.state.settings &&
                               <ToggleSwitch name="activated"
                                             id="activated"
                                             defaultValue={this.state.settings.activated}
@@ -368,29 +299,19 @@ class AuctionSetting extends React.Component {
                                             onChange={()=>{ this.state.settings.enableMarketValue = !this.state.settings.enableMarketValue}}/>}
                             </div>
                           </div>
-                          <input type="hidden" name defaultValue />
-                          <div>
-                          </div></form>
+                        </form>
 
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
                         </div>
 
                         <div className="row form-group category-settings" style={{display : 'block'}}>
+                        <div className="row form-group category-settings">
                           <div className="col-md-3 col-md-offset-1">
                             Category Management
                           </div>
-
-                          <div className="col-md-6">
-                            <div id="alertmessage" />
-                            { this.state.itemCategories && this.state.itemCategories.length &&
-                            <BootstrapTable data={ this.state.itemCategories } striped hover search  pagination={ true }
-                                            insertRow={ true } cellEdit={ editCategory } deleteRow={ true }
-                                            selectRow={ selectCategory } options={ options }>
-                              <TableHeaderColumn isKey dataField='id' dataFormat={indexN}>No</TableHeaderColumn>
-                              <TableHeaderColumn dataSort dataField='name' editable={{validator : this.categoryNameValidator}}>Name</TableHeaderColumn>
-                            </BootstrapTable>}
-                          </div>
+                          {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
+                        </div>
 
                         </div>
                         <div className="form-group operations-row text-center">
@@ -415,22 +336,17 @@ class AuctionSetting extends React.Component {
             </Modal.Footer>
           </Modal>
           </div>
-        </div>
-
-
-
-
-    );
+        </div>);
   }
 }
 const mapDispatchToProps = {
-  updateAuctionSettings : (auctionDTO)  => updateAuctionSettings(auctionDTO),
-  getAuctionSettings : () => getAuctionSettings(),
-  getAuctionCategories : () => getAuctionCategories(),
-  removeAuctionCategory : (id) => removeAuctionCategory(id),
-  addAuctionCategory : (itemCategory) => addAuctionCategory (itemCategory),
-  updateAuctionCategory : (id, itemCategory) => updateAuctionCategory(id, itemCategory),
-  resetAuctionSettings : () => resetAuctionSettings()
+  updateHostSettings : (moduleType, settingsDTO)  => updateHostSettings(moduleType, settingsDTO),
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
+  getHostCategories : (moduleType) => getHostCategories(moduleType),
+  removeHostCategory : (moduleType, id) => removeHostCategory(moduleType, id),
+  addHostCategory : (moduleType, itemCategory) => addHostCategory (moduleType, itemCategory),
+  updateHostCategory : (moduleType, id, itemCategory) => updateHostCategory(moduleType, id, itemCategory),
+  resetHostSettings : (moduleType) => resetHostSettings(moduleType)
 };
 
 const mapStateToProps = (state) => ({});

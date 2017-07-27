@@ -36,12 +36,11 @@ class Html extends React.Component {
           <meta charSet="utf-8" />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <title>{title}</title>
-          <meta name="description" content={description} />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-          <link rel="stylesheet" href="/css/google-custom/css/google-open-sans.css" />
-          <link rel="stylesheet" href="/css/bootstrap.min.css" />
-          <link rel="stylesheet" href="http://allenfang.github.io/react-bootstrap-table/css/react-bootstrap-table-all.min.css" />
+          <meta name="description" content={description}/>
+          <meta name="viewport" content="width=device-width, initial-scale=1"/>
+          <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+          <link rel="stylesheet"  href="/css/bootstrap.min.css"/>
+          <link rel="stylesheet" href="http://allenfang.github.io/react-bootstrap-table/css/react-bootstrap-table-all.min.css"/>
           <link href="http://diegoddox.github.io/react-redux-toastr/5.0/react-redux-toastr.min.css" rel="stylesheet" type="text/css" />
           <link rel="stylesheet" href="/css/font-awesome.min.css" />
           <link rel="stylesheet" href="/css/App.css" />
@@ -67,13 +66,12 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/daterangepicker.css" />
           {/* end plugins */}
 
-          <link rel="stylesheet" href="/css/style.min.css" />
-          <link rel="stylesheet" href="/css/theme.min.css" />
-          <link rel="stylesheet" href="/css/admin-style.min.css" />
-          <link rel="stylesheet" href="/css/display.min.css" />
+          <link rel="stylesheet" href="/css/style.min.css"/>
+          <link rel="stylesheet" href="/css/theme.min.css"/>
+           <link rel="stylesheet"  href="/css/display.min.css"/>
 
           {/* for temporary changes */}
-          <link rel="stylesheet" href="/css/style2.css" />
+          {/*<link rel="stylesheet" href="/css/style2.css" />*/}
           { /* <link rel="stylesheet" href="/css/custom.css"  />*/}
           <link rel="stylesheet" href="/css/add-items.css" />
 

@@ -252,7 +252,7 @@ class EventAside extends React.Component {
 												key={item.name + Math.random()} onClick={() => {
 											this.props.setFilterCategory(item.name)
 										}}>
-											<a className={cx("category-switcher pointer")}>
+											<a className={cx("category-switcher pointer")} title={item.name}>
 												<i className={cx("fa fa-ticket")} />
 												<span className={cx("cat-name")}>{item.name}</span>
 												{item.count &&

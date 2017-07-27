@@ -1,5 +1,4 @@
 .scroll-container {
-  width: 18em;
   max-height: 500px;
   margin: 1em auto;
   overflow: hidden;
@@ -28,8 +27,6 @@
 /* Make it look pretty */
 .microsoft .marquee {
   margin: 0;
-  padding: 0 1em;
-  line-height: 1.5em;
 }
 
 .microsoft:before, .microsoft::before,
