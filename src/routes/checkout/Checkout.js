@@ -153,8 +153,28 @@ class Checkout extends React.Component {
 		    e.preventDefault();
 		  }
 	};
-	cardHolderNameValidateHandler = (e) => {
 
+	cardHolderNameDownValidateHandler = (e) => {
+		if(this.cardHolderName && !this.cardHolderName.value){
+			if (e.keyCode == 32){
+		    	e.preventDefault();
+		    }
+		}
+	};
+
+	cardHolderNameBlurValidateHandler = () => {
+		if(this.cardHolderName && this.cardHolderName.value){
+			let nameLen = this.cardHolderName.value.length;
+			if (this.cardHolderName.value[nameLen-1] == ' '){
+		    	this.setState({
+					cardHolderName: false,
+					cardHolderNameFeedBackMsg: "The card holder name can't end with a space"
+				});
+		    }
+		}
+	};
+
+	cardHolderNameValidateHandler = (e) => {
 		this.setState({
 			cardHolderNameFeedBack: true
 		});
@@ -748,6 +768,21 @@ class Checkout extends React.Component {
 			ticketPurchaseSuccessPopup:false
 		});
 	}
+	getSelectOptions = (itemValue) => {
+		if(!itemValue || !itemValue.length){
+			return [];
+		}
+		let itemValueString = itemValue.toString();
+		let splitedValue;
+		try{
+			splitedValue = itemValueString.split('</dafultvalue><dafultvalue>').join("],[").split('<dafultvalues>').join('[').split('<dafultvalue>').join('[').split('</dafultvalue>').join(']').split('</dafultvalues>').join(']').split('<label>').join('"').split('</label>').join('"').split('<value>').join(',"').split('</value>').join('"');
+			if(splitedValue) return JSON.parse(splitedValue);
+			else return [];
+		}catch(err){
+			if(splitedValue) return JSON.parse(splitedValue);
+			else return [];
+		}
+	};
 	hideformErrorPopup = () => {
 		this.setState({
 			showFormError:false
@@ -881,6 +916,7 @@ class Checkout extends React.Component {
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value&& 'has-success'
 																							)}>
+																							{item.type != 'dropdown' &&
 																								<input
 																									type={item.type}
 																									className="form-control"
@@ -897,6 +933,24 @@ class Checkout extends React.Component {
 																									)
 																									}
 																								/>
+
+																							}
+
+																							{
+																								item.type == 'dropdown' && item.value && 
+																								<select className="form-control"
+																									name={item.name}
+																									placeholder={item.name}
+																									onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
+																									required={item.mandatory}>
+																									{
+																											this.getSelectOptions(item.value).map((oitem,okey) =>
+																												<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
+																												</option>
+																											)
+																									}
+																								</select>
+																							}
 																								<i
 																									className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																								<i
@@ -1017,7 +1071,9 @@ class Checkout extends React.Component {
 																											 ref={ref => {
 																												 this.cardHolderName = ref;
 																											 }}
-																											 onKeyUp={this.cardHolderNameValidateHandler}/>
+																											 onKeyUp={this.cardHolderNameValidateHandler}
+																											 onKeyDown={this.cardHolderNameDownValidateHandler}
+																											 onBlur={this.cardHolderNameBlurValidateHandler}/>
 																							</div>
 																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName &&
 																							<i
@@ -1093,9 +1149,10 @@ class Checkout extends React.Component {
 																												ref={ref => {
 																													this.cardExpMonth = ref;
 																												}}
+																												value={1}
 																												onChange={this.cardExpMonthValidateHandler}
 																								>
-																									<option selected value={1}>Jan (01)</option>
+																									<option value={1}>Jan (01)</option>
 																									<option value={2}>Feb (02)</option>
 																									<option value={3}>Mar (03)</option>
 																									<option value={4}>Apr (04)</option>
