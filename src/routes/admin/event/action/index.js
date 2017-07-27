@@ -216,3 +216,9 @@ export function resendInvitationUserManagementStaff(staffId,whiteLabelURL) {
     });
   }
 }
+export function storeWhiteLableSetting(data) {
+  return {
+    type: 'STORE_WHITE_LABLE_SETTING',
+    data,
+  }
+}

@@ -15,7 +15,7 @@ class AdminLayout extends React.Component {
   render() {
     return (
       <div className="container nav-small-class p-0"  >
-        <HeaderNew admin={true}/>
+        <HeaderNew admin={true} superAdmin={true}/>
         {this.props.children}
         {this.props.showFeedBack && <Feedback />}
         <Footer />

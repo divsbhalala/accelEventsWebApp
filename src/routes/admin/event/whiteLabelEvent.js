@@ -32,7 +32,11 @@ class WhiteLabelEventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setWhiteLabelUrlEvents(row.eventId,this.props.params && this.props.params.params).then((resp) => {
-      window.location = "/host/dashboard";
+      // this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
+      // }).catch(error => {
+      //   console.log('error', error)
+      // })
+      //window.location = "/host/dashboard";
       {/*<Link to="/admin/settings-account" >*/}
       {/*</Link>*/}
     });
@@ -108,6 +112,7 @@ class WhiteLabelEventList extends React.Component {
 }
 const mapDispatchToProps = {
   whitLableEeventsList: (label) => whitLableEeventsList(label),
+  getOrganizationSettings: (label) => getOrganizationSettings(label),
   setWhiteLabelUrlEvents: (eventId,whiteLabelURL) => setWhiteLabelUrlEvents(eventId,whiteLabelURL),
   };
 const mapStateToProps = (state) => ({
