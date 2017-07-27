@@ -2,13 +2,13 @@ import React from 'react';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import {getItemList, addItemList, updateItemList,updateItemListPosition,deleteItemList} from './../../routes/admin/action';
+import {uploadImage} from '../Widget/UploadFile/action';
 import ToggleSwitch from '../Widget/ToggleSwitch';
 import PopupModel from './../PopupModal/index'
 import Button from 'react-bootstrap-button-loader';
 import Dropzone from 'react-dropzone';
 import CKEditor from 'react-ckeditor-wrapper';
-const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
-const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/your_cloudinary_app_name/upload';
+import UploadImage from '../Widget/UploadFile/UploadImage'
 
 class RowItemList extends React.Component {
   state: Object = {
@@ -129,7 +129,11 @@ handleImageUpload(file) {
     item.category=this.category.value;
       this.setState({item,isDataUpdate:true})
   }
-
+  imageUploaded = () =>{
+    this.setState({isDataUpdate:true},function stateChange() {
+      this.autoAddData();
+    })
+  }
   autoAddData =() => {
   console.log("---><><><",this.state)
     setTimeout(()=>{
@@ -231,18 +235,7 @@ render() {
                       { name: 'colors', groups: [ 'colors' ] },
                     ]}} onBlur={this.autoAddData}/>
                   <div>
-                    <div id className="dropzone dz-clickable" action="/AccelEventsWebApp/host/upload">
-                      <div className="dz-default dz-message">
-                        <Dropzone
-                          multiple
-                          accept="image/*"
-                          onDrop={this.onImageDrop.bind(this)}>
-                          <div className="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                        </Dropzone>
-                      </div>
-                    </div>
+                    <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageUploaded = { this.imageUploaded }/>
                   </div>
                 </div>
                 <div className="col-md-4">
@@ -321,6 +314,7 @@ const mapDispatchToProps = {
   updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
   deleteItemList : (type,id) => deleteItemList(type,id),
+  uploadImage :(file) => uploadImage(file),
 };
 
 const mapStateToProps = (state) => ({
