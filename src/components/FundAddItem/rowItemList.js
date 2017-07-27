@@ -3,6 +3,8 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import {getItemList, addItemList, updateItemList,updateItemListPosition,deleteItemList} from './../../routes/admin/action';
 import ToggleSwitch from '../Widget/ToggleSwitch';
+import PopupModel from './../PopupModal/index'
+import Button from 'react-bootstrap-button-loader';
 import Dropzone from 'react-dropzone';
 import CKEditor from 'react-ckeditor-wrapper';
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
@@ -14,6 +16,12 @@ class RowItemList extends React.Component {
     toggle:false,
     uploadedFileCloudinaryUrl: '',
     isDataUpdate:false,
+
+    showPopup: false,
+    errorMsg: '',
+    popupHeader: '',
+    popupType: '',
+    loading:false,
 
     itemNameFeedBack:false,
     itemName:false,
@@ -108,12 +116,20 @@ handleImageUpload(file) {
   }},100)
 }
 deleteItemList =() => {
-    this.state.item && this.state.item.id &&
+  this.setState({loading:true})
+  this.state.item && this.state.item.id &&
       this.props.deleteItemList('fundANeed', this.state.item.id ).then(resp => {
-        console.log("Detete")
-      })
-
+        this.setState({loading:false})
+    })
 }
+  deleteAction = () => {
+    this.setState({
+      showPopup: true,
+      errorMsg: 'Are you sure you want to delete User ? ',
+      popupHeader: 'Delete Confirmation',
+      popupType: 'Delete-Confirmation',
+    });
+  };
   hideItemChangeHandler =()=>{
     let item=this.state.item;
     item.active=!item.active;
@@ -125,9 +141,17 @@ deleteItemList =() => {
   getDragHeight() { return 60; };
   doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };
   showPanel = () =>{ this.setState({ toggle:true }) };
-
+  showPopup = () => {
+    this.setState({
+      showPopup: true,
+    });
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+    });
+  };
 render() {
- // const {item, itemSelected, dragHandle} = this.props.item;
   return (
     <div data-id={36} className={ cx("item-row  ui-sortable-handle",this.state.toggle && "open", this.props.item.images && this.props.item.images[0] && this.props.item.images[0].imageUrl  ? "has-image" : "",this.props.item && this.props.item.description ? "has-description" : "")} >
       <div className="flex-row">
@@ -192,29 +216,6 @@ render() {
                   </div>
                 </div>
                 <div className="col-md-4">
-                  {/*<div className="row">*/}
-                    {/*<div className="form-group">*/}
-                      {/*<label htmlFor="bidIncrement">Bid Increment</label>*/}
-                      {/*<div className="input-group">*/}
-                        {/*<span className="input-group-addon">$</span>*/}
-                        {/*<input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={this.props.item.code} />*/}
-                      {/*</div>*/}
-                    {/*</div>*/}
-                    {/*<div className="form-group">*/}
-                      {/*<select className="form-control" name="itemCategory">*/}
-                        {/*<option value={0} disabled selected>-- Select Category --</option>*/}
-                        {/*<option value={2288}>(final cat)</option>*/}
-                      {/*</select>*/}
-                    {/*</div>*/}
-                  {/*<div className="form-group">*/}
-                    {/*<label htmlFor="marketValue">Market Value</label>*/}
-                    {/*<div className="input-group">*/}
-                      {/*<span className="input-group-addon">$</span>*/}
-                      {/*<input className="form-control" placeholder="Market Value (optional)" data-price="true" name="marketValue" type="number" />*/}
-                    {/*</div>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
-                <br />
                 <div className="row">
                   <div className="col-md-6">
                     Hide Item
@@ -230,7 +231,23 @@ render() {
               </div>
             </div>
             <input type="hidden" name defaultValue  />
-            <i className="fa fa-trash delete-item red"  onClick={this.deleteItemList}/>
+          <i className="fa fa-trash delete-item red"  onClick={this.deleteAction}/>
+          <PopupModel
+            id="mapPopup"
+            showModal={this.state.showPopup}
+            headerText= {<p>{this.state.popupHeader}</p>}
+            modelBody='<div><h1>Location</h1></div>'
+            onCloseFunc={this.hidePopup} >
+            <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+              { this.state && this.state.errorMsg }
+              <div className="modal-footer">
+                {/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
+                {/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
+                {this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteItemList} >Confirm</Button> : ""}
+                <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
+              </div>
+            </div>
+          </PopupModel>
           </div>
         </div>
       </div>

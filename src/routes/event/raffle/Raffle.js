@@ -686,8 +686,8 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                        { this.state.errorMsg }</div>
+                      {this.state.errorMsgCard  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsg }</div> }
                       { this.props.authenticated ? form_login : form_normal  }
                     </div>
                   </div>

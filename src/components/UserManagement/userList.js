@@ -312,7 +312,7 @@ class UserList extends React.Component {
       this.setState({
         loading: false,
         showPopup: true,
-        errorMsg: 'Bidder has been notified.',
+        errorMsg:resp.errorMessage,
         popupHeader: 'Failed',
         popupType: 'Delete-Confirmation-Failed',
       });

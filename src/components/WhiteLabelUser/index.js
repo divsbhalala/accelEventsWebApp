@@ -7,7 +7,7 @@ import Button from 'react-bootstrap-button-loader';
 import { getUserManagementStaff } from './../../routes/admin/event/action/index';
 import UserList from './userList';
 
-class WhiteLabelUserManagement extends React.Component {
+class WhiteLabelUserList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +18,7 @@ class WhiteLabelUserManagement extends React.Component {
   }
   componentWillMount() {
     console.log("props-->",this.props.params.params)
-    this.props.getUserManagementStaff(this.props.params).then((resp) => {
+    this.props.getUserManagementStaff(this.props.params.params).then((resp) => {
       if (resp && resp.data) {
         this.setState({
           userData: resp.data,
@@ -93,11 +93,11 @@ class WhiteLabelUserManagement extends React.Component {
 }
 
 const mapDispatchToProps = {
-  getUserManagementStaff: whiteLabelURL => getUserManagementStaff(whiteLabelURL),
+  getUserManagementStaff: (whiteLabelURL) => getUserManagementStaff(whiteLabelURL),
 };
 
 const mapStateToProps = state => ({
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(WhiteLabelUserManagement));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(WhiteLabelUserList));
 

@@ -13,7 +13,7 @@ import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
 import {browserHistory} from 'react-router';
 import Link from "../../../components/Link/Link";
-import EditEvent from "./editEvent";
+import _ from 'lodash';
 
 class EventList extends React.Component {
   static propTypes = {
@@ -33,14 +33,49 @@ class EventList extends React.Component {
       whiteLabelUrl:false,
       whiteLabelUrlList:null,
       isEdit:false,
+
+      items: [],
+      totalSize: 0,
+      page: 1,
+      sizePerPage: 10,
+      search:"",
     }
+    this.fetchData = this.fetchData.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
+
+  fetchData(page = this.state.page, size = this.state.sizePerPage,search=this.state.search) {
+    this.props.eventsList((page-1)*size,((page-1)*size) + size,search).then((resp) => {
+      this.setState({
+        items: _.slice(resp.data, (page-1)*size, ((page-1)*size) + size),
+        totalSize: resp.recordsTotal ,
+        page,
+        sizePerPage:size,
+        search
+      })
+    })
+  }
+  handlePageChange(page, sizePerPage) {
+    this.fetchData(page, sizePerPage);
+  }
+  onSearchChange(search,row,isSerach) {
+    this.fetchData(1,this.state.sizePerPage ,search);
+  }
+  handleSizePerPageChange(sizePerPage) {
+    this.fetchData(1, sizePerPage);
+  }
+  onSortChange(sizePerPage) {
+    //this.fetchData(1, sizePerPage);
+    console.log("sizePerPage=>",sizePerPage)
+  }
+
   getEventsList = () => {
-    this.props.eventsList("search").then((resp) => {
+    this.props.eventsList(0,10,"search").then((resp) => {
       this.setState({
         event:resp.data
       })
-
     });
   }
   setActiveEvents = (row) => {
@@ -63,7 +98,8 @@ class EventList extends React.Component {
     });
   }
   componentDidMount(){
-    this.getEventsList();
+  //  this.getEventsList();
+    this.fetchData();
     this.getWhiteLabelUrl();
   }
   whiteLabelUrlValidateHandler = (e) => {
@@ -119,23 +155,22 @@ class EventList extends React.Component {
       message:null,
     });
   };
-  editMode =(row) =>{
-    this.setState({isEdit:true})
-  }
   render() {
     var self = this;
     const options = {
-      page: 1,  // which page you want to show as default
       sizePerPageList: [ {
         text: '5', value: 5
       }, {
         text: '10', value: 10
       }, {
         text: 'All', value: this.event && this.event.recordsTotal
-      } ], // you can change the dropdown list for size per page
-      sizePerPage: 10,  // which size per page you want to locate as default
-      pageStartIndex: 0, // where to start counting the pages
-      paginationSize: 5,  // the pagination bar size.
+      } ],
+      onPageChange: this.handlePageChange,
+      onSizePerPageList: this.handleSizePerPageChange,
+      onSearchChange: this.onSearchChange,
+      onSortChange: this.onSortChange,
+      page: this.state.page,
+      sizePerPage: this.state.sizePerPage,
       prePage: 'Prev', // Previous page button text
       nextPage: 'Next', // Next page button text
       // firstPage: 'First', // First page button text
@@ -185,8 +220,16 @@ class EventList extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-12">
-              {this.state.event ?
-              <BootstrapTable data={this.state.event} striped hover search  pagination={ true }  options={ options }>
+              {this.state.items ?
+              <BootstrapTable   data={this.state.items}
+                                options={options}
+                                fetchInfo={{dataTotalSize: this.state.totalSize}}
+                                remote
+                                pagination
+                                striped
+                                hover
+                                condensed
+                                search={ true }>
                 <TableHeaderColumn dataSort isKey dataField='eventName' dataFormat={indexN}>No</TableHeaderColumn>
                 <TableHeaderColumn dataSort  dataField='eventName'>EVENT NAME</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='eventEndDate' width="15%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
@@ -249,7 +292,7 @@ class WhiteLabelUrlList extends React.Component {
   }
 }
 const mapDispatchToProps = {
-  eventsList: (search) => eventsList(search),
+  eventsList: (offset,limit,search) => eventsList(offset,limit,search),
   setEvents: (eventId) => setEvents(eventId),
   whiteLabelUrl: () => whiteLabelUrl(),
   createWhiteLabelUrl: (label) => createWhiteLabelUrl(label)

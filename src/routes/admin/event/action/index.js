@@ -4,11 +4,11 @@ import {sessionService, loadSession} from 'redux-react-session';
 
 import {apiUrl as API_URL} from './../../../../clientConfig';
 
-export function eventsList(search) {
+export function eventsList(offset,limit,search="") {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'superadmin/events?offset=0&limit=350'  ,
+      url: API_URL + 'superadmin/events?offset='+offset+'&limit='+limit +'&search[value]='+search,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
@@ -58,7 +58,7 @@ export function whiteLabelUrl() {
       method: 'get',
       url: API_URL + 'superadmin/whiteLabelUrl'  ,
       headers: {Authorization: localStorage.getItem('token')}
-    }).then(resp=>{
+    }).then(resp=>{0
       if(resp && resp.data){
         return resp.data;
       }

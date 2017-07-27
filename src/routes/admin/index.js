@@ -1,5 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/AdminLayout';
+import AdminWLLayout from '../../components/AdminWLLayout';
 import Design from './design/Design';
 import Ticket from './ticket/Ticket';
 import CreateTicket from './ticket/create/CreateTicket';
@@ -303,7 +304,7 @@ export default {
       async action() {
         return {
           title: "Events",
-          component: <EventsList title="Events"/>,
+          component: <AdminWLLayout><EventsList title="Events"/></AdminWLLayout>,
         };
       }
     },
@@ -312,7 +313,7 @@ export default {
       async action(props) {
         return {
           title: "Events",
-          component: <WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/>,
+          component: <AdminWLLayout><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
         };
       }
     },
@@ -321,7 +322,7 @@ export default {
       async action(props) {
         return {
           title: "Organization Settings",
-          component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
+          component: <AdminWLLayout><OrganizationSettings params={props.params} title="Organization Settings"/></AdminWLLayout>,
         };
       }
     },
@@ -330,7 +331,7 @@ export default {
       async action(props) {
         return {
           title: "WhiteLabel User Management",
-          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+          component: <AdminWLLayout><WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/></AdminWLLayout>,
         };
       }
     },
@@ -339,7 +340,7 @@ export default {
       async action(props) {
         return {
           title: "EditEvent",
-          component: <EditEvent params={props.params} title="EditEvent"/>,
+          component: <AdminWLLayout><EditEvent params={props.params} title="EditEvent"/></AdminWLLayout>,
         };
       }
     }

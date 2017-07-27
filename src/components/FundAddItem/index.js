@@ -44,12 +44,11 @@ class PlanetItem extends React.Component {
    componentWillReceiveProps(){
      setTimeout(()=>{
      let message="";
-    console.log("main",this.props.isItemAdded)
-   if(  this.props.isItemAdded.status=="success"){
-     if(this.props.isItemAdded.type == "Updated"){message="Item Updated"}
-     if(this.props.isItemAdded.type == "PositionChange"){message="Item PositionChange Updated"}
-     if(this.props.isItemAdded.type == "Inserted"){message="Item Inserted";this.getItemList()}
-     if(this.props.isItemAdded.type == "Deleted"){message="Item deleted";this.getItemList()}
+       if(this.props.isItemAdded.status=="success"){
+       if(this.props.isItemAdded.type == "Updated"){message="Item Updated ..."}
+       if(this.props.isItemAdded.type == "PositionChange"){message="Item PositionChange Updated ..."}
+       if(this.props.isItemAdded.type == "Inserted"){message="Item Added successfully ...";this.getItemList()}
+       if(this.props.isItemAdded.type == "Deleted"){message="Item deleted successfully ...";this.getItemList()}
     }else {
          message="Something Wrong"
        }
@@ -129,11 +128,12 @@ addEmptyRow =()=>{
       <div>
         <p>In Fund a Need, any number of people can submit a 'bid' for a fund a need item. The price
           of the item does not increase with each subsequent bid.</p>
-        {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
         <div className="text-left mrg-t-md">
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
         </div>
-        <div className="ajax-wrap"></div>
+        <div className="ajax-wrap">
+          {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
+        </div>
         <div className="table-header">
           <div className="flex-row">
             <div className="flex-col plus-sign-column" />

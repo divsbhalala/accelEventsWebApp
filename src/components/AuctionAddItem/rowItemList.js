@@ -3,6 +3,8 @@ import cx from 'classnames';
 import {connect} from 'react-redux';
 import {getItemList, addItemList, updateItemList,updateItemListPosition,deleteItemList} from './../../routes/admin/action';
 import ToggleSwitch from '../Widget/ToggleSwitch';
+import PopupModel from './../PopupModal/index'
+import Button from 'react-bootstrap-button-loader';
 import Dropzone from 'react-dropzone';
 import CKEditor from 'react-ckeditor-wrapper';
 const CLOUDINARY_UPLOAD_PRESET = 'your_upload_preset_id';
@@ -14,6 +16,12 @@ class RowItemList extends React.Component {
     toggle:false,
     uploadedFileCloudinaryUrl: '',
     isDataUpdate:false,
+
+    showPopup: false,
+    errorMsg: '',
+    popupHeader: '',
+    popupType: '',
+    loading:false,
 
     itemNameFeedBack:false,
     itemName:false,
@@ -38,6 +46,16 @@ onImageDrop(files) {
   });
   this.handleImageUpload(files[0]);
 }
+showPopup = () => {
+  this.setState({
+    showPopup: true,
+  });
+};
+hidePopup = () => {
+  this.setState({
+    showPopup: false,
+  });
+};
 handleImageUpload(file) {
   const upload = request.post(CLOUDINARY_UPLOAD_URL)
     .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
@@ -129,12 +147,20 @@ handleImageUpload(file) {
   }},100)
 }
 deleteItemList =() => {
+  this.setState({loading:true});
     this.state.item && this.state.item.id &&
       this.props.deleteItemList('auction', this.state.item.id ).then(resp => {
-        console.log("Detete")
-      })
-
+       this.setState({loading:false})
+     })
 }
+  deleteAction = () => {
+    this.setState({
+      showPopup: true,
+      errorMsg: 'Are you sure you want to delete User ? ',
+      popupHeader: 'Delete Confirmation',
+      popupType: 'Delete-Confirmation',
+    });
+  };
   hideItemChangeHandler =()=>{
     let item=this.state.item;
     item.active=!item.active;
@@ -148,7 +174,6 @@ deleteItemList =() => {
   showPanel = () =>{ this.setState({ toggle:true }) };
 
 render() {
- // const {item, itemSelected, dragHandle} = this.props.item;
   return (
     <div data-id={36} className={ cx("item-row  ui-sortable-handle",this.state.toggle && "open", this.props.item.images && this.props.item.images[0] && this.props.item.images[0].imageUrl  ? "has-image" : "",this.props.item && this.props.item.description ? "has-description" : "")} >
       <div className="flex-row">
@@ -265,7 +290,23 @@ render() {
               </div>
             </div>
             <input type="hidden" name defaultValue  />
-            <i className="fa fa-trash delete-item red"  onClick={this.deleteItemList}/>
+            <i className="fa fa-trash delete-item red"  onClick={this.deleteAction}/>
+          <PopupModel
+            id="mapPopup"
+            showModal={this.state.showPopup}
+            headerText= {<p>{this.state.popupHeader}</p>}
+            modelBody='<div><h1>Location</h1></div>'
+            onCloseFunc={this.hidePopup} >
+            <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+              { this.state && this.state.errorMsg }
+              <div className="modal-footer">
+                {/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
+                {/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
+                {this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteItemList} >Confirm</Button> : ""}
+                <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
+              </div>
+            </div>
+          </PopupModel>
           </div>
         </div>
       </div>

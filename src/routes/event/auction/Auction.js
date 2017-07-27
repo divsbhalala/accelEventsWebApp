@@ -1212,8 +1212,8 @@ class Auction extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                        { this.state.errorMsgCard }</div>
+                      {this.state.errorMsgCard  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsgCard }</div> }
                       <div className="row">
                         <div className="col-sm-4">
                           <div className="curr-bid-number">$<span

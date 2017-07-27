@@ -676,8 +676,8 @@ class Fund extends React.Component {
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
                       <div className="row">
-                        <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                          { this.state.errorMsg }</div>
+                        {this.state.errorMsgCard  && <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                          { this.state.errorMsg }</div> }
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
