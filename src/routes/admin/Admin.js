@@ -20,22 +20,12 @@ class Admin extends React.Component {
       data: null,
     }
   }
-  componentDidMount(){
-    this.getDashboard()
-  }
-  getDashboard = () => {
-    this.props.getDashboard().then((resp) => {
-      this.setState({
-        data:resp
-      })
-    });
-  }
+
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
-          {console.log("-><-",this.state.data)}
-          <div className="col-sm-12">
+          { this.props.hostData ? <div className="col-sm-12">
             <div className="row">
               <div className="col-lg-12">
                 <div id="content-header" className="clearfix">
@@ -53,9 +43,9 @@ class Admin extends React.Component {
                   className="main-box infographic-box colored display-page-box"
                   headerText="Fundraiser Page"
                   descText="Share this URL with your audience so that they can learn about your fundraiser and participate online."
-                  linkTo={ this.state.data && "https://www.accelevents.com/events/" +  this.state.data.eventUrl}
+                  linkTo={ this.props.hostData && "https://www.accelevents.com/events/" +  this.props.hostData.eventUrl}
                   linkTitle="Share your custom event page with your participants"
-                  linkText={ this.state.data && "https://www.accelevents.com/events/" +  this.state.data.eventUrl}
+                  linkText={ this.props.hostData && "https://www.accelevents.com/events/" +  this.props.hostData.eventUrl}
                   linkTarget="_blank"
                   tooltip="Share your custom event page with your participants"
                 />
@@ -67,7 +57,7 @@ class Admin extends React.Component {
                   descText="This is the phone number that participants will use."
                   linkTo="javascript:void(0)"
                   linkTitle="Text bids, raffle tickets, and pledges to this number"
-                  linkText={ this.state.data && this.state.data.eventPhoneNumber}
+                  linkText={ this.props.hostData && this.props.hostData.eventPhoneNumber}
                   linkTarget=""
                   tooltip="Text bids, raffle tickets, and pledges to this number"
                 />
@@ -75,66 +65,66 @@ class Admin extends React.Component {
             </div>
 
             <div className="form-group flex-row flex-2-col">
-              <div className="flex-col flex-col-mobile">
-                { this.state.data && this.state.data.ticketingDetail  && <PenalBoxWidget
+							{ this.props.hostData && this.props.hostData.ticketingDetail && this.props.hostData.ticketingDetail.active ?<div className="flex-col flex-col-mobile">
+                 <PenalBoxWidget
                   boxTitle="Event Ticketing"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
                   badgeLink="/host/settings/account"
                   badgeClass="white text-uppercase pull-right badge badge-danger"
                   firstTitle="Time Until Event Starts:"
-                  firstData= {this.state.data.ticketingDetail.startDate}
+                  firstData= {this.props.hostData.ticketingDetail.startDate}
                   secondTitle="Total Collection from ticket sales"
-                  secondData={ this.state.data.ticketingDetail.collectedAmout}
+                  secondData={ this.props.hostData.ticketingDetail.collectedAmout}
                   thirdTitle="Total tickets sold"
-                  thirdData={ this.state.data.ticketingDetail.numberOfTicketSold}
-                  active={this.state.data.ticketingDetail.active}
-                /> }
-              </div>
-              <div className="flex-col flex-col-mobile">
-                { this.state.data  && this.state.data.auctionDetail &&  <PenalBoxWidget
+                  thirdData={ this.props.hostData.ticketingDetail.numberOfTicketSold}
+                  active={this.props.hostData.ticketingDetail.active}
+                />
+              </div> : ""}
+							{ this.props.hostData && this.props.hostData.auctionDetail && this.props.hostData.auctionDetail.active ? <div className="flex-col flex-col-mobile">
+                 <PenalBoxWidget
                   boxTitle="Auction"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
                   badgeLink="/host/settings/account"
                   badgeClass="white text-uppercase pull-right badge badge-danger"
                   firstTitle="Ends In"
-                  firstData={this.state.data.auctionDetail.endDate}
+                  firstData={this.props.hostData.auctionDetail.endDate}
                   secondTitle="Proceeds"
-                  secondData={this.state.data.auctionDetail.collectedAmout}
+                  secondData={this.props.hostData.auctionDetail.collectedAmout}
                   thirdTitle="Bidders"
-                  thirdData={this.state.data.auctionDetail.numberOfBidder}
-                  active={this.state.data.auctionDetail.active}
-                /> }
-              </div>
-              <div className="flex-col flex-col-mobile">
-                { this.state.data &&  this.state.data.raffleDetail &&  <PenalBoxWidget
+                  thirdData={this.props.hostData.auctionDetail.numberOfBidder}
+                  active={this.props.hostData.auctionDetail.active}
+                />
+              </div> : "" }
+							{ this.props.hostData && this.props.hostData.raffleDetail && this.props.hostData.raffleDetail.active ? <div className="flex-col flex-col-mobile">
+                  <PenalBoxWidget
                   boxTitle="Raffle"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
                   badgeLink="/host/settings/account"
                   badgeClass="white text-uppercase pull-right badge badge-danger"
                   firstTitle="Ends In"
-                  firstData={ this.state.data.raffleDetail.endDate}
+                  firstData={ this.props.hostData.raffleDetail.endDate}
                   secondTitle="Proceeds"
-                  secondData={ this.state.data.raffleDetail.collectedAmout}
+                  secondData={ this.props.hostData.raffleDetail.collectedAmout}
                   thirdTitle="Ticket Purchasers"
-                  thirdData={ this.state.data.raffleDetail.numberOfTicketPurchased}
-                  active={this.state.data.raffleDetail.active}
-                /> }
-              </div>
-              <div className="flex-col flex-col-mobile">
-                { this.state.data &&  this.state.data.fundANeedDetail && <PenalBoxWidget
+                  thirdData={ this.props.hostData.raffleDetail.numberOfTicketPurchased}
+                  active={this.props.hostData.raffleDetail.active}
+                />
+              </div> : ""}
+							{ this.props.hostData && this.props.hostData.fundANeedDetail && this.props.hostData.fundANeedDetail.active ? <div className="flex-col flex-col-mobile">
+                  <PenalBoxWidget
                   boxTitle="Fund a Need"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
                   badgeLink="/host/settings/account"
                   badgeClass="white text-uppercase pull-right badge badge-danger"
                   firstTitle="Ends In"
-                  firstData={this.state.data.fundANeedDetail.endDate}
+                  firstData={this.props.hostData.fundANeedDetail.endDate}
                   secondTitle="Proceeds"
-                  secondData={ this.state.data.fundANeedDetail.collectedAmout}
+                  secondData={ this.props.hostData.fundANeedDetail.collectedAmout}
                   thirdTitle="Donors"
-                  thirdData={this.state.data.fundANeedDetail.donors}
-                  active={this.state.data.fundANeedDetail.active}
-                /> }
-              </div>
+                  thirdData={this.props.hostData.fundANeedDetail.donors}
+                  active={this.props.hostData.fundANeedDetail.active}
+                />
+              </div> : ""}
             </div>
             <div className="row form-group">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -144,15 +134,15 @@ class Admin extends React.Component {
                   </header>
                   <div className="main-box-body clearfix">
                     <ul className="widget-todo">
-                      {  this.state.data &&  this.state.data.checkList.map((value,index)=>
-                        <EventChecklist key={index} checkList={value} phone={ this.state.data && this.state.data.eventPhoneNumber} />
+                      {  this.props.hostData &&  this.props.hostData.checkList.map((value,index)=>
+                        <EventChecklist key={index} checkList={value} phone={ this.props.hostData && this.props.hostData.eventPhoneNumber} />
                       )}
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </div> : "" }
         </div>
       </div>
     );
@@ -160,9 +150,11 @@ class Admin extends React.Component {
 }
 
 const mapDispatchToProps = {
-  getDashboard: () => getDashboard()
 };
 const mapStateToProps = (state) => ({
+	user: state.session.user,
+	authenticated: state.session.authenticated,
+  hostData : state.host && state.host.data
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Admin));

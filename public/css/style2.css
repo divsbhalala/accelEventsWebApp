@@ -536,3 +536,6 @@ body:not(.displayhome ) {
 		transform: rotate(360deg);
 	}
 }
+.white{
+	color: white !important;
+}

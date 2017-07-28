@@ -12,7 +12,8 @@ export function getDashboard() {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
-        return resp.data;
+				dispatch(storeDashboardData(resp.data));
+				return resp.data;
       }
       return resp;
     }).catch((error, code, status)=>{
@@ -20,6 +21,13 @@ export function getDashboard() {
     });
   }
 }
+export function storeDashboardData(data) {
+	return {
+		type: 'STORE_HOST_DATA',
+		data,
+	}
+}
+
 export function dashboardSubmitBid(countryCode,phoneNumber) {
   return (dispatch) => {
     return axios({
