@@ -28,7 +28,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 			"endDate": moment().add(1, 'days'),
 			"eventEndDate": undefined,
 			"eventStartDate": undefined,
-			"isDateError": false,
+			"isInvalidDate": true,
 
 		};
 		this.toggleTicketSettings = this.toggleTicketSettings.bind(this);
@@ -42,8 +42,18 @@ class TicketRow extends React.Component { // eslint-disable-line
 		this.setMinTicketsPerBuyer = this.setMinTicketsPerBuyer.bind(this);
 		this.deleteTicketTypes = this.deleteTicketTypes.bind(this);
 		this.changeTicketName = this.changeTicketName.bind(this);
+		this.hasInvalidDate = this.hasInvalidDate.bind(this);
+		this.setTicketTypeDate = this.setTicketTypeDate.bind(this);
 	}
 
+	hasInvalidDate = (hasInvalidDate) => {
+		this.setState({
+			isInvalidDate: hasInvalidDate
+		});
+		if(this.props.hasInvalidDate){
+			this.props.hasInvalidDate(hasInvalidDate);
+		}
+	};
 	updateTicketState = (data, key) => {
 		setTimeout(() => {
 			this.props.updateTicketState(data, key);
@@ -127,14 +137,15 @@ class TicketRow extends React.Component { // eslint-disable-line
 		let ticket = this.state.ticket;
 		ticket.startDate = picker.startDate;
 		ticket.endDate = picker.endDate;
-		console.log("picker", picker);
 		this.setState({
 			// startDate: moment(picker.startDate).format('YYYY-MM-DD HH:mm:ss'),
 			// endDate: moment(picker.endDate).format('YYYY-MM-DD HH:mm:ss'),
-			startDate: picker.startDat,
+			startDate: picker.startDate,
 			endDate: picker.endDate,
 			ticket: ticket
 		});
+		this.hasInvalidDate((picker.startDate.diff(this.state.eventStartDate) && picker.endDate.diff(this.state.eventEndDate) < 0));
+		console.log(picker.startDate.diff(this.state.eventStartDate) > 0 && picker.endDate.diff(this.state.eventEndDate)<0);
 		this.updateTicketState(ticket, this.props.index);
 	};
 	updateBidPrice = (value) => {
@@ -174,19 +185,30 @@ class TicketRow extends React.Component { // eslint-disable-line
 		}, 100)
 	};
 
-	componentDidMount() {
+	setTicketTypeDate = ()=>{
 		let self = this;
 		setTimeout(() => {
-			console.log({eventEndDate: moment(this.props.eventEndDate).format('YYYY-MM-DD HH:mm:ss'),
-				eventStartDate: moment(this.props.eventStartDate).format('YYYY-MM-DD HH:mm:ss'),});
+			let eventEndDate = this.props.eventEndDate && this.props.eventEndDate._isAMomentObject ? this.props.eventEndDate : moment(this.props.eventEndDate);
+			let eventStartDate = this.props.eventStartDate && this.props.eventStartDate._isAMomentObject ? this.props.eventStartDate : moment(this.props.eventStartDate);
+			let endDate= this.props.ticket && this.props.ticket.endDate ? moment(this.props.ticket.endDate) : moment().add(1, 'days');
+			let startDate = this.props.ticket && this.props.ticket.startDate ? moment(this.props.ticket.startDate) : moment();
+			this.hasInvalidDate(startDate.diff(eventStartDate) > 0 && endDate.diff(eventEndDate) < 0);
+			console.log(startDate.diff(eventStartDate) > 0 && endDate.diff(eventEndDate) < 0);
 			self.setState({
 				ticket: this.props.ticket,
-				eventEndDate: this.props.eventEndDate,
-				eventStartDate: this.props.eventStartDate,
-				endDate: this.props.ticket && this.props.ticket.endDate ? moment(this.props.ticket.endDate) : moment().add(1, 'days'),
-				startDate: this.props.ticket && this.props.ticket.startDate ? moment(this.props.ticket.startDate) : moment(),
+				eventEndDate: eventEndDate,
+				eventStartDate: eventStartDate,
+				endDate: endDate,
+				startDate: startDate,
 			});
 		}, 100);
+	};
+
+	componentWillReceiveProps(){
+		this.setTicketTypeDate();
+	}
+	componentDidMount() {
+		this.setTicketTypeDate();
 	}
 
 	render() {
@@ -280,25 +302,23 @@ class TicketRow extends React.Component { // eslint-disable-line
 												<div className="row">
 													<DatetimeRangePicker
 														timePicker
-														timePicker24Hour
 														showDropdowns
-														timePickerSeconds
 														locale={locale}
 														startDate={this.state.startDate && this.state.startDate ? this.state.startDate : moment(this.state.startDate)}
 														endDate={this.state.endDate && this.state.endDate ? this.state.endDate : moment(this.state.endDate)}
-														minDate={this.props.eventStartDate && this.props.eventStartDate._isAMomentObject ? this.props.eventStartDate : moment(this.props.eventStartDate)}
-														maxDate={this.props.eventEndDate && this.props.eventEndDate._isAMomentObject ? this.props.eventEndDate : moment(this.props.eventEndDate)}
+														// minDate={this.props.eventStartDate && this.props.eventStartDate._isAMomentObject ? this.props.eventStartDate : moment(this.props.eventStartDate)}
+														// maxDate={this.props.eventEndDate && this.props.eventEndDate._isAMomentObject ? this.props.eventEndDate : moment(this.props.eventEndDate)}
 														// endDate={this.state.endDate}
 														//minDate={this.props.eventStartDate}
 														//maxDate={this.eventStartDate.eventEndDate}
 														onApply={this.handleDateRangeApply}
 														autoUpdateInput = {true}
 														isInvalidDate = {(a,b,c)=>{
-															console.log(a,b,c);
+															// console.log(a,b,c);
 															return false;
 														}}
 													>
-														<div className="form-group">
+														<div className={cx("form-group", !this.state.isInvalidDate && "has-error")}>
 															<input type="text" className="form-control" value={label}/>
 														</div>
 													</DatetimeRangePicker>

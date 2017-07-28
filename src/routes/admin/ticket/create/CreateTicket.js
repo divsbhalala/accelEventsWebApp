@@ -41,6 +41,7 @@ class CreateTicket extends React.Component {
 			showConfirmationDialog: false,
 			startDate: moment(),
 			endDate: moment().add(1, 'days'),
+			hasInvalidDate: false
 		};
 		this.doTicketTypes = this.doTicketTypes.bind(this);
 		this.addNewTicket = this.addNewTicket.bind(this);
@@ -51,12 +52,18 @@ class CreateTicket extends React.Component {
 		this.updateEventData = this.updateEventData.bind(this);
 		this.deleteTicketTypes = this.deleteTicketTypes.bind(this);
 		this.askDeleteTicketTypes = this.askDeleteTicketTypes.bind(this);
+		this.hasInvalidDate = this.hasInvalidDate.bind(this);
 	}
 
 	componentWillMount() {
 		this.doTicketTypes();
 	}
 
+	hasInvalidDate = (hasInvalidDate) => {
+		this.setState({
+			hasInvalidDate: hasInvalidDate
+		});
+	};
 	doTicketTypes = () => {
 		this.props.doTicketTypes().then(resp => {
 			this.setState({
@@ -268,10 +275,8 @@ class CreateTicket extends React.Component {
 													<div className="form-group mrg-b-0">
 														<label>Event Starts and End duration<span className="red"/></label>
 														{this.state.eventData && this.state.eventData.eventStartDate && <DatetimeRangePicker
-                              timePicker
-                              timePicker24Hour
-                              showDropdowns
-                              timePickerSeconds
+															timePicker
+															showDropdowns
                               locale={locale}
                               startDate={this.state.eventData.eventStartDate && this.state.eventData.eventStartDate._isAMomentObject ? this.state.eventData.eventStartDate : moment(this.state.eventData.eventStartDate)}
 															endDate={this.state.eventData.eventEndDate && this.state.eventData.eventEndDate._isAMomentObject ? this.state.eventData.eventEndDate : moment(this.state.eventData.eventEndDate)}
@@ -355,7 +360,15 @@ class CreateTicket extends React.Component {
 										</div>
 										<div className="table-body event-tickets">
 											{
-												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) => <TicketRow key={key} index={key} ticket={item} eventEndDate={this.state.eventData.eventEndDate} eventStartDate={this.state.eventData.eventStartDate} updateTicketState={this.updateTicketState} deleteTicketTypes={this.askDeleteTicketTypes} />) : ""}
+												this.state.eventData.ticketTypes ? this.state.eventData.ticketTypes.map((item, key) =>
+													<TicketRow key={key} index={key}
+																		 ticket={item}
+																		 eventEndDate={this.state.eventData.eventEndDate}
+																		 eventStartDate={this.state.eventData.eventStartDate}
+																		 updateTicketState={this.updateTicketState}
+																		 deleteTicketTypes={this.askDeleteTicketTypes}
+																		 hasInvalidDate={this.hasInvalidDate}
+													/>) : ""}
 										</div>
 									</div>
 
