@@ -376,7 +376,7 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            <Button theme='' loading={this.state.loading}  type="submit" bsStyle="link" className="btn-green btn-square btn-block btn-lg"> SIGN UP </Button>
+                            <Button loading={this.state.loading}  type="submit" bsStyle="link" className="btn-green btn-square btn-block btn-lg"> SIGN UP </Button>
                           </div>
                           <p className="mrg-t-md small text-center">
                             By signing up, I agree to Accelevent&#39;s <a href="/AccelEventsWebApp/tos" target="_blank">terms of
