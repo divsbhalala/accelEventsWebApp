@@ -1498,7 +1498,7 @@ class Checkout extends React.Component {
 								<p>Thank you for supporting the event. Please check your inbox for your tickets.</p>
 								<div className="modal-footer">
 									<button className="btn btn-green" onClick={() => {
-													history.push('/event/' + eventUrl)}}>Close</button>
+													history.push('/events/' + eventUrl)}}>Close</button>
 								</div>
 							</div>
 						</PopupModel>

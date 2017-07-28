@@ -273,7 +273,7 @@ class CreditCard extends React.Component {
 						<tbody>
 						{
 							this.state.transactions ? this.state.transactions.map(item=>{
-								<tr>
+								<tr key={item.name}>
 									<td>{item.name}</td>
 									<td>{item.phoneNumber}</td>
 									<td>{item.amount}</td>

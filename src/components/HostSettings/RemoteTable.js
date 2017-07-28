@@ -44,13 +44,14 @@ export default class RemoteTable extends React.Component {
     };
 
     const editCategory = {
+
       mode: 'click',
       afterSaveCell: this.props.updateItemCategory
     };
 
     return (
       <BootstrapTable data={ this.props.tableData } striped hover pagination={ true } fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
-            insertRow={ true } remote = { true} cellEdit={ editCategory } deleteRow={ true } options={ options }
+            insertRow={ true } remote = { true} cellEdit={ editCategory }
             deleteRow={ true } selectRow={ {mode: 'checkbox'} } >
           <TableHeaderColumn isKey dataField='id' editable={false} hiddenOnInsert={true} dataFormat={indexN}>Id</TableHeaderColumn>
           <TableHeaderColumn dataField='name' editable={{validator : this.categoryNameValidator}}>Name</TableHeaderColumn>

@@ -17,9 +17,9 @@ export default {
     require('./privacy').default,
     require('./admin').default,
     require('./event').default,
-    require('./scroll').default,
-    require('./table').default,
-    require('./goal').default,
+   // require('./scroll').default,
+   // require('./table').default,
+   // require('./goal').default,
     require('./checkout').default,
     require('./myProfile').default,
 

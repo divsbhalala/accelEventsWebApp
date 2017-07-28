@@ -59,6 +59,7 @@ class HeaderNew extends React.Component {
 			errorMsgNumber: null,
 			phoneNumber: false,
 			toggle: true,
+
 			emailValue: null,
 			nameValue: null,
 			messageValue: null,
@@ -87,6 +88,7 @@ class HeaderNew extends React.Component {
 
 	onFormClick = (e) => {
 		e.preventDefault();
+
 
 		if (this.email.value == '') {
 			this.setState({
@@ -247,7 +249,13 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-		//	history.push('/login');
+		history.push('/login');
+	};
+	logoutSuperUser = () => {
+		localStorage.clear();
+		sessionService.deleteSession();
+		sessionService.deleteUser();
+		setTimeout(()=>{history.push('/u/login');},1000)
 	};
 	showContactPopup = () => {
 		this.setState({
@@ -363,7 +371,7 @@ class HeaderNew extends React.Component {
 					<Brand className={cx(this.props.admin && "p-0")}>
             <span >
               { this.props.eventData &&
-							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
+							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
 							{ this.props.admin  && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
 								 className="navbar-brand" >
@@ -407,7 +415,7 @@ class HeaderNew extends React.Component {
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
 						</MenuItem> }
 						{ event && this.props.is_volunteer && !this.props.admin && <MenuItem eventKey="3" onClick={() => {
-							history.push('/event/' + event + '/volunteer')
+							history.push('/events/' + event + '/volunteer')
 						}}>
 							Volunteer
 						</MenuItem>}
@@ -415,49 +423,49 @@ class HeaderNew extends React.Component {
 						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"/> <span className="hidden-xs">Views</span> </span>} id="navDropdown3">
 
 							<MenuItem eventKey="5" onClick={() => {
-								history.push("/scroll/" + event + "/auction")
+								history.push("/events/" + event + "/auction/scroll")
 							}}>
 								<span> Auction Scrolling </span>
 							</MenuItem>
 							<MenuItem eventKey="6" onClick={() => {
-								history.push("/scroll/" + event + "/raffle")
+								history.push("/events/" + event + "/raffle/scroll")
 							}}>
 								<span> Raffle Scrolling </span>
 							</MenuItem>
 							<MenuItem eventKey="7" onClick={() => {
-								history.push("/scroll/" + event + "/fund")
+								history.push("/events/" + event + "/FundaNeed/scroll")
 							}}>
 								<span> Fund a Need Scrolling </span>
 							</MenuItem>
 							<MenuItem divider/>
 							<MenuItem eventKey="8" onClick={() => {
-								history.push("/goal/" + event + "/auction")
+								history.push("/events/" + event + "/auction/goal")
 							}}>
 								<span> Auction Goal </span>
 							</MenuItem>
 							<MenuItem eventKey="9" onClick={() => {
-								history.push("/goal/" + event + "/raffle")
+								history.push("/events/" + event + "/raffle/goal")
 							}}>
 								<span> Raffle Goal </span>
 							</MenuItem>
 							<MenuItem eventKey="10" onClick={() => {
-								history.push("/goal/" + event + "/fund")
+								history.push("/events/" + event + "/FundaNeed/goal")
 							}}>
 								<span> Fund a Need Goal </span>
 							</MenuItem>
 							<MenuItem divider/>
 							<MenuItem eventKey="11" onClick={() => {
-								history.push("/table/" + event + "/auction")
+								history.push("/events/" + event + "/auction/table")
 							}}>
 								<span> Auction Table </span>
 							</MenuItem>
 							<MenuItem eventKey="12" onClick={() => {
-								history.push("/table/" + event + "/raffle")
+								history.push("/events/" + event + "/raffle/table")
 							}}>
 								<span> Raffle Table </span>
 							</MenuItem>
 							<MenuItem eventKey="13" onClick={() => {
-								history.push("/table/" + event + "/fund")
+								history.push("/events/" + event + "/FundaNeed/table")
 							}}>
 								<span> Fund a Need Table </span>
 							</MenuItem>
@@ -471,7 +479,7 @@ class HeaderNew extends React.Component {
 						{ !this.props.authenticated  &&  <MenuItem eventKey="9"
 							// onClick={this.showLoginPopup}
 																										 onClick={(event) => {
-																											 history.push('/signup');
+																											 history.push('/u/signup');
 																										 }}
 						>
 							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
@@ -483,8 +491,8 @@ class HeaderNew extends React.Component {
 						{ this.props.admin && !this.props.superAdmin && <MenuItem eventKey="10" className="white">
 							<i className="fa fa-question-circle"></i>Help
 						</MenuItem> }
-						{ this.props.admin && this.props.superAdmin && <MenuItem eventKey="10" className="white">
-              <span> <i className="fa fa-sign-out fa-fw" /> Logout </span>
+						{ this.props.admin && this.props.superAdmin && <MenuItem eventKey="10" className="white"  onClick={this.logoutSuperUser}>
+              <span> <i className="fa fa-sign-out fa-fw"   /> Logout </span>
 						</MenuItem> }
 
             {
@@ -630,7 +638,7 @@ class HeaderNew extends React.Component {
 						this.hideFormMessagePopup()
 					}}>Close</button>}
 				>
-					<center>{ this.state.formMessage }</center>
+					{ this.state.formMessage }
 				</PopupModel> }
 				<LoginModal
 					showModal={this.state.showLoginPopup}

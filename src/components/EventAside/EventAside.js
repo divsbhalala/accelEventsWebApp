@@ -247,8 +247,8 @@ class EventAside extends React.Component {
 									</a>
 								</li>
 								{
-									this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
-										<li className={cx(this.props.selectedCategory === item.name && "active")}
+									this.props.settings && this.props.settings.categories && this.props.settings.categories.map((item) =>
+										<li  className={cx(this.props.selectedCategory === item.name && "active")}
 												key={item.name + Math.random()} onClick={() => {
 											this.props.setFilterCategory(item.name)
 										}}>

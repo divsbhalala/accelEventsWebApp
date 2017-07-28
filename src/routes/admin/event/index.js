@@ -184,7 +184,7 @@ class EventList extends React.Component {
     function buttonFormatter(cell, row){
       return (<ul className="readonly-actions list-inline">
         <li><Link to={"superadmin/edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
-        <li><Link ><i className="fa fa-trash red" ></i></Link></li>
+        <li><Link to="" ><i className="fa fa-trash red" ></i></Link></li>
       </ul>);
     }
     function dateFormatter(cell, row){
@@ -212,7 +212,7 @@ class EventList extends React.Component {
             </div>
             <div className="col-md-2" role="group">
               <DropdownButton title="Access White Label" pullRight id="split-button-pull-right">
-                {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.map((value,index)=>
+                {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.length > 0 &&  this.state.whiteLabelUrlList.map((value,index)=>
                   <WhiteLabelUrlList key={index} item={value} />
                 )}
               </DropdownButton>

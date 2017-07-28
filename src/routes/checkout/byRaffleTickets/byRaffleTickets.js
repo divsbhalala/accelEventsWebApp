@@ -573,8 +573,8 @@ class ByRaffleTickets extends React.Component {
                             this.raffleTicket = ref;
                           }} onChange={this.raffleTicketValidateHandler}>
                             <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
-                            { this.state.settings.ticktes && this.state.settings.ticktes.map(value =>
-                              <option value={value.id} data-ticket={value.numberOfTickets} data-price={value.price}>
+                            { this.state.settings.ticktes && this.state.settings.ticktes.map((value ,index)=>
+                              <option value={value.id} data-ticket={value.numberOfTickets} data-price={value.price} key={index} >
                                 {value.numberOfTickets + " Ticket For $"+ value.price}
                               </option>)}
                           </select>

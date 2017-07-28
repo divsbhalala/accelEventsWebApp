@@ -36,7 +36,7 @@ class WhiteLabelEventList extends React.Component {
       // }).catch(error => {
       //   console.log('error', error)
       // })
-      //window.location = "/host/dashboard";
+      window.location = "/host/dashboard";
       {/*<Link to="/admin/settings-account" >*/}
       {/*</Link>*/}
     });
