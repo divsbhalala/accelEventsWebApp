@@ -109,7 +109,6 @@ class Register extends React.Component {
   render() {
     return (
       <div>
-        <link rel="stylesheet" type="text/css" href="/css/signup.css"/>
         <img
           src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
           alt="" className="logo-img img-responsive center-block"/>
