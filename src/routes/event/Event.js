@@ -488,7 +488,18 @@ class Event extends React.Component {
 				}
 				this.setState({
 					rafflePageItems: resp.data.items,
-				})
+				},function changeAfter(){
+		          let seenNames = {};
+		          let array = this.state.rafflePageItems.filter(function(currentObject) {
+		            if (currentObject.id in seenNames) {
+		              return false;
+		            } else {
+		              seenNames[currentObject.id] = true;
+		              return true;
+		            }
+		          });
+		          this.setState({rafflePageItems:array})
+		        })
 			}
 			else {
 				this.setState({
@@ -917,8 +928,8 @@ class Event extends React.Component {
 									<div className="sale-card" key={item.typeId.toString()}>
 										<div className="flex-row">
 											<div className="flex-col">
-												<div className="type-name"><strong>{item.name}</strong>
-													(<span className="type-cost txt-sm gray">${item.price}</span>)
+												<div className="type-name"><strong style={{"fontWeight":700}}>{item.name} </strong>
+													( <span className="type-cost txt-sm gray"> ${item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
 															<select className="form-control" name={item.typeId} data-price={item.price}

@@ -191,7 +191,7 @@ class Auction extends React.Component {
             loading:true,
             showPopup: true,
             errorMsgCard:resp.message,
-            popupHeader:"Successfully",
+            popupHeader:"Successful Bid",
           });
           this.props.changeUserData(this.props.user,user)
         }else{

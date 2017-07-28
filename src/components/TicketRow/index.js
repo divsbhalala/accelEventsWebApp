@@ -28,7 +28,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 			"endDate": moment().add(1, 'days'),
 			"eventEndDate": undefined,
 			"eventStartDate": undefined,
-			"isInvalidDate": true,
+			"hasInvalidDate": false,
 
 		};
 		this.toggleTicketSettings = this.toggleTicketSettings.bind(this);
@@ -48,10 +48,10 @@ class TicketRow extends React.Component { // eslint-disable-line
 
 	hasInvalidDate = (hasInvalidDate) => {
 		this.setState({
-			isInvalidDate: hasInvalidDate
+			hasInvalidDate: !hasInvalidDate
 		});
 		if(this.props.hasInvalidDate){
-			this.props.hasInvalidDate(hasInvalidDate);
+			this.props.hasInvalidDate(hasInvalidDate, this.props.index);
 		}
 	};
 	updateTicketState = (data, key) => {
@@ -145,7 +145,6 @@ class TicketRow extends React.Component { // eslint-disable-line
 			ticket: ticket
 		});
 		this.hasInvalidDate((picker.startDate.diff(this.state.eventStartDate) && picker.endDate.diff(this.state.eventEndDate) < 0));
-		console.log(picker.startDate.diff(this.state.eventStartDate) > 0 && picker.endDate.diff(this.state.eventEndDate)<0);
 		this.updateTicketState(ticket, this.props.index);
 	};
 	updateBidPrice = (value) => {
@@ -193,7 +192,6 @@ class TicketRow extends React.Component { // eslint-disable-line
 			let endDate= this.props.ticket && this.props.ticket.endDate ? moment(this.props.ticket.endDate) : moment().add(1, 'days');
 			let startDate = this.props.ticket && this.props.ticket.startDate ? moment(this.props.ticket.startDate) : moment();
 			this.hasInvalidDate(startDate.diff(eventStartDate) > 0 && endDate.diff(eventEndDate) < 0);
-			console.log(startDate.diff(eventStartDate) > 0 && endDate.diff(eventEndDate) < 0);
 			self.setState({
 				ticket: this.props.ticket,
 				eventEndDate: eventEndDate,
@@ -238,19 +236,19 @@ class TicketRow extends React.Component { // eslint-disable-line
 						className="fa fa-ellipsis-v edit-item fa-lg"/>
 					</div>
 					<div className="flex-col ticket-name-column">
-						<input type="text" className="form-control ticket-name" name="ticketTypeName"
-									 maxLength={255} defaultValue={this.state.ticket.name}/>
+						<input type="text" className="form-control ticket-name required" name="ticketTypeName" onChange={this.changeTicketName}
+									 maxLength={255} defaultValue={this.state.ticket.name} required={true}/>
 					</div>
 					<div className="flex-col ticket-quantity-column">
-						<NumericInput name="numberOfTickets" className="form-control ticket-quantity" step={1} precision={0} min={0}
+						<NumericInput name="numberOfTickets" className="form-control ticket-quantity required" step={1} precision={0} min={0}
 													value={this.state.ticket.numberOfTicket} onChange={this.setNumberOfTicket}/>
 
 					</div>
 					<div className="flex-col ticket-price-column">
 						<div className="input-group">
 							<span className="input-group-addon">$</span>
-							<NumericInput name="price" className="form-control ticket-price" step={1} precision={0} min={0}
-														value={this.state.ticket.price} onChange={this.updateBidPrice}/>
+							<NumericInput name="price" className="form-control ticket-price required" step={1} precision={0} min={0}
+														value={this.state.ticket.price} onChange={this.updateBidPrice} required={true}/>
 						</div>
 						<div className="tiny">
 							Buyer price: <br /><span className="blue buyer-price">$<span
@@ -313,12 +311,12 @@ class TicketRow extends React.Component { // eslint-disable-line
 														//maxDate={this.eventStartDate.eventEndDate}
 														onApply={this.handleDateRangeApply}
 														autoUpdateInput = {true}
-														isInvalidDate = {(a,b,c)=>{
+														isInvalidDate = {(date)=>{
 															// console.log(a,b,c);
-															return false;
+															return !(date.diff(this.state.eventStartDate) > 0 && date.diff(this.state.eventEndDate) < 0);
 														}}
 													>
-														<div className={cx("form-group", !this.state.isInvalidDate && "has-error")}>
+														<div className={cx("form-group", this.state.hasInvalidDate && "has-error")}>
 															<input type="text" className="form-control" value={label}/>
 														</div>
 													</DatetimeRangePicker>
@@ -346,7 +344,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 												<label className="max-ticket-label">&nbsp;Tickets allowed per order</label>
 												<div className="row">
 													<div className="col-md-6">
-														<NumericInput name="minTicketsPerBuyer" className="form-control minTicket" step={1}
+														<NumericInput name="minTicketsPerBuyer" className="form-control minTicket required" step={1}
 																					precision={0} min={0} value={this.state.ticket.minTickerPerBuyer}
 																					onChange={this.setMinTicketsPerBuyer}/>
 

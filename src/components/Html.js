@@ -47,11 +47,12 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/carousel.css" />
           <link rel="stylesheet" href="/css/loader.css"/>
 
-          <link rel="stylesheet" href="/css/admin-style.min.css"/>
 
           <link rel="stylesheet" href="/css/transitions.min.css" />
           <link rel="stylesheet" href="/css/display.min.css"/>
           <link rel="stylesheet" href="/css/style.min.css"/>
+          <link rel="stylesheet" href="/css/admin-style.min.css"/>
+
 
 
           {/* AE Icons */}
