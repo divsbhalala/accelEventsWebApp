@@ -17,9 +17,9 @@ export default class RemoteTable extends React.Component {
     return response;
   };
 
-  addCategoryHeader(closeModal, save){
-    return (<InsertModalHeader  title='Add Item Category' />);
-  };
+  // addCategoryHeader(closeModal, save){
+  //   return (<InsertModalHeader  title='Add Item Category' />);
+  // };
 
 
 
@@ -40,7 +40,7 @@ export default class RemoteTable extends React.Component {
       onSizePerPageList: this.props.onSizePerPageList,
       onPageChange: this.props.onPageChange,
       afterInsertRow: this.props.addItemCategory,
-      insertModalHeader: this.addCategoryHeader
+      // insertModalHeader: this.addCategoryHeader
     };
 
     const editCategory = {
