@@ -256,7 +256,7 @@ class EventAside extends React.Component {
 												key={item.name + Math.random()} onClick={() => {
 											this.props.setFilterCategory(item.name)
 										}}>
-											<a className={cx("category-switcher pointer")} title={item.name}>
+											<a href="#" className={cx("category-switcher pointer")} title={item.name}>
 												<i className={cx("fa fa-ticket")} />
 												<span className={cx("cat-name")}>{item.name}</span>
 												{item.count &&
@@ -297,7 +297,7 @@ class EventAside extends React.Component {
 												this.props.setFilterCategory(item.name),
 												this.toggleMobileViewCat()
 											}}>
-												<a className={cx("category-switcher pointer")}>
+												<a href="#" className={cx("category-switcher pointer")}>
 													<i className={cx("fa fa-ticket")} />
 													<span className={cx("cat-name")}>{item.name}</span>
 													{item.count &&
