@@ -14,6 +14,7 @@ import cx from 'classnames';
 import {browserHistory} from 'react-router';
 import Link from "../../../components/Link/Link";
 import _ from 'lodash';
+import  history from './../../../history';
 
 class EventList extends React.Component {
   static propTypes = {
@@ -80,14 +81,9 @@ class EventList extends React.Component {
   }
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
-
-      window.location = "/host/dashboard";
-       // this.props.router.push('/some/location');
-      {/*<Link to="/admin" >*/}
-      {/*</Link>*/}
-     //this.context.router.push('/admin');
-     // browserHistory.push('/login');
-
+      setTimeout(()=>{
+        history.push("/host/dashboard")
+      },2000)
     });
   }
   getWhiteLabelUrl = () => {
@@ -287,7 +283,7 @@ class EventList extends React.Component {
 class WhiteLabelUrlList extends React.Component {
   render() {
     return (
-      <MenuItem eventKey={this.props.key}><Link to={"u/"+this.props.item+"/home"} >{this.props.item}</Link></MenuItem>
+      <MenuItem eventKey={this.props.key}><Link to={"/u/wl/"+this.props.item+"/home"} >{this.props.item}</Link></MenuItem>
     );
   }
 }

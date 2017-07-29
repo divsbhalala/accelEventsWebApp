@@ -171,6 +171,19 @@ export function getItemCategories(type) {
     })
   }
 }
+export function enableModules(data) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'host/enableModules?'+data,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+}
 export function storeItemUpdate(data) {
   return {
     type: 'IS_ITEMADDED',

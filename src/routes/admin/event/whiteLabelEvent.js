@@ -8,6 +8,8 @@ import {whitLableEeventsList,whiteLabelUrl,setWhiteLabelUrlEvents} from './actio
 import {connect} from 'react-redux';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
 import Link from "../../../components/Link/Link";
+import  history from './../../../history';
+
 class WhiteLabelEventList extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -29,14 +31,17 @@ class WhiteLabelEventList extends React.Component {
       })
 
     });
-  }
+  };
   setActiveEvents = (row) => {
     this.props.setWhiteLabelUrlEvents(row.eventId,this.props.params && this.props.params.params).then((resp) => {
+      setTimeout(()=>{
+        history.push("/host/dashboard")
+      },2000);
       // this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
       // }).catch(error => {
       //   console.log('error', error)
       // })
-      window.location = "/host/dashboard";
+     // window.location = "/host/dashboard";
       {/*<Link to="/admin/settings-account" >*/}
       {/*</Link>*/}
     });
@@ -82,13 +87,13 @@ class WhiteLabelEventList extends React.Component {
           <h1 className="text-center">All Events</h1>
           <div className="row">
             <div className="col-md-2" role="group">
-              <Link className="btn btn-block btn-default mrg-b-md" > <span className="hidden-xs">Create New Event</span> </Link>
+              <Link className="btn btn-block btn-default mrg-b-md" to="#" > <span className="hidden-xs">Create New Event</span> </Link>
             </div>
             <div className="col-md-2" role="group">
-                <Link className="btn btn-block btn-default mrg-b-md" to={"user"}> <span className="hidden-xs">Users</span> </Link>
+                <Link className="btn btn-block btn-default mrg-b-md" to={"users"}> <span className="hidden-xs">Users</span> </Link>
             </div>
             <div className="col-md-2" role="group">
-              <Link className="btn btn-block btn-default mrg-b-md" to={"wl-settings"}>
+              <Link className="btn btn-block btn-default mrg-b-md" to={"settings"}>
                 <span className="hidden-xs">Settings</span>
               </Link>
             </div>
@@ -99,7 +104,7 @@ class WhiteLabelEventList extends React.Component {
               {this.state.event ?
               <BootstrapTable data={this.state.event} striped hover   options={ options }>
                 <TableHeaderColumn  isKey={true} dataField='eventName'>EVENT NAME</TableHeaderColumn>
-                <TableHeaderColumn  dataField='eventEndDate' width="15%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
+                <TableHeaderColumn  dataField='eventEndDate' width="20%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
                 <TableHeaderColumn columnClassName='theme-turquoise' dataFormat={urlFormate}  dataField='eventURL' >URL</TableHeaderColumn>
                </BootstrapTable> :<div id="app" className="loader" />
               }

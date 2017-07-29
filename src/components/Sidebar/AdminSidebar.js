@@ -48,7 +48,7 @@ class AdminSiderbar extends React.Component {
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
 							<div id="user-left-box" className="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
 								<div className="event-logo">
-									<img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png" alt className="img-responsive" />
+									<img src={this.props.hostData && this.props.hostData.eventLogo ? this.props.hostData.eventLogo : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} alt className="img-responsive" />
 									<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
 										<img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
 									</a>
@@ -95,7 +95,7 @@ class AdminSiderbar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-									{ this.props.hostData && this.props.hostData.ticketingDetail && this.props.hostData.ticketingDetail.active ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
@@ -118,7 +118,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : "" }
-									{ this.props.hostData && this.props.hostData.auctionDetail && this.props.hostData.auctionDetail.active ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.auctionEnabled  ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("silentAuction", "")}} >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
@@ -136,7 +136,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> :"" }
-									{ this.props.hostData && this.props.hostData.raffleDetail && this.props.hostData.raffleDetail.active ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
+									{ this.props.hostData && this.props.hostData.raffleEnabled ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("raffle", "")}} >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
@@ -154,7 +154,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : ""}
-									{ this.props.hostData && this.props.hostData.fundANeedDetail && this.props.hostData.fundANeedDetail.active ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
+									{ this.props.hostData && this.props.hostData.fundANeedEnabled ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("causeAuction", "")}}>
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>

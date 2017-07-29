@@ -50,10 +50,8 @@ class Login extends React.Component {
         if (!resp.errorMessage) {
           this.setState({error: "Log In SuccessFully...",loading:false});
           setTimeout(()=>{
-            //window.location="/host/superadmin/events"
-            history.push("/host/superadmin/events")
+            history.push("/u/superadmin/events")
           },2000)
-        //  history.push('/host/superadmin/events');
         }
         else {
           this.setState({error: "Invalid Email or password"});
@@ -113,7 +111,7 @@ class Login extends React.Component {
      }
      */
     if (this.props.authenticated) {
-       history.push('/host/superadmin/events');
+       history.push('/u/superadmin/events');
     }
   }
 

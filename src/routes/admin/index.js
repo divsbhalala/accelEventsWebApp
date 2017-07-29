@@ -27,11 +27,7 @@ import RaffleAddItems from './raffle/addItem/RaffleAddItems';
 import RaffleSetting from './raffle/settings/RaffleSetting';
 import DonationPerformance from './donation/performance/DonationPerformance';
 import UserManagement from './usermanagement/UserManagement';
-import EventsList from './event/index';
-import WhiteLabelEventList from './event/whiteLabelEvent';
-import OrganizationSettings from './event/organizationSettings';
-import WhiteLabelUserManagement from './event/WhiteLabelUserManagement';
-import EditEvent from './event/editEvent';
+
 
 const title = 'Admin Page';
 const isAdmin = false;
@@ -299,51 +295,7 @@ export default {
         };
       },
     },
-    {
-      path: '/superadmin/events',
-      async action() {
-        return {
-          title: "Events",
-          component: <AdminWLLayout><EventsList title="Events"/></AdminWLLayout>,
-        };
-      }
-    },
-    {
-      path: '/u/:params/home',
-      async action(props) {
-        return {
-          title: "Events",
-          component: <AdminWLLayout><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
-        };
-      }
-    },
-    {
-      path: '/u/:params/wl-settings',
-      async action(props) {
-        return {
-          title: "Organization Settings",
-          component: <AdminWLLayout><OrganizationSettings params={props.params} title="Organization Settings"/></AdminWLLayout>,
-        };
-      }
-    },
-    {
-    	path: '/u/:params/user',
-      async action(props) {
-        return {
-          title: "WhiteLabel User Management",
-          component: <AdminWLLayout><WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/></AdminWLLayout>,
-        };
-      }
-    },
-    {
-    	path: '/superadmin/edit/:params',
-      async action(props) {
-        return {
-          title: "EditEvent",
-          component: <AdminWLLayout><EditEvent params={props.params} title="EditEvent"/></AdminWLLayout>,
-        };
-      }
-    }
+
 	]
 
 };

@@ -539,3 +539,10 @@ body:not(.displayhome ) {
 .white{
 	color: white !important;
 }
+.model-transparent > .modal-content {
+	background-color: transparent;
+}
+.model-transparent {
+	width: 100%;
+	color: #fff;
+}
