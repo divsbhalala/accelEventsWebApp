@@ -29,12 +29,12 @@ class AuctionPerformance extends React.Component {
   getPerformanceAuctionBidderCSV = () => {
     this.props.getPerformanceAuctionBidderCSV().then((resp) => {
     });
-  }
+  };
   getPerformanceAuctionItemByItemCode = () => {
     this.props.getPerformanceAuctionItemByItemCode().then((resp) => {
       this.setState({ items: resp });
     });
-  }
+  };
   componentWillMount() {
     this.props.getPerformanceAuctionItem().then((resp) => {
       console.log('resp', resp);
