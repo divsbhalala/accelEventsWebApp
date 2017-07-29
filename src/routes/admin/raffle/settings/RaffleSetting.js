@@ -136,37 +136,50 @@ class RaffleSetting extends React.Component {
     });
   };
 
-  addRow =() =>{
-  let tickets = this.state.tickets;
-  let newRow = {numberOfTickets:1,price:0,id:0,complementary:false};
-  tickets.push(newRow);
-  this.setState({
-    tickets
-  })
-}
-removeRow =(index) =>{
-  let tickets = this.state.tickets;
-  tickets.splice(index,1)
-  this.setState({
-    tickets
-  })
-}
-actionResult = (method,status,message) =>{
-  if(status == "Failed"){ this.setState({status,message});}
-  else{
-    this.setState({status,message,tickets : ""});
-    this.props.getHostTickets(this.state.moduleType).then(resp => {
-      if(resp && resp.data){
-        this.setState({tickets:resp.data});
+  resetHostSettings = () => {
+    this.props.resetHostSettings(this.state.moduleType).then(resp => {
+      if(resp && resp.data && resp.status==200){
+        this.closeResetModal();
+        this.handleAlertShow(resp.data.message,'success');
       }
-    }).catch(error => {
-      console.log(error);
+      else{
+        this.handleAlertShow('Something went wrong.','danger');
+      }
+    }).catch((error) => {
+      this.handleAlertShow('Something went wrong.','danger');
     });
+  };
+
+  addRow =() =>{
+    let tickets = this.state.tickets;
+    let newRow = {numberOfTickets:1,price:0,id:0,complementary:false};
+    tickets.push(newRow);
+    this.setState({
+      tickets
+    })
   }
-}
+  removeRow =(index) =>{
+    let tickets = this.state.tickets;
+    tickets.splice(index,1)
+    this.setState({
+      tickets
+    })
+  }
+  actionResult = (method,status,message) =>{
+    if(status == "Failed"){ this.setState({status,message});}
+    else{
+      this.setState({status,message,tickets : ""});
+      this.props.getHostTickets(this.state.moduleType).then(resp => {
+        if(resp && resp.data){
+          this.setState({tickets:resp.data});
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+  }
 
   render() {
-
     let locale = {
       format: 'YYYY/MM/DD HH:mm',
       separator: ' - ',
@@ -305,7 +318,7 @@ actionResult = (method,status,message) =>{
                           </div>
                         </form>
                         <div className="form-group operations-row text-center">
-                          <button className="btn btn-default reset" data-toggle="modal" data-target="#resetModuleConfirm">Reset</button>
+                          <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
                         </div>
 
                         {this.state.message && <div className={cx("alert",this.state.status=="Success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
@@ -354,7 +367,18 @@ actionResult = (method,status,message) =>{
                 </div>
               </div>
             </div>
-
+            <Modal show={this.state.showModal} onHide={this.closeResetModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Reset Raffle</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>Reseting your raffle will delete all ticket and winner history. You will not be able to recover this information. Are you sure you want to reset?</p>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button bsStyle="danger" onClick={this.resetHostSettings}>Reset</Button>
+                <Button onClick={this.closeResetModal}>Close</Button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </div>
     );

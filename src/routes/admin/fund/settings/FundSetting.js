@@ -56,15 +56,15 @@ class FundSetting extends React.Component {
 
   resetHostSettings = () => {
     this.props.resetHostSettings(this.state.moduleType).then(resp => {
-      if(resp && resp.data){
+      if(resp && resp.data && resp.status==200){
         this.closeResetModal();
         this.handleAlertShow(resp.data.message,'success');
       }
       else{
-        console.log(resp);
+        this.handleAlertShow('Something went wrong.','danger');
       }
     }).catch((error) => {
-      console.log(error);
+      this.handleAlertShow('Something went wrong.','danger');
     });
   };
 
@@ -267,7 +267,7 @@ class FundSetting extends React.Component {
               <p>Reseting your auction will delete all bid history. You will not be able to recover this information. Are you sure you want to reset?</p>
             </Modal.Body>
             <Modal.Footer>
-              <Button bsStyle="danger" onClick={this.resetAuctionSettings}>Reset</Button>
+              <Button bsStyle="danger" onClick={this.resetHostSettings}>Reset</Button>
               <Button onClick={this.closeResetModal}>Close</Button>
             </Modal.Footer>
           </Modal>
