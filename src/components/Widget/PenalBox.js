@@ -43,7 +43,7 @@ class PenalBoxWidget extends Component { // eslint-disable-line
 
       // let duration = moment.duration(duration - interval, 'milliseconds');
       this.setState({
-        days: days <= 0 ? "00": days,
+        days: days <= 0 ? 0 : days <=9 ? ("0" +days).slice(-2) : days,
         hours: hours <= 0 ? "00": hours <=9 ? ("0" +hours).slice(-2) : hours,
         minute: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
         seconds: seconds <= 0 ? "00": seconds <=9 ? ("0" +seconds).slice(-2) : seconds,
@@ -88,11 +88,11 @@ class PenalBoxWidget extends Component { // eslint-disable-line
                       <span className="hours">{this.state.hours}</span>
                     </div>
                     <div className="flex-col">
-                      <span className="minutes">{this.state.seconds}</span>
+                      <span className="minutes">{this.state.minutes}</span>
                     </div>
                     { this.state.days <= 0 &&
                     <div className="flex-col">
-                      <span className="seconds">{this.state.second}</span>
+                      <span className="seconds">{this.state.seconds}</span>
                     </div>
                     }
                   </div>
