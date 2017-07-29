@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import serialize from 'serialize-javascript';
 import config from '../config';
+import $ from 'jquery'
 
 import rrui from 'react-phone-number-input/rrui.css'
 import rpni from 'react-phone-number-input/style.css'
@@ -74,7 +75,8 @@ class Html extends React.Component {
           {/*<link rel="stylesheet" href="/css/style2.css"/>*/}
           {/*<link rel="stylesheet" href="/css/custom.css" />*/}
 
-          <script src="/css/Tel/libphonenumber.js"></script>
+          <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDtLyd6ZZn_g4NaPstiJ8QgOLeWnPu0zas"></script>
+          <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
           {styles.map(style =>
             <style
               key={style.id}
@@ -85,9 +87,6 @@ class Html extends React.Component {
         </head>
         <body>
           <div id="app" dangerouslySetInnerHTML={{__html: children}}/>
-          <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDtLyd6ZZn_g4NaPstiJ8QgOLeWnPu0zas"></script>
-          <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
-
           <script dangerouslySetInnerHTML={{__html: `window.App=${serialize(app)}`}}/>
           {scripts.map(script => <script key={script} src={script}/>)}
           {config.analytics.googleTrackingId &&
@@ -103,8 +102,7 @@ class Html extends React.Component {
           {config.analytics.googleTrackingId &&
           <script src="https://www.google-analytics.com/analytics.js" async defer/>
           }
-          <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-
+          <script src="/js/plugins.js"></script>
         </body>
       </html>
     );

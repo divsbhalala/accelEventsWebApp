@@ -17,7 +17,7 @@ class AdminSiderbar extends React.Component {
 		this.setNav = this.setNav.bind(this);
 	//	this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 	}
-  toggleUl = () =>{
+  toggleUl = () => {
 	  this.setState({
       toggle:!this.state.toggle
     });
@@ -28,18 +28,16 @@ class AdminSiderbar extends React.Component {
 			showBuyRaffleTicketPopup: this.props.authenticated
 		})
 	};
-	setNav = (nav, subNav)=>{
+	setNav = (nav, subNav)=> {
 		this.setState({
 			nav: nav,
-			subNav: subNav
 		})
 	};
-
 	render() {
 		return (
-			<div className="admin-sidebar-wrap" >
+			<div className="sidebar-wrap" >
 				<div id="nav-col">
-					<section id="col-left" className="col-left-nano has-scrollbar">
+					<section id="col-left" className="col-left-nano">
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
 							<div id="user-left-box" className="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
 								<div className="event-logo">
@@ -199,11 +197,9 @@ class AdminSiderbar extends React.Component {
 								</ul>
 							</div>
 						</div>
-						<div className="nano-pane"><div className="nano-slider" style={{ transform: 'translate(0px, 0px)'}} /></div></section>
-					<div id="nav-col-submenu" />
+					</section>
 				</div>
 			</div>
-
 		);
 	}
 }
