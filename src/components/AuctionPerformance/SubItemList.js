@@ -143,9 +143,88 @@ class SubItemList extends React.Component {
 							<td><span className="name">{item.bidderFirstName}</span></td>
 							<td><span className="name">{item.bidderLastName}</span></td>
 							<td><span className="amount">${item.bidAmount}</span></td>
-              {!item.bidPaid && 	<td> <a className="delete-bid" onClick={()=>this.requestPaymentAction(item)}> Request Payment</a></td> }
+
+              {/* Condition for Request Payment */}
+              { (
+                  (
+                    item.bidId === item.highestBid &&
+                    item.eventEnded &&
+                    !item.bidPaid &&
+                    item.confirm
+                  )
+                  ||
+								(
+								  item.cardRequiredForBidConfirmartion &&
+                  item.eventCardEnabled &&
+                  item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid
+                )
+                  ||
+								(
+								  !item.cardRequiredForBidConfirmartion &&
+                  !item.eventCardEnabled &&
+                  item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid
+                )||
+								(
+								  item.bidId === item.highestBid &&
+                  item.eventCardEnabled &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid
+                )
+              ) ?
+              <td> <a className="delete-bid" onClick={()=>this.requestPaymentAction(item)}> Request Payment</a></td>
+              : ""}
+
+
+							{/* Condition for Request Confirmation */}
+              { (
+                item.cardRequiredForBidConfirmartion &&
+                item.eventCardEnabled &&
+                !item.bidderCardAvailble &&
+                !item.eventEnded &&
+                !item.displayBuyItNowPrice &&
+                !item.bidPaid ) ?
+              <td> <a className="delete-bid" onClick={()=>alert("Request Confirmation")}>>Request Confirmation</a></td>
+              : ""}
+
+
+							{/* Condition for Request Name */}
+							{ (
+								( !item.cardRequiredForBidConfirmartion
+                  && !item.eventCardEnabled &&
+                  (!item.bidderFirstName || !item.bidderLastName) &&
+                  !item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid )
+                ||
+								( !item.cardRequiredForBidConfirmartion &&
+                  item.eventCardEnabled &&
+								  (!item.bidderFirstName || !item.bidderLastName) &&
+                  !item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid )
+                ||
+                ( !item.cardRequiredForBidConfirmartion &&
+                  !item.eventCardEnabled &&
+								  (!item.bidderFirstName || !item.bidderLastName) &&
+                  item.displayBuyItNowPrice &&
+                  !item.bidPaid )
+							) ?
+                <td> <a className="delete-bid" onClick={()=>alert("Request Name")}> Request Name</a></td>
+								: ""}
+
+							{/* Condition for Request Payment */}
+							{ (item.bidId === item.highestBid &&
+                  item.bidderCardAvailble == "WINNER_ANNOUNED" &&
+                  !item.bidPaid ) ?
+                <td> <a className="delete-bid" onClick={()=>this.markAsPaidAction(item)}>Mark as Paid</a></td>
+								: ""
+							}
               {/*{!item.bidPaid && 	<td> <a className="delete-bid" onClick={()=>this.markAsPaidAction(item)}> Mark as Paid</a></td> }*/}
-              {!item.bidPaid && 	<td> <span className="actions">
+              {<td> <span className="actions">
                   <ul className="mrg-b-xs readonly-actions list-inline">
                     <li>
                       <a className="delete-bid" onClick={()=>this.deleteAction(item)} >Delete</a>
