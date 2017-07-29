@@ -2569,7 +2569,7 @@ class Volunteer extends React.Component {
                     </div>
                     <div className="pull-right">
                       <button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
-                        checkout
+                        PROCEED TO CHECKOUT
                       </button>
                     </div>
                   </div>

@@ -235,6 +235,6 @@ const mapStateToProps = (state) => ({
 });
 
 Register.propTypes = {
-  onFormClick: PropTypes.func.isRequired
+  //onFormClick: PropTypes.func.isRequired
 };
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Register));

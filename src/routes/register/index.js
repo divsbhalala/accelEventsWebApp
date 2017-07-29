@@ -7,7 +7,7 @@ const title = 'New User Registration';
 
 export default {
 
-  path: '/signup',
+  path: '/u/signup',
 
   action() {
     return {

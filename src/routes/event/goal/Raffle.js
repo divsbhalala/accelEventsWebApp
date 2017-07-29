@@ -5,10 +5,10 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import s from './goal.css';
-import {doGetSettings,getGoalData} from './../event/action/index';
-import EventEndUntil from '../../components/Widget/EventEndUntil';
-import TotalProceeds from '../../components/Widget/TotalProceeds';
-import Thermometer from '../../components/Widget/Thermometer';
+import {doGetSettings,getGoalData} from './../action/index';
+import EventEndUntil from '../../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../../components/Widget/TotalProceeds';
+import Thermometer from '../../../components/Widget/Thermometer';
 
 class Raffle extends React.Component {
   static propTypes = {

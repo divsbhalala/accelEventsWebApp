@@ -26,7 +26,7 @@ class TimeOut extends React.Component {
                     Sorry, your session has timed out.
                   </p>
                   <p>
-                    Please click <Link to={'/event/'+this.props.eventUrl}>here</Link> to go back to the event page.
+                    Please click <Link to={'/events/'+this.props.eventUrl}>here</Link> to go back to the event page.
                   </p>
                 </div>
               </div>

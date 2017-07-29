@@ -8,7 +8,7 @@ const showFeedBack = false;
 
 export default {
 
-  path: '/login',
+  path: '/u/login',
 
   async action() {
     return {

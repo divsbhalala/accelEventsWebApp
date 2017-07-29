@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import Navbar, {Brand} from 'react-bootstrap/lib/Navbar';
@@ -99,6 +90,8 @@ class LoginPopup extends React.Component {
       this.props.doLogin(this.email.value, this.password.value).then((resp) => {
         if (!resp.errorMessage) {
           this.setState({error: "Log In SuccessFully",loading:false});
+          setTimeout(()=>{window.location.reload();},3000)
+         // window.location.reload();
           this.props.onCloseFunc();
         }
         else {

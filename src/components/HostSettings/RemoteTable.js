@@ -17,9 +17,9 @@ export default class RemoteTable extends React.Component {
     return response;
   };
 
-  addCategoryHeader(closeModal, save){
-    return (<InsertModalHeader  title='Add Item Category' />);
-  };
+  // addCategoryHeader(closeModal, save){
+  //   return (<InsertModalHeader  title='Add Item Category' />);
+  // };
 
 
 
@@ -40,17 +40,18 @@ export default class RemoteTable extends React.Component {
       onSizePerPageList: this.props.onSizePerPageList,
       onPageChange: this.props.onPageChange,
       afterInsertRow: this.props.addItemCategory,
-      insertModalHeader: this.addCategoryHeader
+      // insertModalHeader: this.addCategoryHeader
     };
 
     const editCategory = {
+
       mode: 'click',
       afterSaveCell: this.props.updateItemCategory
     };
 
     return (
       <BootstrapTable data={ this.props.tableData } striped hover pagination={ true } fetchInfo={ { dataTotalSize: this.props.totalDataSize } }
-            insertRow={ true } remote = { true} cellEdit={ editCategory } deleteRow={ true } options={ options }
+            insertRow={ true } remote = { true} cellEdit={ editCategory }
             deleteRow={ true } selectRow={ {mode: 'checkbox'} } >
           <TableHeaderColumn isKey dataField='id' editable={false} hiddenOnInsert={true} dataFormat={indexN}>Id</TableHeaderColumn>
           <TableHeaderColumn dataField='name' editable={{validator : this.categoryNameValidator}}>Name</TableHeaderColumn>

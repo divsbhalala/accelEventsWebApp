@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from '../Link';
 import cx from 'classnames';
+import {sessionService} from 'redux-react-session';
+import {connect} from 'react-redux';
 import $ from 'jquery'
-
+import {getDashboard} from './../../routes/admin/action/index';
 class AdminSiderbar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -35,6 +37,9 @@ class AdminSiderbar extends React.Component {
 		})
 	};
 
+	componentWillMount(){
+		this.props.getDashboard();
+	}
 	render() {
 		return (
 			<div className="nav-small-id" >
@@ -90,7 +95,7 @@ class AdminSiderbar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-									<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.ticketingDetail && this.props.hostData.ticketingDetail.active ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
@@ -112,8 +117,8 @@ class AdminSiderbar extends React.Component {
 												</Link>
 											</li>
 										</ul>
-									</li>
-									<li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
+									</li> : "" }
+									{ this.props.hostData && this.props.hostData.auctionDetail && this.props.hostData.auctionDetail.active ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("silentAuction", "")}} >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
@@ -130,8 +135,8 @@ class AdminSiderbar extends React.Component {
 												</Link>
 											</li>
 										</ul>
-									</li>
-									<li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
+									</li> :"" }
+									{ this.props.hostData && this.props.hostData.raffleDetail && this.props.hostData.raffleDetail.active ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("raffle", "")}} >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
@@ -148,8 +153,8 @@ class AdminSiderbar extends React.Component {
 												</Link>
 											</li>
 										</ul>
-									</li>
-									<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
+									</li> : ""}
+									{ this.props.hostData && this.props.hostData.fundANeedDetail && this.props.hostData.fundANeedDetail.active ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("causeAuction", "")}}>
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>
@@ -166,7 +171,7 @@ class AdminSiderbar extends React.Component {
 												</Link>
 											</li>
 										</ul>
-									</li>
+									</li> :""}
 									<li className={cx(this.state.nav === "userManagement" && "active")}>
 										<Link to="/host/user-management/volunteers" onClick={()=>{ this.setNav("userManagement", "")}}>
 											<i className="vt vt-user-settings" />
@@ -207,4 +212,13 @@ class AdminSiderbar extends React.Component {
 		);
 	}
 }
-export default AdminSiderbar;
+const mapDispatchToProps = {
+	getDashboard: () => getDashboard()
+};
+
+const mapStateToProps = (state) => ({
+	user: state.session && state.session.user,
+	authenticated: state.session && state.session.authenticated,
+	hostData : state.host && state.host.data
+});
+export default connect(mapStateToProps, mapDispatchToProps)(AdminSiderbar);

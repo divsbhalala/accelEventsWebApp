@@ -29,7 +29,7 @@ class Thermometer extends Component { // eslint-disable-line
 								<rect x="20%" y={0} width="20%" height="100%" fill="url(#ticks--low)" rx={2}/>
 								<rect x="40%" y={0} width="20%" height="100%" fill="url(#ticks--moderate)" rx={2}/>
 								<rect x="60%" y={0} width="20%" height="100%" fill="url(#ticks--high)" rx={2}/>
-								<rect x="80%" y={0} width="20%" height="10k%" fill="url(#ticks--very-high)" rx={2}/>
+								<rect x="80%" y={0} width="20%" height="100%" fill="url(#ticks--very-high)" rx={2}/>
 								<defs>
 									<pattern id="ticks--very-low" className="ticks--very-low" width="60px" height="100%"
 									         patternUnits="userSpaceOnUse" x={0}>

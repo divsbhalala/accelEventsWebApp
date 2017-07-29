@@ -1,55 +1,50 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
+import {doGetSettings, getScrollData} from './../action/index';
 import s from './table.css';
-import {getScrollData, doGetSettings} from './../event/action/index';
-import  EventAside from './../../components/EventAside/EventAside';
-import ItemList from '../../components/Widget/FundANeed/ItemList';
+import ItemList from '../../../components/Widget/Auction/ItemList';
 // import  history from './../../../history';
-class Fund extends React.Component {
+
+import  EventAside from './../../../components/EventAside/EventAside';
+class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
   };
-
   constructor(props) {
     super(props);
     this.state = {
       isLogin: false,
       settings: null,
-			eventSettings: null,
+      eventSettings: null,
       itemList: null,
     }
-
   }
-
   componentWillMount() {
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
       this.setState({
 				eventSettings: resp && resp.data
       });
     });
-		this.props.getScrollData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+		this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
 			this.setState({
-				settings: resp,
+				settings: resp
+
 			});
 		});
   }
-
   render() {
     return (
       <div className="table-view-wrap">
         <div id="content-wrapper">
           <div className="row">
             <div className="col-lg-3 col-md-4 col-sm-4">
-
               <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.eventSettings}
                           eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
                           showMapPopup={this.showMapPopup} activeCategory={false}/>
             </div>
-
             <div className="col-lg-9 col-md-8 col-sm-8">
               <div className="main-box no-header clearfix">
                 <div className="main-box-body">
@@ -57,14 +52,15 @@ class Fund extends React.Component {
 										{ this.state.settings && this.state.settings.displayText && <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center")}>
 											{this.state.settings.displayText}
                     </p>}
-                    <div id="scroller">
-                      <table className={("table datatables" )}>
+                    <div id="scroller" className="">
+                      <table className={("table datatables scrollingtable" )}>
                         <thead className="turquoise-bg white">
                         <tr>
                           <th>Item</th>
                           <th>Item Code</th>
-                          <th>MINIMUM PLEDGE</th>
-                          <th>TOTAL AMOUNT PLEDGED</th>
+                          <th>{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
+													{ this.state.settings && !this.state.settings.highestBidderHidden &&
+													!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
                         </tr>
                         </thead>
                         <tbody>
@@ -81,19 +77,18 @@ class Fund extends React.Component {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     );
   }
 }
 const mapDispatchToProps = {
-  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
+  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
   eventTicketData: state.event && state.event.ticket_data
-});
 
-export default  connect(mapStateToProps, mapDispatchToProps)(Fund);
+});
+export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

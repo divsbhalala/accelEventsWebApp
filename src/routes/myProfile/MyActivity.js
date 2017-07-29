@@ -48,8 +48,8 @@ class myActivity extends React.Component {
                   </tr>
                   </thead>
                   <tbody>
-                  {this.state.userData && this.state.userData.silentActivitys.map((data) =>
-                    <ActivityData userData={data} />)
+                  {this.state.userData && this.state.userData.silentActivitys.map((data,index) =>
+                    <ActivityData userData={data} key={index} />)
                   }
                   </tbody>
                 </table>
@@ -72,8 +72,8 @@ class myActivity extends React.Component {
                   </tr>
                   </thead>
                   <tbody>
-                  {this.state.userData && this.state.userData.raffleActivitys.map((data) =>
-                    <ActivityItem userData={data} />)
+                  {this.state.userData && this.state.userData.raffleActivitys.map((data,index) =>
+                    <ActivityItem userData={data} key={index}/>)
                   }
                   </tbody>
                 </table>
@@ -96,8 +96,8 @@ class myActivity extends React.Component {
                   </tr>
                   </thead>
                   <tbody>
-                  {this.state.userData && this.state.userData.causeAuctionActivitys.map((data) =>
-                    <ActivityItem userData={data} />)
+                  {this.state.userData && this.state.userData.causeAuctionActivitys.map((data,index) =>
+                    <ActivityItem userData={data} key={index} />)
                   }
                   </tbody>
                 </table>

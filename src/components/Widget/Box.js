@@ -13,7 +13,7 @@ class BoxWidget extends Component { // eslint-disable-line
     linkTitle: PropTypes.string,
     linkText: PropTypes.string,
     linkTarget: PropTypes.string,
-  }
+  };
 
   render() {
     return (
@@ -21,10 +21,10 @@ class BoxWidget extends Component { // eslint-disable-line
         <span className="headline">{this.props.headerText}</span>
         <span className="desc">{this.props.descText}</span>
         <span className="value">
-           <LinkWithTooltip tooltip={this.props.tooltip} href="#" id="tooltip-1">
-             <a href={this.props.linkTo} data-toggle="tooltip" title={this.props.linkTitle}
+           <LinkWithTooltip href={this.props.linkTo} tooltip={this.props.tooltip}  id="tooltip-1" >
+             <span data-toggle="tooltip" className="white" title={this.props.linkTitle}
              target="_blank">{this.props.linkText}
-         </a></LinkWithTooltip>
+         </span></LinkWithTooltip>
         </span>
       </div>
     );

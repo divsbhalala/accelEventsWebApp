@@ -46,14 +46,14 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/App.css" />
           <link rel="stylesheet" href="/css/carousel.css" />
           <link rel="stylesheet" href="/css/loader.css"/>
-          <link rel="stylesheet" href="/css/sb-admin.min.css"/>
-          <link rel="stylesheet" href="/css/admin-style.min.css"/>
+
 
           <link rel="stylesheet" href="/css/transitions.min.css" />
           <link rel="stylesheet" href="/css/display.min.css"/>
           <link rel="stylesheet" href="/css/style.min.css"/>
+          <link rel="stylesheet" href="/css/admin-style.min.css"/>
 
-          <link rel="stylesheet" href="/css/react-styles.min.css"/>
+
 
           {/* AE Icons */}
           <link rel="stylesheet" href="/css/vt-icons.css" />
@@ -62,7 +62,6 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/telInput.css" />
           <link rel="stylesheet" href="/css/rrui.css" />
           <link rel="stylesheet" href="/css/loader.css" />
-          <link rel="stylesheet" href="/css/host-dashboard.css" />
 
           {/* plugins */}
           <link rel="stylesheet" href="/css/Tel/main.css" />
