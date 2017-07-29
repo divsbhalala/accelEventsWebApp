@@ -1022,7 +1022,8 @@ class Fund extends React.Component {
             </div>
           </div>
         </PopupModel>
-        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params}/>
+        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params} modelFooter={<button className="btn btn-info center-block" data-dismiss="modal" onClick={() => {this.hideLoginModal()
+           }}>Close</button>}/>
       </div>
     );
   }
