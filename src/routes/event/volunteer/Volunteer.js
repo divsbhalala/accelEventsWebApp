@@ -14,6 +14,7 @@ import moment from 'moment';
 import IntlTelInput from 'react-intl-tel-input';
 import {doValidateMobileNumber,doGetEventData} from './../action/index';
 import {getCardToken} from './../../checkout/action/index';
+import NumericInput from 'react-numeric-input';
 
 import  {
   getItemStatusByCode,
@@ -565,20 +566,20 @@ class Volunteer extends React.Component {
 			});
 		}
 	};
-	availTicketsValidateHandler = (e) => {
+	availTicketsValidateHandler = (value) => {
 		let tickets = 0;
 		tickets = this.state.userData && this.state.userData.availableTickets;
 		this.setState({
 			availTicketsFeedBack: true,
-			submittedTickets: this.availTickets.value.trim()
+			submittedTickets: value
 		});
-		if (this.availTickets.value.trim() == '') {
+		if (value == '' || value == null) {
 			this.setState({
 				availTickets: false,
 				errorMsgAvailTickets: "Please enter tickets you want to submit.",
 			});
 		}
-		 if(this.state.userData){
+		else if(this.state.userData){
        if (tickets == null ) {
          this.setState({
            availTickets: false,
@@ -589,7 +590,7 @@ class Volunteer extends React.Component {
            availTickets: false,
            errorMsgAvailTickets: "This user does not have any raffle tickets. Please purchase tickets.",
          });
-       } else if (this.availTickets.value.trim() > tickets) {
+       } else if (value > tickets) {
          this.setState({
            availTickets: false,
            errorMsgAvailTickets: " Please enter ticket less than or equal to " + tickets,
@@ -609,20 +610,20 @@ class Volunteer extends React.Component {
      }
 
 	};
-  submitPledgeAmountValidateHandler = (e) => {
+  submitPledgeAmountValidateHandler = (value) => {
     this.setState({
       amountFeedBack: true,
-      amountValue: this.amount.value.trim()
+      amountValue: value
     });
     let bid = 0;
     bid = this.state.itemData && this.state.itemData.minPrice ;
 
-    if (this.amount.value.trim() == '') {
+    if (value == '' || value == null) {
       this.setState({
         amount: false,
         errorMsgAmount: "Submitted pledge Amount can't be empty",
       });
-    } else if (bid > this.amount.value.trim()) {
+    } else if (bid > value) {
       this.setState({
         amount: false,
         errorMsgAmount: "Submitted pledge amount should be greater than or equal to the stated pledge amount.",
@@ -633,20 +634,20 @@ class Volunteer extends React.Component {
       });
     }
 	}
-	amountValidateHandler = (e) => {
-		this.setState({
+	amountValidateHandler = (value) => {
+    this.setState({
 			amountFeedBack: true,
-			amountValue: this.amount.value.trim()
+			amountValue: value
 		});
 		let bid = 0;
 		bid = this.state.itemData && this.state.itemData.currentBid + 20;
 
-		if (this.amount.value.trim() == '') {
+		if (value == '' || value == null) {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "Bid Amount can't be empty",
 			});
-		} else if (bid > this.amount.value.trim()) {
+		} else if (bid > value) {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $" + bid + " increments. " + "   Bids for this item must be placed in increments of at least $20",
@@ -1409,13 +1410,11 @@ class Volunteer extends React.Component {
 									<div className="col-md-12">
 										<div className="input-group">
 											<div className="input-group-addon">$</div>
-											<input type="number" className="form-control" name="itembid" id="itembid"
-											       placeholder="Amount" step required="required"
-											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
-											       ref={ref => {
-                               this.amount = ref;
-                             }}
-											       onKeyUp={this.amountValidateHandler}/>
+                      <NumericInput className="form-control" name="itembid" id="itembid"
+											       placeholder="Amount"
+											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid" style={ false }
+                             onChange={this.amountValidateHandler}
+                             value={ this.state.amountValue }/>
 											{ this.state.amountFeedBack && this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
 											{ this.state.amountFeedBack && !this.state.amount &&
@@ -1763,13 +1762,11 @@ class Volunteer extends React.Component {
 									<div className="col-md-12">
 										<div className="input-group">
 											<div className="input-group-addon">$</div>
-											<input type="number" className="form-control" name="itembid" id="itembid"
-											       placeholder="Amount" step required="required"
-											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
-											       ref={ref => {
-                               this.amount = ref;
-                             }}
-											       onKeyUp={this.submitPledgeAmountValidateHandler}/>
+                      <NumericInput className="form-control" name="itembid" id="itembid"
+											       placeholder="Amount" step = {1}
+											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid" style={ false }
+                             onChange={this.submitPledgeAmountValidateHandler}
+                             value={ this.state.amountValue }/>
 											{ this.state.amountFeedBack && this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
 											{ this.state.amountFeedBack && !this.state.amount &&
@@ -2476,17 +2473,22 @@ class Volunteer extends React.Component {
 
 							<div
 								className={cx("form-group", this.state.availTicketsFeedBack && 'has-feedback', this.state.availTicketsFeedBack && this.state.availTickets && 'has-success', this.state.availTicketsFeedBack && (!this.state.availTickets) && 'has-error')}>
-								<input type="number" name="tickets" placeholder="Number Of Ticket" autoComplete="off"
-								       className="form-control" data-fv-field="tickets" ref={ref => {
-                  this.availTickets = ref;
-                }}
-								       onKeyUp={this.availTicketsValidateHandler}/>
-								{ this.state.availTicketsFeedBack && this.state.availTickets &&
-								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-								{ this.state.availTicketsFeedBack && !this.state.availTickets &&
-								<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+
+
+                <NumericInput className="form-control" name="tickets" id="tickets"
+                       placeholder="Number Of Ticket"
+                       data-isprocessingfeestopurchaser="false" data-fv-field="tickets" style={ false }
+                       onChange={this.availTicketsValidateHandler}
+                       value={ this.state.submittedTickets }/>
+                { this.state.availTicketsFeedBack && this.state.availTickets &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
+                { this.state.availTicketsFeedBack && !this.state.availTickets &&
+                <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
+
                 { this.state.availTicketsFeedBack && !this.state.availTickets &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
+
+
 							</div>
 							<div className="form-group">
 								<Button loading={this.state.loading} type="submit" className="btn btn-block btn-success submit">Submit</Button>
@@ -2799,13 +2801,12 @@ class Volunteer extends React.Component {
 									<div className="col-md-12">
 										<div className="input-group">
 											<div className="input-group-addon">$</div>
-											<input type="number" className="form-control" name="itembid" id="itembid"
-											       placeholder="Amount" step required="required"
-											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
-											       ref={ref => {
-                               this.amount = ref;
-                             }}
-											       onKeyUp={this.amountValidateHandler}/>
+
+                      <NumericInput className="form-control" name="itembid" id="itembid"
+                             placeholder="Amount" precision={2} step={0.1}
+                             data-isprocessingfeestopurchaser="false" data-fv-field="itembid" style={ false }
+                             onChange={this.amountValidateHandler}
+                             value={ this.state.amountValue }/>
 											{ this.state.amountFeedBack && this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
 											{ this.state.amountFeedBack && !this.state.amount &&
