@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import {apiUrl as API_URL} from './../../../clientConfig';
-import {sessionService, loadSession} from 'redux-react-session';
+import {sessionService} from 'redux-react-session';
 
 //let API_URL = 'http://35.161.147.220:3333/api/';
 export const STORE_LOGIN_DATA = 'STORE_LOGIN_DATA';
@@ -11,15 +11,6 @@ export function onFormSubmit(e) {
   alert(test);
   e.preventDefault();
   return false;
-}
-
-function updateUserData(field,value){
-  if (!_.isEmpty(localStorage.getItem('user'))){
-    var newUser = JSON.parse(localStorage.getItem('user'));
-    newUser[field] = value;
-    localStorage.setItem('user', JSON.stringify(newUser));
-    sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
-  } 
 }
 
 export function doRegister(email, password) {
@@ -71,4 +62,12 @@ export function updateProfile(field,value) {
       headers: {Authorization: localStorage.getItem('token')}
     })
   }
+}
+function updateUserData(field,value){
+  if (!_.isEmpty(localStorage.getItem('user'))){
+    var newUser = JSON.parse(localStorage.getItem('user'));
+    newUser[field] = value;
+    localStorage.setItem('user', JSON.stringify(newUser));
+    sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+  } 
 }
