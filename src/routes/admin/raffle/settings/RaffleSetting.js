@@ -98,7 +98,7 @@ class RaffleSetting extends React.Component {
   onSaveSetting = () =>{
     this.setState({loading:true});
     const settings = {};
-    settings.activated = this.state.settings.activated;
+    settings.moduleHidden = this.state.settings.moduleHidden;
     settings.categoryEnabled = this.state.settings.categoryEnabled;
     settings.eventTimeZone = this.state.settings.eventTimeZone;
     settings.moduleHidden = this.state.settings.moduleHidden;
@@ -278,9 +278,9 @@ actionResult = (method,status,message) =>{
                               Hide Raffle Tab
                             </div>
                             <div className="col-md-3">
-                              <ToggleSwitch name="activated" id="activated"
-                                  defaultValue={this.state.settings.activated} className="success"
-                                  onChange={()=>{ this.state.settings.activated = !this.state.settings.activated}}/>
+                              <ToggleSwitch name="moduleHidden" id="moduleHidden"
+                                  defaultValue={this.state.settings.moduleHidden} className="success"
+                                  onChange={()=>{ this.state.settings.moduleHidden = !this.state.settings.moduleHidden}}/>
                             </div>
                           </div>
                           <div className="row form-group">
@@ -315,7 +315,7 @@ actionResult = (method,status,message) =>{
                           </div>
                           <div className="col-md-8">
                             <div id="alert" />
-                            <table className="table ticket-price-settings-table">
+                            <table className="table volunteer-table">
                               <thead>
                               <tr>
                                 <th className="text-center"><span>Number of Tickets</span></th>

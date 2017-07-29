@@ -210,7 +210,7 @@ render() {
 	return (
     <tr className={cx(this.state.isEdit || this.props.ticket.id==0 ? "edit" : "")}>
       <td>
-        <input name="numberOfTickets" type="text" className="form-control"
+        <input name="numberOfTickets" type="text" className="form-control first-name"
                ref={ref => { this.numberOfTickets = ref; }} onKeyUp={this.numberOfTicketsValidater}/>
         <span className="value" >{this.props.ticket.numberOfTickets}</span>
       </td>

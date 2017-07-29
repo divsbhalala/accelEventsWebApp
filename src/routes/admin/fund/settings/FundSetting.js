@@ -77,7 +77,7 @@ class FundSetting extends React.Component {
 
   onSaveSetting = () =>{
     const settings = {};
-    settings.activated = this.state.settings.activated;
+    settings.moduleHidden = this.state.settings.moduleHidden;
     settings.categoryEnabled = this.state.settings.categoryEnabled;
     settings.eventTimeZone = this.state.settings.eventTimeZone;
     settings.moduleHidden = this.state.settings.moduleHidden;
@@ -221,9 +221,9 @@ class FundSetting extends React.Component {
                             </div>
                             <div className="col-md-3">
                               {this.state.settings &&
-                              <ToggleSwitch name="activated" id="activated"
-                                defaultValue={this.state.settings.activated} className="success"
-                                onChange={()=>{ this.state.settings.activated = !this.state.settings.activated}}/> }
+                              <ToggleSwitch name="moduleHidden" id="moduleHidden"
+                                defaultValue={this.state.settings.moduleHidden} className="success"
+                                onChange={()=>{ this.state.settings.moduleHidden = !this.state.settings.moduleHidden}}/> }
                             </div>
                           </div>
                           <div className="row form-group">
