@@ -580,12 +580,14 @@ class Event extends React.Component {
 			tickettypeid: e.target.name
 		};
 		let totalPrice = 0;
+		let totalNoTickets = 0;
 		totalTickets.map(item => {
 			totalPrice += item.price * item.numberofticket;
+			totalNoTickets += (item.numberofticket ? parseInt(item.numberofticket) : 0);
 		});
 		this.setState({
 			totalTickets: totalTickets,
-			totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
+			totalTicketQty: totalNoTickets,
 			totalTicketPrice: totalPrice,
 		});
 	}
@@ -932,7 +934,7 @@ class Event extends React.Component {
 													( <span className="type-cost txt-sm gray"> ${item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
-															<select className="form-control" name={item.typeId} data-price={item.price}
+															<select className="form-control all-select-values" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
