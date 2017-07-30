@@ -15,7 +15,7 @@ export default {
       action(props) {
         return {
           title: "Event Page",
-          component: <Layout params={props.params} class="display"><Event title={title} params={props.params}/></Layout>,
+          component: <Layout params={props.params} class="display"><Event title={title} params={props.params} query={props.query}/></Layout>,
         };
       }
     },

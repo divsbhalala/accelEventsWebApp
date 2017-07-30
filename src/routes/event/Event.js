@@ -134,7 +134,15 @@ class Event extends React.Component {
 					tab: 'donation'
 				})
 			}
-			this.setActiveTabState(this.state.tab)
+			this.setActiveTabState(this.state.tab);
+
+			if(this.props && this.props.query && this.props.query.tab){
+				this.setState({
+					tab: this.props.query.tab
+				},function changeAfter(){
+					this.setActiveTabState(this.props.query.tab)
+				})
+			}
 		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
@@ -145,6 +153,13 @@ class Event extends React.Component {
 			history.push('/404');
 		});
 		this.props.isVolunteer(this.props.params && this.props.params.params);
+		if(this.props && this.props.query && this.props.query.tab){
+			this.setState({
+				tab: this.props.query.tab
+			},function changeAfter(){
+				this.setActiveTabState(this.props.query.tab)
+			})
+		}
 	}
 
 	componentDidMount() {
