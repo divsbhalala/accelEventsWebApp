@@ -492,6 +492,8 @@ class Volunteer extends React.Component {
 		}
 	};
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+  	var isnum = /^\d+$/.test(value);
+  	if(!isnum && value) return false;
     this.setState({
       phone: value,
       countryPhone: countryData.iso2,
