@@ -306,7 +306,7 @@ class Event extends React.Component {
 		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
-				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+				errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
 			});
 		} else {
 			this.setState({
