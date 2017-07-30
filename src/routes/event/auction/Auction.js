@@ -935,7 +935,7 @@ class Auction extends React.Component {
       </div>
       <div className="col-sm-6">
         <a role="button" className="btn btn-success btn-block"
-           href={this.props.params && "/event/" + this.props.params.params }>
+           href={this.props.params && "/event/" + this.props.params.params + '?tab=Auction'}>
           Go back to All Items</a></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1165,7 +1165,7 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6">
-        <Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success btn-block" >
+        <Link to={this.props.params && "/event/" + this.props.params.params + '?tab=Auction' } className="btn btn-success btn-block" >
           Go back to All Items
         </Link>
       </div>

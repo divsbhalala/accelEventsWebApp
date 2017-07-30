@@ -994,7 +994,7 @@ class Fund extends React.Component {
                                                              loading={this.state.loading} >
                             Submit Pledge
                           </Button></div>
-                          <div className="col-sm-5"><Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success">
+                          <div className="col-sm-5"><Link to={this.props.params && "/event/" + this.props.params.params + '?tab=Fund a Need'} className="btn btn-success">
                             Go back to All Items
                           </Link></div>
                         </div>
