@@ -404,7 +404,7 @@ class Auction extends React.Component {
       errorMsgAmount = "Bid Amount can't be empty"
       amount = false
     } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value.trim()) {
-      errorMsgAmount = "Bids for this item must be placed in increments of at least $" + this.state.auctionData.bidIncrement + ". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
+      errorMsgAmount = "Bids for this item must be placed in increments of at least $" + this.state.auctionData.bidIncrement + ". Please enter a value of at least $" + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
       amount = false
     } else {
       amount = true
