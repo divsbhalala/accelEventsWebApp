@@ -15,7 +15,7 @@ class PlanetItem extends React.Component {
   };
 
   getDragHeight() { return 60; }
-  doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) }
+  doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };
 
   render() {
     const {item, itemSelected, dragHandle} = this.props;
@@ -44,19 +44,19 @@ class PlanetItem extends React.Component {
    componentWillReceiveProps(){
      setTimeout(()=>{
      let message="";
-       if(this.props.isItemAdded.status=="success"){
-       if(this.props.isItemAdded.type == "Updated"){message="Item Updated ..."}
-       if(this.props.isItemAdded.type == "PositionChange"){message="Item PositionChange Updated ..."}
-       if(this.props.isItemAdded.type == "Inserted"){message="Item Added successfully ...";this.getItemList()}
-       if(this.props.isItemAdded.type == "Deleted"){message="Item deleted successfully ...";this.getItemList()}
+       if(this.props.isItemAdded.status==="success"){
+       if(this.props.isItemAdded.type === "Updated"){message="Item Updated ..."}
+       if(this.props.isItemAdded.type === "PositionChange"){message="Item PositionChange Updated ..."}
+       if(this.props.isItemAdded.type === "Inserted"){message="Item Added successfully ...";this.getItemList()}
+       if(this.props.isItemAdded.type === "Deleted"){message="Item deleted successfully ...";this.getItemList()}
     }else {
          message="Something Wrong"
        }
-     if(this.props.isItemAdded.type == "getList"){message="Item Listed"}
+     if(this.props.isItemAdded.type === "getList"){message="Item Listed"}
      this.setState({
        message,
        status:this.props.isItemAdded.status
-     })},500)
+     })},500);
      setTimeout(()=>{ this.setState({message:""}) },4000)
   }
   getItemList =()=> {
@@ -66,24 +66,21 @@ class PlanetItem extends React.Component {
         console.log(this.state.items);
       }
       else{
-        this.addEmptyRow()
+        this.addEmptyRow();
         console.log(resp);
       }
     }).catch((error) => {
       console.log(error);
     });
-  }
+  };
   componentWillMount(){
     this.getItemList()
   };
   onListChange(newList: Array<Object>,movedItem: Array<Object>, oldIndex: number, newIndex: number) {
     this.setState({list: newList});
-    console.log(this.state.list,movedItem, oldIndex, newIndex)
-
-    let topItem= newIndex ==  0  ? 0 : newIndex-1
-    let bottomItem =  newIndex ==  newList.length-1  ? newIndex : newIndex + 1
+    let topItem= newIndex ===  0  ? 0 : newIndex-1;
+    let bottomItem =  newIndex ===  newList.length-1  ? newIndex : newIndex + 1;
     if(newList[newIndex].id && newList[newIndex].id && newList[topItem].id && newList[bottomItem].id ){
-      console.log("--->",newList[newIndex].id, newList[topItem].id, newList[bottomItem].id)
       this.props.updateItemListPosition('fundANeed',newList[newIndex].id, newList[topItem].id, newList[bottomItem].id).then(resp => {
         if(resp && resp.data && resp.data.items.length){
           this.setState({list:resp.data.items});
@@ -167,7 +164,9 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
+  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded,
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FundNeedAddItem);

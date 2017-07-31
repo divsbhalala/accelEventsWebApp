@@ -4,8 +4,9 @@ import cx from 'classnames';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
-import {getDashboard} from './../../routes/admin/action/index';
-class AdminSiderbar extends React.Component {
+import { getDashboard } from './../../routes/admin/action/index';
+import { getDesignDetails } from './../../routes/admin/design/action/index';
+class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -39,6 +40,7 @@ class AdminSiderbar extends React.Component {
 
 	componentWillMount(){
 		this.props.getDashboard();
+		this.props.getDesignDetails();
 	}
 	render() {
 		return (
@@ -95,7 +97,7 @@ class AdminSiderbar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-									{ this.props.hostData && this.props.hostData.ticketingDetail && this.props.hostData.ticketingDetail.active ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
@@ -118,7 +120,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : "" }
-									{ this.props.hostData && this.props.hostData.auctionDetail && this.props.hostData.auctionDetail.active ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.auctionEnabled ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("silentAuction", "")}} >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
@@ -136,7 +138,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> :"" }
-									{ this.props.hostData && this.props.hostData.raffleDetail && this.props.hostData.raffleDetail.active ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
+									{ this.props.hostData && this.props.hostData.raffleEnabled ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("raffle", "")}} >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
@@ -154,7 +156,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : ""}
-									{ this.props.hostData && this.props.hostData.fundANeedDetail && this.props.hostData.fundANeedDetail.active ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
+									{ this.props.hostData && this.props.hostData.fundANeedEnabled ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("causeAuction", "")}}>
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>
@@ -194,11 +196,11 @@ class AdminSiderbar extends React.Component {
 													Credit Card Processing
 												</Link>
 											</li>
-											<li className={cx(this.state.subNav === "billing" && "active")}>
+											{ this.props.designData &&  this.props.designData.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
 												<Link to="/host/settings/account" onClick={()=>{ this.setNav("settings", "billing")}}>
 													Billing
 												</Link>
-											</li>
+											</li> : "" }
 										</ul>
 									</li>
 								</ul>
@@ -213,12 +215,14 @@ class AdminSiderbar extends React.Component {
 	}
 }
 const mapDispatchToProps = {
-	getDashboard: () => getDashboard()
+	getDashboard: () => getDashboard(),
+	getDesignDetails: () => getDesignDetails()
 };
 
 const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
-	hostData : state.host && state.host.data
+	hostData : state.host && state.host.data,
+	designData : state.host && state.host.design
 });
-export default connect(mapStateToProps, mapDispatchToProps)(AdminSiderbar);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);

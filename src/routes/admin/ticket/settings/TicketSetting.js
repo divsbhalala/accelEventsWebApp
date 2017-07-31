@@ -722,7 +722,7 @@ class TicketSetting extends React.Component {
 												</div>
 											</div>
 											<div className="small ticketType-price">
-												${item.price}
+												{this.props.currencySymbol}{item.price}
 											</div>
 										</li>) : <li className="text-center"> No ticket found for this event</li>}
 									</ul>
@@ -757,7 +757,7 @@ class TicketSetting extends React.Component {
 										<label>Discount Amount</label>
 										<div className="form-inline">
 											<div className="input-group">
-												<span className="input-group-addon">$</span>
+												<span className="input-group-addon">{this.props.currencySymbol}</span>
 												<input type="text" className="form-control" id="amount-fixed"
 															 ref={ref => {
 																 this.amountFixed = ref;
@@ -874,5 +874,7 @@ const mapDispatchToProps = {
 	doUpdateCouponCode: (code, data) => doUpdateCouponCode(code, data),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(TicketSetting));
