@@ -224,7 +224,7 @@ const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
 	hostData : state.host && state.host.data,
-	designData : state.host && state.host.design
+	designData : state.host && state.host.design,
 	hostDesign : state.host && state.host.storeDesing,
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);
