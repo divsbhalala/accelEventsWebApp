@@ -366,17 +366,17 @@ class HeaderNew extends React.Component {
 	render() {
 		let event = this.props.params && this.props.params.params;
 		return (
-			<div className={cx("top-header-wrap")}>
+			<div className={cx("top-header-wrap")} style={{background:this.props.hostDesign &&  this.props.hostDesign.headerColor,color:this.props.hostDesign &&  this.props.hostDesign.headerFontColor}}>
 				<Navbar fluid={true} style={ {margin: 0} }>
 					<Brand className={cx(this.props.admin && "p-0")}>
             <span >
               { this.props.eventData &&
 							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
-							{ this.props.admin  && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
+							{ this.props.admin && this.props.hostDesign  && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
 								 className="navbar-brand" >
-            		<img
-									src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
+								<img
+									src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/'+this.props.hostDesign.headerLogoImage}
 									alt className="normal-logo logo-white has-custom"/>
           		</a>}
 							{  this.props.admin && !this.props.superAdmin &&  <button type="button" className="navbar-toggle" onClick={() => {
@@ -668,6 +668,8 @@ const mapStateToProps = (state) => ({
 	is_volunteer: state.event && state.event.is_volunteer,
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
+  hostData : state.host && state.host.data,
+  hostDesign : state.host && state.host.storeDesing,
 });
 
 function toggleSide() {
