@@ -4,7 +4,6 @@ import cx from 'classnames';
 import s from './RaffleSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings, getHostTickets} from '../../../../components/HostSettings/action/RestActions';
 import TicketList from '../../../../components/HostSettings/TicketList';
 import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';

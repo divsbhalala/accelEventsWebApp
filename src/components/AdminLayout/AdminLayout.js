@@ -5,7 +5,7 @@ import './AdminLayout.css';
 import HeaderNew from '../HeaderNew/HeaderNew';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
-import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
+import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 
 class AdminLayout extends React.Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class AdminLayout extends React.Component {
     return (
       <div className="container nav-small-class p-0"  >
         <HeaderNew admin={true}/>
-        <AdminSiderbar />
+        <AdminSidebar />
         {this.props.children}
         {this.props.showFeedBack && <Feedback />}
         <Footer />

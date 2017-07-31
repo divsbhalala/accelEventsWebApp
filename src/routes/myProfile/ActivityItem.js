@@ -6,7 +6,7 @@ class ActivityItem extends React.Component {
       <tr style={{height: 70}}>
         <td>
           <strong>
-            ${this.props.userData.itemName}
+            {this.props.userData.itemName}
           </strong>
         </td>
         <td className="text-center  ">

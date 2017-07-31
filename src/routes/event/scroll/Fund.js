@@ -37,6 +37,7 @@ class Fund extends React.Component {
   render() {
     return (
       <div className="scroll-page-wrap">
+        {this.state.settings ?
         <div id="content-wrapper">
           <div className="row">
             <div className="col-md-5 col-md-offset-1">
@@ -88,6 +89,8 @@ class Fund extends React.Component {
             </div>
           </div>
         </div>
+          : <div id="app" className="loader" /> }
+
       </div>
     );
   }

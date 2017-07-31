@@ -48,6 +48,7 @@ class Auction extends React.Component {
 		return (
 			<div className="container goal-page">
 				<div className="row">
+					{this.state.goalData ?
 					<div className="col-lg-12">
 						<div>
 							<div className="row header">
@@ -77,6 +78,7 @@ class Auction extends React.Component {
 
 						</div>
 					</div>
+					: <div id="app" className="loader" /> }
 				</div>
 
 			</div>

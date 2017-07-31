@@ -30,7 +30,7 @@ class Design extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getDesingSetting("general").then(resp => {
+    this.props.getDesignSetting("general").then(resp => {
       console.log("resp", resp);
       this.setState({
         settings: resp
@@ -43,7 +43,7 @@ class Design extends React.Component {
   submitSettings = (e) => {
     e.preventDefault();
     this.setState({loading:true})
-    this.props.updateDesingSetting( this.state.settings).then(resp =>{
+    this.props.updateDesignSetting( this.state.settings).then(resp =>{
       if(resp && resp.message){
         this.setState({loading:false,message:resp.message,isError:false})
       }else{
@@ -263,8 +263,8 @@ class Design extends React.Component {
 
 
 const mapDispatchToProps = {
-  getDesingSetting: () => getDesingSetting(),
-  updateDesingSetting: (data) => updateDesingSetting(data),
+  getDesignSetting: () => getDesignSetting(),
+  updateDesignSetting: (data) => updateDesignSetting(data),
   updateEventUrlDesingSetting: (value) => updateEventUrlDesingSetting(value)
 };
 

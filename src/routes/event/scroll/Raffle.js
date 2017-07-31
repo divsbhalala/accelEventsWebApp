@@ -35,7 +35,7 @@ class Raffle extends React.Component {
   render() {
     return (
       <div className="scroll-page-wrap">
-        <div id="content-wrapper">
+        {this.state.settings ? <div id="content-wrapper">
           <div className="row">
             <div className="col-md-5 col-md-offset-1">
               {this.state.settings && <EventEndUntil isBig settings={this.state.settings} headerText="Time Until Event Ends" className="gray-bg" />}
@@ -67,7 +67,7 @@ class Raffle extends React.Component {
                       <tbody>
                         {this.state.settings && this.state.settings.items &&
 											this.state.settings.items.map((item, index) =>
-  <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded} />,
+                         <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded} />,
 											)
 											}
                       </tbody>
@@ -86,13 +86,11 @@ class Raffle extends React.Component {
               </div>
             </div>
           </div>
-        </div>
+        </div>: <div id="app" className="loader" /> }
       </div>
     );
   }
 }
-
-
 const mapDispatchToProps = {
   getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
   doGetRaffleItemByLimit: (eventUrl, page, size, type) => doGetRaffleItemByLimit(eventUrl, page, size, type),
