@@ -799,7 +799,7 @@ class Event extends React.Component {
 												{
 													this.state.auctionPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="auction"
+														                   type="A"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -842,7 +842,7 @@ class Event extends React.Component {
 												{
 													this.state.rafflePageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="raffle"
+														                   type="R"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -879,7 +879,7 @@ class Event extends React.Component {
 												{
 													this.state.fundANeedPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="fund"
+														                   type="C"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}

@@ -134,7 +134,7 @@ export default {
       }
     },
     {
-      path: '/auction/:ItemCode',
+      path: '/A/:ItemCode',
       async action(props) {
         return {
           title: "Auction Page",
@@ -145,7 +145,7 @@ export default {
       }
     },
     {
-      path: '/fund/:ItemCode',
+      path: '/C/:ItemCode',
       async action(props) {
         return {
           title: "Fund Page",
@@ -155,7 +155,7 @@ export default {
       }
     },
     {
-      path: '/raffle/:ItemCode',
+      path: '/R/:ItemCode',
       async action(props) {
         return {
           title: "Raffle Page",
