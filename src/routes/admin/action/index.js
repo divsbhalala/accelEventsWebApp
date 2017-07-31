@@ -22,6 +22,25 @@ export function getDashboard() {
     });
   }
 }
+export function getStoreDesingData() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/design/details'  ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+				//dispatch(storeDashboardData(resp.data));
+			//	dispatch(storeCurrencySymbols(resp.data && resp.data.currencySymbol));
+				dispatch(storeDesing(resp.data));
+				return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 export function storeDashboardData(data) {
 	return {
 		type: 'STORE_HOST_DATA',
@@ -31,6 +50,12 @@ export function storeDashboardData(data) {
 export function storeCurrencySymbols(data) {
 	return {
 		type: 'STORE_CURRENCY_SYMBOLS',
+		data,
+	}
+}
+export function storeDesing(data) {
+	return {
+		type: 'STORE_HOST_DESING_DATA',
 		data,
 	}
 }

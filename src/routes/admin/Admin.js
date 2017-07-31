@@ -6,7 +6,7 @@ import s from './Admin.css';
 import BoxWidget from '../../components/Widget/Box';
 import EventChecklist from '../../components/EventChecklist/index';
 import PenalBoxWidget from '../../components/Widget/PenalBox';
-import {getDashboard,enableModules} from './action/index';
+import {getDashboard,enableModules,getStoreDesingData} from './action/index';
 import {connect} from 'react-redux';
 import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import cx from 'classnames';
@@ -35,6 +35,11 @@ class Admin extends React.Component {
   }
   getDashboard = () => {
     this.props.getDashboard().then((resp) => {
+      this.setState({
+        data:resp
+      })
+    });
+    this.props.getStoreDesingData().then((resp) => {
       this.setState({
         data:resp
       })
@@ -260,6 +265,7 @@ class Admin extends React.Component {
 
 const mapDispatchToProps = {
   getDashboard: () => getDashboard(),
+  getStoreDesingData: () => getStoreDesingData(),
   doGetHostSettings: type => doGetHostSettings(type),
   enableModules: data => enableModules(data),
 };

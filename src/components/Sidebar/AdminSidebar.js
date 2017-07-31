@@ -5,7 +5,7 @@ import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
 import { getDashboard } from './../../routes/admin/action/index';
-import { getDesignSetting } from './../../routes/admin/design/action/index';
+import { getDesignDetails } from './../../routes/admin/design/action/index';
 class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -40,7 +40,7 @@ class AdminSidebar extends React.Component {
 
 	componentWillMount(){
 		this.props.getDashboard();
-		this.props.getDesignSetting();
+		this.props.getDesignDetails();
 	}
 	render() {
 		return (
@@ -50,7 +50,8 @@ class AdminSidebar extends React.Component {
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
 							<div id="user-left-box" className="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
 								<div className="event-logo">
-									<img src={this.props.hostData && this.props.hostData.eventLogo ? this.props.hostData.eventLogo : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} alt className="img-responsive" />
+									<img src={this.props.hostDesign && this.props.hostDesign.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.hostDesign.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} className="img-responsive" />
+                  {console.log(this.props.hostDesign && this.props.hostDesign.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.hostDesign.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png")}
 									<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
 										<img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
 									</a>
@@ -97,7 +98,7 @@ class AdminSidebar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-									{ this.props.hostData && this.props.hostData.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
+						      { this.props.hostData && this.props.hostData.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
@@ -196,11 +197,11 @@ class AdminSidebar extends React.Component {
 													Credit Card Processing
 												</Link>
 											</li>
-											<li className={cx(this.state.subNav === "billing" && "active")}>
+											{ this.props.designData &&  this.props.designData.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
 												<Link to="/host/settings/account" onClick={()=>{ this.setNav("settings", "billing")}}>
 													Billing
 												</Link>
-											</li>
+											</li> : "" }
 										</ul>
 									</li>
 								</ul>
@@ -216,12 +217,14 @@ class AdminSidebar extends React.Component {
 }
 const mapDispatchToProps = {
 	getDashboard: () => getDashboard(),
-	getDesignSetting: () => getDesignSetting()
+	getDesignDetails: () => getDesignDetails()
 };
 
 const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
-	hostData : state.host && state.host.data
+	hostData : state.host && state.host.data,
+	designData : state.host && state.host.design
+	hostDesign : state.host && state.host.storeDesing,
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);
