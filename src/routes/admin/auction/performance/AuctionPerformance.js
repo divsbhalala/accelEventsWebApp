@@ -93,6 +93,8 @@ const mapDispatchToProps = {
   getPerformanceAuctionBidderCSV: () => getPerformanceAuctionBidderCSV(),
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(AuctionPerformance));
 

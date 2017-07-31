@@ -237,7 +237,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
+  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded,
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RowItemList);

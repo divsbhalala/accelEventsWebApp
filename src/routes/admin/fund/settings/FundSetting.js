@@ -287,6 +287,8 @@ const mapDispatchToProps = {
   resetHostSettings : (moduleType) => resetHostSettings(moduleType)
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundSetting));

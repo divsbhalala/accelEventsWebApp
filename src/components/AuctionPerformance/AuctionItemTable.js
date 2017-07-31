@@ -55,7 +55,7 @@ class AuctionItemTable extends React.Component {
 			expandRowBgColor: 'rgb(221, 221, 221)',
 		};
 
-		function formtPaid(cell, row) {
+		function formatPaid(cell, row) {
 			return (cell ? <i className="fa fa-check green" aria-hidden="true"/> :
 				<i className="fa fa-times red" aria-hidden="true"/>);
 		}
@@ -90,7 +90,7 @@ class AuctionItemTable extends React.Component {
 					<TableHeaderColumn dataField="itemCode" isKey>Item Code</TableHeaderColumn>
 					<TableHeaderColumn dataField="bid">Highest Bidder</TableHeaderColumn>
 					<TableHeaderColumn dataField="bidder">Current Bid</TableHeaderColumn>
-					<TableHeaderColumn dataField="paid" dataFormat={formtPaid}>Paid ?</TableHeaderColumn>
+					<TableHeaderColumn dataField="paid" dataFormat={formatPaid}>Paid ?</TableHeaderColumn>
 
 				</BootstrapTable>
 			</div>
@@ -102,5 +102,7 @@ const mapDispatchToProps = {
 	getPerformanceAuctionItemByItemCode: ItemCode => getPerformanceAuctionItemByItemCode(ItemCode),
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(AuctionItemTable);

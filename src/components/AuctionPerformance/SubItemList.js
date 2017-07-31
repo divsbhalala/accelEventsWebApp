@@ -142,7 +142,7 @@ class SubItemList extends React.Component {
 							<td><span className="phone">{item.bidderPhone}</span></td>
 							<td><span className="name">{item.bidderFirstName}</span></td>
 							<td><span className="name">{item.bidderLastName}</span></td>
-							<td><span className="amount">${item.bidAmount}</span></td>
+							<td><span className="amount">{this.props.currencySymbol}{item.bidAmount}</span></td>
 
               {/* Condition for Request Payment */}
               { (
@@ -187,7 +187,7 @@ class SubItemList extends React.Component {
                 !item.eventEnded &&
                 !item.displayBuyItNowPrice &&
                 !item.bidPaid ) ?
-              <td> <a className="delete-bid" onClick={()=>alert("Request Confirmation")}>>Request Confirmation</a></td>
+              <td> <a className="delete-bid" onClick={()=>alert("Request Confirmation")}>Request Confirmation</a></td>
               : ""}
 
 
@@ -218,7 +218,7 @@ class SubItemList extends React.Component {
 
 							{/* Condition for Request Payment */}
 							{ (item.bidId === item.highestBid &&
-                  item.bidderCardAvailble == "WINNER_ANNOUNED" &&
+                  item.eventEnded &&
                   !item.bidPaid ) ?
                 <td> <a className="delete-bid" onClick={()=>this.markAsPaidAction(item)}>Mark as Paid</a></td>
 								: ""
@@ -265,5 +265,7 @@ const mapDispatchToProps = {
   markAsPaidBid: (bid) => markAsPaidBid(bid),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(SubItemList);

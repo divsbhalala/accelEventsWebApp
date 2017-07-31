@@ -215,8 +215,8 @@ class AuctionSetting extends React.Component {
                               <div className="help-text" />
                             </div>
                             <div className="col-md-3">
-                            { this.state.settings.eventTimeZone && <TimeZoneSelector id="timeZone" name="timeZone" className="form-control"
-                            defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone} timeZoneList={this.state.settings.timeZones} /> }
+                            { this.state.settings.eventTimeZone ? <TimeZoneSelector id="timeZone" name="timeZone" className="form-control"
+                            defaultValue={this.state.settings.eventTimeZone} onChange={this.updateTimezone} timeZoneList={this.state.settings.timeZones} /> : ""}
                             </div>
                           </div>
                           <div className="row form-group">
@@ -227,7 +227,7 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3">
                               <div className="input-group">
                                 <div className="input-group-addon">
-                                  <i className="fa fa-usd" aria-hidden="true"/>
+																	{this.props.currencySymbol}
                                 </div>
                                 <input type="text" className="form-control"
                                        name="defaultBidIncrement" id="defaultBid"
@@ -235,7 +235,7 @@ class AuctionSetting extends React.Component {
                                        required="required" ref={(input) => {this.defaultBidIncrement = input;}}
                                        onChange={this.bidHandler}/>
                               </div>
-                              {this.state.bidIncrement && <p className="red">Bid increament must be greater than 0 or numeric.</p>}
+                              {this.state.bidIncrement ? <p className="red">Bid increment must be greater than 0 or numeric.</p> : ""}
                             </div>
                           </div>
                           <div className="row form-group">
@@ -349,6 +349,8 @@ const mapDispatchToProps = {
   resetHostSettings : (moduleType) => resetHostSettings(moduleType)
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(AuctionSetting));

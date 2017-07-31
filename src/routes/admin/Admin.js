@@ -65,7 +65,7 @@ class Admin extends React.Component {
             </div>
 
             <div className="form-group flex-row flex-2-col">
-							{ this.props.hostData && this.props.hostData.ticketingDetail && this.props.hostData.ticketingDetail.active ?<div className="flex-col flex-col-mobile">
+							{ this.props.hostData && this.props.hostData.ticketingEnabled ?<div className="flex-col flex-col-mobile">
                  <PenalBoxWidget
                   boxTitle="Event Ticketing"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -80,7 +80,7 @@ class Admin extends React.Component {
                   active={this.props.hostData.ticketingDetail.active}
                 />
               </div> : ""}
-							{ this.props.hostData && this.props.hostData.auctionDetail && this.props.hostData.auctionDetail.active ? <div className="flex-col flex-col-mobile">
+							{ this.props.hostData && this.props.hostData.auctionEnabled ? <div className="flex-col flex-col-mobile">
                  <PenalBoxWidget
                   boxTitle="Auction"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -95,7 +95,7 @@ class Admin extends React.Component {
                   active={this.props.hostData.auctionDetail.active}
                 />
               </div> : "" }
-							{ this.props.hostData && this.props.hostData.raffleDetail && this.props.hostData.raffleDetail.active ? <div className="flex-col flex-col-mobile">
+							{ this.props.hostData && this.props.hostData.raffleEnabled ? <div className="flex-col flex-col-mobile">
                   <PenalBoxWidget
                   boxTitle="Raffle"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -110,7 +110,7 @@ class Admin extends React.Component {
                   active={this.props.hostData.raffleDetail.active}
                 />
               </div> : ""}
-							{ this.props.hostData && this.props.hostData.fundANeedDetail && this.props.hostData.fundANeedDetail.active ? <div className="flex-col flex-col-mobile">
+							{ this.props.hostData && this.props.hostData.fundANeedEnabled ? <div className="flex-col flex-col-mobile">
                   <PenalBoxWidget
                   boxTitle="Fund a Need"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -154,7 +154,8 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
 	user: state.session.user,
 	authenticated: state.session.authenticated,
-  hostData : state.host && state.host.data
+  hostData : state.host && state.host.data,
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Admin));

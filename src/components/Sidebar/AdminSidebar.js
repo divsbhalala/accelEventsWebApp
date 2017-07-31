@@ -95,7 +95,7 @@ class AdminSiderbar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-									{ this.props.hostData && this.props.hostData.ticketingDetail && this.props.hostData.ticketingDetail.active ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
@@ -118,7 +118,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : "" }
-									{ this.props.hostData && this.props.hostData.auctionDetail && this.props.hostData.auctionDetail.active ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.auctionEnabled ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("silentAuction", "")}} >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
@@ -136,7 +136,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> :"" }
-									{ this.props.hostData && this.props.hostData.raffleDetail && this.props.hostData.raffleDetail.active ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
+									{ this.props.hostData && this.props.hostData.raffleEnabled ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("raffle", "")}} >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
@@ -154,7 +154,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : ""}
-									{ this.props.hostData && this.props.hostData.fundANeedDetail && this.props.hostData.fundANeedDetail.active ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
+									{ this.props.hostData && this.props.hostData.fundANeedEnabled ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("causeAuction", "")}}>
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>
