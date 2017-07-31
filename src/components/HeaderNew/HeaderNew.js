@@ -249,7 +249,7 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-		history.push('/login');
+		history.push('/u/login');
 	};
 	logoutSuperUser = () => {
 		localStorage.clear();

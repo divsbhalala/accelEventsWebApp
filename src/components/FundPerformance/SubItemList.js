@@ -140,10 +140,10 @@ class SubItemList extends React.Component {
                   <td><span className="phone">{item.phone}</span></td>
                   <td><span className="name">{item.firstName}</span></td>
                   <td><span className="name">{item.lastName}</span></td>
-                  <td><span className="amount">${item.pledgeAmount}</span></td>
+                  <td><span className="amount">{this.props.currencySymbol}{item.pledgeAmount}</span></td>
                   {!item.pledgePaid && 	<td> <a className="delete-bid" onClick={() => this.requestPaymentAction(item)}>Notify</a></td> }
-                  {!item.pledgePaid && 	<td> <a className="delete-bid" onClick={() => this.markAsPaidAction(item)}> Mark as Paid</a></td> }
-                  {!item.pledgePaid && 	<td> <span className="actions">
+                  {!item.pledgePaid ? 	<td> <a className="delete-bid" onClick={() => this.markAsPaidAction(item)}> Mark as Paid</a></td> : <td> <a className="delete-bid" onClick={() => alert("paid")}> Paid</a></td> }
+                  {<td> <span className="actions">
                     <ul className="mrg-b-xs readonly-actions list-inline">
                       <li>
                         <a className="delete-bid" onClick={() => this.deleteAction(item)} >Delete</a>
@@ -183,5 +183,7 @@ const mapDispatchToProps = {
   markAsPaidPledge: pledgeId => markAsPaidPledge(pledgeId),
   requestPaymentPledge: pledgeId => requestPaymentPledge(pledgeId),
 };
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
+});
 export default connect(mapStateToProps, mapDispatchToProps)(SubItemList);

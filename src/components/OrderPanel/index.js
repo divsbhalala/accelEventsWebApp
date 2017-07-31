@@ -102,7 +102,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 			<div className="order-panel">
 				<div className="order-panel-header">
 					<div className="order-number">
-						Order #{this.props.order.id} - ${this.props.order.totalAmount}<br />
+						Order #{this.props.order.id} - {this.props.currencySymbol}{this.props.order.totalAmount}<br />
 						<strong>{this.props.order.status}</strong>
 					</div>
 					{this.props.order.status && this.props.order.status.toLowerCase() !== "refunded" ?
@@ -136,7 +136,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 								<td>{item.firstName} {item.lastName}</td>
 								<td>{item.qty}</td>
 								<td>{item.ticketType}</td>
-								<td>{this.props.order.currency || "$"}{item.paidAmount} {<p className="hide">{ total += item.paidAmount}</p>}</td>
+								<td>{this.props.currencySymbol}{item.paidAmount} {<p className="hide">{ total += item.paidAmount}</p>}</td>
 								<td width="1px" className="text-center">
 									{this.props.order.status && this.props.order.status.toLowerCase() == "refunded" ?
 										this.props.order.status : 	<DropdownButton bsSize={"sm"} title={"Actions"}  id={`dropdown-basic`}>
@@ -155,7 +155,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 						}
 						<tr>
 							<td colSpan={3} className="text-right">Total</td>
-							<td>${total} {<p className="hide">{ total  = 0}</p>}</td>
+							<td>{this.props.currencySymbol}{total} {<p className="hide">{ total  = 0}</p>}</td>
 							<td />
 						</tr>
 						</tbody>
@@ -180,5 +180,7 @@ const mapDispatchToProps = {
 	doResendOrderMailByOrderIdByTicketId: (orderId, ticketId) => doResendOrderMailByOrderIdByTicketId(orderId, ticketId),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)((OrderPenal));

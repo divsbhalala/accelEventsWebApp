@@ -17,16 +17,16 @@ class SilentAuctionAddItems extends React.Component {
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf().then((resp) => {
     });
-  }
+  };
   getItemCatalogPdf= () => {
     this.props.getItemCatalogPdf().then((resp) => {
 
     });
-  }
+  };
   getItemListCsv=() => {
     this.props.getItemListCsv().then((resp) => {
     });
-  }
+  };
 
 
   render() {
@@ -95,6 +95,8 @@ const mapDispatchToProps = {
   getItemSheetPdf: () => getItemSheetPdf(),
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(SilentAuctionAddItems));

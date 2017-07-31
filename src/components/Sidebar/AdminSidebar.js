@@ -118,7 +118,7 @@ class AdminSiderbar extends React.Component {
 											</li>
 										</ul>
 									</li> : "" }
-									{ this.props.hostData && this.props.hostData.auctionEnabled  ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
+									{ this.props.hostData && this.props.hostData.auctionEnabled ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("silentAuction", "")}} >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>

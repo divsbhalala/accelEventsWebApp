@@ -9,6 +9,7 @@ import {getPerformanceSale,getPerformanceBuyer,
   getPerformanceBuyerCSV,getPerformanceHolderCSV} from './action';
 import {connect} from 'react-redux';
 
+let self_TicketPerformance;
 class TicketPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -26,26 +27,27 @@ class TicketPerformance extends React.Component {
   getPerformanceBuyerCSV = () => {
     this.props.getPerformanceBuyerCSV().then((resp) => {
     });
-  }
+  };
   getPerformanceHolderCSV = () => {
     this.props.getPerformanceHolderCSV().then((resp) => {
     });
-  }
+  };
   componentWillMount() {
-    var total =0
+		self_TicketPerformance = this;
+    let total =0;
     this.props.getPerformanceSale().then(resp => {
       console.log("resp", resp);
-      resp.map(function(value){total +=value.ticketPrice })
+      resp.map(function(value){total +=value.ticketPrice });
       this.setState({
         sales: resp,
-      })
+      });
       console.log("total",total)
     }).catch(error => {
       console.log('error', error)
-    })
+    });
     this.props.getPerformanceBuyer().then(resp => {
       console.log("resp", resp);
-      resp.map(function(value){total +=value.orderAmount  })
+      resp.map(function(value){total +=value.orderAmount  });
       this.setState({
         order: resp,
         total: total.toFixed(2),
@@ -73,7 +75,7 @@ class TicketPerformance extends React.Component {
       return new Date(1*cell).toUTCString();
     }
     function priceFormate(cell, row){
-      return  "$"+ cell.toFixed(2);
+      return  self_TicketPerformance.props.currencySymbol + cell.toFixed(2);
     }
     function soldFormate(cell, row){
       return   cell + "/" + row.totalTickets;
@@ -99,7 +101,7 @@ class TicketPerformance extends React.Component {
                         <br /><br /><br />
                       <div className="grossSales">
                         <strong>Gross Sales</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <strong><span className="sales">${this.state.total}</span></strong>
+                        <strong><span className="sales">{self_TicketPerformance.props.currencySymbol}{this.state.total}</span></strong>
                       </div>
                       <div id="DataTables_Table_1_wrapper" >
                         {this.state.sales ?
@@ -155,5 +157,7 @@ const mapDispatchToProps = {
   getPerformanceHolderCSV: () => getPerformanceHolderCSV(),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(TicketPerformance));

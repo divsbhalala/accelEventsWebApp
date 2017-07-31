@@ -262,7 +262,7 @@ class TicketRefund extends React.Component {
 												</tr>
 												<tr>
 													<td>Original Payment</td>
-													<td className="text-right">${this.state.orderData.amount}</td>
+													<td className="text-right">{this.props.currencySymbol}{this.state.orderData.amount}</td>
 												</tr>
 												<tr>
 													<td>Status</td>
@@ -290,7 +290,7 @@ class TicketRefund extends React.Component {
 													<td>{item.firstName}</td>
 													<td>{item.ticketType }<input type="hidden" className="event-ticket-id" name="eventticketingid" defaultValue={166} /></td>
 													<td>{item.qty}</td>
-													<td>${item.paid}</td>
+													<td>{this.props.currencySymbol}{item.paid}</td>
 													<td>
 														<select className="form-control ticket-qty" style={{maxWidth: 80}} defaultValue={item.qty} onChange={(e)=>{ this.setTicketQty(e, key, item.eventTicketingId)}}>
 															<option value={0} selected="selected">0</option>
@@ -300,7 +300,7 @@ class TicketRefund extends React.Component {
 													{/*  eventticketingid */}
 													<td>
 														<div className="input-group">
-															<span className="input-group-addon">$</span>
+															<span className="input-group-addon">{this.props.currencySymbol}</span>
 															<NumericInput className="form-control ticket-refund-amount" step={0.01} precision={2}  min={0.00} onChange={(e)=>{ this.setRefundAmount(e, key, item.eventTicketingId)}} max={item.paid - item.refundedAmount} value={item.paid - item.refundedAmount}/>
 															{/*<input  name="refundamount" defaultValue={} data-allow-decimals="true" min={0.00} step="0.01" />*/}
 														</div>
@@ -337,5 +337,7 @@ const mapDispatchToProps = {
 	doGetRefundByOrderId: (method, orderId, data) => doGetRefundByOrderId(method, orderId, data),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(TicketRefund);
