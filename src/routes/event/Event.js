@@ -135,13 +135,15 @@ class Event extends React.Component {
 				})
 			}
 			this.setActiveTabState(this.state.tab);
-
-			if(this.props && this.props.query && this.props.query.tab){
-				this.setState({
-					tab: this.props.query.tab
-				},function changeAfter(){
-					this.setActiveTabState(this.props.query.tab)
-				})
+			if(window.location.hash){
+				let query = window.location.hash.split('#');
+				if(query && query.length == 2){
+					this.setState({
+						tab: query[1]
+					},function changeAfter(){
+						this.setActiveTabState(query[1])
+					})
+				}
 			}
 		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
@@ -153,12 +155,15 @@ class Event extends React.Component {
 			history.push('/404');
 		});
 		this.props.isVolunteer(this.props.params && this.props.params.params);
-		if(this.props && this.props.query && this.props.query.tab){
-			this.setState({
-				tab: this.props.query.tab
-			},function changeAfter(){
-				this.setActiveTabState(this.props.query.tab)
-			})
+		if(window.location.hash){
+			let query = window.location.hash.split('#');
+			if(query && query.length == 2){
+				this.setState({
+					tab: query[1]
+				},function changeAfter(){
+					this.setActiveTabState(query[1])
+				})
+			}
 		}
 	}
 
@@ -784,6 +789,7 @@ class Event extends React.Component {
 						<div className="col-lg-9 col-md-8 col-sm-8 ">
 							{ this.state.tab && this.state.isLoaded && <div className="main-box">
 								<Tabs onSelect={ (index, label) => {
+									window.location.hash = '#'+label;
                   this.setActiveTabState(label)
                 } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
 
