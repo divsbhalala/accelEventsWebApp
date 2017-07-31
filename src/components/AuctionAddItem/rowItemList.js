@@ -261,7 +261,7 @@ render() {
                     <div className="form-group">
                       <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
                               ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
-                        <option value={0} disabled selected>-- Select Category --</option>
+                        <option value={0} disabled >-- Select Category --</option>
                         {this.props.item.categories && this.props.item.categories.map((value,index)=>
                           <option value={value} key={index}>{value}</option>
                         )}
@@ -292,15 +292,14 @@ render() {
               </div>
               </div>
             </div>
-            <input type="hidden" name defaultValue  />
-            <i className="fa fa-trash delete-item red"  onClick={this.deleteAction}/>
+             <i className="fa fa-trash delete-item red"  onClick={this.deleteAction}/>
           <PopupModel
             id="mapPopup"
             showModal={this.state.showPopup}
             headerText= {<p>{this.state.popupHeader}</p>}
             modelBody='<div><h1>Location</h1></div>'
             onCloseFunc={this.hidePopup} >
-            <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
+            <div className="ticket-type-container"><input type="hidden"  name="tickettypeid"/>
               { this.state && this.state.errorMsg }
               <div className="modal-footer">
                 {/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}

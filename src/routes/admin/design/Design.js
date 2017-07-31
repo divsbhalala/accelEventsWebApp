@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 
 import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 
-import {getDesignSetting,updateDesingSetting,updateEventUrlDesingSetting} from './action';
+import {getDesignSetting,updateDesignSetting,updateEventUrlDesingSetting} from './action';
 import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
 import CKEditor from 'react-ckeditor-wrapper';
