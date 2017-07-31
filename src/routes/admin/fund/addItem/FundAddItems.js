@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './FundAddItems.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import { connect } from 'react-redux';
 import { getItemSheetPdf, getItemCatalogPdf, getItemListCsv } from './action';
 import FundNeedAddItem from './../../../../components/FundAddItem'
@@ -16,7 +15,7 @@ class FundAddItems extends React.Component {
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf().then((resp) => {
     });
-  }
+  };
   getItemCatalogPdf= () => {
     this.props.getItemCatalogPdf().then((resp) => {
 
@@ -25,7 +24,7 @@ class FundAddItems extends React.Component {
   getItemListCsv=() => {
     this.props.getItemListCsv().then((resp) => {
     });
-  }
+  };
 
   render() {
     return (

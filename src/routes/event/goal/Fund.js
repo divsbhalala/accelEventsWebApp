@@ -39,6 +39,7 @@ class FundGoal extends React.Component {
   render() {
     return (
       <div className="container goal-page">
+        {this.state.goalData ?
         <div className="row">
           <div className="col-lg-12">
             <div>
@@ -70,7 +71,7 @@ class FundGoal extends React.Component {
             </div>
           </div>
         </div>
-
+          : <div id="app" className="loader" /> }
       </div>
     );
   }

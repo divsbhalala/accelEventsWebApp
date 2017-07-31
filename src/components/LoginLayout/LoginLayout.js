@@ -6,9 +6,6 @@ import './LoginLayout.css';
 import LoginHeader from '../LoginHeader';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
-import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import SidebarNew from '../../components/SidebarNew';
 
 class LoginLayout extends React.Component {
   static propTypes = {

@@ -4,8 +4,9 @@ import cx from 'classnames';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
-import {getDashboard} from './../../routes/admin/action/index';
-class AdminSiderbar extends React.Component {
+import { getDashboard } from './../../routes/admin/action/index';
+import { getDesignDetails } from './../../routes/admin/design/action/index';
+class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -39,6 +40,7 @@ class AdminSiderbar extends React.Component {
 
 	componentWillMount(){
 		this.props.getDashboard();
+		this.props.getDesignDetails();
 	}
 	render() {
 		return (
@@ -195,11 +197,11 @@ class AdminSiderbar extends React.Component {
 													Credit Card Processing
 												</Link>
 											</li>
-											<li className={cx(this.state.subNav === "billing" && "active")}>
+											{ this.props.designData &&  this.props.designData.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
 												<Link to="/host/settings/account" onClick={()=>{ this.setNav("settings", "billing")}}>
 													Billing
 												</Link>
-											</li>
+											</li> : "" }
 										</ul>
 									</li>
 								</ul>
@@ -214,13 +216,15 @@ class AdminSiderbar extends React.Component {
 	}
 }
 const mapDispatchToProps = {
-	getDashboard: () => getDashboard()
+	getDashboard: () => getDashboard(),
+	getDesignDetails: () => getDesignDetails()
 };
 
 const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
 	hostData : state.host && state.host.data,
-  hostDesign : state.host && state.host.storeDesing,
+	designData : state.host && state.host.design
+	hostDesign : state.host && state.host.storeDesing,
 });
-export default connect(mapStateToProps, mapDispatchToProps)(AdminSiderbar);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);
