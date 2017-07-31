@@ -44,11 +44,11 @@ class PlanetItem extends React.Component {
    componentWillReceiveProps(){
      setTimeout(()=>{
      let message="";
-       if(this.props.isItemAdded.status==="success"){
-       if(this.props.isItemAdded.type === "Updated"){message="Item Updated ..."}
-       if(this.props.isItemAdded.type === "PositionChange"){message="Item PositionChange Updated ..."}
-       if(this.props.isItemAdded.type === "Inserted"){message="Item Added successfully ...";this.getItemList()}
-       if(this.props.isItemAdded.type === "Deleted"){message="Item deleted successfully ...";this.getItemList()}
+			 if(this.props.isItemAdded && this.props.isItemAdded.status === "success"){
+				 if(this.props.isItemAdded && this.props.isItemAdded.type === "Updated"){message="Item Updated ..."}
+				 if(this.props.isItemAdded && this.props.isItemAdded.type === "PositionChange"){message="Item PositionChange Updated ..."}
+				 if(this.props.isItemAdded && this.props.isItemAdded.type === "Inserted"){message="Item Added successfully ...";this.getItemList()}
+				 if(this.props.isItemAdded && this.props.isItemAdded.type === "Deleted"){message="Item deleted successfully ...";this.getItemList()}
     }else {
          message="Something Wrong"
        }
