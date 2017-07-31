@@ -181,7 +181,7 @@ class AuctionAddItem extends React.Component {
 				</div>
 				<div className="ajax-wrap">
 					{this.state.message && <div
-						className={cx("alert", this.props.isItemAdded.status === "success" ? "alert-success" : "alert-danger")}>{this.state.message}</div>}
+						className={cx("alert", this.props.isItemAdded &&  this.props.isItemAdded.status === "success" ? "alert-success" : "alert-danger")}>{this.state.message}</div>}
 				</div>
 				<div className="table-header">
 					<div className="flex-row">
