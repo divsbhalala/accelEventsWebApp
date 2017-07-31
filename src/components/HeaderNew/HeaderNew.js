@@ -505,14 +505,14 @@ class HeaderNew extends React.Component {
 							>
   <MenuItem
     eventKey="2" onClick={() => {
-      history.push('/my-activity');
+      history.push('/u/my-activity');
     }}
   >
     <span> <i className="fa fa fa-money fa-fw" /> My Activity </span>
   </MenuItem>
   <MenuItem
     eventKey="2" onClick={() => {
-      history.push('/my-profile');
+      history.push('/u/my-profile');
     }}
   >
     <span> <i className="fa fa-user fa-fw" /> User Profile </span>

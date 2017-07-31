@@ -233,7 +233,7 @@ class RowItemList extends React.Component {
 										</div>
 										<div className="col-md-6">
 											<ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
-																		defaultValue={ (this.state.item && this.state.item.active)}
+																		defaultValue={ (this.state.item && !this.state.item.active)}
 																		className="success activeswitch" onChange={this.hideItemChangeHandler}/>
 										</div>
 									</div>

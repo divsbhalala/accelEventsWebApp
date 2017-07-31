@@ -58,3 +58,19 @@ export function updateDesignSetting(data) {
     });
   }
 }
+  export function updateEventUrlDesingSetting(value) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'host/design/url/value/'+value ,
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}

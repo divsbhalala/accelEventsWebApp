@@ -38,14 +38,19 @@ class Auction extends React.Component {
   render() {
     return (
       <div className="table-view-wrap">
+
         <div id="content-wrapper">
+          {this.state.settings ?
           <div className="row">
-            <div className="col-lg-3 col-md-4 col-sm-4">
+
+              <div className="col-lg-3 col-md-4 col-sm-4">
               <EventAside activeTab={'Auction'} eventData={this.props.eventData} settings={this.state.eventSettings}
                           eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
                           showMapPopup={this.showMapPopup} activeCategory={false}/>
-            </div>
+             </div>
+
             <div className="col-lg-9 col-md-8 col-sm-8">
+
               <div className="main-box no-header clearfix">
                 <div className="main-box-body">
                   <div className="table white-bg ">
@@ -75,8 +80,10 @@ class Auction extends React.Component {
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
+            : <div id="app" className="loader" /> }
         </div>
       </div>
     );

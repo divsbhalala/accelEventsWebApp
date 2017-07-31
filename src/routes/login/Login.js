@@ -47,13 +47,12 @@ class Login extends React.Component {
     }
     if (this.state.isValidData) {
       this.props.doLogin(this.email.value.trim(), this.password.value.trim()).then((resp) => {
+        //console.log(resp.data.redirectUrl);
         if (!resp.errorMessage) {
           this.setState({error: "Log In SuccessFully...",loading:false});
           setTimeout(()=>{
-            //window.location="/host/superadmin/events"
-            history.push("/host/superadmin/events")
+            history.push(resp.data.redirectUrl)
           },2000)
-        //  history.push('/host/superadmin/events');
         }
         else {
           this.setState({error: "Invalid Email or password"});
@@ -113,7 +112,7 @@ class Login extends React.Component {
      }
      */
     if (this.props.authenticated) {
-       history.push('/host/superadmin/events');
+       history.push('/u/superadmin/events');
     }
   }
 

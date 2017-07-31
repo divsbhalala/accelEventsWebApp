@@ -6,9 +6,10 @@ import s from './Admin.css';
 import BoxWidget from '../../components/Widget/Box';
 import EventChecklist from '../../components/EventChecklist/index';
 import PenalBoxWidget from '../../components/Widget/PenalBox';
-import {getDashboard} from './action/index';
+import {getDashboard,enableModules} from './action/index';
 import {connect} from 'react-redux';
-
+import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
+import cx from 'classnames';
 
 class Admin extends React.Component {
   static propTypes = {
@@ -18,10 +19,89 @@ class Admin extends React.Component {
     super(props);
     this.state = {
       data: null,
+      settings: null,
+
+      slientAuctionActivated: false,
+      causeAuctionActivated: false,
+      raffleActivated: false,
+      ticketingActivated: false,
+      errorMessage:"",
+      isAnySelected:true,
     }
   }
 
+  componentDidMount(){
+    this.getDashboard()
+  }
+  getDashboard = () => {
+    this.props.getDashboard().then((resp) => {
+      this.setState({
+        data:resp
+      })
+    });
+  }
+  addPackage = (item) => {
+    if (item.target) {
+      const type = item.target.getAttribute('data-type');
+      if (type === 'slientAuctionActivated') {
+        this.setState({
+         slientAuctionActivated: !this.state.slientAuctionActivated
+        });
+      }	if (type === 'causeAuctionActivated') {
+        this.setState({
+         causeAuctionActivated: !this.state.causeAuctionActivated
+        });
+      }	if (type === 'raffleActivated') {
+        this.setState({
+          raffleActivated: !this.state.raffleActivated
+        });
+      }	if (type === 'ticketingActivated') {
+        this.setState({
+          ticketingActivated: !this.state.ticketingActivated
+        });
+      }
+    }
+    console.log(this.state)
+  }
+  enableModule =(e)=>{
+    e.preventDefault();
+      if(this.state.slientAuctionActivated || this.state.causeAuctionActivated || this.state.raffleActivated || this.state.ticketingActivated){
+        this.setState({isAnySelected:true})
+        let data='auctionEnabled='+this.state.slientAuctionActivated+'&causeEnabled='+this.state.causeAuctionActivated+'&raffleEnabled='+this.state.raffleActivated +'&ticketingEnabled='+this.state.ticketingActivated
+        this.props.enableModules(data).then(resp=>{
+            this.getDashboard();
+        });
+      }else {
+        this.setState({isAnySelected:false})
+      }
+  }
+
   render() {
+    const products = [{
+      id: 1,
+      type: 'slientAuctionActivated',
+      name: 'Silent Auction',
+      code: 'silentactionpkg',
+      price: 99,
+    }, {
+      id: 2,
+      type: 'causeAuctionActivated',
+      name: 'Fund a Need',
+      code: 'causeauctionpkg',
+      price: 99,
+    }, {
+      id: 3,
+      type: 'raffleActivated',
+      name: 'Raffle',
+      code: 'rafflepkg',
+      price: 99,
+    }, {
+      id: 4,
+      type: 'ticketingActivated',
+      name: 'Event Ticketing',
+      code: 'ticketingpkg',
+      price: 0,
+    }];
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
@@ -144,12 +224,44 @@ class Admin extends React.Component {
             </div>
           </div> : "" }
         </div>
+        <div id="select-modules" >
+        <Modal show={ this.state.data &&  this.state.data.noModuleActivate } dialogClassName="model-transparent" >
+          <Modal.Body  >
+            <form id="selectModules" >
+              <label className="text-center center-block">Please select the tools that you would like to setup for your event.</label>
+              <div className="js-error module-check" style={{display: this.state.isAnySelected ? 'none' : 'block'}}>You must select at least one fundraising option to create your account.</div>
+              <input type="hidden" name="eventId" defaultValue={310} />
+              { products.map(item => <div className="col-md-6 mrg-b-md" data-toggle="buttons" key={item.id}>
+                <label
+                  disabled={this.state.settings && this.state.settings[item.type]}
+                  className={cx('btn btn-lg btn-block', this.state.settings && this.state.settings[item.type] ? 'btn-success' : 'btn-danger', _.findIndex(this.state.itemSelected, { type: item.type }) >= 0 && 'active')}>
+                  <input
+                    type="checkbox" autoComplete="off" name={item.code}
+                    id={item.code} data-cost={item.price} data-type={item.type} onChange={this.addPackage} disabled={this.state.settings && this.state.settings[item.type]}
+                    defaultValue={this.state.settings && this.state.settings[item.type]}
+                  />
+                  <span className="glyphicon glyphicon-ok" />
+                  { (this.state.settings && this.state.settings[item.type]) ? `${item.name} Activated` : `${item.name}`}
+                </label>
+              </div>) }
+              <div className="small text-center">You can add or remove tools from the Settings page at any time</div>
+              <button onClick={this.enableModule} className="btn btn-lg btn-block mrg-t-lg text-uppercase" role="button" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
+                Enable
+              </button>
+            </form>
+          </Modal.Body>
+
+        </Modal>
+        </div>
       </div>
     );
   }
 }
 
 const mapDispatchToProps = {
+  getDashboard: () => getDashboard(),
+  doGetHostSettings: type => doGetHostSettings(type),
+  enableModules: data => enableModules(data),
 };
 const mapStateToProps = (state) => ({
 	user: state.session.user,
