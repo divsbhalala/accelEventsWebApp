@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './RaffleAddItems.css';
 import cx from 'classnames';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import { getItemSheetPdf, getItemCatalogPdf, getItemListCsv } from './action';
 import { connect } from 'react-redux';
 import RaffleAddItem from './../../../../components/RaffleAddItem'

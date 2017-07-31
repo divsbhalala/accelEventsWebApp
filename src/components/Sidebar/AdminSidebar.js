@@ -4,8 +4,9 @@ import cx from 'classnames';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
-import {getDashboard} from './../../routes/admin/action/index';
-class AdminSiderbar extends React.Component {
+import { getDashboard } from './../../routes/admin/action/index';
+import { getDesignSetting } from './../../routes/admin/design/action/index';
+class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -39,6 +40,7 @@ class AdminSiderbar extends React.Component {
 
 	componentWillMount(){
 		this.props.getDashboard();
+		this.props.getDesignSetting();
 	}
 	render() {
 		return (
@@ -213,7 +215,8 @@ class AdminSiderbar extends React.Component {
 	}
 }
 const mapDispatchToProps = {
-	getDashboard: () => getDashboard()
+	getDashboard: () => getDashboard(),
+	getDesignSetting: () => getDesignSetting()
 };
 
 const mapStateToProps = (state) => ({
@@ -221,4 +224,4 @@ const mapStateToProps = (state) => ({
 	authenticated: state.session && state.session.authenticated,
 	hostData : state.host && state.host.data
 });
-export default connect(mapStateToProps, mapDispatchToProps)(AdminSiderbar);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);

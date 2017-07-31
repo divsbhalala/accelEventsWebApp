@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import s from './AuctionSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import AdminSiderbar from '../../../../components/Sidebar/AdminSidebar';
 import {EditableTextField} from 'react-bootstrap-xeditable';
 import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory, resetAuctionSettings} from './../Auction';
 import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
