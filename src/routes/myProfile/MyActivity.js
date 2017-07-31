@@ -34,7 +34,7 @@ class myActivity extends React.Component {
     return (
       <div className="container">
         <h1 className="stats-event-name">{this.state.userData && this.state.userData.eventName}</h1>
-               <div className="row">
+         <div className="row">
           <div className="col-xs-12 col-md-6">
             <h2>Silent Auction Items</h2>
             <div className="main-box-body clearfix">
@@ -56,8 +56,6 @@ class myActivity extends React.Component {
               </div>
             </div>
           </div>
-        </div>
-        <div className="row">
           <div className="col-xs-12 col-md-6">
             <header class="main-box-header clearfix greenbg">
               <h2>Raffle Auction Items</h2>
@@ -80,8 +78,6 @@ class myActivity extends React.Component {
               </div>
             </div>
           </div>
-        </div>
-        <div className="row">
           <div className="col-xs-12 col-md-6">
             <header class="main-box-header clearfix greenbg">
               <h2>Cause Auction Activity </h2>
@@ -106,8 +102,6 @@ class myActivity extends React.Component {
           </div>
         </div>
       </div>
-
-
     );
   }
 }
