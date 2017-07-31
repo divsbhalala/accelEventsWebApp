@@ -67,7 +67,7 @@ phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
   };
 componentWillMount() {
   this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-  this.setState({phone:this.props.phone})
+  this.setState({phone:this.props.phone.replace( /[^0-9]/g, '')})
 }
 submiteForm = (e) => {
   e.preventDefault();

@@ -18,7 +18,7 @@ class WhiteLabelUserManagement extends React.Component {
 		super();
 	};
 goBack = () =>{
-  history.push('/');
+  history.push('home');
 }
 	componentWillMount(){
 	}
@@ -45,16 +45,6 @@ goBack = () =>{
                           </p>
                           <div id="alertmessage" />
                          <WhiteLabelUserList params={this.props.params} />
-                          {/*<BootstrapTable containerClass='table volunteer-table' insertRow bordered={ false }  data={this.state.userList} hover  pagination={ this.state.userList.length > 5 }  options={ options }>*/}
-                            {/*<TableHeaderColumn columnClassName='text-center' dataSort isKey dataField='firstName'>First Name</TableHeaderColumn>*/}
-                            {/*<TableHeaderColumn columnClassName='text-center' dataSort dataField='lastName'>Last Name</TableHeaderColumn>*/}
-                            {/*<TableHeaderColumn columnClassName='text-center' dataSort dataField='email'>Email</TableHeaderColumn>*/}
-                            {/*<TableHeaderColumn columnClassName='text-center' dataSort dataField='role'>Permissions</TableHeaderColumn>*/}
-                            {/*<TableHeaderColumn columnClassName='text-center' dataFormat={buttonFormatter} >Action</TableHeaderColumn>*/}
-                          {/*</BootstrapTable>*/}
-                          {/*<div className="form-group operations-row text-center">*/}
-                            {/*<button className="btn btn-default add-item">Add Member</button>*/}
-                          {/*</div>*/}
                         </div>
                       </div>
                     </div>

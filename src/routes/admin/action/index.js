@@ -12,7 +12,8 @@ export function getDashboard() {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
-        return resp.data;
+				dispatch(storeDashboardData(resp.data));
+				return resp.data;
       }
       return resp;
     }).catch((error, code, status)=>{
@@ -20,6 +21,13 @@ export function getDashboard() {
     });
   }
 }
+export function storeDashboardData(data) {
+	return {
+		type: 'STORE_HOST_DATA',
+		data,
+	}
+}
+
 export function dashboardSubmitBid(countryCode,phoneNumber) {
   return (dispatch) => {
     return axios({
@@ -155,6 +163,19 @@ export function getItemCategories(type) {
     return axios({
       method: 'get',
       url: API_URL + 'host/'+type+'/itemCategories',
+      headers: {Authorization: localStorage.getItem('token')}
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+}
+export function enableModules(data) {
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'host/enableModules?'+data,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp => {
       return resp;

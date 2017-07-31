@@ -29,6 +29,8 @@ class RowItemList extends React.Component {
     itemCode:false,
     startingBidFeedBack:false,
     startingBid:false,
+    buyItNowPriceFeedBack:false,
+    buyItNowPrice:true,
   };
 componentWillReceiveProps() {
     this.setState({
@@ -110,6 +112,13 @@ handleImageUpload(file) {
       this.setState({item,isDataUpdate:true})
   }
   buyItNowPriceHandlerChange = (e) =>{
+    this.setState({ buyItNowPriceFeedBack: true,});
+    if (this.buyItNowPrice.value.trim() == '') {
+      this.setState({ buyItNowPrice: true });
+    }else if (this.buyItNowPrice.value >= this.startingBid.value) {
+      this.setState({ buyItNowPrice: true });
+    } else { this.setState({buyItNowPrice: false}); }
+
     let item=this.state.item;
     item.buyItNowPrice=this.buyItNowPrice.value;
       this.setState({item,isDataUpdate:true})
@@ -137,7 +146,7 @@ handleImageUpload(file) {
   autoAddData =() => {
   console.log("---><><><",this.state)
     setTimeout(()=>{
-    if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate ){
+    if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate && this.state.buyItNowPrice ){
       if (this.state.item.id ) {
         this.props.updateItemList('auction', this.state.item.id, this.state.item).then(resp => {
           console.log("Updated ",this.props.isItemAdded)
@@ -207,6 +216,7 @@ render() {
             <span className="input-group-addon">$</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.buyItNowPrice}  onFocus={this.showPanel}
                    ref={ref=> {this.buyItNowPrice=ref;}} onKeyUp={this.buyItNowPriceHandlerChange} onBlur={this.autoAddData}/>
+            { this.state.buyItNowPriceFeedBack && !this.state.buyItNowPrice && <small className="error red"> Buy it now price must be greater than Starting Bid</small>}
           </div>
         </div>
         <div className="flex-col text-center item-actions-column">
@@ -275,7 +285,7 @@ render() {
                   </div>
                   <div className="col-md-6">
                     <ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
-                                  defaultValue={ (this.state.item && this.state.item.active)}
+                                  defaultValue={ (this.state.item && !this.state.item.active)}
                                   className="success activeswitch" onChange={this.hideItemChangeHandler}/>
                   </div>
                 </div>

@@ -247,7 +247,7 @@ class OrganizationSettings extends React.Component {
                 <div className="row">
                   <div className="col-md-6 col-offset-md-3">
                     <Button className="btn btn-info" loading={this.state.loading}  onClick={this.submitSettings} type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
-                    <Link to="home" className="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</Link>
+                    <Link to="u/wl/JonsBigWLL/home" className="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</Link>
                   </div>
                 </div>
               </div>
