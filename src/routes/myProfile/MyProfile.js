@@ -56,6 +56,7 @@ class MyProfile extends React.Component {
     return (
       <div className="row myProfile">
         <div className="col-lg-12">
+          {this.state.user ?
           <div id="content-wrapper">
             <div className="row">
               <div className="col-lg-3 col-md-4 col-sm-4">
@@ -135,6 +136,8 @@ class MyProfile extends React.Component {
             </div>
 
           </div>
+          : <div id="app" className="loader" /> }
+
         </div>
       </div>
     );
@@ -143,7 +146,7 @@ class MyProfile extends React.Component {
 class EventList extends React.Component {
   render() {
     return (
-      <tr>
+        <tr>
         <td>
           <a href={`/AccelEventsWebApp/u/display/hostevent/${this.props.item.eventURL}`}><font><font>{this.props.item.name}</font></font></a>
         </td>
@@ -151,7 +154,7 @@ class EventList extends React.Component {
           {new Date(1 * this.props.item.eventEndDate).toUTCString()}
         </td>
       </tr>
-    );
+  );
   }
 }
 const mapDispatchToProps = {

@@ -38,6 +38,7 @@ class Auction extends React.Component {
   render() {
     return (
       <div className={cx("scroll-page-wrap auction-scroll")}>
+        {this.state.settings ?
         <div id="content-wrapper">
           <div className="row">
             <div className="col-md-5 col-md-offset-1">
@@ -91,6 +92,8 @@ class Auction extends React.Component {
             </div>
           </div>
         </div>
+        : <div id="app" className="loader" /> }
+
       </div>
     );
   }
