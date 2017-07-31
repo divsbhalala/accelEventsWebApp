@@ -205,7 +205,7 @@ render() {
         </div>
         <div className="flex-col item-starting-bid-column">
           <div className="input-group">
-            <span className="input-group-addon">$</span>
+            <span className="input-group-addon">{this.props.currencySymbol}</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
                    ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>
             { this.state.startingBidFeedBack && !this.state.startingBid && <small className="error red"> Starting Bid is Required.</small>}
@@ -213,7 +213,7 @@ render() {
         </div>
         <div className="flex-col item-starting-bid-column">
           <div className="input-group">
-            <span className="input-group-addon">$</span>
+            <span className="input-group-addon">{this.props.currencySymbol}</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.buyItNowPrice}  onFocus={this.showPanel}
                    ref={ref=> {this.buyItNowPrice=ref;}} onKeyUp={this.buyItNowPriceHandlerChange} onBlur={this.autoAddData}/>
             { this.state.buyItNowPriceFeedBack && !this.state.buyItNowPrice && <small className="error red"> Buy it now price must be greater than Starting Bid</small>}
@@ -253,7 +253,7 @@ render() {
                     <div className="form-group">
                       <label htmlFor="bidIncrement">Bid Increment</label>
                       <div className="input-group">
-                        <span className="input-group-addon">$</span>
+                        <span className="input-group-addon">{this.props.currencySymbol}</span>
                         <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={this.props.item.bidIncrement}
                                ref={ref=> {this.bidIncrement=ref;}} onKeyUp={this.bidIncrementHandlerChange} onBlur={this.autoAddData}/>
                       </div>
@@ -270,7 +270,7 @@ render() {
                   <div className="form-group">
                     <label htmlFor="marketValue">Market Value</label>
                     <div className="input-group">
-                      <span className="input-group-addon">$</span>
+                      <span className="input-group-addon">{this.props.currencySymbol}</span>
                       <input className="form-control" placeholder="Market Value (optional)" data-price="true" name="marketValue" type="number"
                              defaultValue={this.props.item.marketValue}
                              ref={ref=> {this.marketValue=ref;}} onKeyUp={this.marketValueHandlerChange} onBlur={this.autoAddData}/>
@@ -328,7 +328,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
+  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded,
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RowItemList);

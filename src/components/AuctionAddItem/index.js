@@ -16,7 +16,7 @@ class PlanetItem extends React.Component {
   };
 
   getDragHeight() { return 60; }
-  doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) }
+  doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };
 
   render() {
     const {item, itemSelected, dragHandle} = this.props;
@@ -45,20 +45,19 @@ class PlanetItem extends React.Component {
    componentWillReceiveProps(){
      setTimeout(()=>{
      let message="";
-    console.log("main",this.props.isItemAdded)
-     if(this.props.isItemAdded.status=="success"){
-     if(this.props.isItemAdded.type == "Updated"){message="Item Updated ..."}
-     if(this.props.isItemAdded.type == "PositionChange"){message="Item PositionChange Updated ..."}
-     if(this.props.isItemAdded.type == "Inserted"){message="Item Added successfully ...";this.getItemList()}
-     if(this.props.isItemAdded.type == "Deleted"){message="Item deleted successfully ...";this.getItemList()}
+     if(this.props.isItemAdded.status === "success"){
+     if(this.props.isItemAdded.type === "Updated"){message="Item Updated ..."}
+     if(this.props.isItemAdded.type === "PositionChange"){message="Item PositionChange Updated ..."}
+     if(this.props.isItemAdded.type === "Inserted"){message="Item Added successfully ...";this.getItemList()}
+     if(this.props.isItemAdded.type === "Deleted"){message="Item deleted successfully ...";this.getItemList()}
     }else {
          message="Something Wrong"
        }
-     if(this.props.isItemAdded.type == "getList"){message="Item Listed"}
+     if(this.props.isItemAdded.type === "getList"){message="Item Listed"}
      this.setState({
        message,
        status:this.props.isItemAdded.status
-     })},500)
+     })},500);
      setTimeout(()=>{ this.setState({message:""}) },4000)
   }
   getItemList =()=> {
@@ -71,24 +70,22 @@ class PlanetItem extends React.Component {
         this.props.getItemCategories("auction").then(resp=>{
           this.setState({categories:resp.data.itemCategories.map((value)=>{ return value.name})})
           this.addEmptyRow()
-        })
+        });
         console.log(resp);
       }
     }).catch((error) => {
       console.log(error);
     });
-  }
+  };
   componentWillMount(){
     this.getItemList()
   };
   onListChange(newList: Array<Object>,movedItem: Array<Object>, oldIndex: number, newIndex: number) {
     this.setState({list: newList});
-    console.log(this.state.list,movedItem, oldIndex, newIndex)
 
-    let topItem= newIndex ==  0  ? 0 : newIndex-1
-    let bottomItem =  newIndex ==  newList.length-1  ? newIndex : newIndex + 1
+    let topItem = newIndex ===  0  ? 0 : newIndex-1;
+    let bottomItem =  newIndex ===  newList.length-1  ? newIndex : newIndex + 1;
     if(newList[newIndex].id && newList[newIndex].id && newList[topItem].id && newList[bottomItem].id ){
-      console.log("--->",newList[newIndex].id, newList[topItem].id, newList[bottomItem].id)
       this.props.updateItemListPosition('auction',newList[newIndex].id, newList[topItem].id, newList[bottomItem].id).then(resp => {
         if(resp && resp.data && resp.data.items.length){
           this.setState({list:resp.data.items});
@@ -108,7 +105,7 @@ class PlanetItem extends React.Component {
      this.addEmptyRow()
     }
     }else { this.addEmptyRow()}
-   }
+   };
 addEmptyRow =()=>{
   const list = this.state.list;
   let data={
@@ -126,11 +123,10 @@ addEmptyRow =()=>{
     "marketValue": 0,
     "name": "",
     "startingBid": 0
-  }
-console.log(data)
+  };
   list.unshift(data);
   this.setState({list})
-}
+};
   render() {
     const {useContainer} = this.state;
     return (
@@ -141,7 +137,7 @@ console.log(data)
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
         </div>
         <div className="ajax-wrap">
-          {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
+          {this.state.message && <div className={cx("alert",this.props.isItemAdded.status==="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
         </div>
         <div className="table-header">
           <div className="flex-row">
@@ -178,7 +174,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded
+  isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded,
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuctionAddItem);

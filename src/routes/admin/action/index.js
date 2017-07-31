@@ -13,6 +13,7 @@ export function getDashboard() {
     }).then(resp=>{
       if(resp && resp.data){
 				dispatch(storeDashboardData(resp.data));
+				dispatch(storeCurrencySymbols(resp.data && resp.data.currencySymbol));
 				return resp.data;
       }
       return resp;
@@ -24,6 +25,12 @@ export function getDashboard() {
 export function storeDashboardData(data) {
 	return {
 		type: 'STORE_HOST_DATA',
+		data,
+	}
+}
+export function storeCurrencySymbols(data) {
+	return {
+		type: 'STORE_CURRENCY_SYMBOLS',
 		data,
 	}
 }

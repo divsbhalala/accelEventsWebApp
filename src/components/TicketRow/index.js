@@ -246,12 +246,12 @@ class TicketRow extends React.Component { // eslint-disable-line
 					</div>
 					<div className="flex-col ticket-price-column">
 						<div className="input-group">
-							<span className="input-group-addon">$</span>
+							<span className="input-group-addon">{this.props.currencySymbol}</span>
 							<NumericInput name="price" className="form-control ticket-price required" step={1} precision={0} min={0}
 														value={this.state.ticket.price} onChange={this.updateBidPrice} required={true}/>
 						</div>
 						<div className="tiny">
-							Buyer price: <br /><span className="blue buyer-price">$<span
+							Buyer price: <br /><span className="blue buyer-price">{this.props.currencySymbol}<span
 							className="price-fees">{this.state.ticket.price}</span></span>
 						</div>
 					</div>
@@ -290,7 +290,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 											<option value={false}>Absorb fees</option>
 										</select>
 										<div className="small">
-											Buyer Total: $<span className="buyer-price-fees">{this.state.ticket.price}</span>
+											Buyer Total: {this.props.currencySymbol}<span className="buyer-price-fees">{this.state.ticket.price}</span>
 										</div>
 									</div>
 									<div className="row mrg-b-lg">
@@ -414,5 +414,7 @@ class TicketRow extends React.Component { // eslint-disable-line
 }
 const mapDispatchToProps = {};
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)((TicketRow));

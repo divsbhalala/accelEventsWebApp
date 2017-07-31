@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 
 import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 
-import {getDesingSetting,updateDesingSetting} from './action';
+import {getDesignSetting,updateDesignSetting} from './action';
 import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
 
@@ -30,7 +30,7 @@ class Design extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getDesingSetting("general").then(resp => {
+    this.props.getDesignSetting("general").then(resp => {
       console.log("resp", resp);
       this.setState({
         settings: resp
@@ -43,7 +43,7 @@ class Design extends React.Component {
   submitSettings = (e) => {
     e.preventDefault();
     this.setState({loading:true})
-    this.props.updateDesingSetting( this.state.settings).then(resp =>{
+    this.props.updateDesignSetting( this.state.settings).then(resp =>{
       if(resp && resp.message){
         this.setState({loading:false,message:resp.message,isError:false})
       }else{
@@ -249,8 +249,8 @@ class Design extends React.Component {
 
 
 const mapDispatchToProps = {
-  getDesingSetting: () => getDesingSetting(),
-  updateDesingSetting: ( data) => updateDesingSetting( data)
+  getDesignSetting: () => getDesignSetting(),
+  updateDesignSetting: ( data) => updateDesignSetting( data)
 };
 
 const mapStateToProps = (state) => ({});
