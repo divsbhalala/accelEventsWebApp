@@ -55,15 +55,15 @@ class FundSetting extends React.Component {
 
   resetHostSettings = () => {
     this.props.resetHostSettings(this.state.moduleType).then(resp => {
-      if(resp && resp.data){
+      if(resp && resp.data && resp.status==200){
         this.closeResetModal();
         this.handleAlertShow(resp.data.message,'success');
       }
       else{
-        console.log(resp);
+        this.handleAlertShow('Something went wrong.','danger');
       }
     }).catch((error) => {
-      console.log(error);
+      this.handleAlertShow('Something went wrong.','danger');
     });
   };
 
@@ -76,7 +76,7 @@ class FundSetting extends React.Component {
 
   onSaveSetting = () =>{
     const settings = {};
-    settings.activated = this.state.settings.activated;
+    settings.moduleHidden = this.state.settings.moduleHidden;
     settings.categoryEnabled = this.state.settings.categoryEnabled;
     settings.eventTimeZone = this.state.settings.eventTimeZone;
     settings.moduleHidden = this.state.settings.moduleHidden;
@@ -220,9 +220,9 @@ class FundSetting extends React.Component {
                             </div>
                             <div className="col-md-3">
                               {this.state.settings &&
-                              <ToggleSwitch name="activated" id="activated"
-                                defaultValue={this.state.settings.activated} className="success"
-                                onChange={()=>{ this.state.settings.activated = !this.state.settings.activated}}/> }
+                              <ToggleSwitch name="moduleHidden" id="moduleHidden"
+                                defaultValue={this.state.settings.moduleHidden} className="success"
+                                onChange={()=>{ this.state.settings.moduleHidden = !this.state.settings.moduleHidden}}/> }
                             </div>
                           </div>
                           <div className="row form-group">
@@ -266,7 +266,7 @@ class FundSetting extends React.Component {
               <p>Reseting your auction will delete all bid history. You will not be able to recover this information. Are you sure you want to reset?</p>
             </Modal.Body>
             <Modal.Footer>
-              <Button bsStyle="danger" onClick={this.resetAuctionSettings}>Reset</Button>
+              <Button bsStyle="danger" onClick={this.resetHostSettings}>Reset</Button>
               <Button onClick={this.closeResetModal}>Close</Button>
             </Modal.Footer>
           </Modal>

@@ -108,7 +108,7 @@ class AuctionSetting extends React.Component {
 
   onSaveSetting = () =>{
     const settings = {};
-    settings.activated = this.state.settings.activated;
+    settings.moduleHidden = this.state.settings.moduleHidden;
     settings.categoryEnabled = this.state.settings.categoryEnabled;
     settings.defaultBidIncrement = this.state.settings.defaultBidIncrement;
     settings.enableMarketValue = this.state.settings.enableMarketValue;
@@ -136,6 +136,21 @@ class AuctionSetting extends React.Component {
       settings
     });
   };
+
+  resetHostSettings = () => {
+    this.props.resetHostSettings(this.state.moduleType).then(resp => {
+      if(resp && resp.data && resp.status==200){
+        this.closeResetModal();
+        this.handleAlertShow(resp.data.message,'success');
+      }
+      else{
+        this.handleAlertShow('Something went wrong.','danger');
+      }
+    }).catch((error) => {
+      this.handleAlertShow('Something went wrong.','danger');
+    });
+  };
+
   render() {
     let locale = {
       format: 'YYYY/MM/DD HH:mm',
@@ -158,8 +173,7 @@ class AuctionSetting extends React.Component {
                         <h1>
                           {this.state.title}
                           <div className="pull-right">
-                            <button
-                              className={cx("btn btn-info btn-block save-settings", ( (this.state.emailFeedBack && !this.state.email) || (this.state.passwordFeedBack && !this.state.password)) && 'disabled')}
+                            <button className={"btn btn-info btn-block save-settings"}
                               role="button" type="submit" onClick={this.onSaveSetting}
                               data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings..">
                               Save Settings
@@ -179,7 +193,8 @@ class AuctionSetting extends React.Component {
                           </Alert>
                           }
                         </div>
-                        <form id="command" className="form" action="update" method="POST">
+                        {this.state.settings != {} ?
+                        <form id="command" className="form">
                           <input type="hidden" name="id" defaultValue={288} />
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
@@ -242,63 +257,53 @@ class AuctionSetting extends React.Component {
                               Enable Social Sharing
                               <div className="help-text">This is popup text for enable social sharing</div>
                             </div>
-                            <div className="col-md-3"> {this.state.settings &&
-                              <ToggleSwitch name="socialSharingEnabled"
-                                            id="socialSharingEnabled"
-                                            defaultValue={this.state.settings.socialSharingEnabled}
-                                            className="success"
-                                            onChange={()=>{ this.state.settings.socialSharingEnabled = !this.state.settings.socialSharingEnabled}}/> }
+                            <div className="col-md-3">
+                              <ToggleSwitch name="socialSharingEnabled" id="socialSharingEnabled"
+                                  defaultValue={this.state.settings.socialSharingEnabled} className="success"
+                                  onChange={()=>{ this.state.settings.socialSharingEnabled = !this.state.settings.socialSharingEnabled}}/>
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Enable Item Categories
                             </div>
-                            <div className="col-md-3">{this.state.settings &&
-                              <ToggleSwitch name="categoryEnabled"
-                                            id="categoryEnabled"
-                                            defaultValue={this.state.settings.categoryEnabled}
-                                            className="success"
-                                            onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/> }
+                            <div className="col-md-3">
+                              <ToggleSwitch name="categoryEnabled" id="categoryEnabled"
+                                    defaultValue={this.state.settings.categoryEnabled} className="success"
+                                    onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/>
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Hide Auction Tab
                             </div>
-                            <div className="col-md-3">{this.state.settings &&
-                              <ToggleSwitch name="activated"
-                                            id="activated"
-                                            defaultValue={this.state.settings.activated}
-                                            className="success"
-                                            onChange={()=>{ this.state.settings.activated = !this.state.settings.activated}}/> }
+                            <div className="col-md-3">
+                              <ToggleSwitch name="activated" id="activated"
+                                    defaultValue={this.state.settings.moduleHidden} className="success"
+                                    onChange={()=>{ this.state.settings.moduleHidden = !this.state.settings.moduleHidden}}/>
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Hide Highest Bidder
                             </div>
-                            <div className="col-md-3">{this.state.settings &&
-                              <ToggleSwitch name="highestBidderHidden"
-                                            id="highestBidderHidden"
-                                            defaultValue={this.state.settings.highestBidderHidden}
-                                            className="success"
-                                            onChange={()=>{ this.state.settings.highestBidderHidden = !this.state.settings.highestBidderHidden}}/>}
+                            <div className="col-md-3">
+                              <ToggleSwitch name="highestBidderHidden" id="highestBidderHidden"
+                                    defaultValue={this.state.settings.highestBidderHidden} className="success"
+                                    onChange={()=>{ this.state.settings.highestBidderHidden = !this.state.settings.highestBidderHidden}}/>
                             </div>
                           </div>
                           <div className="row form-group">
                             <div className="col-md-3 col-md-offset-1">
                               Enable Market Value
                             </div>
-                            <div className="col-md-3">{this.state.settings &&
-                              <ToggleSwitch name="enableMarketValue"
-                                            id="enableMarketValue"
-                                            defaultValue={this.state.settings.enableMarketValue}
-                                            className="success"
-                                            onChange={()=>{ this.state.settings.enableMarketValue = !this.state.settings.enableMarketValue}}/>}
+                            <div className="col-md-3">
+                              <ToggleSwitch name="enableMarketValue" id="enableMarketValue"
+                                    defaultValue={this.state.settings.enableMarketValue} className="success"
+                                    onChange={()=>{ this.state.settings.enableMarketValue = !this.state.settings.enableMarketValue}}/>
                             </div>
                           </div>
-                        </form>
+                        </form> : <p></p> }
 
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
@@ -330,7 +335,7 @@ class AuctionSetting extends React.Component {
               <p>Reseting your auction will delete all bid history. You will not be able to recover this information. Are you sure you want to reset?</p>
             </Modal.Body>
             <Modal.Footer>
-              <Button bsStyle="danger" onClick={this.resetAuctionSettings}>Reset</Button>
+              <Button bsStyle="danger" onClick={this.resetHostSettings}>Reset</Button>
               <Button onClick={this.closeResetModal}>Close</Button>
             </Modal.Footer>
           </Modal>
