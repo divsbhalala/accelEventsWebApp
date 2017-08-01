@@ -103,23 +103,16 @@ class Fund extends React.Component {
         popupHeader:"Failed",
       })
     }else{
-      let selectedCurrency = '$';
-      if(localStorage.getItem('eventsData')){
-        let eventData = JSON.parse(localStorage.getItem('eventsData'));
-        if(eventData && eventData.currencySymbol){
-         selectedCurrency = eventData.currencySymbol;   
-       }
-      }
       if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged "+selectedCurrency+" "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }else{
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged "+selectedCurrency+" "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }
