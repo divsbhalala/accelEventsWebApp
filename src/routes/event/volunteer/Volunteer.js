@@ -745,7 +745,7 @@ class Volunteer extends React.Component {
     this.setState({
       showPopup: false,
     });
-    if (this.state.popupHeader == 'Success') {
+    if (this.state.popupHeader === 'Success') {
       this.setActiveView('select-action');
     }
   };
@@ -2698,8 +2698,7 @@ class Volunteer extends React.Component {
                             <div className="type-name"><strong>{item.name}</strong>
                               (<span className="type-cost txt-sm gray"> ${item.price}</span>)
                               <div className="pull-right">
-                                <div className="col-md-7">No Of Tickets</div>
-                                { item.remaniningTickets && item.remaniningTickets > 0 ? <div className="col-md-5">
+                                { item.remaniningTickets && item.remaniningTickets > 0 ?
                                   <select
                                     className="form-control" name={item.typeId} data-price={item.price}
                                     disabled={moment(item.endDate).diff(moment()) <= 0}
@@ -2707,10 +2706,9 @@ class Volunteer extends React.Component {
                                     value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}
                                   >
                                     {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
-                                  </select>
-                                </div> : ''}
+                                  </select> : ''}
                                 {
-                                  !item.remaniningTickets && <div className="col-md-5"> SOLD OUT </div>
+                                  (!item.remaniningTickets || item.remaniningTickets <= 0) && <span class="sold-out-text"> SOLD OUT </span>
                                 }
                               </div>
                             </div>
@@ -2721,9 +2719,9 @@ class Volunteer extends React.Component {
                             {item.ticketsPerTable && item.ticketsPerTable > 0 ?
                               <div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable}
                                 tickets</div> : ''}
-                            {/* <div className="txt-sm gray type-desc">
-                             sadfw
-                             </div>*/}
+                            {<div className="txt-sm gray type-desc">
+                             TODO: Item desctiption goes here
+                             </div>}
                           </div>
                         </div>
                       </div>,
@@ -2793,7 +2791,7 @@ class Volunteer extends React.Component {
           <view name="event-ticketing" className={cx(this.state.activeViews === 'event-ticketing' && s.active)}>
             <h4 className="text-center"><strong>Check in attendees</strong></h4>
             <input
-              type="text" className="filter-attendee form-control" placeholder="Search..."
+              type="text" className="filter-attendee input-lg form-control" placeholder="Search..."
               ref={(ref) => {
                 this.attendeesFilter = ref;
               }}

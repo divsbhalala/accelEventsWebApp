@@ -655,7 +655,7 @@ class EventDonation extends React.Component {
                   className={cx('form-group', this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}
                 >
                   <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                       <label className="control-label login-password">Donation Amount</label>
                       <div className="input-group">
                         <div className="input-group-addon">$</div>

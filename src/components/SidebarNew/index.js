@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 // import classNames from 'classnames';
 import history from '../../history';
@@ -18,7 +19,7 @@ class SidebarNew extends Component {
 
   render() {
     return (
-      <div className="navbar-default sidebar" style={{marginLeft: '-20px'}} role="navigation">
+      <div className="navbar-default sidebar" role="navigation">
         <div className="sidebar-nav navbar-collapse collapse">
           <ul className="nav in" id="side-menu">
             <li className="sidebar-search">
@@ -33,39 +34,39 @@ class SidebarNew extends Component {
             </li>
 
             <li>
-              <Link to="/admin" style={{color: "#333"}}>
+              <Link to="/admin">
                 <i className="fa fa-dashboard fa-fw"/> &nbsp;Dashboard </Link>
 
             </li>
 
             <li>
-              <Link to="/admin/design" style={{color: "#333"}}>
+              <Link to="/admin/design">
                 <i className="fa fa-paint-brush fa-fw"/> &nbsp;Design </Link>
             </li>
 
             <li>
-              <Link to="/admin/ticket" style={{color: "#333"}}>
+              <Link to="/admin/ticket">
                 <i className="fa fa-ticket"/> &nbsp;Ticketing </Link>
             </li>
 
             <li>
-              <Link to="/admin/auction" style={{color: "#333"}}>
+              <Link to="/admin/auction">
                 <i className="fa fa-gavel"/> &nbsp;Silent Auction</Link>
             </li>
 
             <li>
-              <Link to="/admin/raffle" style={{color: "#333"}}><i className="fa fa-dashboard fa-fw"/> &nbsp;
+              <Link to="/admin/raffle"><i className="fa fa-dashboard fa-fw"/> &nbsp;
                 Raffle</Link>
             </li>
 
             <li>
-              <Link to="/admin/fund" style={{color: "#333"}}><i className="fa fa-money fa-fw"/> &nbsp;Fund A Need</Link>
+              <Link to="/admin/fund"><i className="fa fa-money fa-fw"/> &nbsp;Fund A Need</Link>
             </li>
             <li>
-              <Link to="/admin/users" style={{color: "#333"}}><i className="fa fa-users"/> &nbsp;User Management</Link>
+              <Link to="/admin/users"><i className="fa fa-users"/> &nbsp;User Management</Link>
             </li>
             <li>
-              <Link to="/admin/setting" style={{color: "#333"}}><i className="fa fa-cogs fa-fw"/> &nbsp;Settings</Link>
+              <Link to="/admin/setting"><i className="fa fa-cogs fa-fw"/> &nbsp;Settings</Link>
             </li>
 
 
@@ -75,6 +76,4 @@ class SidebarNew extends Component {
     );
   }
 }
-
-
 export default SidebarNew;

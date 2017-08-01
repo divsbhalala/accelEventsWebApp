@@ -940,7 +940,7 @@ class Event extends React.Component {
 															</select>
 															: ''}
 														{
-															!item.remaniningTickets && <span class="sold-out-text"> SOLD OUT </span>
+															(!item.remaniningTickets || item.remaniningTickets <= 0) && <span class="sold-out-text"> SOLD OUT </span>
 														}
 													</div>
 												</div>
@@ -949,9 +949,9 @@ class Event extends React.Component {
 													<Moment format="MMMM D YYYY">{item.endDate}</Moment></div>
 												{item.ticketsPerTable && item.ticketsPerTable > 0 ?
 													<div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable} tickets</div> : ''}
-												{/*<div className="txt-sm gray type-desc">
-												 sadfw
-												 </div>*/}
+												{<div className="txt-sm gray type-desc">
+												 TODO: Item desctiption goes here
+												 </div>}
 											</div>
 										</div>
 									</div>

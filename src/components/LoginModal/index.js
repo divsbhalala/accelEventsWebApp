@@ -214,7 +214,7 @@ class LoginPopup extends React.Component {
                       <div className="login-form" id="LoginAttempt">
                         <h1 className="text-center">Log in</h1>
                         <h4 className="text-center">
-                          Or, &nbsp;&nbsp;<a className={s.link} onClick={this.showRegister}>Sign up</a>
+                          Or, <a className={s.link} onClick={this.showRegister}>sign up.</a>
                         </h4>
                         {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
                         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClickLogin}>
