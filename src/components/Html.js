@@ -32,7 +32,7 @@ class Html extends React.Component {
   render() {
     const {title, description, styles, scripts, app, children, isAdmin} = this.props;
     return (
-      <html lang="en">{console.log("isAdmin", isAdmin, this.props.component.props, this.props.component.props.isAdmin)}
+      <html lang="en">
         <head>
           <meta charSet="utf-8"/>
           <meta httpEquiv="x-ua-compatible" content="ie=edge"/>
