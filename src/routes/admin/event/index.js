@@ -82,7 +82,7 @@ class EventList extends React.Component {
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
       setTimeout(()=>{
-        history.push("/host/dashboard")
+        history.push("/host/dashboard/home")
       },2000)
     });
   }
@@ -281,9 +281,12 @@ class EventList extends React.Component {
   }
 }
 class WhiteLabelUrlList extends React.Component {
+  onClickRedirection =(url) =>{
+    history.push(url);
+  }
   render() {
     return (
-      <MenuItem eventKey={this.props.key}><Link to={"/u/wl/"+this.props.item+"/home"} >{this.props.item}</Link></MenuItem>
+      <MenuItem eventKey={this.props.key} onClick={()=>this.onClickRedirection("/u/wl/"+this.props.item+"/home")}>{this.props.item}</MenuItem>
     );
   }
 }

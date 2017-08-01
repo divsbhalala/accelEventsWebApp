@@ -37,7 +37,7 @@ export default {
   path: '/host',
   children: [
     {
-      path: '/dashboard',
+      path: '/dashboard/home',
       async action() {
 				/*  if (!isAdmin) {
 				 return { redirect: '/login' };
