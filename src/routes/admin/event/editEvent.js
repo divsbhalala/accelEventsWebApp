@@ -145,7 +145,7 @@ class EditEvent extends React.Component {
               <button className="btn btn-info btn-block" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
             </div>
             <div className="col-md-2 col-sm-12">
-              <a className="btn btn-danger btn-block" href="/AccelEventsWebApp/u/superadmin/auction">Cancel</a>
+              <a className="btn btn-danger btn-block" href="/u/superadmin/auction">Cancel</a>
             </div>
             <div id="alertmessage" className="col-md-8 col-sm-12" />
           </div>
