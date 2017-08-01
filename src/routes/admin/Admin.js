@@ -34,11 +34,11 @@ class Admin extends React.Component {
     this.getDashboard()
   }
   getDashboard = () => {
-    this.props.getDashboard().then((resp) => {
+    /*this.props.getDashboard().then((resp) => {
       this.setState({
         data:resp
       })
-    });
+    });*/
     /*this.props.getStoreDesingData().then((resp) => {
       this.setState({
         data:resp

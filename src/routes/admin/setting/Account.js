@@ -171,11 +171,11 @@ class Account extends React.Component {
         message += 'FUND A NEED';
       }
       if (resp.data.raffleActivated) {
-        if (message != '') { message += ','; }
+        if (message !== '') { message += ','; }
         message += 'RAFFLE';
       }
       if (resp.data.ticketingActivated) {
-        if (message != '') { message += ','; }
+        if (message !== '') { message += ','; }
         message += ' TICKETING';
       }
       if (message === '') {
@@ -610,5 +610,7 @@ const mapDispatchToProps = {
   getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
+});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Account));
