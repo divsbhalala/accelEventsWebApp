@@ -759,6 +759,7 @@ const mapStateToProps = (state) => ({
   eventTicketData: state.event && state.event.ticket_data,
   user: state.session.user,
   authenticated: state.session.authenticated,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Raffle));

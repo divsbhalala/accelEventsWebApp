@@ -3244,6 +3244,7 @@ const mapStateToProps = (state) => ({
 	is_volunteer : state.event && state.event.is_volunteer,
 	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   eventData: state.event && state.event.data,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Volunteer));

@@ -1056,6 +1056,7 @@ const mapStateToProps = (state) => ({
   fundData: state.event && state.event.auction_data,
   user: state.session.user,
   authenticated: state.session.authenticated,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Fund));

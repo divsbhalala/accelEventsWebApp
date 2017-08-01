@@ -102,5 +102,7 @@ const mapDispatchToProps = {
   getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
   doGetAuctionItemByLimit: (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol: state.event && state.event.currencySymbol || "$",
+});
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

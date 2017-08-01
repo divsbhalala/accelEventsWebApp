@@ -268,7 +268,7 @@ class Event extends React.Component {
 		} else if (bid > this.amount.value.trim()) {
 			this.setState({
 				amount: false,
-				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $" + bid + " increments. " + "   Bids for this item must be placed in increments of at least $20",
+				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in " + this.props.currencySymbol + bid + " increments. " + "   Bids for this item must be placed in increments of at least " + this.props.currencySymbol + "20",
 			});
 		} else {
 			this.setState({
@@ -807,7 +807,7 @@ class Event extends React.Component {
                                                  [
                                                    {
                                                      title: item.currentBid != 0 ? "CURRENT BID" : "Starting Bid",
-                                                     value: item.currentBid != 0 ? '$' + item.currentBid : '$' + item.startingBid
+                                                     value: item.currentBid != 0 ? this.props.currencySymbol + item.currentBid : this.props.currencySymbol + item.startingBid
                                                    }
                                                  ]
                                                }
@@ -817,10 +817,10 @@ class Event extends React.Component {
 														                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
 														                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 														                   auctionPurchaseFor={ item.purchased}
-														                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now $" + item.buyItNowPrice : null}
-														                   auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
+														                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now " + this.props.currencySymbol + item.buyItNowPrice : null}
+														                   auctionBuyNowTitle={ (item.purchased ? "Purchased for "+ this.props.currencySymbol + item.currentBid : null)}
 														                   auctionBuyNowClassName="item-link btn btn-success actionlinks"
-														                   marketValue={item.marketValue > 0 ? '$' + item.marketValue : null}
+														                   marketValue={item.marketValue > 0 ? this.props.currencySymbol + item.marketValue : null}
 														                   marketValueLabel={item.marketValue > 0 ? 'Market Value' : null}
 														/>
 													)
@@ -929,7 +929,7 @@ class Event extends React.Component {
 										<div className="flex-row">
 											<div className="flex-col">
 												<div className="type-name"><strong style={{"fontWeight":700}}>{item.name} </strong>
-													( <span className="type-cost txt-sm gray"> ${item.price} </span>)
+													( <span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
 															<select className="form-control" name={item.typeId} data-price={item.price}
@@ -976,7 +976,7 @@ class Event extends React.Component {
 								<div className="pull-left">
 									<span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                   <span
-	                  className="total-price">{this.state.totalTicketPrice ? '$' + this.state.totalTicketPrice : 'FREE'}</span>
+	                  className="total-price">{this.state.totalTicketPrice ? this.props.currencySymbol + this.state.totalTicketPrice : 'FREE'}</span>
 								</div>
 								<div className="pull-right">
 									<button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
@@ -1035,6 +1035,7 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = (state) => ({
 	eventData: state.event && state.event.data,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 	eventTicketData: state.event && state.event.ticket_data,
 	eventRaffleData: state.event && state.event.raffle_data,
 	eventFundData: state.event && state.event.fund_data,

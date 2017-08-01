@@ -1297,7 +1297,8 @@ const mapStateToProps = (state) => ({
   eventTicketData: state.event && state.event.ticket_data,
   auction_data: state.event && state.event.auction_data,
   user: state.session.user,
-  authenticated: state.session.authenticated
+  authenticated: state.session.authenticated,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

@@ -8,6 +8,7 @@ import {
   STORE_ACTIVE_TAB,
   STORE_ORDER_DATA,
   IS_VOLUNTEER,
+	STORE_EVENT_CURRENCY,
 } from '../constants';
 export default function event(state = {}, action) {
   switch (action.type) {
@@ -29,6 +30,8 @@ export default function event(state = {}, action) {
       return {...state, order_data: action.data};
     case IS_VOLUNTEER:
       return {...state, is_volunteer: action.data};
+    case STORE_EVENT_CURRENCY:
+      return {...state, currencySymbol: action.data};
     default:
       return state;
   }
