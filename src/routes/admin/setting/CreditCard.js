@@ -19,7 +19,7 @@ class CreditCard extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			settings: {},
+			settings: undefined,
 			creditCardEnabled: false,
 			ccRequiredForBidConfirm: false,
 			showItemTransactions: false,
@@ -125,7 +125,8 @@ class CreditCard extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="row">
+                { this.state.settings ?
+									<div className="row">
                   <div className>
                     <div className="main-box no-header">
                       { this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
@@ -177,7 +178,7 @@ class CreditCard extends React.Component {
 														</div>
 														<div className="col-md-4">
 															<ToggleSwitch name="ccRequiredForBidConfirm" id="ccRequiredForBidConfirm"
-																						defaultValue={this.state.settings && this.state.settings.ccRequiredForBidConfirm}
+																						defaultValue={this.state.settings && this.state.settings.ccRequiredForBidConfirm || false}
 																						className="success" onChange={() => {
 																this.state.settings.ccRequiredForBidConfirm = !this.state.settings.ccRequiredForBidConfirm
 															}}/>
@@ -220,7 +221,7 @@ class CreditCard extends React.Component {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> :  <div id="app" className="loader" /> }
 							</div>
 						</div>
 					</div>
