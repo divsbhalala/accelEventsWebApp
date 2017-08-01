@@ -368,7 +368,7 @@ class HeaderNew extends React.Component {
 		return (
 			<div className={cx("top-header-wrap")} style={{background:this.props.hostDesign &&  this.props.hostDesign.headerColor,color:this.props.hostDesign &&  this.props.hostDesign.headerFontColor}}>
 				<Navbar fluid={true} style={ {margin: 0} }>
-					<Brand className={cx(this.props.admin && "p-0")}>
+					<Brand className={cx(this.props.admin)}>
             <span >
               { this.props.eventData &&
 							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
@@ -640,7 +640,7 @@ class HeaderNew extends React.Component {
 					onCloseFunc={this.hideFormMessagePopup}
 					modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={() => {
 						this.hideFormMessagePopup()
-					}}>Close</button>}
+					}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
 				>
 					{ this.state.formMessage }
 				</PopupModel> }
@@ -651,7 +651,7 @@ class HeaderNew extends React.Component {
 					params={this.props.params }
 					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
 						this.hideLoginPopup()
-					}}> Close </button>}
+					}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
 				/>
 			</div>
 		)

@@ -27,10 +27,14 @@ import RaffleAddItems from './raffle/addItem/RaffleAddItems';
 import RaffleSetting from './raffle/settings/RaffleSetting';
 import DonationPerformance from './donation/performance/DonationPerformance';
 import UserManagement from './usermanagement/UserManagement';
+import EventsList from './event/index';
+import WhiteLabelEventList from './event/whiteLabelEvent';
+import OrganizationSettings from './event/organizationSettings';
+import WhiteLabelUserManagement from './event/WhiteLabelUserManagement';
 
 
 const title = 'Admin Page';
-const isAdmin = false;
+const isAdmin = true;
 
 export default {
 
@@ -48,7 +52,7 @@ export default {
         return {
           title,
           chunk: 'host',
-          component: <AdminLayout><Admin title={title} /></AdminLayout>,
+          component: <AdminLayout class="host dashboard" isAdmin={isAdmin}><Admin title={title} /></AdminLayout>,
         };
       },
     },
@@ -57,7 +61,7 @@ export default {
       async action() {
         return {
           title: 'Design Page',
-          component: <AdminLayout><Design title="Design Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin} ><Design title="Design Page" /></AdminLayout>,
         };
       },
     },
@@ -66,7 +70,7 @@ export default {
       async action() {
         return {
           title: 'Ticket Page',
-          component: <AdminLayout><Ticket title="Ticket Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><Ticket title="Ticket Page" /></AdminLayout>,
         };
       },
     },
@@ -75,7 +79,7 @@ export default {
       async  action() {
         return {
           title: 'Create Ticket',
-          component: <AdminLayout><CreateTicket title="Create Ticket" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><CreateTicket title="Create Ticket" /></AdminLayout>,
         };
       },
     },
@@ -84,7 +88,7 @@ export default {
       async  action() {
         return {
           title: 'Event ticketing settings',
-          component: <AdminLayout><TicketSetting title="Event ticketing settings" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><TicketSetting title="Event ticketing settings" /></AdminLayout>,
         };
       },
     },
@@ -93,7 +97,7 @@ export default {
       async action() {
         return {
           title: 'Event ticketing Orders',
-          component: <AdminLayout><TicketOrders title="Event ticketing Orders" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><TicketOrders title="Event ticketing Orders" /></AdminLayout>,
         };
       },
     },
@@ -102,7 +106,7 @@ export default {
       async action(props) {
         return {
           title: 'Event ticketing Orders',
-          component: <AdminLayout><TicketHolderData ticketId={props.params && props.params.ticketId} title="Event ticketing edit holder data" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><TicketHolderData ticketId={props.params && props.params.ticketId} title="Event ticketing edit holder data" /></AdminLayout>,
         };
       },
     },
@@ -111,7 +115,7 @@ export default {
       async action(props) {
         return {
           title: 'Event ticketing Orders',
-          component: <AdminLayout><TicketRefund ticketId={props.params && props.params.ticketId} title="Event ticket refund" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><TicketRefund ticketId={props.params && props.params.ticketId} title="Event ticket refund" /></AdminLayout>,
         };
       },
     },
@@ -120,7 +124,7 @@ export default {
       async action(props) {
         return {
           title: 'Event ticketing Orders',
-          component: <AdminLayout><TicketRefund ticketId={props.params && props.params.ticketId} holderId={props.params && props.params.holderId} title="Event ticket refund" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><TicketRefund ticketId={props.params && props.params.ticketId} holderId={props.params && props.params.holderId} title="Event ticket refund" /></AdminLayout>,
         };
       },
     },
@@ -129,7 +133,7 @@ export default {
       async action() {
         return {
           title: 'Ticket Performance',
-          component: <AdminLayout><TicketPerformance title="Ticket Performance Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><TicketPerformance title="Ticket Performance Page" /></AdminLayout>,
         };
       },
     },
@@ -138,7 +142,7 @@ export default {
       async action() {
         return {
           title: 'Raffle Page',
-          component: <AdminLayout><Raffle title="Raffle Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><Raffle title="Raffle Page" /></AdminLayout>,
         };
       },
     },
@@ -147,7 +151,7 @@ export default {
       async action() {
         return {
           title: 'Raffle performance Page',
-          component: <AdminLayout><RafflePerformance title="Raffle performance Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><RafflePerformance title="Raffle performance Page" /></AdminLayout>,
         };
       },
     },
@@ -156,7 +160,7 @@ export default {
       async action() {
         return {
           title: 'Raffle Add Item Page',
-          component: <AdminLayout><RaffleAddItems title="Raffle Add Item" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><RaffleAddItems title="Raffle Add Item" /></AdminLayout>,
         };
       },
     },
@@ -165,7 +169,7 @@ export default {
       async action() {
         return {
           title: 'Raffle Setting',
-          component: <AdminLayout><RaffleSetting title="Raffle Setting " /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><RaffleSetting title="Raffle Setting " /></AdminLayout>,
         };
       },
     },
@@ -174,7 +178,7 @@ export default {
       async action() {
         return {
           title: 'Silent Auction Page',
-          component: <AdminLayout><Auction title="Silent Auction Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><Auction title="Silent Auction Page" /></AdminLayout>,
         };
       },
     },
@@ -183,7 +187,7 @@ export default {
       async action() {
         return {
           title: 'Silent Auction performance Page',
-          component: <AdminLayout><AuctionPerformance title="Silent Auction performance Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><AuctionPerformance title="Silent Auction performance Page" /></AdminLayout>,
         };
       },
     },
@@ -192,7 +196,7 @@ export default {
       async action() {
         return {
           title: 'Silent Auction Add Item',
-          component: <AdminLayout><SilentAuctionAddItems title="Silent Auction Add item" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><SilentAuctionAddItems title="Silent Auction Add item" /></AdminLayout>,
         };
       },
     },
@@ -201,7 +205,7 @@ export default {
       async action() {
         return {
           title: 'Silent Auction Setting',
-          component: <AdminLayout><SilentAuctionSettings title="Silent Auction Setting" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><SilentAuctionSettings title="Silent Auction Setting" /></AdminLayout>,
         };
       },
     },
@@ -210,7 +214,7 @@ export default {
       async  action() {
         return {
           title: 'Setting Page',
-          component: <AdminLayout><SettingsGeneral title="Setting Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><SettingsGeneral title="Setting Page" /></AdminLayout>,
         };
       },
     },
@@ -219,7 +223,7 @@ export default {
       async action() {
         return {
           title: 'Users Page',
-          component: <AdminLayout><Users title="Users Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><Users title="Users Page" /></AdminLayout>,
         };
       },
     },
@@ -228,7 +232,7 @@ export default {
       async action() {
         return {
           title: 'Fund Page',
-          component: <AdminLayout><Fund title="Fund Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><Fund title="Fund Page" /></AdminLayout>,
         };
       },
     },
@@ -237,7 +241,7 @@ export default {
       async action() {
         return {
           title: 'Fund Page',
-          component: <AdminLayout><FundAddItems title="Fund Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><FundAddItems title="Fund Page" /></AdminLayout>,
         };
       },
     },
@@ -246,7 +250,7 @@ export default {
       async action() {
         return {
           title: 'Fund Page',
-          component: <AdminLayout><FundSetting title="Fund Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><FundSetting title="Fund Page" /></AdminLayout>,
         };
       },
     },
@@ -255,7 +259,7 @@ export default {
       async action() {
         return {
           title: 'Fund performance Page',
-          component: <AdminLayout><FundPerformance title="Fund performance Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><FundPerformance title="Fund performance Page" /></AdminLayout>,
         };
       },
     },
@@ -264,7 +268,7 @@ export default {
       async action() {
         return {
           title: 'Donation performance Page',
-          component: <AdminLayout><DonationPerformance title="Donation performance Page" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><DonationPerformance title="Donation performance Page" /></AdminLayout>,
         };
       },
     },
@@ -273,7 +277,7 @@ export default {
       async action() {
         return {
           title: 'settings credit card',
-          component: <AdminLayout><SettingsCreditCard title="settings credit card" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><SettingsCreditCard title="settings credit card" /></AdminLayout>,
         };
       },
     },
@@ -282,7 +286,7 @@ export default {
       async action() {
         return {
           title: 'settings account',
-          component: <AdminLayout><SettingsAccount title="Settings Account" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><SettingsAccount title="Settings Account" /></AdminLayout>,
         };
       },
     },
@@ -291,11 +295,46 @@ export default {
       async action() {
         return {
           title: 'user management volunteers',
-          component: <AdminLayout><UserManagement title="user management volunteers" /></AdminLayout>,
+          component: <AdminLayout class="host" isAdmin={isAdmin}><UserManagement title="user management volunteers" /></AdminLayout>,
         };
       },
     },
-
+    {
+      path: '/u/:params/home',
+      async action(props) {
+        return {
+          title: "Events",
+          component: <WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/>,
+        };
+      }
+    },
+    {
+      path: '/u/:params/wl-settings',
+      async action(props) {
+        return {
+          title: "Organization Settings",
+          component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
+        };
+      }
+    },
+    {
+    	path: '/u/:params/user',
+      async action(props) {
+        return {
+          title: "WhiteLabel User Management",
+          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+        };
+      }
+    },
+    {
+    	path: '/superadmin/edit/:params',
+      async action(props) {
+        return {
+          title: "WhiteLabel User Management",
+          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+        };
+      }
+    }
 	]
 
 };

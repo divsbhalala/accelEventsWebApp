@@ -987,9 +987,9 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <div className="row btn-row" >
-                          <div className="col-sm-3">
-                            <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
+                        <div className="row btn-row mrg-b-lg" >
+                          <div className="col-sm-5">
+                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={!this.state.isValidBidData }
                                                              role="button" type="submit"
                                                              loading={this.state.loading} >
                             Submit Pledge

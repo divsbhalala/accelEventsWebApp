@@ -20,7 +20,7 @@ class AdminSidebar extends React.Component {
 		this.setNav = this.setNav.bind(this);
 	//	this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 	}
-  toggleUl = () =>{
+  toggleUl = () => {
 	  this.setState({
       toggle:!this.state.toggle
     });
@@ -31,7 +31,7 @@ class AdminSidebar extends React.Component {
 			showBuyRaffleTicketPopup: this.props.authenticated
 		})
 	};
-	setNav = (nav, subNav)=>{
+	setNav = (nav, subNav)=> {
 		this.setState({
 			nav: nav,
 			subNav: subNav
@@ -44,15 +44,15 @@ class AdminSidebar extends React.Component {
 	}
 	render() {
 		return (
-			<div className="nav-small-id" >
+			<div className="sidebar-wrap" >
 				<div id="nav-col">
-					<section id="col-left" className="col-left-nano has-scrollbar">
+					<section id="col-left" className="col-left-nano">
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
 							<div id="user-left-box" className="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
 								<div className="event-logo">
 									<img src={this.props.eventDetails && this.props.eventDetails.eventDesignDetailDto && this.props.eventDetails.eventDesignDetailDto && this.props.eventDetails.eventDesignDetailDto.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.eventDetails.eventDesignDetailDto.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} className="img-responsive" />
                 	<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
-										<img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
+										<img src="/images/photo-camera.png" /> Change Logo
 									</a>
 								</div>
 							</div>
@@ -206,11 +206,9 @@ class AdminSidebar extends React.Component {
 								</ul>
 							</div>
 						</div>
-						<div className="nano-pane"><div className="nano-slider" style={{ transform: 'translate(0px, 0px)'}} /></div></section>
-					<div id="nav-col-submenu" />
+					</section>
 				</div>
 			</div>
-
 		);
 	}
 }

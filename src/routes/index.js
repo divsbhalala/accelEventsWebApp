@@ -35,6 +35,7 @@ export default {
     // Provide default values for title, description etc.
     route.title = `${route.title || 'Untitled Page'}`;
     route.description = route.description || '';
+    route.isAdmin = route.component.props.isAdmin || false;
 
     return route;
   },
