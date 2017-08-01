@@ -59,6 +59,7 @@ class HeaderNew extends React.Component {
 			errorMsgNumber: null,
 			phoneNumber: false,
 			toggle: true,
+
 			emailValue: null,
 			nameValue: null,
 			messageValue: null,
@@ -87,6 +88,7 @@ class HeaderNew extends React.Component {
 
 	onFormClick = (e) => {
 		e.preventDefault();
+
 
 		if (this.email.value == '') {
 			this.setState({
@@ -247,7 +249,13 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-		//	history.push('/login');
+    setTimeout(()=>{history.push('/u/login');},1000)
+	};
+	logoutSuperUser = () => {
+		localStorage.clear();
+		sessionService.deleteSession();
+		sessionService.deleteUser();
+		setTimeout(()=>{history.push('/u/login');},1000)
 	};
 	showContactPopup = () => {
 		this.setState({
@@ -358,20 +366,24 @@ class HeaderNew extends React.Component {
 	render() {
 		let event = this.props.params && this.props.params.params;
 		return (
-			<div className={cx("top-header-wrap")}>
+			<div className={cx("top-header-wrap")} style={{background:this.props.hostDesign &&  this.props.hostDesign.headerColor,color:this.props.hostDesign &&  this.props.hostDesign.headerFontColor}}>
 				<Navbar fluid={true} style={ {margin: 0} }>
 					<Brand className={cx(this.props.admin)}>
             <span >
               { this.props.eventData &&
-							<Link to={"/event/" + this.props.eventData.eventURL} title={this.props.eventData.name}
+							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
-							{ this.props.admin && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
+							{ this.props.admin && this.props.hostDesign &&  ( this.props.hostDesign.headerLogoImage  ? <a href="" id="logo"
 								 className="navbar-brand" >
-            		<img
-									src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png"
+								<img
+									src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/'+this.props.hostDesign.headerLogoImage}
 									alt className="normal-logo logo-white has-custom"/>
-          		</a>}
-							{ this.props.admin && <button type="button" className="navbar-toggle" onClick={() => {
+          		</a>:
+                <img
+                  src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png'}
+                  alt className="normal-logo logo-white has-custom"/>
+              )}
+							{  this.props.admin && !this.props.superAdmin &&  <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}}>
                   <span className="sr-only">Toggle navigation</span>
@@ -383,7 +395,7 @@ class HeaderNew extends React.Component {
             </span>
 
 					</Brand>
-					{ this.props.admin && <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
+					{ this.props.admin && !this.props.superAdmin && <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
 						<ul className="nav navbar-nav pull-left">
 							<li>
 								<a className="btn" id="make-small-nav" onClick={() => {
@@ -407,71 +419,71 @@ class HeaderNew extends React.Component {
 							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
 						</MenuItem> }
 						{ event && this.props.is_volunteer && !this.props.admin && <MenuItem eventKey="3" onClick={() => {
-							history.push('/event/' + event + '/volunteer')
+							history.push('/events/' + event + '/volunteer')
 						}}>
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
-						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"></i> <span className="hidden-xs">Views</span></span> } id='navDropdown3'>
+						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"/> <span className="hidden-xs">Views</span> </span>} id="navDropdown3">
 
 							<MenuItem eventKey="5" onClick={() => {
-								history.push("/scroll/" + event + "/auction")
+								history.push("/events/" + event + "/auction/scroll")
 							}}>
 								<span> Auction Scrolling </span>
 							</MenuItem>
 							<MenuItem eventKey="6" onClick={() => {
-								history.push("/scroll/" + event + "/raffle")
+								history.push("/events/" + event + "/raffle/scroll")
 							}}>
 								<span> Raffle Scrolling </span>
 							</MenuItem>
 							<MenuItem eventKey="7" onClick={() => {
-								history.push("/scroll/" + event + "/fund")
+								history.push("/events/" + event + "/FundaNeed/scroll")
 							}}>
 								<span> Fund a Need Scrolling </span>
 							</MenuItem>
 							<MenuItem divider/>
 							<MenuItem eventKey="8" onClick={() => {
-								history.push("/goal/" + event + "/auction")
+								history.push("/events/" + event + "/auction/goal")
 							}}>
 								<span> Auction Goal </span>
 							</MenuItem>
 							<MenuItem eventKey="9" onClick={() => {
-								history.push("/goal/" + event + "/raffle")
+								history.push("/events/" + event + "/raffle/goal")
 							}}>
 								<span> Raffle Goal </span>
 							</MenuItem>
 							<MenuItem eventKey="10" onClick={() => {
-								history.push("/goal/" + event + "/fund")
+								history.push("/events/" + event + "/FundaNeed/goal")
 							}}>
 								<span> Fund a Need Goal </span>
 							</MenuItem>
 							<MenuItem divider/>
 							<MenuItem eventKey="11" onClick={() => {
-								history.push("/table/" + event + "/auction")
+								history.push("/events/" + event + "/auction/table")
 							}}>
 								<span> Auction Table </span>
 							</MenuItem>
 							<MenuItem eventKey="12" onClick={() => {
-								history.push("/table/" + event + "/raffle")
+								history.push("/events/" + event + "/raffle/table")
 							}}>
 								<span> Raffle Table </span>
 							</MenuItem>
 							<MenuItem eventKey="13" onClick={() => {
-								history.push("/table/" + event + "/fund")
+								history.push("/events/" + event + "/FundaNeed/table")
 							}}>
 								<span> Fund a Need Table </span>
 							</MenuItem>
 
 						</NavDropdown>}
 
-						{ !this.props.authenticated && <MenuItem eventKey="8" onClick={this.showLoginPopup}>
+						{ !this.props.authenticated &&  <MenuItem eventKey="8" onClick={this.showLoginPopup}>
 							<i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
 						</MenuItem>}
 
-						{ !this.props.authenticated && <MenuItem eventKey="9"
+						{ !this.props.authenticated  &&  <MenuItem eventKey="9"
 							// onClick={this.showLoginPopup}
 																										 onClick={(event) => {
-																											 history.push('/signup');
+																											 history.push('/u/signup');
 																										 }}
 						>
 							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
@@ -480,24 +492,39 @@ class HeaderNew extends React.Component {
 						{ !this.props.admin && <MenuItem eventKey="10" className="hidden-xs">
 							<i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
 						</MenuItem> }
-						{ this.props.admin && <MenuItem eventKey="10" className="white">
+						{ this.props.admin && !this.props.superAdmin && <MenuItem eventKey="10" className="white">
 							<i className="fa fa-question-circle"></i>Help
 						</MenuItem> }
+						{ this.props.admin && this.props.superAdmin && <MenuItem eventKey="10" className="white"  onClick={this.logoutSuperUser}>
+              <span> <i className="fa fa-sign-out fa-fw"   /> Logout </span>
+						</MenuItem> }
 
-						{
-							this.props.authenticated && <NavDropdown className=" profile-dropdown pointer" title={<span><img
-								src="/images/user-icon-placeholder.png"
-								alt="{this.props.user.firstName}"/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
-							</span>} id='navDropdown4'>
-								<MenuItem eventKey="2" onClick={() => {
-                  history.push("/my-profile")
-                }}>
-                  <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
-								</MenuItem>
-								<MenuItem divider/>
-								<MenuItem eventKey="4" onClick={this.logout}>
-									<span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
-								</MenuItem>
+            {
+							this.props.authenticated && !this.props.superAdmin &&  <NavDropdown
+  className=" profile-dropdown pointer" title={<span><img
+    src="/images/user-icon-placeholder.png"
+    alt="{this.props.user.firstName}"
+  /> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+  </span>} id="navDropdown4"
+							>
+  <MenuItem
+    eventKey="2" onClick={() => {
+      history.push('/u/my-activity');
+    }}
+  >
+    <span> <i className="fa fa fa-money fa-fw" /> My Activity </span>
+  </MenuItem>
+  <MenuItem
+    eventKey="2" onClick={() => {
+      history.push('/u/my-profile');
+    }}
+  >
+    <span> <i className="fa fa-user fa-fw" /> User Profile </span>
+  </MenuItem>
+  <MenuItem divider />
+  <MenuItem eventKey="4" onClick={this.logout}>
+    <span> <i className="fa fa-sign-out fa-fw" /> Logout </span>
+  </MenuItem>
 							</NavDropdown>
 						}
 
@@ -615,7 +642,7 @@ class HeaderNew extends React.Component {
 						this.hideFormMessagePopup()
 					}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
 				>
-					<center>{ this.state.formMessage }</center>
+					{ this.state.formMessage }
 				</PopupModel> }
 				<LoginModal
 					showModal={this.state.showLoginPopup}
@@ -645,6 +672,8 @@ const mapStateToProps = (state) => ({
 	is_volunteer: state.event && state.event.is_volunteer,
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
+  hostData : state.host && state.host.data,
+  hostDesign : state.host && state.host.eventDetails && state.host.eventDetails.eventDesignDetailDto,
 });
 
 function toggleSide() {

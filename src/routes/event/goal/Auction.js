@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetSettings, getGoalData} from './../event/action/index';
+import {doGetSettings, getGoalData} from './../action/index';
 import s from './goal.css';
-import EventEndUntil from '../../components/Widget/EventEndUntil';
-import TotalProceeds from '../../components/Widget/TotalProceeds';
-import Thermometer from '../../components/Widget/Thermometer';
+import EventEndUntil from '../../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../../components/Widget/TotalProceeds';
+import Thermometer from '../../../components/Widget/Thermometer';
 
 class Auction extends React.Component {
 	static propTypes = {
@@ -48,6 +48,7 @@ class Auction extends React.Component {
 		return (
 			<div className="container goal-page">
 				<div className="row">
+					{this.state.goalData ?
 					<div className="col-lg-12">
 						<div>
 							<div className="row header">
@@ -77,6 +78,7 @@ class Auction extends React.Component {
 
 						</div>
 					</div>
+					: <div id="app" className="loader" /> }
 				</div>
 
 			</div>

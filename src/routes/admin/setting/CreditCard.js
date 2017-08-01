@@ -19,7 +19,7 @@ class CreditCard extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			settings: {},
+			settings: undefined,
 			creditCardEnabled: false,
 			ccRequiredForBidConfirm: false,
 			showItemTransactions: false,
@@ -97,28 +97,6 @@ class CreditCard extends React.Component {
 	};
 
 	render() {
-		const options = {
-			page: 1,  // which page you want to show as default
-			sizePerPageList: [{
-				text: '5', value: 5
-			}, {
-				text: '10', value: 10
-			}, {
-				text: 'All', value: 100
-			}], // you can change the dropdown list for size per page
-			sizePerPage: 10,  // which size per page you want to locate as default
-			pageStartIndex: 0, // where to start counting the pages
-			paginationSize: 5,  // the pagination bar size.
-			prePage: 'Prev', // Previous page button text
-			nextPage: 'Next', // Next page button text
-			// firstPage: 'First', // First page button text
-			// lastPage: 'Last', // Last page button text
-			// paginationShowsTotal: this.renderShowsTotal,  // Accept bool or function
-			paginationPosition: 'bottom'  // default is bottom, top and both is all available
-			// hideSizePerPage: true > You can hide the dropdown for sizePerPage
-			// alwaysShowAllBtns: true // Always show next and previous button
-			// withFirstAndLast: false > Hide the going to First and Last page button
-		};
 		return (
 			<div id="content-wrapper" className="admin-content-wrapper">
 				<div className="row">
@@ -143,17 +121,18 @@ class CreditCard extends React.Component {
 													<Button loading={this.state.loading} className="btn btn-info mrg-b-md" type="button" onClick={this.submitSettings}>&nbsp;&nbsp;&nbsp;&nbsp;Save
 														Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
 												</div>
-											</h1>
-										</div>
-									</div>
-								</div>
-								<div className="row">
-									<div className>
-										<div className="main-box no-header">
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                        { this.state.message }</div>
-											<div className="main-box-body clearfix">
-												<p>If you would like to accept credit cards through Accelevents please set up a Stripe account.
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+                { this.state.settings ?
+									<div className="row">
+                  <div className>
+                    <div className="main-box no-header">
+                      { this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
+                        { this.state.message }</div> }
+                      <div className="main-box-body clearfix">
+                        <p>If you would like to accept credit cards through Accelevents please set up a Stripe account.
 													There is a link below with a step-by-step guide on how to quickly (5-10 minutes) create your
 													free Stripe account.</p>
 												<form id="form" className="mrg-t-lg">
@@ -199,7 +178,7 @@ class CreditCard extends React.Component {
 														</div>
 														<div className="col-md-4">
 															<ToggleSwitch name="ccRequiredForBidConfirm" id="ccRequiredForBidConfirm"
-																						defaultValue={this.state.settings && this.state.settings.ccRequiredForBidConfirm}
+																						defaultValue={this.state.settings && this.state.settings.ccRequiredForBidConfirm || false}
 																						className="success" onChange={() => {
 																this.state.settings.ccRequiredForBidConfirm = !this.state.settings.ccRequiredForBidConfirm
 															}}/>
@@ -242,7 +221,7 @@ class CreditCard extends React.Component {
 											</div>
 										</div>
 									</div>
-								</div>
+								</div> :  <div id="app" className="loader" /> }
 							</div>
 						</div>
 					</div>
@@ -273,7 +252,7 @@ class CreditCard extends React.Component {
 						<tbody>
 						{
 							this.state.transactions ? this.state.transactions.map(item=>{
-								<tr>
+								<tr key={item.name}>
 									<td>{item.name}</td>
 									<td>{item.phoneNumber}</td>
 									<td>{item.amount}</td>

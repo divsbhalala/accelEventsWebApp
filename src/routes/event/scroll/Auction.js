@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {doGetAuctionItemByLimit, doGetSettings, getScrollData} from './../event/action/index';
+import {doGetAuctionItemByLimit, doGetSettings, getScrollData} from './../action/index';
 import s from './scroll.css';
 import moment from 'moment';
-import EventEndUntil from '../../components/Widget/EventEndUntil';
-import TotalProceeds from '../../components/Widget/TotalProceeds';
-import ItemList from '../../components/Widget/Auction/ItemList';
+import EventEndUntil from '../../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../../components/Widget/TotalProceeds';
+import ItemList from '../../../components/Widget/Auction/ItemList';
 import $ from 'jquery'
 // import  history from './../../../history';
 
@@ -38,6 +38,7 @@ class Auction extends React.Component {
   render() {
     return (
       <div className={cx("scroll-page-wrap auction-scroll")}>
+        {this.state.settings ?
         <div id="content-wrapper">
           <div className="row">
             <div className="col-md-5 col-md-offset-1">
@@ -66,7 +67,7 @@ class Auction extends React.Component {
                   </thead>
                 </table>
                 <div id="scroller" className="scrollingpage microsoft scroll-container" height={ "500px"}>
-                  {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <p  className="marquee" >
+                  {this.state.settings && this.state.settings.items && this.state.settings.items.length > 8 && <span  className="marquee" >
                     <table className={cx("table datatables scrollingtable" , s.inner)}>
                       <tbody>
                       {this.state.settings && this.state.settings.items &&
@@ -76,7 +77,7 @@ class Auction extends React.Component {
                       }
                       </tbody>
                     </table>
-                  </p>}
+                  </span>}
                   {this.state.settings && this.state.settings.items && this.state.settings.items.length <= 8 && <table className={("table datatables scrollingtable")}>
                     <tbody>
 										{this.state.settings && this.state.settings.items &&
@@ -91,6 +92,8 @@ class Auction extends React.Component {
             </div>
           </div>
         </div>
+        : <div id="app" className="loader" /> }
+
       </div>
     );
   }

@@ -20,7 +20,7 @@ class Navigation extends React.Component {
        </div>*/
       <header className="navbar turquoise-bg" id="header-navbar">
         <div className="container">
-          <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo" className="navbar-brand">
+          <a href="host/dashboard/home" id="logo" className="navbar-brand">
             <img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png" alt className="normal-logo logo-white has-custom" />
           </a>
           <div className="clearfix">

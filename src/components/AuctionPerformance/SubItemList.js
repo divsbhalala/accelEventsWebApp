@@ -92,7 +92,7 @@ class SubItemList extends React.Component {
         this.setState({
           loading:false,
           showPopup: true,
-          errorMsg: "Bidder has been notified.",
+          errorMsg: resp.errorMessage,
           popupHeader:"Failed",
           popupType:"Delete-Confirmation-Failed",
         });
@@ -142,10 +142,89 @@ class SubItemList extends React.Component {
 							<td><span className="phone">{item.bidderPhone}</span></td>
 							<td><span className="name">{item.bidderFirstName}</span></td>
 							<td><span className="name">{item.bidderLastName}</span></td>
-							<td><span className="amount">${item.bidAmount}</span></td>
-              {!item.bidPaid && 	<td> <a className="delete-bid" onClick={()=>this.requestPaymentAction(item)}> Request Payment</a></td> }
+							<td><span className="amount">{this.props.currencySymbol}{item.bidAmount}</span></td>
+
+              {/* Condition for Request Payment */}
+              { (
+                  (
+                    item.bidId === item.highestBid &&
+                    item.eventEnded &&
+                    !item.bidPaid &&
+                    item.confirm
+                  )
+                  ||
+								(
+								  item.cardRequiredForBidConfirmartion &&
+                  item.eventCardEnabled &&
+                  item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid
+                )
+                  ||
+								(
+								  !item.cardRequiredForBidConfirmartion &&
+                  !item.eventCardEnabled &&
+                  item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid
+                )||
+								(
+								  item.bidId === item.highestBid &&
+                  item.eventCardEnabled &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid
+                )
+              ) ?
+              <td> <a className="delete-bid" onClick={()=>this.requestPaymentAction(item)}> Request Payment</a></td>
+              : ""}
+
+
+							{/* Condition for Request Confirmation */}
+              { (
+                item.cardRequiredForBidConfirmartion &&
+                item.eventCardEnabled &&
+                !item.bidderCardAvailble &&
+                !item.eventEnded &&
+                !item.displayBuyItNowPrice &&
+                !item.bidPaid ) ?
+              <td> <a className="delete-bid" onClick={()=>alert("Request Confirmation")}>Request Confirmation</a></td>
+              : ""}
+
+
+							{/* Condition for Request Name */}
+							{ (
+								( !item.cardRequiredForBidConfirmartion
+                  && !item.eventCardEnabled &&
+                  (!item.bidderFirstName || !item.bidderLastName) &&
+                  !item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid )
+                ||
+								( !item.cardRequiredForBidConfirmartion &&
+                  item.eventCardEnabled &&
+								  (!item.bidderFirstName || !item.bidderLastName) &&
+                  !item.eventEnded &&
+                  !item.displayBuyItNowPrice &&
+                  !item.bidPaid )
+                ||
+                ( !item.cardRequiredForBidConfirmartion &&
+                  !item.eventCardEnabled &&
+								  (!item.bidderFirstName || !item.bidderLastName) &&
+                  item.displayBuyItNowPrice &&
+                  !item.bidPaid )
+							) ?
+                <td> <a className="delete-bid" onClick={()=>alert("Request Name")}> Request Name</a></td>
+								: ""}
+
+							{/* Condition for Request Payment */}
+							{ (item.bidId === item.highestBid &&
+                  item.eventEnded &&
+                  !item.bidPaid ) ?
+                <td> <a className="delete-bid" onClick={()=>this.markAsPaidAction(item)}>Mark as Paid</a></td>
+								: ""
+							}
               {/*{!item.bidPaid && 	<td> <a className="delete-bid" onClick={()=>this.markAsPaidAction(item)}> Mark as Paid</a></td> }*/}
-              {!item.bidPaid && 	<td> <span className="actions">
+              {<td> <span className="actions">
                   <ul className="mrg-b-xs readonly-actions list-inline">
                     <li>
                       <a className="delete-bid" onClick={()=>this.deleteAction(item)} >Delete</a>
@@ -156,7 +235,7 @@ class SubItemList extends React.Component {
 						</tr> ) }
 					</tbody>
 				</table>
-        : "Nobody has bid on this item." :<span className="sr-only"><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"> </i>Loading...</span>
+        : "Nobody has bid on this item." :<span><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"> </i>Loading...</span>
       }
       <PopupModel
         id="mapPopup"
@@ -186,5 +265,7 @@ const mapDispatchToProps = {
   markAsPaidBid: (bid) => markAsPaidBid(bid),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(SubItemList);

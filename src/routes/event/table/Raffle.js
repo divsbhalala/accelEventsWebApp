@@ -4,12 +4,12 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import s from './table.css';
-import {doGetSettings, getScrollData} from './../event/action/index';
+import {doGetSettings, getScrollData} from './../action/index';
 import moment from 'moment';
-import EventEndUntil from '../../components/Widget/EventEndUntil';
-import TotalProceeds from '../../components/Widget/TotalProceeds';
-import  EventAside from './../../components/EventAside/EventAside';
-import ItemList from '../../components/Widget/Raffle/ItemList';
+import EventEndUntil from '../../../components/Widget/EventEndUntil';
+import TotalProceeds from '../../../components/Widget/TotalProceeds';
+import  EventAside from './../../../components/EventAside/EventAside';
+import ItemList from '../../../components/Widget/Raffle/ItemList';
 // import  history from './../../../history';
 class Raffle extends React.Component {
   static propTypes = {
@@ -41,13 +41,15 @@ class Raffle extends React.Component {
       <div className="table-view-wrap">
         <div id="content-wrapper">
           <div className="row">
-            <div className="col-lg-3 col-md-4 col-sm-4">
+            {this.props.eventData ? <div className="col-lg-3 col-md-4 col-sm-4">
               <EventAside activeTab={'Raffle'} eventData={this.props.eventData} settings={this.state.eventSettings}
                           eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
                           showMapPopup={this.showMapPopup} activeCategory={false}/>
             </div>
+            : <div id="app" className="loader" /> }
             <div className="col-lg-9 col-md-8 col-sm-8">
               <div className="main-box no-header clearfix">
+                { this.state.settings ?
                 <div className="main-box-body">
                   <div className="table white-bg">
 										{ this.state.settings && this.state.settings.displayText && <p className={cx(" help-text mrg-t-lg mrg-t-lg text-center")}>
@@ -74,6 +76,7 @@ class Raffle extends React.Component {
                     </div>
                   </div>
                 </div>
+                : <div id="app" className="loader" /> }
               </div>
             </div>
           </div>

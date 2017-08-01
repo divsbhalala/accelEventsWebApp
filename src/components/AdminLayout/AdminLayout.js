@@ -6,7 +6,7 @@ import './AdminLayout.css';
 import HeaderNew from '../HeaderNew/HeaderNew';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
-import AdminSiderbar from '../../components/Sidebar/AdminSidebar';
+import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import $ from 'jquery'
 
 class AdminLayout extends React.Component {
@@ -86,7 +86,7 @@ class AdminLayout extends React.Component {
     return (
       <div className={cx("fixed-header ", (this.props.class))}>
         <HeaderNew admin={true}/>
-        <AdminSiderbar />
+        <AdminSidebar />
         {this.props.children}
         {this.props.showFeedBack && <Feedback />}
         <Footer />

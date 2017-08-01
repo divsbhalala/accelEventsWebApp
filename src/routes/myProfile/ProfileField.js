@@ -44,7 +44,6 @@ class ProfileField extends React.Component {
  }
   componentWillUpdate(){}
   componentWillReceiveProps(){}
-
   render() {
     return (
       <li className="list-group-item">

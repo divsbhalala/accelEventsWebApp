@@ -30,9 +30,9 @@ class Html extends React.Component {
 
 
   render() {
-    const {title, description, styles, scripts, app, children} = this.props;
+    const {title, description, styles, scripts, app, children, isAdmin} = this.props;
     return (
-      <html lang="en">
+      <html lang="en">{console.log("isAdmin", isAdmin, this.props.component.props, this.props.component.props.isAdmin)}
         <head>
           <meta charSet="utf-8"/>
           <meta httpEquiv="x-ua-compatible" content="ie=edge"/>
@@ -63,17 +63,20 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/goal-thermometer.min.css"/>
           <link rel="stylesheet" href="/css/bootstrap-editable.css" />
           <link rel="stylesheet" href="/css/color-picker.css" />
-          <link rel="stylesheet" href="/css/react-bootstrap-date-picker.css" />
+          <link rel="stylesheet" href="/css/dragableList/main.css" />
+          <link rel="stylesheet" href="/css/daterangepicker.css" />
           {/* end plugins */}
 
           <link rel="stylesheet" href="/css/style.min.css"/>
           <link rel="stylesheet" href="/css/theme.min.css"/>
           <link rel="stylesheet" href="/css/display.min.css"/>
-          <link rel="stylesheet" href="/css/host.min.css"/>
+          {isAdmin ? <link rel="stylesheet" href="/css/host.min.css"/> : ""}
+
 
           {/* for temporary changes */}
-          {/*<link rel="stylesheet" href="/css/style2.css"/>*/}
-          {/*<link rel="stylesheet" href="/css/custom.css" />*/}
+          {isAdmin ? <link rel="stylesheet" href="/css/style2.css"/> : ""}
+          {isAdmin ? <link rel="stylesheet" href="/css/custom.css" /> : ""}
+          {isAdmin ? <link rel="stylesheet" href="/css/admin-style.min.css"/> : ""}
 
           <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDtLyd6ZZn_g4NaPstiJ8QgOLeWnPu0zas"></script>
           <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>

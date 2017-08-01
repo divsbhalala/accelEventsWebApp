@@ -5,12 +5,6 @@ class ToggleSwitch extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			isValidData: false,
-			email: null,
-			password: null,
-			error: null,
-			emailFeedBack: false,
-			passwordFeedBack: false,
 		}
 	};
 

@@ -114,7 +114,7 @@
 	max-height: 51px !important;
 }
 .form-group .glyphicon-ok, .form-group .glyphicon-remove {
-	display: none;
+	display: block !important;
 }
 .form-group.has-feedback.has-error .glyphicon-remove, .form-group.has-feedback.has-success .glyphicon-ok {
 	display: block;
@@ -535,4 +535,17 @@ body:not(.displayhome ) {
 		-webkit-transform: rotate(360deg);
 		transform: rotate(360deg);
 	}
+}
+.white{
+	color: white !important;
+}
+.model-transparent > .modal-content {
+	background-color: transparent;
+}
+.model-transparent {
+	width: 100%;
+	color: #fff;
+}
+.bg-white{
+	background-color: #fff !important;
 }

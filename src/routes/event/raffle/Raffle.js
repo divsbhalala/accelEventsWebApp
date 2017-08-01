@@ -627,7 +627,7 @@ class Raffle extends React.Component {
 
         </div>
         <div className="col-md-6 col-lg-5">
-          <Link to={this.props.params && "/event/" + this.props.params.params } role="button" className="btn btn-success btn-block" >
+          <Link to={this.props.params && "/events/" + this.props.params.params } role="button" className="btn btn-success btn-block" >
               Go back to All Items
           </Link>
         </div>
@@ -644,7 +644,7 @@ class Raffle extends React.Component {
       <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
-         to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
+         to={this.props.params && "/events/" + this.props.params.params } >Go back to All Items</Link>
     </div>;
     return (
       <div className="row">
@@ -686,8 +686,8 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                        { this.state.errorMsg }</div>
+                      {this.state.errorMsgCard  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsg }</div> }
                       { this.props.authenticated ? form_login : form_normal  }
                     </div>
                   </div>

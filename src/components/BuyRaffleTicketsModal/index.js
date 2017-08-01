@@ -753,10 +753,10 @@ componentDidMount() {
 								      noValidate="novalidate"
 								      onSubmit={this.buyRaffleTicket}>
 
-									<div
+                  { this.state.message && 	<div
 										className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')}>
 										{ this.state.errorMsgCard }
-										{ this.state.errorMsg }</div>
+										{ this.state.errorMsg }</div> }
 									{ !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?
 										<div
 											className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>

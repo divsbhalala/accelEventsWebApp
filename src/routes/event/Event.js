@@ -488,7 +488,18 @@ class Event extends React.Component {
 				}
 				this.setState({
 					rafflePageItems: resp.data.items,
-				})
+				},function changeAfter(){
+		          let seenNames = {};
+		          let array = this.state.rafflePageItems.filter(function(currentObject) {
+		            if (currentObject.id in seenNames) {
+		              return false;
+		            } else {
+		              seenNames[currentObject.id] = true;
+		              return true;
+		            }
+		          });
+		          this.setState({rafflePageItems:array})
+		        })
 			}
 			else {
 				this.setState({
@@ -788,7 +799,7 @@ class Event extends React.Component {
 												{
 													this.state.auctionPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="auction"
+														                   type="A"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -831,7 +842,7 @@ class Event extends React.Component {
 												{
 													this.state.rafflePageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="raffle"
+														                   type="R"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -868,7 +879,7 @@ class Event extends React.Component {
 												{
 													this.state.fundANeedPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="fund"
+														                   type="C"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -917,8 +928,8 @@ class Event extends React.Component {
 									<div className="sale-card" key={item.typeId.toString()}>
 										<div className="flex-row">
 											<div className="flex-col">
-												<div className="type-name"><strong>{item.name}</strong>
-													(<span className="type-cost txt-sm gray">${item.price}</span>)
+												<div className="type-name"><strong style={{"fontWeight":700}}>{item.name} </strong>
+													( <span className="type-cost txt-sm gray"> ${item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
 															<select className="form-control" name={item.typeId} data-price={item.price}
@@ -1121,7 +1132,7 @@ class GMap extends React.Component {
 			'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
 			'    </div>' +
 			'    <div class="form-group">' +
-			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick="getDirections()">' +
+			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onClick="getDirections()">' +
 			'    </div>' +
 			'    <div class="form-group">' +
 			'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +

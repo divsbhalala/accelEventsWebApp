@@ -33,11 +33,22 @@ export function doGetTicketingCouponCodes() {
 	}
 }
 
-export function doGetTicketTypes() {
+export function doTicketTypes(method, data) {
 	return (dispatch) => {
 		return axios({
-			method: "get",
+			method: method ? method : "get",
 			url: API_URL + "host/ticketing/ticketTypes",
+			data: data ? data : {},
+			headers: {Authorization: localStorage.getItem("token")}
+		})
+	}
+}
+
+export function doDeleteTicketTypes(id) {
+	return (dispatch) => {
+		return axios({
+			method: "delete",
+			url: API_URL + "host/ticketing/ticketType/"+id,
 			data: {},
 			headers: {Authorization: localStorage.getItem("token")}
 		})

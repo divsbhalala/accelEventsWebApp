@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import   PropTypes   from 'prop-types';
+import {connect} from 'react-redux';
 import {Panel} from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
@@ -120,7 +121,7 @@ class PenalBoxWidget extends Component { // eslint-disable-line
             <div className="flex-row">
               <div className="flex-col text-left lh-30">{this.props.secondTitle}:</div>
               <div className="flex-col lh-30">
-                ${this.props.secondData.toFixed(2)}
+                {this.props.currencySymbol}{this.props.secondData.toFixed(2)}
               </div>
             </div>
             <div className="flex-row">
@@ -134,4 +135,11 @@ class PenalBoxWidget extends Component { // eslint-disable-line
   }
 }
 
-export default PenalBoxWidget;
+const mapDispatchToProps = {
+
+};
+
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
+export default connect(mapStateToProps, mapDispatchToProps)(PenalBoxWidget);

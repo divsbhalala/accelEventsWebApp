@@ -92,8 +92,8 @@ class OrganizationSettings extends React.Component {
                 <Link className="btn btn-default " to="home">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</Link>
                 <Button className="btn btn-info" type="button" loading={this.state.loading}  onClick={this.submitSettings} >&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
               </div>
-              <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                { this.state.message }</div>
+              { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                { this.state.message }</div>  }
             </div>
             </div>
           <div className="row">
@@ -247,7 +247,7 @@ class OrganizationSettings extends React.Component {
                 <div className="row">
                   <div className="col-md-6 col-offset-md-3">
                     <Button className="btn btn-info" loading={this.state.loading}  onClick={this.submitSettings} type="button">&nbsp;&nbsp;&nbsp;&nbsp;Save Settings&nbsp;&nbsp;&nbsp;&nbsp;</Button>
-                    <Link to="home" className="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</Link>
+                    <Link to="u/wl/JonsBigWLL/home" className="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;&nbsp;</Link>
                   </div>
                 </div>
               </div>

@@ -17,9 +17,9 @@ export default {
     require('./privacy').default,
     require('./admin').default,
     require('./event').default,
-    require('./scroll').default,
-    require('./table').default,
-    require('./goal').default,
+   // require('./scroll').default,
+   // require('./table').default,
+   // require('./goal').default,
     require('./checkout').default,
     require('./myProfile').default,
 
@@ -35,6 +35,7 @@ export default {
     // Provide default values for title, description etc.
     route.title = `${route.title || 'Untitled Page'}`;
     route.description = route.description || '';
+    route.isAdmin = route.component.props.isAdmin || false;
 
     return route;
   },

@@ -129,7 +129,11 @@ class EventAside extends React.Component {
 				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>
 					<header className={cx("main-box-header", "clearfix")}>
-						<h2>TODO: Add event name </h2>
+						
+							{ this.props.eventData && this.props.eventData.name &&
+								<h2>{this.props.eventData.name}</h2>
+							}
+						
 					</header>
 					<div className={cx("main-box-body", "clearfix")}>
 						{ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.logoEnabled &&
@@ -247,8 +251,8 @@ class EventAside extends React.Component {
 									</a>
 								</li>
 								{
-									this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
-										<li className={cx(this.props.selectedCategory === item.name && "active")}
+									this.props.settings && this.props.settings.categories && this.props.settings.categories.map((item) =>
+										<li  className={cx(this.props.selectedCategory === item.name && "active")}
 												key={item.name + Math.random()} onClick={() => {
 											this.props.setFilterCategory(item.name)
 										}}>
