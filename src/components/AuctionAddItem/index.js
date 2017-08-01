@@ -39,7 +39,7 @@ class PlanetItem extends React.Component {
 		return (
 			<div className={cx('item', {dragged})}>
 				{dragHandle(<div className="dragHandle"/>)}
-				{this.props.item && <RowItemList item={this.props.item}/> }
+				{this.props.item && <RowItemList item={this.props.item}  /> }
 			</div>
 		);
 	}
@@ -116,11 +116,10 @@ class AuctionAddItem extends React.Component {
 
 	onListChange(newList: Array<Object>, movedItem: Array<Object>, oldIndex: number, newIndex: number) {
 		this.setState({list: newList});
-
-		let topItem = newIndex === 0 ? 0 : newIndex - 1;
-		let bottomItem = newIndex === newList.length - 1 ? newIndex : newIndex + 1;
-		if (newList[newIndex].id && newList[newIndex].id && newList[topItem].id && newList[bottomItem].id) {
-			this.props.updateItemListPosition('auction', newList[newIndex].id, newList[topItem].id, newList[bottomItem].id).then(resp => {
+		let topItem = newIndex === 0 ? 0 : newList[newIndex - 1].id;
+		let bottomItem = newIndex === newList.length - 1 ? 0 : newList[newIndex + 1].id;
+		if ( newList[newIndex].id && topItem && bottomItem) {
+			this.props.updateItemListPosition('auction', newList[newIndex].id, topItem, bottomItem).then(resp => {
 				if (resp && resp.data && resp.data.items.length) {
 					this.setState({list: resp.data.items});
 					console.log(this.state.items);
@@ -146,6 +145,7 @@ class AuctionAddItem extends React.Component {
 	addEmptyRow = () => {
 		const list = this.state.list;
 		let data = {
+      id:0,
 			"active": false,
 			"bidIncrement": 0,
 			"buyItNowPrice": 0,

@@ -16,7 +16,7 @@ class PlanetItem extends React.Component {
 
 	getDragHeight() {
 		return 60;
-	}
+	};
 
 	doToggle = () => {
 		this.setState({toggle: !this.state.toggle})
@@ -36,7 +36,7 @@ class PlanetItem extends React.Component {
 			</div>
 		);
 	}
-}
+};
 
 class FundNeedAddItem extends React.Component {
 	_container: HTMLElement;
@@ -79,17 +79,15 @@ class FundNeedAddItem extends React.Component {
 		setTimeout(() => {
 			this.setState({message: ""})
 		}, 4000)
-	}
+	};
 
 	getItemList = () => {
 		this.props.getItemList("fundANeed").then(resp => {
 			if (resp && resp.data && resp.data.items.length) {
 				this.setState({list: resp.data.items});
-				console.log(this.state.items);
 			}
 			else {
 				this.addEmptyRow();
-				console.log(resp);
 			}
 		}).catch((error) => {
 			console.log(error);
@@ -102,22 +100,20 @@ class FundNeedAddItem extends React.Component {
 
 	onListChange(newList: Array<Object>, movedItem: Array<Object>, oldIndex: number, newIndex: number) {
 		this.setState({list: newList});
-		let topItem = newIndex === 0 ? 0 : newIndex - 1;
-		let bottomItem = newIndex === newList.length - 1 ? newIndex : newIndex + 1;
-		if (newList[newIndex].id && newList[newIndex].id && newList[topItem].id && newList[bottomItem].id) {
-			this.props.updateItemListPosition('fundANeed', newList[newIndex].id, newList[topItem].id, newList[bottomItem].id).then(resp => {
+    let topItem = newIndex === 0 ? 0 : newList[newIndex - 1].id;
+    let bottomItem = newIndex === newList.length - 1 ? 0 : newList[newIndex + 1].id;
+    if ( newList[newIndex].id && topItem && bottomItem) {
+      this.props.updateItemListPosition('fundANeed', newList[newIndex].id, topItem, bottomItem).then(resp => {
 				if (resp && resp.data && resp.data.items.length) {
 					this.setState({list: resp.data.items});
-					console.log(this.state.items);
 				}
 				else {
-					console.log(resp);
 				}
 			}).catch((error) => {
 				console.log(error);
 			});
 		}
-	}
+	};
 
 	addNewRow = () => {
 		if (this.state.list.length > 0) {
@@ -131,6 +127,7 @@ class FundNeedAddItem extends React.Component {
 	addEmptyRow = () => {
 		const list = this.state.list;
 		let data = {
+      id:0,
 			"active": false,
 			"category": "",
 			"code": "",
@@ -145,7 +142,7 @@ class FundNeedAddItem extends React.Component {
 		}
 		list.unshift(data);
 		this.setState({list})
-	}
+	};
 
 	render() {
 		const {useContainer} = this.state;
@@ -184,7 +181,7 @@ class FundNeedAddItem extends React.Component {
 			</div>
 		);
 	}
-}
+};
 
 const mapDispatchToProps = {
 	getItemList: (type) => getItemList(type),

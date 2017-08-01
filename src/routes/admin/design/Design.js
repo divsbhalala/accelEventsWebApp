@@ -21,7 +21,7 @@ class Design extends React.Component {
   constructor() {
     super();
     this.state = {
-      settings: {},
+      settings:null,
       loading:false,
       isError:false,
       message:null,
@@ -74,6 +74,11 @@ class Design extends React.Component {
     });
     console.log(settings,value)
   };
+  eventNameChangeHandler = () => {
+    let settings = this.state.settings;
+    settings.eventName = this.eventName.value;
+    this.setState({settings})
+  }
   render() {
     return (
       <div>
@@ -115,7 +120,7 @@ class Design extends React.Component {
                               <div className="help-text" />
                             </div>
                             <div className="col-md-3">
-                              <input type="text"  name="name" className="form-control" value={this.state.settings.eventName} maxLength={50} />
+                              <input type="text" ref={ref=>{this.eventName=ref; }} onKeyUp={this.eventNameChangeHandler}  className="form-control" defaultValue={this.state.settings.eventName} maxLength={50} />
                             </div>
                           </div>
                           <div className="form-group row">
@@ -160,12 +165,14 @@ class Design extends React.Component {
                               <div className="help-text">The ideal dimensions are 1900 x 300 pixels.</div>
                             </div>
                             <div className="col-md-3">
+                              <div className="event-logo">
                               <div className="banner-img">
-                                <img src={this.state.settings.bannerImage ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/"+this.state.settings.bannerImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} alt className="img-responsive normal-logo logo-black" />
-                                <a role="button" href="#eventBannerImage" data-toggle="modal" className="change-image-text">
+                                <img src={this.state.settings.bannerImage ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/"+this.state.settings.bannerImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} alt className="img-responsive " />
+                                <a role="button" href="#event-logo" data-toggle="modal" className="change-image-text">
                                   <img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
                                 </a>
                               </div>
+                            </div>
                             </div>
                             <div className="col-md-3">
                               <ToggleSwitch name="requireBidderAddress" id="bannerImageEnabled"

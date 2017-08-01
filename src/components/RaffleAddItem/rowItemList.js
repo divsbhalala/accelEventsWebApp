@@ -75,27 +75,19 @@ class RowItemList extends React.Component {
 		item.code = this.itemCode.value;
 		this.setState({item, isDataUpdate: true})
 	}
-	// startingBidHandlerChange = (e) =>{
-	//   let item=this.state.item;
-	//   item.startingBid=this.startingBid.value;
-	//     this.setState({item,isDataUpdate:true})
-	// }
 	imageUploaded = () => {
 		this.setState({isDataUpdate: true}, function stateChange() {
 			this.autoAddData();
 		})
 	}
 	autoAddData = () => {
-		console.log("---><><><", this.state)
 		setTimeout(() => {
 			if (this.state.item.name && this.state.item.code && this.state.isDataUpdate) {
 				if (this.state.item.id) {
 					this.props.updateItemList('raffle', this.state.item.id, this.state.item).then(resp => {
-						console.log("Updated ", this.props.isItemAdded)
 					})
 				} else {
 					this.props.addItemList('raffle', this.state.item).then(resp => {
-						console.log("Insert ", this.props.isItemAdded)
 					})
 				}
 				this.setState({isDataUpdate: false})
@@ -114,7 +106,7 @@ class RowItemList extends React.Component {
 		this.setState({loading: true});
 		this.state.item && this.state.item.id &&
 		this.props.deleteItemList('raffle', this.state.item.id).then(resp => {
-			this.setState({loading: false})
+			this.setState({loading: false,showPopup: false,})
 		})
 
 	}

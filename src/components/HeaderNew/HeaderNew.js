@@ -249,7 +249,7 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-		history.push('/u/login');
+    setTimeout(()=>{history.push('/u/login');},1000)
 	};
 	logoutSuperUser = () => {
 		localStorage.clear();
@@ -373,12 +373,16 @@ class HeaderNew extends React.Component {
               { this.props.eventData &&
 							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
-							{ this.props.admin && this.props.hostDesign  && <a href="http://www.stagingaccel.com:8080/AccelEventsWebApp/host/dashboard/home" id="logo"
+							{ this.props.admin && this.props.hostDesign &&  ( this.props.hostDesign.headerLogoImage  ? <a href="" id="logo"
 								 className="navbar-brand" >
 								<img
 									src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/'+this.props.hostDesign.headerLogoImage}
 									alt className="normal-logo logo-white has-custom"/>
-          		</a>}
+          		</a>:
+                <img
+                  src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png'}
+                  alt className="normal-logo logo-white has-custom"/>
+              )}
 							{  this.props.admin && !this.props.superAdmin &&  <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}}>
@@ -669,7 +673,7 @@ const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
   hostData : state.host && state.host.data,
-  hostDesign : state.host && state.host.storeDesing,
+  hostDesign : state.host && state.host.eventDetails && state.host.eventDetails.eventDesignDetailDto,
 });
 
 function toggleSide() {

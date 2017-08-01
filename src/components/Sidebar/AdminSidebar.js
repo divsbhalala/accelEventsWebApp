@@ -50,9 +50,8 @@ class AdminSidebar extends React.Component {
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
 							<div id="user-left-box" className="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
 								<div className="event-logo">
-									<img src={this.props.hostDesign && this.props.hostDesign.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.hostDesign.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} className="img-responsive" />
-                  {console.log(this.props.hostDesign && this.props.hostDesign.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.hostDesign.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png")}
-									<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
+									<img src={this.props.eventDetails && this.props.eventDetails.eventDesignDetailDto && this.props.eventDetails.eventDesignDetailDto && this.props.eventDetails.eventDesignDetailDto.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.eventDetails.eventDesignDetailDto.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} className="img-responsive" />
+                	<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
 										<img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
 									</a>
 								</div>
@@ -223,7 +222,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
-	hostData : state.host && state.host.data && state.host.data.eventDesignDetailDto,
+	// hostData : state.host  && state.host.eventDetails.eventDesignDetailDto,
 	eventDetails : state.host && state.host.eventDetails
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);

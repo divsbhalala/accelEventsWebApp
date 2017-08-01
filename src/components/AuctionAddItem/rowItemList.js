@@ -92,6 +92,7 @@ handleImageUpload(file) {
       this.setState({item,isDataUpdate:true})
   }
   itemCodeHandlerChange = (e) =>{
+  this.itemCode.value= this.itemCode.value.replace(/[^a-zA-Z]/g, '');
     this.setState({ itemCodeFeedBack: true,});
     if (this.itemCode.value.trim() == '') {
       this.setState({ itemCode: false });
@@ -112,16 +113,19 @@ handleImageUpload(file) {
       this.setState({item,isDataUpdate:true})
   }
   buyItNowPriceHandlerChange = (e) =>{
-    this.setState({ buyItNowPriceFeedBack: true,});
-    if (this.buyItNowPrice.value.trim() == '') {
-      this.setState({ buyItNowPrice: true });
-    }else if (this.buyItNowPrice.value >= this.startingBid.value) {
-      this.setState({ buyItNowPrice: true });
-    } else { this.setState({buyItNowPrice: false}); }
 
-    let item=this.state.item;
-    item.buyItNowPrice=this.buyItNowPrice.value;
+    this.setState({ buyItNowPriceFeedBack: true,});
+    if (this.buyItNowPrice.value.trim() == '' || this.buyItNowPrice.value >= this.state.item.startingBid) {
+      this.setState({ buyItNowPrice: true });
+    }else {
+      this.setState({buyItNowPrice: false});
+    }
+    setTimeout(()=>{
+      let item=this.state.item;
+      item.buyItNowPrice=this.buyItNowPrice.value;
       this.setState({item,isDataUpdate:true})
+    },100)
+
   }
   bidIncrementHandlerChange = (e) =>{
     let item=this.state.item;
@@ -144,7 +148,6 @@ handleImageUpload(file) {
     })
   }
   autoAddData =() => {
-  console.log("---><><><",this.state)
     setTimeout(()=>{
     if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate && this.state.buyItNowPrice ){
       if (this.state.item.id ) {
@@ -200,7 +203,7 @@ render() {
         <div className="flex-col item-code-column">
 
           <input type="text" className="form-control item-code alpha-only" name="code" defaultValue={this.props.item.code} maxLength={3} onFocus={this.showPanel}
-                 ref={ref=> {this.itemCode=ref;}} onKeyUp={this.itemCodeHandlerChange} onBlur={this.autoAddData}/>
+                 ref={ref=> {this.itemCode=ref;}} onKeyUp={this.itemCodeHandlerChange} onBlur={this.autoAddData} />
           { this.state.itemCodeFeedBack && !this.state.itemCode && <small className="error red"> Item Code is Required.</small>}
         </div>
         <div className="flex-col item-starting-bid-column">
@@ -208,16 +211,16 @@ render() {
             <span className="input-group-addon">{this.props.currencySymbol}</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
                    ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>
-            { this.state.startingBidFeedBack && !this.state.startingBid && <small className="error red"> Starting Bid is Required.</small>}
           </div>
+          { this.state.startingBidFeedBack && !this.state.startingBid && <small className="error red"> Starting Bid is Required.</small>}
         </div>
         <div className="flex-col item-starting-bid-column">
           <div className="input-group">
             <span className="input-group-addon">{this.props.currencySymbol}</span>
             <input type="text" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.buyItNowPrice}  onFocus={this.showPanel}
                    ref={ref=> {this.buyItNowPrice=ref;}} onKeyUp={this.buyItNowPriceHandlerChange} onBlur={this.autoAddData}/>
-            { this.state.buyItNowPriceFeedBack && !this.state.buyItNowPrice && <small className="error red"> Buy it now price must be greater than Starting Bid</small>}
           </div>
+          { this.state.buyItNowPriceFeedBack && !this.state.buyItNowPrice && <small className="error red"> Buy it now price must be greater than Starting Bid</small>}
         </div>
         <div className="flex-col text-center item-actions-column">
           <ul className="list-inline">
