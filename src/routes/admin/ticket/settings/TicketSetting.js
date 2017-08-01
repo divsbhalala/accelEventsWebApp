@@ -40,8 +40,6 @@ class TicketSetting extends React.Component {
 			couponAmount : 0,
 			couponUses : 0,
 			couponCode : '',
-			couponEndDate : '',
-			couponStartDate : '',
 			discountType : '',
 			couponEventTicketTypeId : '',
 			couponCouponUsesType : 'Unlimited',
@@ -52,8 +50,11 @@ class TicketSetting extends React.Component {
 			couponToDelete: '',
 			errorMessage:'',
 			isError:false,
-			startDate: moment(),
-			endDate: moment().add(1, "days"),
+			couponStartDate: moment(),
+			couponEndDate: moment().add(1, "days"),
+			dialogMessage: "",
+			dialogTitle: "",
+			showDialog: false,
 		};
 		this.setActiveScreen = this.setActiveScreen.bind(this);
 		this.setActiveTab = this.setActiveTab.bind(this);
@@ -69,6 +70,27 @@ class TicketSetting extends React.Component {
 		this.confirmDeleteCode = this.confirmDeleteCode.bind(this);
 		this.toggleDeleteConfirmationPopup = this.toggleDeleteConfirmationPopup.bind(this);
 		this.doDeleteCouponCode = this.doDeleteCouponCode.bind(this);
+		this.toggleDialog = this.toggleDialog.bind(this);
+		this.throwError = this.throwError.bind(this);
+		this.onError = this.onError.bind(this);
+	};
+	toggleDialog = () => {
+		this.setState({
+			showDialog: !this.state.showDialog
+		})
+	};
+	throwError = (title, message) => {
+		this.setState({
+			dialogTitle: title || "Not found",
+			dialogMessage: message || "Oops! Something went wrong, Try again later"
+		});
+		setTimeout(() => {
+			this.toggleDialog();
+		}, 10);
+	};
+	onError = (error) => {
+		let resendMailError = error && error.response && error.response.data;
+		this.throwError("Error", resendMailError && resendMailError.errorMessage);
 	};
 	toggleCouponCodePopup = (e) => {
 		if(!this.state.isShowCouponModel){
@@ -77,7 +99,7 @@ class TicketSetting extends React.Component {
 					ticketData: resp && resp.data
 				})
 			}).catch(error=>{
-
+				this.onError(error);
 			})
 		}
 		else {
@@ -103,21 +125,21 @@ class TicketSetting extends React.Component {
 			let data = {
 				"amount": parseInt(this.state.couponAmount),
 				"couponCode": this.state.couponCode,
-				"couponEndDate":  moment().format(),//this.state.couponEndDate,
-				"couponStartDate": moment().format(),//this.state.couponStartDate,
+				"couponEndDate":  this.state.couponEndDate.format("DD/MM/YYYY HH:mm:ss"),
+				"couponStartDate": this.state.couponStartDate.format("DD/MM/YYYY HH:mm:ss"),
 				"discountType": this.state.discountType || "PERCENTAGE",
-				"eventTicketTypeId": this.state.selectedTicketTypes.join(",") || "",
+				"eventTicketTypeId": this.state.selectedTicketTypes.join(",") || 0,
 				"uses": this.state.couponUses || 0
 			};
 			this.props.doCreateCouponCode(data, this.state.isCouponEdit ? this.state.editingRow.code : null).then(resp=>{
-				console.log('resp', resp);
-			  this.setState({errorMessage:"",isError:false})//resp.data.message
+			  this.setState({errorMessage:"",isError:false}); // resp.data.message
 				this.resetCouponForm();
 				this.toggleCouponCodePopup();
 				this.getCouponCodes();
-
+				this.throwError("Success", this.state.isCouponEdit ? "Coupon updated successfully" : "Coupon created successfully");
 			}).catch(error=>{
-				console.log(error)
+				console.log(error);
+				this.onError(error);
 			})
 		}
 		else {
@@ -133,7 +155,7 @@ class TicketSetting extends React.Component {
 				document.querySelector('#check-'+item).checked = true;
 			});
 		}).catch(error=>{
-
+			this.onError(error);
 		})
 	};
 	setActiveTab = (tab, type)=>{
@@ -154,11 +176,10 @@ class TicketSetting extends React.Component {
 	saveSettings = (e)=>{
 		e.preventDefault();
 		this.props.doPostTicketingSettings('settings', this.state.settings).then(resp=>{
-			console.log('resp', resp);
-			alert("Saved")
+			this.throwError("Success", "Setting save successfully");
 		}).catch(error=>{
 			console.log('error', error);
-			alert("error in saved")
+			this.onError(error);
 		})
 
 	};
@@ -250,8 +271,8 @@ class TicketSetting extends React.Component {
 			couponAmount : 0,
 			couponUses : 0,
 			couponCode : '',
-			couponEndDate : '',
-			couponStartDate : '',
+			couponStartDate: moment(),
+			couponEndDate: moment().add(1, "days"),
 			discountType : '',
 			couponEventTicketTypeId : '',
 			couponCouponUsesType : 'Unlimited',
@@ -327,8 +348,8 @@ class TicketSetting extends React.Component {
 			activeScreen: row.eventTicketTypeId ? 2 : 3,
 			couponAmount: row.amount,
 			couponCode: row.code,
-			couponEndDate: moment(row.endDate).format("L"),
-			couponStartDate: moment(row.startDate).format("L"),
+			couponEndDate: moment(row.endDate).format("DD/MM/YYYY HH:mm:ss"),
+			couponStartDate: moment(row.startDate).format("DD/MM/YYYY HH:mm:ss"),
 			couponUses: row.maximumUseOfCoupon,
 			discountType: row.discountType,
 			couponEventTicketTypeId: row.eventTicketTypeId || "",
@@ -360,16 +381,16 @@ class TicketSetting extends React.Component {
 		});
 	};
 	render() {
-		let start = this.state.startDate.format("YYYY-MM-DD HH:mm:ss");
-		let end =this.state.endDate.format("YYYY-MM-DD HH:mm:ss");
-		// let end = this.state.endDate.format("YYYY-MM-DD HH:mm:ss");
+		let start = this.state.couponStartDate && this.state.couponStartDate._isAMomentObject ? this.state.couponStartDate.format("DD/MM/YYYY HH:mm:ss") : moment(this.state.couponStartDate).format("DD/MM/YYYY HH:mm:ss");
+		let end =this.state.couponEndDate && this.state.couponEndDate._isAMomentObject ? this.state.couponEndDate.format("DD/MM/YYYY HH:mm:ss") : moment(this.state.couponEndDate).format("DD/MM/YYYY HH:mm:ss");
+		// let end = this.state.endDate.format("DD/MM/YYYY HH:mm:sss");
 		let label = start + " - " + end;
 		if (start === end) {
 			label = start;
 		}
 
 		let locale = {
-			format: "YYYY-MM-DD HH:mm:ss",
+			format: "DD/MM/YYYY HH:mm:ss",
 			separator: " - ",
 			applyLabel: "Apply",
 			cancelLabel: "Cancel",
@@ -645,13 +666,12 @@ class TicketSetting extends React.Component {
 																<div className=" discount-codes-table-container">
 																	<div className="text">Event Specific Codes</div>
 																	<BootstrapTable data={this.state.couponCodes} striped hover search  pagination={ true }  options={ options }
-																									fetchInfo={{dataTotalSize: 30}}
 																									remote>
 																		<TableHeaderColumn dataSort  isKey={true} dataField='code'>NAME</TableHeaderColumn>
 																		<TableHeaderColumn dataSort  dataField='amount'>AMOUNT</TableHeaderColumn>
 																		<TableHeaderColumn  dataFormat={couponUsageCount}>USES</TableHeaderColumn>
 																		<TableHeaderColumn  dataFormat={formatStartEndDate} >STARS-ENDS</TableHeaderColumn>
-																		<TableHeaderColumn  dataFormat={formatActionButtons} ></TableHeaderColumn>
+																		<TableHeaderColumn  dataFormat={formatActionButtons} />
 																	</BootstrapTable>
 																</div>
 															</div>
@@ -767,7 +787,7 @@ class TicketSetting extends React.Component {
 														 onChange={this.changeCouponName}
 														 readOnly={this.state.isCouponEdit}
 											/>
-										</div>=<div className="help-text">E.g. Members, Child, Senior, Military etc. Presented as a sub-option to attendees when selecting a ticket</div>
+										</div><div className="help-text">E.g. Members, Child, Senior, Military etc. Presented as a sub-option to attendees when selecting a ticket</div>
 									</div>
 									<div className="form-group">
 										<label>Discount Amount</label>
@@ -827,45 +847,14 @@ class TicketSetting extends React.Component {
 												timePicker
 												showDropdowns
 												locale={locale}
-												startDate={this.state.startDate && this.state.startDate._isAMomentObject ? this.state.startDate : moment(this.state.startDate)}
-												endDate={this.state.endDate && this.state.endDate._isAMomentObject ? this.state.endDate : moment(this.state.endDate)}
+												startDate={this.state.couponStartDate && this.state.couponStartDate._isAMomentObject ? this.state.couponStartDate : moment(this.state.couponStartDate)}
+												endDate={this.state.couponEndDate && this.state.couponEndDate._isAMomentObject ? this.state.couponEndDate : moment(this.state.couponEndDate)}
 												onApply={this.handleDateRangeApply}
 											>
 												<div className={ cx("form-group bg-white", !this.state.hasInvalidDate && "has-error") }>
 													<input type="text" className={("form-control required")} value={label} required={true}/>
 												</div>
 											</DatetimeRangePicker>
-										</div>
-									</div>
-									<div className="form-group">
-										<label>Starts</label>
-										<div className="form-inline">
-											<div className="input-group">
-											{/*	<DateField
-													dateFormat="YYYY-MM-DD hh:mm:ss"
-													date={date}
-													onChange={onChange}
-												/>*/}
-												<input type="text" className="datepicker form-control white-bg"
-															 name="couponStartDate" id="couponStartDate"
-															 ref={(input) => {
-																 this.couponStartDate = input;
-															 }}
-															 defaultValue={this.state.couponStartDate}
-															 onChange={this.changeCouponStartDate}
-															 placeholder="Start Date"  />
-											</div>
-											<div className="input-group">
-												<input type="text"
-															 className="datepicker form-control white-bg"
-															 name="couponEndDate"
-															 ref={(input) => {
-																 this.couponEndDate = input;
-															 }}
-															 defaultValue={this.state.couponEndDate}
-															 onChange={this.changeCouponEndDate}
-															 id="couponEndDate" placeholder="End Date"  />
-											</div>
 										</div>
 									</div>
 								</div>
@@ -891,6 +880,20 @@ class TicketSetting extends React.Component {
 						<button className="btn btn-green" onClick={()=>{this.toggleDeleteConfirmationPopup()}}>Close</button></div>}
 				>
 					<center>{ this.state.message }</center>
+				</PopupModel>
+				<PopupModel
+					id="popupDialog"
+					showModal={this.state.showDialog && this.state.dialogMessage && this.state.dialogMessage.length > 0}
+					headerText={<p>{this.state.dialogTitle}</p>}
+					onCloseFunc={this.toggleDialog}
+					modelFooter={<div>
+						<button className="btn btn-green" onClick={() => {
+							this.toggleDialog()
+						}}>Close
+						</button>
+					</div>}
+				>
+					<div>{this.state.dialogMessage}</div>
 				</PopupModel>
 			</div>
 		);

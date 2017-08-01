@@ -190,7 +190,7 @@ class Setting extends React.Component {
 															</div>
 															<div className="col-md-4">
 																<div className="input-group">
-																	<span className="input-group-addon">$</span>
+																	<span className="input-group-addon">{this.props.currencySymbol}</span>
 																	<input
 																		type="text"
 																		className="form-control"
@@ -213,7 +213,7 @@ class Setting extends React.Component {
 															</div>
 															<div className="col-md-4">
 																<div className="input-group">
-																	<span className="input-group-addon">$</span>
+																	<span className="input-group-addon">{this.props.currencySymbol}</span>
 																	<input
 																		type="text"
 																		className="form-control"
@@ -349,5 +349,7 @@ const mapDispatchToProps = {
   putGetHostSettings: (type, data) => putGetHostSettings(type, data),
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
+});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Setting));
