@@ -64,6 +64,7 @@ class RowItemList extends React.Component {
 		this.setState({item, isDataUpdate: true})
 	}
 	itemCodeHandlerChange = (e) => {
+    this.itemCode.value= this.itemCode.value.replace(/[^a-zA-Z]/g, '');
 		this.setState({itemCodeFeedBack: true,});
 		if (this.itemCode.value.trim() == '') {
 			this.setState({itemCode: false});

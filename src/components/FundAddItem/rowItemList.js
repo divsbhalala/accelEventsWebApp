@@ -67,6 +67,7 @@ class RowItemList extends React.Component {
 		this.setState({item, isDataUpdate: true})
 	};
 	itemCodeHandlerChange = (e) => {
+    this.itemCode.value= this.itemCode.value.replace(/[^a-zA-Z]/g, '');
 		this.setState({itemCodeFeedBack: true,});
 		if (this.itemCode.value.trim() === '') {
 			this.setState({itemCode: false});
@@ -184,7 +185,7 @@ class RowItemList extends React.Component {
 					<div className="flex-col item-starting-bid-column">
 						<div className="input-group">
 							<span className="input-group-addon">{this.props.currencySymbol}</span>
-							<input type="text" className="form-control item-bid" name="startingBid"
+							<input type="number" className="form-control item-bid" name="startingBid"
 										 defaultValue={this.props.item.startingBid} onFocus={this.showPanel}
 										 ref={ref => {
 											 this.startingBid = ref;
