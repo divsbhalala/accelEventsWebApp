@@ -98,7 +98,7 @@ class AdminSidebar extends React.Component {
 											<span>Design</span>
 										</Link>
 									</li>
-						      { this.props.hostData && this.props.hostData.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
+						      { this.props.eventDetails && this.props.eventDetails.ticketingEnabled ?<li className={cx(this.state.nav === "ticketing" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("ticketing", "")}}>
 											<i className="vt vt-event-ticketing" />
 											<span>Ticketing</span>
@@ -121,7 +121,7 @@ class AdminSidebar extends React.Component {
 											</li>
 										</ul>
 									</li> : "" }
-									{ this.props.hostData && this.props.hostData.auctionEnabled ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
+									{ this.props.eventDetails && this.props.eventDetails.auctionEnabled ? <li className={cx(this.state.nav === "silentAuction" && "active")} onClick={()=>{  }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("silentAuction", "")}} >
 											<i className="vt vt-gavel" />
 											<span>Silent Auction Management</span>
@@ -139,7 +139,7 @@ class AdminSidebar extends React.Component {
 											</li>
 										</ul>
 									</li> :"" }
-									{ this.props.hostData && this.props.hostData.raffleEnabled ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
+									{ this.props.eventDetails && this.props.eventDetails.raffleEnabled ? <li className={cx(this.state.nav === "raffle" && "active")} onClick={()=>{ }} >
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("raffle", "")}} >
 											<i className="vt vt-raffle" />
 											<span>Raffle</span>
@@ -157,7 +157,7 @@ class AdminSidebar extends React.Component {
 											</li>
 										</ul>
 									</li> : ""}
-									{ this.props.hostData && this.props.hostData.fundANeedEnabled ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
+									{ this.props.eventDetails && this.props.eventDetails.fundANeedEnabled ?<li className={cx(this.state.nav === "causeAuction" && "active")} onClick={()=>{  }}>
 										<Link to="#" className="dropdown-toggle" onClick={()=>{ this.setNav("causeAuction", "")}}>
 											<i className="vt vt-cause" />
 											<span>Fund a Need</span>
@@ -197,7 +197,7 @@ class AdminSidebar extends React.Component {
 													Credit Card Processing
 												</Link>
 											</li>
-											{ this.props.designData &&  this.props.designData.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
+											{ this.props.eventDetails &&  this.props.eventDetails.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
 												<Link to="/host/settings/account" onClick={()=>{ this.setNav("settings", "billing")}}>
 													Billing
 												</Link>
@@ -223,8 +223,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
-	hostData : state.host && state.host.data,
-	designData : state.host && state.host.design,
-	hostDesign : state.host && state.host.storeDesing,
+	hostData : state.host && state.host.data && state.host.data.eventDesignDetailDto,
+	eventDetails : state.host && state.host.eventDetails
 });
 export default connect(mapStateToProps, mapDispatchToProps)(AdminSidebar);

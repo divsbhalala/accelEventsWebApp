@@ -22,7 +22,7 @@ export function getDesignDetails() {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'host/design/details' ,
+      url: API_URL + 'host/eventDetails' ,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){

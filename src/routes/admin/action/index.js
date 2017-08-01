@@ -13,7 +13,7 @@ export function getDashboard() {
     }).then(resp=>{
       if(resp && resp.data){
 				dispatch(storeDashboardData(resp.data));
-				dispatch(storeCurrencySymbols(resp.data && resp.data.currencySymbol));
+				//dispatch(storeCurrencySymbols(resp.data && resp.data.currencySymbol));
 				return resp.data;
       }
       return resp;
@@ -26,13 +26,13 @@ export function getStoreDesingData() {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'host/design/details'  ,
+      url: API_URL + 'host/eventDetails'  ,
       headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
 				//dispatch(storeDashboardData(resp.data));
-			//	dispatch(storeCurrencySymbols(resp.data && resp.data.currencySymbol));
-				dispatch(storeDesing(resp.data));
+				dispatch(storeCurrencySymbols(resp.data && resp.data.currencySymbol));
+				dispatch(storeDesignData(resp.data));
 				return resp.data;
       }
       return resp;
@@ -53,9 +53,9 @@ export function storeCurrencySymbols(data) {
 		data,
 	}
 }
-export function storeDesing(data) {
+export function storeDesignData(data) {
 	return {
-		type: 'STORE_HOST_DESING_DATA',
+		type: 'STORE_DESIGN_DATA',
 		data,
 	}
 }

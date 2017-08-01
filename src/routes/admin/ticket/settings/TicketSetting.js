@@ -17,11 +17,7 @@ import {doGetTicketingSettings,
 import moment from 'moment';
 import {connect} from 'react-redux';
 import PopupModel from './../../../../components/PopupModal';
-import { DateField, Calendar } from 'react-date-picker';
-
-const onChange = (dateString, { dateMoment, timestamp }) => {
-	console.log(dateString)
-};
+import DatetimeRangePicker from "react-bootstrap-datetimerangepicker";
 
 let ticketInst;
 class TicketSetting extends React.Component {
@@ -56,6 +52,8 @@ class TicketSetting extends React.Component {
 			couponToDelete: '',
 			errorMessage:'',
 			isError:false,
+			startDate: moment(),
+			endDate: moment().add(1, "days"),
 		};
 		this.setActiveScreen = this.setActiveScreen.bind(this);
 		this.setActiveTab = this.setActiveTab.bind(this);
@@ -362,6 +360,25 @@ class TicketSetting extends React.Component {
 		});
 	};
 	render() {
+		let start = this.state.startDate.format("YYYY-MM-DD HH:mm:ss");
+		let end =this.state.endDate.format("YYYY-MM-DD HH:mm:ss");
+		// let end = this.state.endDate.format("YYYY-MM-DD HH:mm:ss");
+		let label = start + " - " + end;
+		if (start === end) {
+			label = start;
+		}
+
+		let locale = {
+			format: "YYYY-MM-DD HH:mm:ss",
+			separator: " - ",
+			applyLabel: "Apply",
+			cancelLabel: "Cancel",
+			weekLabel: "W",
+			customRangeLabel: "Custom Range",
+			daysOfWeek: moment.weekdaysMin(),
+			monthNames: moment.monthsShort(),
+			firstDay: moment.localeData().firstDayOfWeek(),
+		};
 		const options = {
 			page: 1,  // which page you want to show as default
 			sizePerPageList: [{
@@ -390,7 +407,7 @@ class TicketSetting extends React.Component {
 		}
 		function couponUsageCount(cell, row){
 			let sysmbol = row.maximumUseOfCoupon;
-			if(sysmbol == -1){
+			if(sysmbol === -1){
 				sysmbol = '&#8734;';
 			}
 			return '<label>' + row.couponUsed + '/'+sysmbol+'</label>';
@@ -750,8 +767,7 @@ class TicketSetting extends React.Component {
 														 onChange={this.changeCouponName}
 														 readOnly={this.state.isCouponEdit}
 											/>
-										</div>
-										<div className="help-text">E.g. Members, Child, Senior, Military etc. Presented as a sub-option to attendees when selecting a ticket</div>
+										</div>=<div className="help-text">E.g. Members, Child, Senior, Military etc. Presented as a sub-option to attendees when selecting a ticket</div>
 									</div>
 									<div className="form-group">
 										<label>Discount Amount</label>
@@ -802,6 +818,23 @@ class TicketSetting extends React.Component {
 															 onChange={this.changeCouponUses}
 												/>
 											</div>
+										</div>
+									</div>
+									<div className="form-group">
+										<label>Coupon Duration Starts-Ends</label>
+										<div className="col-md-12">
+											<DatetimeRangePicker
+												timePicker
+												showDropdowns
+												locale={locale}
+												startDate={this.state.startDate && this.state.startDate._isAMomentObject ? this.state.startDate : moment(this.state.startDate)}
+												endDate={this.state.endDate && this.state.endDate._isAMomentObject ? this.state.endDate : moment(this.state.endDate)}
+												onApply={this.handleDateRangeApply}
+											>
+												<div className={ cx("form-group bg-white", !this.state.hasInvalidDate && "has-error") }>
+													<input type="text" className={("form-control required")} value={label} required={true}/>
+												</div>
+											</DatetimeRangePicker>
 										</div>
 									</div>
 									<div className="form-group">

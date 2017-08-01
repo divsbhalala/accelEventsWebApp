@@ -6,7 +6,7 @@ import s from './Admin.css';
 import BoxWidget from '../../components/Widget/Box';
 import EventChecklist from '../../components/EventChecklist/index';
 import PenalBoxWidget from '../../components/Widget/PenalBox';
-import {getDashboard,enableModules,getStoreDesingData} from './action/index';
+import {getDashboard,enableModules} from './action/index';
 import {connect} from 'react-redux';
 import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import cx from 'classnames';
@@ -39,12 +39,12 @@ class Admin extends React.Component {
         data:resp
       })
     });
-    this.props.getStoreDesingData().then((resp) => {
+    /*this.props.getStoreDesingData().then((resp) => {
       this.setState({
         data:resp
       })
-    });
-  }
+    });*/
+  };
   addPackage = (item) => {
     if (item.target) {
       const type = item.target.getAttribute('data-type');
@@ -67,11 +67,11 @@ class Admin extends React.Component {
       }
     }
     console.log(this.state)
-  }
+  };
   enableModule =(e)=>{
     e.preventDefault();
       if(this.state.slientAuctionActivated || this.state.causeAuctionActivated || this.state.raffleActivated || this.state.ticketingActivated){
-        this.setState({isAnySelected:true})
+        this.setState({isAnySelected:true});
         let data='auctionEnabled='+this.state.slientAuctionActivated+'&causeEnabled='+this.state.causeAuctionActivated+'&raffleEnabled='+this.state.raffleActivated +'&ticketingEnabled='+this.state.ticketingActivated
         this.props.enableModules(data).then(resp=>{
             this.getDashboard();
@@ -79,7 +79,7 @@ class Admin extends React.Component {
       }else {
         this.setState({isAnySelected:false})
       }
-  }
+  };
 
   render() {
     const products = [{
@@ -150,7 +150,7 @@ class Admin extends React.Component {
             </div>
 
             <div className="form-group flex-row flex-2-col">
-							{ this.props.hostData && this.props.hostData.ticketingEnabled ?<div className="flex-col flex-col-mobile">
+							{ this.props.eventDetails && this.props.eventDetails.ticketingEnabled ?<div className="flex-col flex-col-mobile">
                  <PenalBoxWidget
                   boxTitle="Event Ticketing"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -165,7 +165,7 @@ class Admin extends React.Component {
                   active={this.props.hostData.ticketingDetail.active}
                 />
               </div> : ""}
-							{ this.props.hostData && this.props.hostData.auctionEnabled ? <div className="flex-col flex-col-mobile">
+							{ this.props.eventDetails && this.props.eventDetails.auctionEnabled ? <div className="flex-col flex-col-mobile">
                  <PenalBoxWidget
                   boxTitle="Auction"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -180,7 +180,7 @@ class Admin extends React.Component {
                   active={this.props.hostData.auctionDetail.active}
                 />
               </div> : "" }
-							{ this.props.hostData && this.props.hostData.raffleEnabled ? <div className="flex-col flex-col-mobile">
+							{ this.props.eventDetails && this.props.eventDetails.raffleEnabled ? <div className="flex-col flex-col-mobile">
                   <PenalBoxWidget
                   boxTitle="Raffle"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -195,7 +195,7 @@ class Admin extends React.Component {
                   active={this.props.hostData.raffleDetail.active}
                 />
               </div> : ""}
-							{ this.props.hostData && this.props.hostData.fundANeedEnabled ? <div className="flex-col flex-col-mobile">
+							{ this.props.eventDetails && this.props.eventDetails.fundANeedEnabled ? <div className="flex-col flex-col-mobile">
                   <PenalBoxWidget
                   boxTitle="Fund a Need"
                   badgeTitle="Your Silent Auction is in Test Mode. To begin accepting bids please activate this module by clicking here."
@@ -265,7 +265,6 @@ class Admin extends React.Component {
 
 const mapDispatchToProps = {
   getDashboard: () => getDashboard(),
-  getStoreDesingData: () => getStoreDesingData(),
   doGetHostSettings: type => doGetHostSettings(type),
   enableModules: data => enableModules(data),
 };
@@ -273,6 +272,7 @@ const mapStateToProps = (state) => ({
 	user: state.session.user,
 	authenticated: state.session.authenticated,
   hostData : state.host && state.host.data,
+	eventDetails : state.host && state.host.eventDetails,
 	currencySymbol : (state.host && state.host.currencySymbol) || "$",
 });
 
