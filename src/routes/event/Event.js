@@ -131,13 +131,13 @@ class Event extends React.Component {
 				})
 			} else {
 				this.setState({
-					tab: 'donation'
+					tab: 'Donate'
 				})
 			}
 			this.setActiveTabState(this.state.tab);
 			if(window.location.hash){
 				let query = window.location.hash.split('#');
-				if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'donation')){
+				if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
 					this.setState({
 						tab: query[1]
 					},function changeAfter(){
@@ -157,7 +157,7 @@ class Event extends React.Component {
 		this.props.isVolunteer(this.props.params && this.props.params.params);
 		if(window.location.hash){
 			let query = window.location.hash.split('#');
-			if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'donation')){
+			if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
 				this.setState({
 					tab: query[1]
 				},function changeAfter(){
