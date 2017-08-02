@@ -25,11 +25,11 @@ class TicketPerformance extends React.Component {
     }
   }
   getPerformanceBuyerCSV = () => {
-    this.props.getPerformanceBuyerCSV().then((resp) => {
+    this.props.getPerformanceBuyerCSV('All ticket buyer.csv').then((resp) => {
     });
   };
   getPerformanceHolderCSV = () => {
-    this.props.getPerformanceHolderCSV().then((resp) => {
+    this.props.getPerformanceHolderCSV('All ticket holder.csv').then((resp) => {
     });
   };
   componentWillMount() {
@@ -153,8 +153,8 @@ class TicketPerformance extends React.Component {
 const mapDispatchToProps = {
   getPerformanceSale: () => getPerformanceSale(),
   getPerformanceBuyer: () => getPerformanceBuyer(),
-  getPerformanceBuyerCSV: () => getPerformanceBuyerCSV(),
-  getPerformanceHolderCSV: () => getPerformanceHolderCSV(),
+  getPerformanceBuyerCSV: (name) => getPerformanceBuyerCSV(name),
+  getPerformanceHolderCSV: (name) => getPerformanceHolderCSV(name),
 };
 
 const mapStateToProps = (state) => ({

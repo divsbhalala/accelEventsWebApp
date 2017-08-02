@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import FileDownload from 'react-file-download';
 import {apiUrl as API_URL} from './../../../../../clientConfig';
 
 export function getPerformanceAuctionItem() {
@@ -34,14 +35,16 @@ export function getPerformanceAuctionItemByItemCode(itemCode) {
     });
   }
 }
-export function getPerformanceAuctionBidderCSV() {
+export function getPerformanceAuctionBidderCSV(name) {
   return (dispatch) => {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/auction/bidder/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')},
+      responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
+        FileDownload(resp.data, name);
         return resp.data;
       }
       return resp;
@@ -50,14 +53,16 @@ export function getPerformanceAuctionBidderCSV() {
     });
   }
 }
-export function getPerformanceAuctionWinnerCSV() {
+export function getPerformanceAuctionWinnerCSV(name) {
   return (dispatch) => {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/auction/winner/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')},
+      responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
+        FileDownload(resp.data, name);
         return resp.data;
       }
       return resp;

@@ -82,7 +82,8 @@ class EventList extends React.Component {
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
       setTimeout(()=>{
-        history.push("/host/dashboard/home")
+        //history.push("/host/dashboard/home")
+        window.location.replace('/host/dashboard/home');
       },2000)
     });
   }

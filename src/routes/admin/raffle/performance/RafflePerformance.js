@@ -26,7 +26,7 @@ class RafflePerformance extends React.Component {
     }
   }
   getPerformanceRafflePurchasedTicketCSV = () => {
-    this.props.getPerformanceRafflePurchasedTicketCSV().then((resp) => {
+    this.props.getPerformanceRafflePurchasedTicketCSV('Purchased Raffle data.csv').then((resp) => {
     });
   };
   getPerformanceAuctionBidderCSV = () => {
@@ -34,11 +34,11 @@ class RafflePerformance extends React.Component {
     });
   };
   getPerformanceRaffleParticipantTicketCSV = () => {
-    this.props.getPerformanceRaffleParticipantTicketCSV().then((resp) => {
+    this.props.getPerformanceRaffleParticipantTicketCSV('All Participant data.csv').then((resp) => {
     });
   };
   getPerformanceRaffleWinnerCSV = () => {
-    this.props.getPerformanceRaffleWinnerCSV().then((resp) => {
+    this.props.getPerformanceRaffleWinnerCSV('Ticket Winner data.csv').then((resp) => {
       this.setState({items:resp})
     });
   };
@@ -99,9 +99,9 @@ class RafflePerformance extends React.Component {
 const mapDispatchToProps = {
   getPerformanceRaffleItem: () => getPerformanceRaffleItem(),
   getPerformanceRaffleItemByItemCode: (ItemCode) => getPerformanceRaffleItemByItemCode(ItemCode),
-  getPerformanceRafflePurchasedTicketCSV: () => getPerformanceRafflePurchasedTicketCSV(),
-  getPerformanceRaffleParticipantTicketCSV: () => getPerformanceRaffleParticipantTicketCSV(),
-  getPerformanceRaffleWinnerCSV: () => getPerformanceRaffleWinnerCSV(),
+  getPerformanceRafflePurchasedTicketCSV: (name) => getPerformanceRafflePurchasedTicketCSV(name),
+  getPerformanceRaffleParticipantTicketCSV: (name) => getPerformanceRaffleParticipantTicketCSV(name),
+  getPerformanceRaffleWinnerCSV: (name) => getPerformanceRaffleWinnerCSV(name),
 
 };
 

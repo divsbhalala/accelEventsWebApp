@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import FileDownload from 'react-file-download';
 import {apiUrl as API_URL} from './../../../../../clientConfig';
 
 export function getPerformancefundANeedItem() {
@@ -18,14 +19,16 @@ export function getPerformancefundANeedItem() {
     });
   }
 }
-export function getPerformancefundANeedItemCSV() {
+export function getPerformancefundANeedItemCSV(name) {
   return (dispatch) => {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/donor/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')}
+      headers: {Authorization: localStorage.getItem('token')},
+      responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
+        FileDownload(resp.data, name);
         return resp.data;
       }
       return resp;
