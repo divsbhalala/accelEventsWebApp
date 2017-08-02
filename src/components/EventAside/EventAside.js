@@ -370,6 +370,6 @@ class EventAside extends React.Component {
 const mapDispatchToProps = {};
 
 const mapStateToProps = (state) => ({
-	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+	currencySymbol : (state.event && state.event.currencySymbol) || "$"
 });
 export default connect(mapStateToProps, mapDispatchToProps)(EventAside);
