@@ -13,16 +13,16 @@ class RaffleAddItems extends React.Component {
     title: PropTypes.string,
   };
   getItemSheetPdf = () => {
-    this.props.getItemSheetPdf().then((resp) => {
+    this.props.getItemSheetPdf('raffle-items.pdf').then((resp) => {
     });
   }
   getItemCatalogPdf= () => {
-    this.props.getItemCatalogPdf().then((resp) => {
+    this.props.getItemCatalogPdf('raffle-catalog.pdf').then((resp) => {
 
     });
   }
   getItemListCsv=() => {
-    this.props.getItemListCsv().then((resp) => {
+    this.props.getItemListCsv('All Items.csv').then((resp) => {
     });
   }
 
@@ -86,9 +86,9 @@ class RaffleAddItems extends React.Component {
 }
 
 const mapDispatchToProps = {
-    getItemListCsv: () => getItemListCsv(),
-    getItemCatalogPdf: () => getItemCatalogPdf(),
-    getItemSheetPdf: () => getItemSheetPdf(),
+    getItemListCsv: (name) => getItemListCsv(name),
+    getItemCatalogPdf: (name) => getItemCatalogPdf(name),
+    getItemSheetPdf: (name) => getItemSheetPdf(name),
 
 };
 
