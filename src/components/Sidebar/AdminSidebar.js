@@ -23,7 +23,6 @@ class AdminSidebar extends React.Component {
 	  this.setState({
       toggle:!this.state.toggle
     });
-    console.log('test',this.state)
   };
 	showBuyRaffleTicketPopup = () => {
 		this.setState({

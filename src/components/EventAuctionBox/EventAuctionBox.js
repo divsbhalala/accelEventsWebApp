@@ -1,4 +1,4 @@
-
+import {connect} from 'react-redux';
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventAuctionBox.css';
@@ -36,7 +36,7 @@ class EventAuctionBox extends React.Component {
                   <strong className={cx("current-bid-label")}> CURRENT BID: </strong>
                 </div>
                 <div className={cx("flex-col")}>
-                  $<span className={cx("current-bid")}>425</span>
+                  {this.props.currencySymbol}<span className={cx("current-bid")}>425</span>
                 </div>
               </div>
 
@@ -53,4 +53,9 @@ class EventAuctionBox extends React.Component {
   }
 }
 
-export default withStyles(s)(EventAuctionBox);
+const mapDispatchToProps = {};
+
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
+export default connect(mapStateToProps, mapDispatchToProps)(EventAuctionBox);

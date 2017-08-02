@@ -82,7 +82,7 @@ class Auction extends React.Component {
                     <tbody>
 										{this.state.settings && this.state.settings.items &&
 										this.state.settings.items.map((item, index) =>
-                      <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+                      <ItemList key={index} item={item}  moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
 										)
 										}
                     </tbody>

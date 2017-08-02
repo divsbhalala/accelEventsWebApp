@@ -73,7 +73,7 @@ class UserList extends React.Component {
       userData: this.props.userData,
       isEdit: false,
     });
-    if (this.props.userData.id == 0) {
+    if (this.props.userData.id === 0) {
       this.setState({
         isEdit: true,
         action: 'Edit',
@@ -92,7 +92,7 @@ class UserList extends React.Component {
     });
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: 'Email is required.',
@@ -110,7 +110,7 @@ class UserList extends React.Component {
       passwordValue: this.password.value.trim(),
     });
 
-    if (this.password.value.trim() == '') {
+    if (this.password.value.trim() === '') {
       this.setState({
         password: false,
       });
@@ -126,7 +126,7 @@ class UserList extends React.Component {
       firstNameFeedBack: true,
       firstNameValue: this.firstName.value.trim(),
     });
-    if (this.firstName.value.trim() == '') {
+    if (this.firstName.value.trim() === '') {
       this.setState({
         firstName: false,
       });
@@ -142,7 +142,7 @@ class UserList extends React.Component {
       lastNameValue: this.lastName.value.trim(),
     });
 
-    if (this.lastName.value.trim() == '') {
+    if (this.lastName.value.trim() === '') {
       this.setState({
         lastName: false,
       });
@@ -159,7 +159,7 @@ class UserList extends React.Component {
       roleValue: this.role.value.trim(),
     });
 
-    if (this.role.value.trim() == '') {
+    if (this.role.value.trim() === '') {
       this.setState({
         role: false,
       });
@@ -172,7 +172,7 @@ class UserList extends React.Component {
   };
 
   editToggle = () => {
-    if (this.state.userData.id == 0) {
+    if (this.state.userData.id === 0) {
       this.props.removeRow(this.props.inedx);
     }
     this.setState({
@@ -182,9 +182,9 @@ class UserList extends React.Component {
 
   clickAction = (action) => {
     this.setState({ action });
-    if (action == 'Edit') { this.editToggle(); }
-    if (action == 'Delete') { this.deleteUserManagementStaff(); }
-    if (action == 'Resend-Invitation') { this.resendInvitationUserManagementStaff(); }
+    if (action === 'Edit') { this.editToggle(); }
+    if (action === 'Delete') { this.deleteUserManagementStaff(); }
+    if (action === 'Resend-Invitation') { this.resendInvitationUserManagementStaff(); }
   };
   addAction = () => {
     this.setState({
@@ -214,7 +214,7 @@ class UserList extends React.Component {
   submiteAction = () => {
     this.emailValidateHandler();
 
-    if (this.state.action == 'Edit') {
+    if (this.state.action === 'Edit') {
       const staff = {
         email: this.email.value,
         firstName: this.firstName.value,
@@ -341,7 +341,7 @@ class UserList extends React.Component {
   };
   render() {
     return (
-      <tr className={cx(this.state.isEdit || this.props.userData.id == 0 ? 'edit' : '')}>
+      <tr className={cx(this.state.isEdit || this.props.userData.id === 0 ? 'edit' : '')}>
         <td>
           <div className={cx('form-group', this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
             <input
@@ -425,7 +425,7 @@ class UserList extends React.Component {
               <div className="modal-footer">
                 {/* {this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
                 {/* {this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
-                {this.state.popupType == 'Delete-Confirmation' ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteUserManagementStaff} >Confirm</Button> : ''}
+                {this.state.popupType === 'Delete-Confirmation' ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteUserManagementStaff} >Confirm</Button> : ''}
                 <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
               </div>
             </div>

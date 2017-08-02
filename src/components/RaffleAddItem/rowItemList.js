@@ -110,14 +110,14 @@ class RowItemList extends React.Component {
 			this.setState({loading: false,showPopup: false,})
 		})
 
-	}
+	};
 	hideItemChangeHandler = () => {
 		let item = this.state.item;
 		item.active = !item.active;
 		this.setState({item, isDataUpdate: true}, function stateChange() {
 			this.autoAddData();
 		})
-	}
+	};
 
 	getDragHeight() {
 		return 60;
@@ -233,7 +233,7 @@ class RowItemList extends React.Component {
 								<div className="modal-footer">
 									{/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
 									{/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
-									{this.state.popupType == "Delete-Confirmation" ?
+									{this.state.popupType === "Delete-Confirmation" ?
 										<Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteItemList}>Confirm</Button> : ""}
 									<button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
 								</div>

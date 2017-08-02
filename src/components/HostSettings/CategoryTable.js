@@ -57,14 +57,14 @@ export default class CategoryTable extends React.Component {
       let tempVal = row[cellName];
       row[cellName] = cellValue;
       this.props.updateHostCategory(this.props.moduleType, row.id ,row).then(resp => {
-        if(resp && resp.status == 200){
+        if(resp && resp.status === 200){
           this.showCategoryAlert(resp.data.message,'success');
         } else {
           row[cellName] = tempVal;
         }
       }).catch(error => {
         row[cellName] = tempVal;
-        if(error && error.response && error.response.status==406){
+        if(error && error.response && error.response.status===406){
           this.showCategoryAlert(error.response.data.errorMessage,'danger');
         }
       });

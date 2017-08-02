@@ -10,8 +10,8 @@ import moment from 'moment';
 import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 
-var countDownInterval = null;
-var isEventEnd = false;
+let countDownInterval = null;
+let isEventEnd = false;
 
 class ProfileAside extends React.Component {
 	static propTypes = {

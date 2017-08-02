@@ -38,16 +38,16 @@ class UserManage extends React.Component {
        userData,
      });
    }
-  }
+  };
   removeRow =(index) => {
     const userData = this.state.userData;
     userData.splice(index, 1);
     this.setState({
       userData,
     });
-  }
+  };
   actionResult = (method, status, message) => {
-    if (status == 'Failed') { this.setState({ status, message }); } else {
+    if (status === 'Failed') { this.setState({ status, message }); } else {
       this.setState({ status, message, userData: '' });
       this.props.getUserManagementStaff().then((resp) => {
         if (resp && resp.data) {
@@ -59,11 +59,11 @@ class UserManage extends React.Component {
         console.log('error', error);
       });
     }
-  }
+  };
   render() {
     return (
       <div>
-        {this.state.message && <div className={cx('alert', this.state.status == 'Success' ? 'alert-success' : 'alert-danger')}>{this.state.message}</div>}
+        {this.state.message && <div className={cx('alert', this.state.status === 'Success' ? 'alert-success' : 'alert-danger')}>{this.state.message}</div>}
         {this.state.userData ? <div className="main-box no-header">
           <div className="main-box-body">
             <div id="alertmessage" className="alert alert-success alert-dismissible" style={{ opacity: 500, display: 'none' }}><h4>Volunteer deleted from the event.</h4></div>
@@ -87,7 +87,7 @@ class UserManage extends React.Component {
             <button className="btn btn-default add-item" onClick={this.addRow}>Add Member</button>
           </div>
         </div>
-      </div> : <div id="app" className="loader"></div> }
+      </div> : <div id="app" className="loader"/> }
     </div>
 		)
 	};

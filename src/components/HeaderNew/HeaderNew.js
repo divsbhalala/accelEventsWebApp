@@ -1,11 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-2016 Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
 
 import React from 'react';
 import Link from '../Link';
@@ -90,13 +82,13 @@ class HeaderNew extends React.Component {
 		e.preventDefault();
 
 
-		if (this.email.value == '') {
+		if (this.email.value === '') {
 			this.setState({
 				email: false
 			});
 		}
 
-		if (this.password.value == '') {
+		if (this.password.value === '') {
 			this.setState({
 				password: false
 			});
@@ -124,13 +116,13 @@ class HeaderNew extends React.Component {
 	onFormClickLogin = (e) => {
 		e.preventDefault();
 
-		if (this.email.value == '') {
+		if (this.email.value === '') {
 			this.setState({
 				email: false
 			});
 		}
 
-		if (this.password.value == '') {
+		if (this.password.value === '') {
 			this.setState({
 				password: false
 			});
@@ -157,7 +149,7 @@ class HeaderNew extends React.Component {
 			phoneNumberFeedBack: true,
 			phoneNumberValue: this.phoneNumber.value,
 		});
-		if (this.phoneNumber.value.trim() == '') {
+		if (this.phoneNumber.value.trim() === '') {
 			this.setState({
 				phoneNumber: false,
 				errorMsgPhoneNumber: "Phone Number is required",
@@ -170,13 +162,14 @@ class HeaderNew extends React.Component {
 		// this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 	};
 	emailValidateHandler = (e) => {
+		this.email.value = this.email.value && this.email.value.trim();
 		this.setState({
 			emailFeedBack: true,
 			emailValue: this.email.value,
 		});
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value.trim() == '') {
+		if (this.email.value.trim() === '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -190,11 +183,12 @@ class HeaderNew extends React.Component {
 		}
 	};
 	nameValidateHandler = (e) => {
+		this.name.value = this.name.value && this.name.value.trim();
 		this.setState({
 			nameFeedBack: true,
 			nameValue: this.name.value,
 		});
-		if (this.name.value.trim() == '' || !this.name.value) {
+		if (this.name.value.trim() === '' || !this.name.value) {
 			this.setState({
 				name: false,
 				errorMsgName: "Name is required.",
@@ -212,10 +206,10 @@ class HeaderNew extends React.Component {
 			messageFeedBack: true,
 			messageValue: this.message.value,
 		});
-		if (this.message.value == '') {
+		if (this.message.value === '') {
 			this.message.value = '';
 		}
-		if (this.message.value.trim() == '') {
+		if (this.message.value.trim() === '') {
 			this.setState({
 				message: false,
 				errorMsgMessage: "Message is required.",
@@ -229,12 +223,12 @@ class HeaderNew extends React.Component {
 		}
 	};
 	passwordValidateHandler = (e) => {
-
+		this.password.value = this.password.value && this.password.value.trim();
 		this.setState({
 			passwordFeedBack: true
 		});
 
-		if (this.password.value == '') {
+		if (this.password.value === '') {
 
 			this.setState({
 				password: false
@@ -304,7 +298,7 @@ class HeaderNew extends React.Component {
 
 	doContactRequest = () => {
 		console.log("here", "this.props.authenticated", this.props.authenticated, (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)), this.message && this.message.value, !this.message.value);
-		if ((this.props.authenticated || (this.email && this.name && this.email.value.trim() != '' && this.name.value.trim() != '')) && this.message && this.message.value.trim() != '') {
+		if ((this.props.authenticated || (this.email && this.name && this.email.value.trim() !== '' && this.name.value.trim() !== '')) && this.message && this.message.value.trim() !== '') {
 			let contactData = {};
 			if (!this.props.authenticated) {
 				contactData = {
@@ -316,7 +310,7 @@ class HeaderNew extends React.Component {
 			if (eventUrl) {
 				this.props.doContactSupport(eventUrl, contactData).then(resp => {
 					console.log("resp", resp);
-					if (resp && resp.status == 200) {
+					if (resp && resp.status === 200) {
 						this.setState({
 							formMessage: resp.data && resp.data.message || "Thank you for writing to us, we will get back to you soon!",
 							showFormMessagePopup: true,
@@ -335,7 +329,7 @@ class HeaderNew extends React.Component {
 						formMessage: "Opps! Error while processing your request. Please try after sometime",
 						showFormMessagePopup: true,
 						showContactPopup: false,
-					})
+					});
 					console.log("error", error);
 				})
 			}
@@ -387,9 +381,9 @@ class HeaderNew extends React.Component {
 								toggleMenu();
 							}}>
                   <span className="sr-only">Toggle navigation</span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
+                  <span className="icon-bar"/>
+                  <span className="icon-bar"/>
+                  <span className="icon-bar"/>
                 </button>}
 
             </span>
@@ -416,7 +410,7 @@ class HeaderNew extends React.Component {
 					<ul className="nav navbar-top-links navbar-right">
 
 						{ !this.props.admin && <MenuItem eventKey="1" onClick={this.showContactPopup}>
-							<i className="fa fa-at fa-fw"></i> <span className="hidden-xs"> Contact</span>
+							<i className="fa fa-at fa-fw"/> <span className="hidden-xs"> Contact</span>
 						</MenuItem> }
 						{ event && this.props.is_volunteer && !this.props.admin && <MenuItem eventKey="3" onClick={() => {
 							history.push('/events/' + event + '/volunteer')
@@ -477,7 +471,7 @@ class HeaderNew extends React.Component {
 						</NavDropdown>}
 
 						{ !this.props.authenticated &&  <MenuItem eventKey="8" onClick={this.showLoginPopup}>
-							<i className="fa fa-user fa-fw"></i> <span className="hidden-xs"> Login</span>
+							<i className="fa fa-user fa-fw"/> <span className="hidden-xs"> Login</span>
 						</MenuItem>}
 
 						{ !this.props.authenticated  &&  <MenuItem eventKey="9"
@@ -486,14 +480,14 @@ class HeaderNew extends React.Component {
 																											 history.push('/u/signup');
 																										 }}
 						>
-							<i className="fa fa-sign-in fa-fw"></i> <span className="hidden-xs"> Sign up</span>
+							<i className="fa fa-sign-in fa-fw"/> <span className="hidden-xs"> Sign up</span>
 						</MenuItem>}
 
 						{ !this.props.admin && <MenuItem eventKey="10" className="hidden-xs">
-							<i className="fa fa-plus fa-fw"></i> <span className="hidden-xs"> Create Event</span>
+							<i className="fa fa-plus fa-fw"/> <span className="hidden-xs"> Create Event</span>
 						</MenuItem> }
 						{ this.props.admin && !this.props.superAdmin && <MenuItem eventKey="10" className="white">
-							<i className="fa fa-question-circle"></i>Help
+							<i className="fa fa-question-circle"/>Help
 						</MenuItem> }
 						{ this.props.admin && this.props.superAdmin && <MenuItem eventKey="10" className="white"  onClick={this.logoutSuperUser}>
               <span> <i className="fa fa-sign-out fa-fw"   /> Logout </span>

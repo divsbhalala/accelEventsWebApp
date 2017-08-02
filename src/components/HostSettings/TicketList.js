@@ -34,8 +34,8 @@ class TicketList extends React.Component {
     this.setState({
       ticket:this.props.ticket,
       isEdit:false,
-    })
-    if(this.props.ticket.id == 0 ){
+    });
+    if(this.props.ticket.id === 0 ){
       this.setState({
         isEdit:true,
         action:"Edit",
@@ -46,8 +46,8 @@ class TicketList extends React.Component {
     this.setState({
       ticket:this.props.ticket,
       isEdit:false,
-    })
-    if(this.props.ticket.id == 0 ){
+    });
+    if(this.props.ticket.id === 0 ){
       this.setState({
         isEdit:true,
         action:"Edit",
@@ -58,8 +58,8 @@ class TicketList extends React.Component {
     this.setState({
       ticket:this.props.ticket,
       isEdit:false,
-    })
-    if(this.props.ticket.id == 0 ){
+    });
+    if(this.props.ticket.id === 0 ){
       this.setState({
         isEdit:true,
         action:"Edit",
@@ -70,11 +70,12 @@ class TicketList extends React.Component {
   };
 
 	numberOfTicketsValidater = (e) => {
+		this.numberOfTickets.value = this.numberOfTickets.value && this.numberOfTickets.value.trim();
 		this.setState({
 			numberOfTicketsFeedBack: true,
 			numberOfTicketsValue: this.numberOfTickets.value.trim()
 		});
-		if (this.numberOfTickets.value.trim() == '') {
+		if (this.numberOfTickets.value.trim() === '') {
 			this.setState({
 				numberOfTickets: false
 			});
@@ -85,12 +86,13 @@ class TicketList extends React.Component {
 		}
 	};
 	priceValidator = (e) => {
+		this.price.value = this.price.value && this.price.value.trim();
 		this.setState({
 			priceFeedBack: true,
 			priceValue: this.price.value.trim(),
 		});
 
-		if (this.price.value.trim() == '') {
+		if (this.price.value.trim() === '') {
 
 			this.setState({
 				price: false
@@ -103,7 +105,7 @@ class TicketList extends React.Component {
 	};
 
 	editToggle = ()=>{
-    if(this.state.ticket.id == 0 ){
+    if(this.state.ticket.id === 0 ){
      this.props.removeRow(this.props.index);
     }
     this.setState({
@@ -112,9 +114,9 @@ class TicketList extends React.Component {
   };
 
   clickAction = (action) => {
-    this.setState({action})
-    if(action=="Edit"){this.editToggle();}
-    if(action=="Delete"){this.deleteTicket();}
+    this.setState({action});
+    if(action==="Edit"){this.editToggle();}
+    if(action==="Delete"){this.deleteTicket();}
   };
   addAction = () =>{
     this.setState({
@@ -134,7 +136,7 @@ class TicketList extends React.Component {
   };
 
   submiteAction = () => {
-    if(this.state.action=="Edit"){
+    if(this.state.action==="Edit"){
       let ticketDTO={"numberOfTickets": this.numberOfTickets.value,"price": this.price.value,"id":0, "complementary":false};
       console.log(this.state.ticket);
       if(this.state.ticket.id) {
@@ -155,7 +157,7 @@ class TicketList extends React.Component {
       } else {
         this.setState({
           isEdit:!this.state.isEdit,
-        })
+        });
         this.props.actionResult("Add","Success",resp.message);
       }
     })
@@ -170,14 +172,14 @@ class TicketList extends React.Component {
       } else {
         this.setState({
           isEdit:!this.state.isEdit,
-        })
+        });
         this.props.actionResult("Update","Success",resp.message);
       }
     })
   };
 
   deleteTicket = () =>{
-    this.setState({loading:true})
+    this.setState({loading:true});
 	  this.props.deleteTicket(this.state.moduleType, this.state.ticket.id).then(resp=>{
       if (resp.errorMessage) {
         this.setState({
@@ -195,7 +197,7 @@ class TicketList extends React.Component {
           errorMsg: resp.message ,
           popupHeader:"Success",
           popupType:"Delete-Confirmation-Success",
-        })
+        });
         this.props.actionResult("Delete","Success", "Ticket Deleted Successfully ");
       }
     })
@@ -208,7 +210,7 @@ class TicketList extends React.Component {
   };
 render() {
 	return (
-    <tr className={cx(this.state.isEdit || this.props.ticket.id==0 ? "edit" : "")}>
+    <tr className={cx(this.state.isEdit || this.props.ticket.id===0 ? "edit" : "")}>
       <td>
         <input name="numberOfTickets" type="text" className="form-control first-name"
                ref={ref => { this.numberOfTickets = ref; }} onKeyUp={this.numberOfTicketsValidater}/>
@@ -247,7 +249,7 @@ render() {
           <div className="ticket-type-container">
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteTicket} >Confirm</Button> : ""}
+              {this.state.popupType === "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteTicket} >Confirm</Button> : ""}
               <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
