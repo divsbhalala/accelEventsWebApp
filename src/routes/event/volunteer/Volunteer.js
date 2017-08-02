@@ -442,7 +442,7 @@ class Volunteer extends React.Component {
     });
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         phoneEnable: true,
         email: false,
@@ -462,7 +462,7 @@ class Volunteer extends React.Component {
       firstNameFeedBack: true,
       firstNameValue: this.firstName.value.trim(),
     });
-    if (this.firstName.value.trim() == '') {
+    if (this.firstName.value && this.firstName.value.trim() === '') {
       this.setState({
         firstName: false,
       });
@@ -477,7 +477,7 @@ class Volunteer extends React.Component {
       lastNameFeedBack: true,
       lastNameValue: this.lastName.value.trim(),
     });
-    if (this.lastName.value.trim() == '') {
+    if (this.lastName.value && this.lastName.value.trim() === '') {
       this.setState({
         lastName: false,
       });
@@ -520,7 +520,7 @@ class Volunteer extends React.Component {
       cardHolderFeedBack: true,
     });
 
-		if (this.cardHolder.value && this.cardHolder.value.trim() == '') {
+		if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
 
 			this.setState({
 				cardHolder: false,
@@ -544,7 +544,7 @@ class Volunteer extends React.Component {
 		this.setState({
 			cardNumberFeedBack: true
 		});
-		if (this.cardNumber.value && this.cardNumber.value.trim() == '') {
+		if (this.cardNumber.value && this.cardNumber.value.trim() === '') {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: "Enter Card Number ",
@@ -644,7 +644,7 @@ class Volunteer extends React.Component {
     } else if (bid > value) {
       this.setState({
         amount: false,
-        errorMsgAmount: `This bid is below the minimum bid amount. Bids must be placed in $${bid} increments. ` + '   Bids for this item must be placed in increments of at least $20',
+        errorMsgAmount: `This bid is below the minimum bid amount. Bids must be placed in  ` + this.props.currencySymbol +` ` + bid + ` increments. ` + '   Bids for this item must be placed in increments of at least '+this.props.currencySymbol+'20',
       });
     } else {
       this.setState({
@@ -658,7 +658,7 @@ class Volunteer extends React.Component {
       cvvFeedBack: true,
     });
 
-    if (this.cvv.value.trim() == '') {
+    if (this.cvv.value && this.cvv.value.trim() === '') {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
@@ -677,9 +677,9 @@ class Volunteer extends React.Component {
   raffleTicketValidateHandler = (e) => {
     this.setState({
       raffleTicketFeedBack: true,
-      raffleTicketValue: this.raffleTicket.value.trim(),
+      raffleTicketValue: this.raffleTicket.value && this.raffleTicket.value.trim(),
     });
-    if (this.raffleTicket.value.trim() == '') {
+    if (this.raffleTicket.value && this.raffleTicket.value.trim() === '') {
       this.setState({
         raffleTicket: false,
         errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
@@ -693,9 +693,9 @@ class Volunteer extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue: this.expMonth.value.trim(),
+      expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
-    if (this.expMonth.value.trim() == '') {
+    if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: 'Expire Month is Require',
@@ -710,9 +710,9 @@ class Volunteer extends React.Component {
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue: this.expYear.value.trim(),
+      expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
-    if (this.expYear.value.trim() == '') {
+    if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: 'Expire Year is Require',
@@ -819,7 +819,7 @@ class Volunteer extends React.Component {
     e.preventDefault();
     this.validateField();
     this.setState({ loading: true });
-    if (this.state.paymentType == 'CC') {
+    if (this.state.paymentType === 'CC') {
       if (this.state.itemCode && this.state.email && this.state.phoneNumber && this.state.lastName && this.state.firstName && this.state.amount && this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
         const card = {
           number: this.cardNumber.value.trim(),
@@ -891,7 +891,7 @@ class Volunteer extends React.Component {
     e.preventDefault();
     this.validateField();
     this.setState({ loading: true });
-    if (this.state.paymentType == 'CC') {
+    if (this.state.paymentType === 'CC') {
       if (this.state.raffleTicketValue && this.state.email && this.state.phoneNumber && this.state.lastName && this.state.firstName && this.state.cardNumber && this.state.cardHolder && this.state.cvv) {
         const card = {
           number: this.cardNumber.value.trim(),
@@ -994,7 +994,7 @@ class Volunteer extends React.Component {
     e.preventDefault();
     this.validateField();
     this.setState({ loading: true });
-    if (this.state.paymentType == 'CC') {
+    if (this.state.paymentType === 'CC') {
       if (this.state.email && this.state.phoneNumber && this.state.lastName && this.state.firstName && this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
         this.props.getCardToken(this.props.stripeKey, this.cardNumber.value.trim(), this.expMonth.value.trim(), this.expYear.value.trim(), this.cvv.value.trim()).then((resp) => {
           if (resp.error) {
@@ -1074,7 +1074,7 @@ class Volunteer extends React.Component {
     this.props.doOrderTicket(eventUrl, Data)
       .then((resp) => {
         if (resp && resp.data && resp.data.orderId) {
-          history.push(`/checkout/${eventUrl}/tickets/order/${resp.data.orderId}`);
+          history.push('/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
         } else {
           this.setState({
             formError: 'Error while Ordering Tickets',
@@ -1427,16 +1427,16 @@ class Volunteer extends React.Component {
 							<div className="form-group">
 								<div className="text-xs">Item Name : <span className="item-name"/> {this.state.itemData.itemName} </div>
 								<div className="text-xs">Current Bid: <span
-									className="currency-symbol">$</span> {this.state.itemData.currentBid}<span
+									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.currentBid}<span
 									className="current-bid"/></div>
 								<div className="text-xs" style={{display: 'none'}}>Starting Bid: <span
-									className="currency-symbol">$</span> {this.state.itemData.itemName}<span className="starting-bid"/>
+									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.itemName}<span className="starting-bid"/>
 								</div>
 								<div className="text-xs">Bid Increment: <span
-									className="currency-symbol">$</span> {this.state.itemData.bidIncrement}<span
+									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.bidIncrement}<span
 									className="bid-increment"/></div>
 								<div className="text-xs">Buy It Now Price: <span
-									className="currency-symbol">$</span> {this.state.itemData.buyItNow}<span
+									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
 									className="buy-it-now"/></div>
 							</div> }
 							<div
@@ -1444,7 +1444,7 @@ class Volunteer extends React.Component {
 								<div className="row">
 									<div className="col-md-12">
 										<div className="input-group">
-											<div className="input-group-addon">$</div>
+											<div className="input-group-addon">{this.props.currencySymbol}</div>
                       <NumericInput className="form-control" name="itembid" id="itembid"
 											       placeholder="Amount"
 											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid" style={ false }
@@ -1826,7 +1826,7 @@ class Volunteer extends React.Component {
                 <div className="text-xs">Item Name : <span className="item-name" /> {this.state.itemData.itemName} </div>
                 <div className="text-xs">Minimum Price: <span
                   className="currency-symbol"
-                >$</span> {this.state.itemData.minPrice}<span
+                >{this.props.currencySymbol}</span> {this.state.itemData.minPrice}<span
                   className="buy-it-now"
                 /></div>
               </div> }
@@ -1840,7 +1840,7 @@ class Volunteer extends React.Component {
 								<div className="row">
 									<div className="col-md-12">
 										<div className="input-group">
-											<div className="input-group-addon">$</div>
+											<div className="input-group-addon">{this.props.currencySymbol}</div>
                       <NumericInput className="form-control" name="itembid" id="itembid"
 											       placeholder="Amount" step = {1}
 											       data-isprocessingfeestopurchaser="false" data-fv-field="itembid" style={ false }
@@ -2246,22 +2246,22 @@ class Volunteer extends React.Component {
                 >
                   <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
                   <option value={847} data-ticket={1} data-price={5}>
-										1 Ticket For $ 5
+										1 Ticket For {this.props.currencySymbol} 5
 									</option>
                   <option value={848} data-ticket={2} data-price={10}>
-										2 Ticket For $ 10
+										2 Ticket For {this.props.currencySymbol} 10
 									</option>
                   <option value={849} data-ticket={6} data-price={20}>
-										6 Ticket For $ 20
+										6 Ticket For {this.props.currencySymbol} 20
 									</option>
                   <option value={850} data-ticket={15} data-price={40}>
-										15 Ticket For $ 40
+										15 Ticket For {this.props.currencySymbol} 40
 									</option>
                   <option value={851} data-ticket={20} data-price={50}>
-										20 Ticket For $ 50
+										20 Ticket For {this.props.currencySymbol} 50
 									</option>
                   <option value={852} data-ticket={50} data-price={100}>
-										50 Ticket For $ 100
+										50 Ticket For {this.props.currencySymbol} 100
 									</option>
                 </select>
 
@@ -2647,7 +2647,7 @@ class Volunteer extends React.Component {
                 <div className="text-xs">Item Name : <span className="item-name" /> {this.state.itemData.itemName} </div>
                 <div className="text-xs"># Of Tickets Submitted: <span
                   className="currency-symbol"
-                >$</span> {this.state.itemData.buyItNow}<span
+                >{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
                   className="buy-it-now"
                 /></div>
               </div> }
@@ -2696,7 +2696,7 @@ class Volunteer extends React.Component {
                         <div className="flex-row">
                           <div className="flex-col">
                             <div className="type-name"><strong>{item.name}</strong>
-                              (<span className="type-cost txt-sm gray"> ${item.price}</span>)
+                              (<span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price}</span>)
                               <div className="pull-right">
                                 { item.remaniningTickets && item.remaniningTickets > 0 ?
                                   <select
@@ -2734,7 +2734,7 @@ class Volunteer extends React.Component {
                    <div className="flex-col">
                    <div className="type-name">
                    <strong>First ticket type</strong>
-                   (<span className="type-cost txt-sm gray"> $100.00 </span>)
+                   (<span className="type-cost txt-sm gray"> {this.props.currencySymbol}100.00 </span>)
                    <div className="pull-right">
                    <div className="col-md-7">No Of Tickets</div>
                    <div className="col-md-5"> SOLD OUT </div>
@@ -3011,7 +3011,7 @@ class Volunteer extends React.Component {
 								<div className="row">
 									<div className="col-md-12">
 										<div className="input-group">
-											<div className="input-group-addon">$</div>
+											<div className="input-group-addon">{this.props.currencySymbol}</div>
 
                       <NumericInput className="form-control" name="itembid" id="itembid"
                              placeholder="Amount" precision={2} step={0.1}
@@ -3214,7 +3214,7 @@ class AttendeesList extends React.Component {
 			    onClick={ ()=>{this.props.setAttendeesClickHandler(this.props.items,this.props.index)}}>
 				<span className="name">{this.props.items.firstName + " " + this.props.items.lastName }</span>
 				<span
-					className={cx("status pull-right btn ", this.props.items.status == "Checked In" ? "btn-success" : 'btn-warning')}>{this.props.items.status == "Checked In" ? "Checked In" : "Registered"  }</span>
+					className={cx("status pull-right btn ", this.props.items && this.props.items.status === "Checked In" ? "btn-success" : 'btn-warning')}>{this.props.items && this.props.items.status === "Checked In" ? "Checked In" : "Registered"  }</span>
 			</li>
 		);
 	}

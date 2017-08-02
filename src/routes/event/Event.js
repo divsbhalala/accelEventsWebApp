@@ -10,6 +10,7 @@ import history from './../../history';
 import Moment from 'react-moment';
 import moment from 'moment';
 
+import {serverUrl } from './../../clientConfig';
 import EventAside from './../../components/EventAside/EventAside';
 import EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox';
 import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
@@ -940,7 +941,7 @@ class Event extends React.Component {
 															</select>
 															: ''}
 														{
-															(!item.remaniningTickets || item.remaniningTickets <= 0) && <span class="sold-out-text"> SOLD OUT </span>
+															(!item.remaniningTickets || item.remaniningTickets <= 0) && <span className="sold-out-text"> SOLD OUT </span>
 														}
 													</div>
 												</div>

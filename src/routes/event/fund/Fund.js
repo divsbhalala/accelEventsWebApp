@@ -106,13 +106,13 @@ class Fund extends React.Component {
       if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }else{
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }
@@ -681,7 +681,7 @@ class Fund extends React.Component {
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
-                            $ <span
+                            {this.props.currencySymbol} <span
                             className="item-bid-price"> {this.state.fundData && this.state.fundData.pledgePrice} </span>
                           </h4>
                         </div>
@@ -961,7 +961,7 @@ class Fund extends React.Component {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="input-group has-feedback">
-                                <div className="input-group-addon">$</div>
+                                <div className="input-group-addon">{this.props.currencySymbol}</div>
                                 <input type="number" className="form-control" name="itembid" id="itembid"
                                        placeholder="Pledge Amount" step required="required"
                                        data-isprocessingfeestopurchaser="false" data-fv-field="itembid"

@@ -29,8 +29,8 @@ class SubItemList extends React.Component {
   hidePopup = () => {
     this.setState({
       showPopup: false,
-    })
-    if(this.state.popupHeader == "Success"){
+    });
+    if(this.state.popupHeader === "Success"){
     }
   };
   requestPaymentAction = (bid) =>{
@@ -54,7 +54,7 @@ class SubItemList extends React.Component {
   deleteAction = (bid) =>{
     this.setState({
       showPopup: true,
-      errorMsg: "Are you sure you want to delete Auction Bid of $"+ bid.bidAmount +" from "+ bid.bidderEmail +" ? ",
+      errorMsg: "Are you sure you want to delete Auction Bid of "+ this.props.currencySymbol + bid.bidAmount +" from "+ bid.bidderEmail +" ? ",
       popupHeader:"Delete Confirmation" ,
       popupType:"Delete-Confirmation" ,
       bid:bid.bidId,
@@ -246,9 +246,9 @@ class SubItemList extends React.Component {
         <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
           { this.state && this.state.errorMsg }
           <div className="modal-footer">
-            {this.state.popupType == "MarkAsPaid-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.markAsPaid} >Confirm</Button> : ""}
-            {this.state.popupType == "Please-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.requestPayment} >Confirm</Button> : ""}
-            {this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteAuctionbid} >Confirm</Button> : ""}
+            {this.state.popupType === "MarkAsPaid-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.markAsPaid} >Confirm</Button> : ""}
+            {this.state.popupType === "Please-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.requestPayment} >Confirm</Button> : ""}
+            {this.state.popupType === "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteAuctionbid} >Confirm</Button> : ""}
             <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
           </div>
         </div>

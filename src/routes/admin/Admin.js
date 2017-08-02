@@ -10,6 +10,8 @@ import {getDashboard,enableModules} from './action/index';
 import {connect} from 'react-redux';
 import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import cx from 'classnames';
+import {serverUrl } from './../../clientConfig';
+
 
 class Admin extends React.Component {
   static propTypes = {
@@ -128,9 +130,9 @@ class Admin extends React.Component {
                   className="main-box infographic-box colored display-page-box"
                   headerText="Fundraiser Page"
                   descText="Share this URL with your audience so that they can learn about your fundraiser and participate online."
-                  linkTo={ this.props.hostData && "https://www.accelevents.com/events/" +  this.props.hostData.eventUrl}
+                  linkTo={ this.props.hostData && serverUrl+"/events/" +  this.props.hostData.eventUrl}
                   linkTitle="Share your custom event page with your participants"
-                  linkText={ this.props.hostData && "https://www.accelevents.com/events/" +  this.props.hostData.eventUrl}
+                  linkText={ this.props.hostData && serverUrl+"/events/" +  this.props.hostData.eventUrl}
                   linkTarget="_blank"
                   tooltip="Share your custom event page with your participants"
                 />
