@@ -17,6 +17,7 @@ import history from "../../../../history";
 import s from "./CreateTicket.css";
 import withStyles from "isomorphic-style-loader/lib/withStyles";
 import {doTicketTypes, doDeleteTicketTypes} from "../action";
+import GoogleMap from "../../../../components/GoogleMaps";
 
 class CreateTicket extends React.Component {
 	static propTypes = {
@@ -78,7 +79,7 @@ class CreateTicket extends React.Component {
 		}
 	};
 	setEventAddress = (event) => {
-		if (event.target.value) {
+		if (event && event.target && event.target.value) {
 			event.target.value = event.target.value.trim();
 		}
 		if (event && event.target) {
@@ -87,6 +88,11 @@ class CreateTicket extends React.Component {
 			this.setState({
 				eventData: eventData
 			});
+		}
+		else if (event) {
+			let eventData = this.state.eventData;
+			eventData.eventAddress = event;
+			this.setState({ eventData });
 		}
 	};
 	hasInvalidDate = (hasInvalidDate, key) => {
@@ -396,9 +402,7 @@ class CreateTicket extends React.Component {
 										</div>
 										<div className="col-md-6">
 											<div className="form-group">
-												<div id="eventAddress-map" style={{height: 250, position: "relative", overflow: "hidden"}}>
-													TODO: embed map with event location
-												</div>
+												<GoogleMap lat={42.3531276} lon={-71.0790255} eventAddress={this.state.eventData.eventAddress} setEventAddress={this.setEventAddress}/>
 											</div>
 										</div>
 									</div>
