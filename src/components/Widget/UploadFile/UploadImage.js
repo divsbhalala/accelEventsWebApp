@@ -9,9 +9,9 @@ export default class UploadImage extends React.Component {
   };
 
   onImageDrop(files) {
-    for (var file in files) {
+    for (let file in files) {
       this.props.uploadImage(files[file]).then(resp => {
-        if (resp && resp.data && resp.status==200) {
+        if (resp && resp.data && resp.status===200) {
           this.props.item.images.push({ "imageUrl": resp.data.message });
           this.props.imageUploaded();
         } else {

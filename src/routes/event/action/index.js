@@ -12,7 +12,8 @@ export function doGetEventData(eventUrl) {
       headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeEventData(response.data));
-      localStorage.setItem('eventsData', JSON.stringify(response.data));
+			dispatch(storeCurrencySymbols(response.data && response.data.currencySymbol));
+			localStorage.setItem('eventsData', JSON.stringify(response.data));
       return response;
 
     })
@@ -315,6 +316,12 @@ export function doGetOrderById(eventUrl, orderId) {
 export function storeEventData(data) {
   return {
     type: 'STORE_EVENT',
+    data,
+  }
+}
+export function storeCurrencySymbols(data) {
+  return {
+    type: 'STORE_EVENT_CURRENCY',
     data,
   }
 }

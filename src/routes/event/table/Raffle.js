@@ -90,5 +90,7 @@ const mapDispatchToProps = {
 	getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
-  eventData: state.event && state.event.data});
+  eventData: state.event && state.event.data,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
+});
 export default  connect(mapStateToProps, mapDispatchToProps)(Raffle);

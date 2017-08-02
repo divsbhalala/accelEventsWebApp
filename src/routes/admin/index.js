@@ -304,7 +304,7 @@ export default {
       async action(props) {
         return {
           title: "Events",
-          component: <WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/>,
+          component: <WhiteLabelEventList isAdmin={isAdmin} params={props.params} title="WhiteLabelEventList"/>,
         };
       }
     },
@@ -313,7 +313,7 @@ export default {
       async action(props) {
         return {
           title: "Organization Settings",
-          component: <OrganizationSettings params={props.params} title="Organization Settings"/>,
+          component: <OrganizationSettings isAdmin={isAdmin} params={props.params} title="Organization Settings"/>,
         };
       }
     },
@@ -322,7 +322,7 @@ export default {
       async action(props) {
         return {
           title: "WhiteLabel User Management",
-          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+          component: <WhiteLabelUserManagement isAdmin={isAdmin} params={props.params} title="WhiteLabel User Management"/>,
         };
       }
     },
@@ -331,7 +331,7 @@ export default {
       async action(props) {
         return {
           title: "WhiteLabel User Management",
-          component: <WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/>,
+          component: <WhiteLabelUserManagement isAdmin={isAdmin} params={props.params} title="WhiteLabel User Management"/>,
         };
       }
     }

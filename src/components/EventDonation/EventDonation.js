@@ -104,13 +104,14 @@ class EventDonation extends React.Component {
     this.doGetStripeToken = this.doGetStripeToken.bind(this);
   }
   emailValidateHandler = (e) => {
+		this.email.value = this.email.value && this.email.value.trim();
     this.setState({
       emailFeedBack: true,
       emailValue: this.email.value,
     });
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value == '') {
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: 'Email is required.',
@@ -124,11 +125,12 @@ class EventDonation extends React.Component {
     this.setState({ isValidData: !!(this.email.value) });
   };
   firstNameValidateHandler = (e) => {
-    this.setState({
+		this.firstName.value = this.firstName.value && this.firstName.value.trim();
+		this.setState({
       firstNameFeedBack: true,
       firstNameValue: this.firstName.value,
     });
-    if (this.firstName.value == '') {
+    if (this.firstName.value === '') {
       this.setState({
         firstName: false,
       });
@@ -139,11 +141,12 @@ class EventDonation extends React.Component {
     }
   };
   lastNameValidateHandler = (e) => {
-    this.setState({
+		this.lastName.value = this.lastName.value && this.lastName.value.trim();
+		this.setState({
       lastNameFeedBack: true,
       lastNameValue: this.lastName.value,
     });
-    if (this.lastName.value == '') {
+    if (this.lastName.value === '') {
       this.setState({
         lastName: false,
       });
@@ -154,11 +157,12 @@ class EventDonation extends React.Component {
     }
   };
   cardHolderValidateHandler = (e) => {
-    this.setState({
+		this.cardHolder.value = this.cardHolder.value && this.cardHolder.value.trim();
+		this.setState({
       cardHolderFeedBack: true,
     });
 
-    if (this.cardHolder.value == '') {
+    if (this.cardHolder.value === '') {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
@@ -175,11 +179,12 @@ class EventDonation extends React.Component {
     }
   };
   cardNumberValidateHandler = (e) => {
-    this.cardNumber.value = this.cardNumber.value.substr(0, 16);
+		this.cardNumber.value = this.cardNumber.value && this.cardNumber.value.trim();
+		this.cardNumber.value = this.cardNumber.value.substr(0, 16);
     this.setState({
       cardNumberFeedBack: true,
     });
-    if (this.cardNumber.value == '') {
+    if (this.cardNumber.value === '') {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: 'Enter Card Number ',
@@ -196,12 +201,13 @@ class EventDonation extends React.Component {
     }
   };
   amountValidateHandler = (e) => {
-    this.setState({
+		this.amount.value = this.amount.value && this.amount.value.trim();
+		this.setState({
       amountFeedBack: true,
       amountValue: this.amount.value,
       donationRate: this.amount.value,
     });
-    if (this.amount.value == '') {
+    if (this.amount.value === '') {
       this.setState({
         amount: false,
         errorMsgAmount: " Amount can't be empty",
@@ -218,12 +224,13 @@ class EventDonation extends React.Component {
     }
   };
   cvvValidateHandler = (e) => {
-    this.cvv.value = this.cvv.value.substr(0, 4);
+		this.cvv.value = this.cvv.value && this.cvv.value.trim();
+		this.cvv.value = this.cvv.value.substr(0, 4);
     this.setState({
       cvvFeedBack: true,
     });
 
-    if (this.cvv.value == '') {
+    if (this.cvv.value === '') {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
@@ -240,12 +247,13 @@ class EventDonation extends React.Component {
     }
   };
   passwordValidateHandler = (e) => {
-    this.setState({
+		this.password.value = this.password.value && this.password.value.trim();
+		this.setState({
       passwordFeedBack: true,
       passwordValue: this.password.value,
     });
 
-    if (this.password.value == '') {
+    if (this.password.value === '') {
       this.setState({
         password: false,
       });
@@ -264,7 +272,7 @@ class EventDonation extends React.Component {
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber: '',
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: 'phoneNumber is Require',
@@ -302,7 +310,7 @@ class EventDonation extends React.Component {
         } else {
           this.setState({
             showPopup: true,
-            errorMsgCard: ` Your card ending in ${this.state.cardNumberValue[this.state.cardNumberValue.length - 4]} will be charged $ ${this.state.amountValue} for  ${this.state.auctionData.name}`,
+            errorMsgCard: ` Your card ending in ${this.state.cardNumberValue[this.state.cardNumberValue.length - 4]} will be charged `+ this.props.currencySymbol +`${this.state.amountValue} for  ${this.state.auctionData.name}`,
             popupHeader: 'Success',
             stripeToken: response.id,
           });
@@ -388,7 +396,7 @@ class EventDonation extends React.Component {
         // this.showDonationConfirmationPopup();
       this.giveDonation();
     }
-  }
+  };
   doGetStripeToken = () => {
     const card = {
       number: this.cardNumber.value,
@@ -411,16 +419,16 @@ class EventDonation extends React.Component {
             email: this.props.user.email,
             paymenttype: 'CC',
           },
-          confirmationMsg: `Your card ending in ${response.card.last4} will be charged $ ${this.state.amountValue} towards donation.`,
+          confirmationMsg: `Your card ending in ${response.card.last4} will be charged `+ this.props.currencySymbol +` ${this.state.amountValue} towards donation.`,
         });
         this.showDonationConfirmationPopup();
       }
     });
-  }
+  };
   doDonationConfirmation = () => {
     this.hideDonationPopup();
     this.giveDonation();
-  }
+  };
   giveDonation=() => {
     let user = {
       amount: this.state.amountValue,
@@ -446,13 +454,13 @@ class EventDonation extends React.Component {
           });
         }
       });
-  }
+  };
   showDonationConfirmationPopup = () => {
     this.hideDonationPopup();
     this.setState({
       showDonationConfirmation: true,
     });
-  }
+  };
   formClick = () => {
     this.setState({
       errorMsg: '',
@@ -477,7 +485,7 @@ class EventDonation extends React.Component {
           <div className={cx('btn-group')} data-toggle="buttons">
             {
               this.props.donations ? this.props.donations.map(item =>
-                <label key={Math.random()} className={cx('btn', this.state.donationRate == item ? 'active' : '')}>
+                <label key={Math.random()} className={cx('btn', this.state.donationRate === item ? 'active' : '')}>
                   <input
                     type="radio" autoComplete="off" name="donate5" className={cx('default-amount')} defaultValue={item}
                     onChange={this.handleRadioChange}
@@ -492,7 +500,7 @@ class EventDonation extends React.Component {
         { this.props.donations && <div className={cx('form-group')}>
           <div className={cx('input-group')}>
             <div className={cx('input-group-addon')}>
-              $
+							{this.props.currencySymbol}
             </div>
             <input
               type="number" className={cx('form-control')} name="amount" value={this.state.donationRate}
@@ -527,7 +535,7 @@ class EventDonation extends React.Component {
                   className="fa fa-spinner fa-pulse fa-fw"
                 /> <span className="resp-message" />
                 </div>
-                { !this.props.authenticated || (this.props.authenticated && this.props.user.firstName == null) ? <div
+                { !this.props.authenticated || (this.props.authenticated && this.props.user.firstName === null) ? <div
                   className={cx('form-group', this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}
                 >
                   <label className="control-label">First Name</label>
@@ -550,7 +558,7 @@ class EventDonation extends React.Component {
                   { this.state.firstNameFeedBack && !this.state.firstName &&
                   <small className="help-block">First Name is required.</small>}
                 </div> : ''}
-                { !this.props.authenticated || (this.props.authenticated && this.props.user.lastName == null) ? <div
+                { !this.props.authenticated || (this.props.authenticated && this.props.user.lastName === null) ? <div
                   className={cx('form-group', this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}
                 >
                   <label className="control-label">Last Name</label>
@@ -658,7 +666,7 @@ class EventDonation extends React.Component {
                     <div className="col-md-12">
                       <label className="control-label login-password">Donation Amount</label>
                       <div className="input-group">
-                        <div className="input-group-addon">$</div>
+                        <div className="input-group-addon">{this.props.currencySymbol}</div>
 
                         <input
                           type="number" className={cx('form-control')} name="amount" ref={(ref) => {
@@ -870,6 +878,7 @@ const mapStateToProps = state => ({
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   user: state.session.user,
   authenticated: state.session.authenticated,
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(EventDonation));

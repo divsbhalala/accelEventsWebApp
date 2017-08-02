@@ -95,7 +95,8 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = (state) => ({
   eventData: state.event && state.event.data,
-  eventTicketData: state.event && state.event.ticket_data
+  eventTicketData: state.event && state.event.ticket_data,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(Fund);

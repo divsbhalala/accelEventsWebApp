@@ -4,8 +4,7 @@ import cx from 'classnames';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
-import { getDashboard } from './../../routes/admin/action/index';
-import { getDesignDetails } from './../../routes/admin/design/action/index';
+import { getDashboard, getStoreDesingData } from './../../routes/admin/action/index';
 class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,7 +23,6 @@ class AdminSidebar extends React.Component {
 	  this.setState({
       toggle:!this.state.toggle
     });
-    console.log('test',this.state)
   };
 	showBuyRaffleTicketPopup = () => {
 		this.setState({
@@ -40,7 +38,7 @@ class AdminSidebar extends React.Component {
 
 	componentWillMount(){
 		this.props.getDashboard();
-		this.props.getDesignDetails();
+		this.props.getStoreDesingData();
 	}
 	render() {
 		return (
@@ -214,7 +212,7 @@ class AdminSidebar extends React.Component {
 }
 const mapDispatchToProps = {
 	getDashboard: () => getDashboard(),
-	getDesignDetails: () => getDesignDetails()
+	getStoreDesingData: () => getStoreDesingData()
 };
 
 const mapStateToProps = (state) => ({

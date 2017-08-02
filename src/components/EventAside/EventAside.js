@@ -1,4 +1,4 @@
-
+import {connect} from 'react-redux';
 import React from 'react';
 import PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -10,8 +10,8 @@ import moment from 'moment';
 import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 
-var countDownInterval = null;
-var isEventEnd = false;
+let countDownInterval = null;
+let isEventEnd = false;
 
 class EventAside extends React.Component {
 	static propTypes = {
@@ -213,7 +213,7 @@ class EventAside extends React.Component {
 								</div>
 							</div>
 							<div className={cx("project-box-content")}>
-								<div className={cx("funds-raised")}>$<span
+								<div className={cx("funds-raised")}>{this.props.currencySymbol}<span
 									className={cx("total-funds-raised")}>{ this.props.settings && this.props.settings.totalFundRaised ? this.props.settings.totalFundRaised : "0"}</span>
 								</div>
 							</div>
@@ -340,7 +340,7 @@ class EventAside extends React.Component {
 												this.props.settings.ticketPackages.map(item =>
 													<option value={item.id} key={Math.random()} data-ticket={item.numOfTicket}
 																	data-price={item.price}>
-														{item.numOfTicket} Ticket For ${item.price}
+														{item.numOfTicket} Ticket For {this.props.currencySymbol}{item.price}
 													</option>
 												) : ''
 											}
@@ -367,5 +367,9 @@ class EventAside extends React.Component {
 		);
 	}
 }
+const mapDispatchToProps = {};
 
-export default withStyles(s)(EventAside);
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.event && state.event.currencySymbol) || "$"
+});
+export default connect(mapStateToProps, mapDispatchToProps)(EventAside);

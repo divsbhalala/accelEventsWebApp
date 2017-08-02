@@ -117,11 +117,11 @@ class BuyRaffleTicketsModal extends React.Component {
 
 		this.setState({
 			emailFeedBack: true,
-			emailValue: this.email.value.trim(),
+			emailValue: this.email.value && this.email.value.trim(),
 		});
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value.trim() == '') {
+		if (this.email.value && this.email.value.trim() === '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -129,21 +129,21 @@ class BuyRaffleTicketsModal extends React.Component {
 		}
 		else {
 			this.setState({
-				email: re.test(this.email.value.trim()),
+				email: re.test(this.email.value && this.email.value.trim()),
 				errorMsgEmail: "Invalid Email.",
 			});
 		}
-		this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
+		this.setState({isValidData: !!(this.email.value.trim() && this.password && this.password.value && this.password.value.trim())});
 
 	};
 	passwordValidateHandler = (e) => {
 
 		this.setState({
 			passwordFeedBack: true,
-			passwordValue: this.password.value.trim(),
+			passwordValue: this.password.value && this.password.value.trim(),
 		});
 
-		if (this.password.value.trim() == '') {
+		if (this.password.value && this.password.value.trim() === '') {
 
 			this.setState({
 				password: false
@@ -159,9 +159,9 @@ class BuyRaffleTicketsModal extends React.Component {
 	firstNameValidateHandler = (e) => {
 		this.setState({
 			firstNameFeedBack: true,
-			firstNameValue: this.firstName.value.trim()
+			firstNameValue: this.firstName.value && this.firstName.value.trim()
 		});
-		if (this.firstName.value.trim() == '') {
+		if (this.firstName.value && this.firstName.value.trim() === '') {
 			this.setState({
 				firstName: false
 			});
@@ -176,10 +176,10 @@ class BuyRaffleTicketsModal extends React.Component {
 	lastNameValidateHandler = (e) => {
 		this.setState({
 			lastNameFeedBack: true,
-			lastNameValue: this.lastName.value.trim(),
+			lastNameValue: this.lastName.value && this.lastName.value.trim(),
 		});
 
-		if (this.lastName.value.trim() == '') {
+		if (this.lastName.value && this.lastName.value.trim() === '') {
 
 			this.setState({
 				lastName: false
@@ -199,7 +199,7 @@ class BuyRaffleTicketsModal extends React.Component {
 			cardHolderValue: this.cardHolder.value,
 		});
 
-		if (this.cardHolder.value.trim() == '') {
+		if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
 
 			this.setState({
 				cardHolder: false,
@@ -224,7 +224,7 @@ class BuyRaffleTicketsModal extends React.Component {
 			cardNumberFeedBack: true,
 			cardNumberValue: this.cardNumber.value,
 		});
-		if (this.cardNumber.value.trim() == '') {
+		if (this.cardNumber.value && this.cardNumber.value.trim() === '') {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: "Enter Card Number ",
@@ -248,7 +248,7 @@ class BuyRaffleTicketsModal extends React.Component {
 			cvvValue: this.cvv.value.trim(),
 		});
 
-		if (this.cvv.value.trim() == '') {
+		if (this.cvv.value && this.cvv.value.trim() === '') {
 
 			this.setState({
 				cvv: false,
@@ -276,7 +276,7 @@ class BuyRaffleTicketsModal extends React.Component {
 		}, function afterTitleChange() {
 			this.checkIsValidBidData()
 		});
-		if (value == '') {
+		if (value === '') {
 			this.setState({
 				phoneNumber: false,
 				errorMsgPhoneNumber: "phoneNumber is Require",
@@ -285,7 +285,6 @@ class BuyRaffleTicketsModal extends React.Component {
 			});
 		} else {
 			this.props.doValidateMobileNumber(number).then(resp => {
-				console.log(resp)
 				this.setState({
 					phoneNumber: !resp,
 					errorMsgPhoneNumber: "Invalid phone number",
@@ -301,9 +300,9 @@ class BuyRaffleTicketsModal extends React.Component {
 	expMonthValidateHandler = (e) => {
 		this.setState({
 			expMonthFeedBack: true,
-			expMonthValue: this.expMonth.value.trim(),
+			expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
 		});
-		if (this.expMonth.value.trim() == '') {
+		if (this.expMonth.value && this.expMonth.value.trim() === '') {
 			this.setState({
 				expMonth: false,
 				errorMsgExpMonth: "Expire Month is Require",
@@ -318,9 +317,9 @@ class BuyRaffleTicketsModal extends React.Component {
 	expYearValidateHandler = (e) => {
 		this.setState({
 			expYearFeedBack: true,
-			expYearValue: this.expYear.value.trim(),
+			expYearValue: this.expYear.value && this.expYear.value.trim(),
 		});
-		if (this.expYear.value.trim() == '') {
+		if (this.expYear.value && this.expYear.value.trim() === '') {
 			this.setState({
 				expYear: false,
 				errorMsgexpYear: "Expire Year is Require",
@@ -334,16 +333,16 @@ class BuyRaffleTicketsModal extends React.Component {
 	};
 	ticketsValidateHandler = (e) => {
 
-		let tickets = true
-		let errorMsgTickets = ""
-		if (this.tickets.value.trim() == '') {
-			errorMsgTickets = "Number Of Tickets can't be empty"
-			tickets = false
+		let tickets = true;
+		let errorMsgTickets = "";
+		if (this.tickets.value && this.tickets.value.trim() === '') {
+			errorMsgTickets = "Number Of Tickets can't be empty";
+			tickets = false;
 		} else if (this.state.raffleData.availableTickets < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
-			errorMsgTickets = "Tickets should br more than 0 and less then " + this.state.raffleData.availableTickets
-			tickets = false
+			errorMsgTickets = "Tickets should br more than 0 and less then " + this.state.raffleData.availableTickets;
+			tickets = false;
 		} else {
-			tickets = true
+			tickets = true;
 		}
 		this.setState({
 			isValidData: ( this.tickets.value.trim() && tickets),
@@ -356,9 +355,9 @@ class BuyRaffleTicketsModal extends React.Component {
 	raffleTicketValidateHandler = (e) => {
 		this.setState({
 			raffleTicketFeedBack: true,
-			raffleTicketValue: this.raffleTicket.value.trim(),
+			raffleTicketValue: this.raffleTicket.value && this.raffleTicket.value.trim(),
 		});
-		if (this.raffleTicket.value.trim() == '') {
+		if (this.raffleTicket.value && this.raffleTicket.value.trim() === '') {
 			this.setState({
 				raffleTicket: false,
 				errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
@@ -425,14 +424,14 @@ componentDidMount() {
 			errorMsg: "",
       expMonthValue:this.expMonth.value,
       expYearValue:this.expYear.value,
-  	})
+  	});
 		if (!this.props.authenticated && this.state.emailValue && this.state.passwordValue && this.state.phone && this.state.cardHolderValue && this.state.cardNumberValue && this.state.cvvValue) {
 			let userData = {
 				"countryCode": this.state.countryPhone,
 				"email": this.state.emailValue,
 				"password": this.state.passwordValue,
 				"phoneNumber": this.state.phone
-			}
+			};
 			this.props.doSignUp(this.props.params && this.props.params.params, userData).then((resp)=> {
 				if (!resp.errorMessage) {
 					this.setState({
@@ -442,7 +441,7 @@ componentDidMount() {
 						popupHeader: "Confirm",
 						loading: false,
 						isError: false,
-					})
+					});
         this.props.onCloseFunc();
 				}
 				else {
@@ -458,7 +457,7 @@ componentDidMount() {
 				})
 			});
 		} else {
-			if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length == 0) {
+			if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length === 0) {
 				if (this.state.cvv && this.state.cardHolder && this.state.cardNumber ) {
 					this.setState({
 						isShowAlertPopup: true,
@@ -467,7 +466,7 @@ componentDidMount() {
 						popupHeader: "Confirm",
 						popupAlertHeader: "Confirm",
 						loading: false,
-					})
+					});
           this.props.onCloseFunc();
 				} else {
 					this.setState({
@@ -487,14 +486,14 @@ componentDidMount() {
 	purchaseTicket = (e) => {
 		this.setState({
 			loading: true,
-		})
+		});
     if (this.props.authenticated && this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0) {
       const user = {
 				//  compTicketCode: this.state.raffleData.code,
         firstname:this.state.firstNameValue,
         lastname:this.state.lastNameValue,
 				raffleTicketId: this.state.raffleTicketValue,
-			}
+			};
 			this.props.purchaseTickets(this.props.params && this.props.params.params, user)
 				.then(resp => {
 					// let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
@@ -600,7 +599,7 @@ componentDidMount() {
 		this.setState({
 			showTicketsPopup: false,
 			popupTicketHeader: "Pay Now",
-		})
+		});
 		this.componentReRender();
 	};
 	showTicketsPopup = () => {
@@ -694,12 +693,11 @@ componentDidMount() {
     })
 	};
 	checkIsValidBidData = () => {
-		console.log(" this.state.lastName ", this.state.lastName)
 		let valid1 = true;
 		let valid2 = true;
 		let flag = true;
 		if (this.props.authenticated) {
-			if (this.props.user.firstName == null) {
+			if (this.props.user && this.props.user.firstName === null) {
 				valid1 = !!(this.state.firstName && this.state.lastName && this.state.amount );
 				flag = false;
 			}
@@ -738,7 +736,7 @@ componentDidMount() {
 		let event = this.props.params && this.props.params.params;
 		return (
 			<div >
-				<Modal show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc}>
+				<Modal show={!!this.props.showModal} onHide={this.props.onCloseFunc}>
 					<Modal.Header closeButton>
 						{!this.props.authenticated && <h4 className="modal-title"><a role="button" onClick={this.showLoginModal} data-form="login">Log in</a> or
 							Signup below</h4>}
@@ -757,7 +755,7 @@ componentDidMount() {
 										className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')}>
 										{ this.state.errorMsgCard }
 										{ this.state.errorMsg }</div> }
-									{ !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?
+									{ !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName === null ) ?
 										<div
 											className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
 											<label className="control-label">First Name</label>
@@ -778,7 +776,7 @@ componentDidMount() {
 											{ this.state.firstNameFeedBack && !this.state.firstName &&
 											<small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
 										</div> : ""}
-									{ !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ? <div
+									{ !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName === null ) ? <div
 										className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
 										<label className="control-label">Last Name</label>
 										<div className="input-group">
@@ -880,22 +878,22 @@ componentDidMount() {
                   }} onChange={this.raffleTicketValidateHandler}>
 											<option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
 											<option value={847} data-ticket={1} data-price={5}>
-												1 Ticket For $ 5
+												1 Ticket For {this.props.currencySymbol} 5
 											</option>
 											<option value={848} data-ticket={2} data-price={10}>
-												2 Ticket For $ 10
+												2 Ticket For {this.props.currencySymbol} 10
 											</option>
 											<option value={849} data-ticket={6} data-price={20}>
-												6 Ticket For $ 20
+												6 Ticket For {this.props.currencySymbol} 20
 											</option>
 											<option value={850} data-ticket={15} data-price={40}>
-												15 Ticket For $ 40
+												15 Ticket For {this.props.currencySymbol} 40
 											</option>
 											<option value={851} data-ticket={20} data-price={50}>
-												20 Ticket For $ 50
+												20 Ticket For {this.props.currencySymbol} 50
 											</option>
 											<option value={852} data-ticket={50} data-price={100}>
-												50 Ticket For $ 100
+												50 Ticket For {this.props.currencySymbol} 100
 											</option>
 										</select>
 
@@ -1055,7 +1053,7 @@ componentDidMount() {
 												</div>
 											</div>
 										</div> : "" }
-									{this.state.popupTicketHeader == "Pay Now" ?
+									{this.state.popupTicketHeader === "Pay Now" ?
 										<Button className="btn btn-success" role="button" type="submit" loading={this.state.loading}
 										        onClick={this.buyTicket}>Pay Now</Button>
 										: <button className="btn badge-danger" onClick={this.props.onCloseFunc}>Close</button> }
@@ -1074,7 +1072,7 @@ componentDidMount() {
 						{ this.state.errorMsg }
 						<div className="modal-footer">
 							{/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.buyTicket} >Confirm</button> : ""}*/}
-							{this.state.popupHeader == "Confirm" ? <Button loading={this.state.loading} className="btn btn-success"
+							{this.state.popupHeader === "Confirm" ? <Button loading={this.state.loading} className="btn btn-success"
 							                                               onClick={this.purchaseTicket}>Confirm</Button> : ""}
 							<button className="btn badge-danger" onClick={this.hideAlertPopup}>Close</button>
 						</div>
@@ -1104,6 +1102,7 @@ const mapStateToProps = (state) => ({
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
 	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(BuyRaffleTicketsModal));

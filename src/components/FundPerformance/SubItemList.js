@@ -52,7 +52,7 @@ class SubItemList extends React.Component {
   deleteAction = (pledge) => {
     this.setState({
       showPopup: true,
-      errorMsg: `Are you sure you want to delete pledge of $${pledge.pledgeAmount} from ${pledge.email} ? `,
+      errorMsg: `Are you sure you want to delete pledge of `+ this.props.currencySymbol +`${pledge.pledgeAmount} from ${pledge.email} ? `,
       popupHeader: 'Delete Confirmation',
       popupType: 'Delete-Confirmation',
       pledgeId: pledge.pledgeId,
@@ -166,9 +166,9 @@ class SubItemList extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid" />
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupType == 'MarkAsPaid-Confirmation' ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.markAsPaid} >Confirm</Button> : ''}
-              {this.state.popupType == 'Please-Confirm' ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.requestPayment} >Confirm</Button> : ''}
-              {this.state.popupType == 'Delete-Confirmation' ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deletePledge} >Confirm</Button> : ''}
+              {this.state.popupType === 'MarkAsPaid-Confirmation' ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.markAsPaid} >Confirm</Button> : ''}
+              {this.state.popupType === 'Please-Confirm' ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.requestPayment} >Confirm</Button> : ''}
+              {this.state.popupType === 'Delete-Confirmation' ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deletePledge} >Confirm</Button> : ''}
               <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
             </div>
           </div>

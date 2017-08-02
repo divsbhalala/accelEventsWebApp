@@ -115,7 +115,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 				</div>
 				<div className="order-panel-body">
 					{this.props.order.purchaser ? <p> Purchased by {this.props.order.purchaser.firstName}&nbsp;{this.props.order.purchaser.lastName}  ({this.props.order.purchaser.email}) on {moment().format('MMM Do YYYY [at] hh:mm A')} {this.props.order.purchaser.timezoneId}</p>  : ""}
-					{ this.props.order.orderType && this.props.order.orderType == 'CARD' && this.props.order.lastFour && this.props.order.cardType ? <div className="small"> {this.props.order.cardType} <span className="text-uppercase">Visa</span> - XXXX XXXX
+					{ this.props.order.orderType && this.props.order.orderType === 'CARD' && this.props.order.lastFour && this.props.order.cardType ? <div className="small"> {this.props.order.cardType} <span className="text-uppercase">Visa</span> - XXXX XXXX
 						XXXX
 						{this.props.order.lastFour}
 					</div> : "" }
@@ -138,7 +138,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 								<td>{item.ticketType}</td>
 								<td>{this.props.currencySymbol}{item.paidAmount} {<p className="hide">{ total += item.paidAmount}</p>}</td>
 								<td width="1px" className="text-center">
-									{this.props.order.status && this.props.order.status.toLowerCase() == "refunded" ?
+									{this.props.order.status && this.props.order.status.toLowerCase() === "refunded" ?
 										this.props.order.status : 	<DropdownButton bsSize={"sm"} title={"Actions"}  id={`dropdown-basic`}>
 											<MenuItem eventKey="1" onClick={()=>{history.push("/admin/event-ticketing-orders/get-refund/" + this.props.order.id + "/" + item.eventTicketingId )}}>Refund</MenuItem>
 											<MenuItem eventKey="2" className="resend-attendee-email"  onClick={()=>{ this.doResendOrderMailByOrderIdByTicketId(this.props.order.id, item.id)}}

@@ -44,29 +44,29 @@ class PlanetItem extends React.Component {
    componentWillReceiveProps(){
      setTimeout(()=>{
      let message="";
-       if(this.props.isItemAdded && this.props.isItemAdded.status=="success"){
-         if(this.props.isItemAdded && this.props.isItemAdded.type == "Updated"){
+       if(this.props.isItemAdded && this.props.isItemAdded.status ==="success"){
+         if(this.props.isItemAdded && this.props.isItemAdded.type === "Updated"){
            message="Item Updated ..."
          }
-         if(this.props.isItemAdded && this.props.isItemAdded.type == "PositionChange"){
+         if(this.props.isItemAdded && this.props.isItemAdded.type === "PositionChange"){
            message="Item PositionChange Updated ..."
          }
-         if(this.props.isItemAdded && this.props.isItemAdded.type == "Inserted"){
+         if(this.props.isItemAdded && this.props.isItemAdded.type === "Inserted"){
            message="Item Added successfully ...";this.getItemList()
          }
-         if(this.props.isItemAdded && this.props.isItemAdded.type == "Deleted"){
+         if(this.props.isItemAdded && this.props.isItemAdded.type === "Deleted"){
            message="Item deleted successfully ...";this.getItemList()
          }
     }else {
          message="Something Wrong"
        }
-     if(this.props.isItemAdded && this.props.isItemAdded.type == "getList"){
+     if(this.props.isItemAdded && this.props.isItemAdded.type === "getList"){
          message="Item Listed"
        }
      this.setState({
        message,
        status: this.props.isItemAdded && this.props.isItemAdded.status
-     })},500)
+     })},500);
      setTimeout(()=>{ this.setState({message:""}) },4000)
   }
   getItemList =()=> {
@@ -76,13 +76,13 @@ class PlanetItem extends React.Component {
         console.log(this.state.items);
       }
       else{
-        this.addEmptyRow()
+        this.addEmptyRow();
         console.log(resp);
       }
     }).catch((error) => {
       console.log(error);
     });
-  }
+  };
   componentWillMount(){
     this.getItemList()
   };
@@ -110,7 +110,7 @@ class PlanetItem extends React.Component {
      this.addEmptyRow()
     }
     }else { this.addEmptyRow()}
-   }
+   };
 addEmptyRow =()=>{
   const list = this.state.list;
   let data={
@@ -125,10 +125,10 @@ addEmptyRow =()=>{
       }
     ],
     "name": "",
-  }
+  };
   list.unshift(data);
   this.setState({list})
-}
+};
   render() {
     const {useContainer} = this.state;
     return (
@@ -137,7 +137,7 @@ addEmptyRow =()=>{
           <button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add Item &nbsp; </button>
         </div>
         <div className="ajax-wrap">
-          {this.state.message && <div className={cx("alert",this.props.isItemAdded.status=="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
+          {this.state.message && <div className={cx("alert",this.props.isItemAdded && this.props.isItemAdded.status==="success" ? "alert-success":"alert-danger")}>{this.state.message}</div>}
         </div>
         <div className="table-header">
           <div className="flex-row">

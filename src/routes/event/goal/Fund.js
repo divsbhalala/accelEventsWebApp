@@ -82,5 +82,7 @@ const mapDispatchToProps = {
   doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
   getGoalData: (eventUrl,type) => getGoalData(eventUrl,type),
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol: state.event && state.event.currencySymbol || "$",
+});
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundGoal));
