@@ -40,7 +40,7 @@ class RaffleAddItems extends React.Component {
                         <h1>Add Raffle Items
                               {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>*/}
                           <div className="pull-right">
-                              {/*<button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>*/}
+                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                         </h1>
                       </div>
@@ -54,7 +54,6 @@ class RaffleAddItems extends React.Component {
                          <p>Add items for your raffle! There is no limit on the number of items that you can add. Attendees can submit their ‘tickets’ online or by texting your event text message number (see dashboard), with the 3 letter item code followed by the number of tickets they would like to submit.ADD ITEM</p>
                         <RaffleAddItem />
                         <div className="table prizes-table">
-
                           <div className="form-group operations-row">
                               <div className="row">
                                 <div className="col-md-3" role="group">
