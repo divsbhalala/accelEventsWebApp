@@ -622,7 +622,7 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button  className={cx("btn btn-primary text-uppercase",  s.btnFull)} disabled={!this.state.isValidData } role="button"
+          <Button  className={cx("btn btn-primary text-uppercase",  s.btnFull)} style={{width:"100%"}} disabled={!this.state.isValidData } role="button"
                    type="submit"  loading={this.state.loading}> Submit Ticket</Button>
 
         </div>
