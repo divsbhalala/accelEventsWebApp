@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import cx from 'classnames';
 class ActivityItem extends React.Component {
   render() {
@@ -11,7 +12,7 @@ class ActivityItem extends React.Component {
         </td>
         <td className="text-center  ">
           <strong className="center-block lh-2">
-            ${this.props.userData.myBid}
+            {this.props.currencySymbol}{this.props.userData.myBid}
           </strong>
         </td>
       </tr>
@@ -19,4 +20,9 @@ class ActivityItem extends React.Component {
       );
   }
 }
-export default ActivityItem;
+const mapDispatchToProps = {};
+
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.event && state.event.currencySymbol) || "$"
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ActivityItem);
