@@ -235,67 +235,67 @@ render() {
       </div>
       <div className="data-wrap">
         <div className="data">
-            <div className="item-data">
-              <div className="row">
-                <div className="col-md-8">
-                  <CKEditor
-                    value={this.props.item.description}
-                    onChange={this.descriptionChangeHandler.bind(this)}
-                    config={{toolbarGroups:[
-                      { name: 'links', groups: [ 'links' ] },
-                      { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-                      { name: 'styles', groups: [ 'styles' ] },
-                      { name: 'colors', groups: [ 'colors' ] },
-                    ]}} onBlur={this.autoAddData}/>
-                  <div>
-                    <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageUploaded = { this.imageUploaded }/>
-                  </div>
+          <div className="item-data">
+            <div className="row">
+              <div className="col-md-8">
+                <CKEditor
+                  value={this.props.item.description}
+                  onChange={this.descriptionChangeHandler.bind(this)}
+                  config={{toolbarGroups:[
+                    { name: 'links', groups: [ 'links' ] },
+                    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                    { name: 'styles', groups: [ 'styles' ] },
+                    { name: 'colors', groups: [ 'colors' ] },
+                  ],height : 100}} onBlur={this.autoAddData}/>
+                <div>
+                  <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageUploaded = { this.imageUploaded }/>
                 </div>
-                <div className="col-md-4">
-                  <div className="row">
-                    <div className="form-group">
-                      <label htmlFor="bidIncrement">Bid Increment</label>
-                      <div className="input-group">
-                        <span className="input-group-addon">{this.props.currencySymbol}</span>
-                        <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={this.props.item.bidIncrement}
-                               ref={ref=> {this.bidIncrement=ref;}} onKeyUp={this.bidIncrementHandlerChange} onBlur={this.autoAddData}/>
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
-                              ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
-                        <option value={0} disabled >-- Select Category --</option>
-                        {this.props.item.categories && this.props.item.categories.map((value,index)=>
-                          <option value={value} key={index}>{value}</option>
-                        )}
-                      </select>
-                    </div>
+              </div>
+              <div className="col-md-4">
+                <div className="row">
                   <div className="form-group">
-                    <label htmlFor="marketValue">Market Value</label>
+                    <label htmlFor="bidIncrement">Bid Increment</label>
                     <div className="input-group">
                       <span className="input-group-addon">{this.props.currencySymbol}</span>
-                      <input className="form-control" placeholder="Market Value (optional)" data-price="true" name="marketValue" type="number"
-                             defaultValue={this.props.item.marketValue}
-                             ref={ref=> {this.marketValue=ref;}} onKeyUp={this.marketValueHandlerChange} onBlur={this.autoAddData}/>
+                      <input className="form-control" placeholder="Increment (optional)" data-price="true" name="bidIncrement" type="number" defaultValue={this.props.item.bidIncrement}
+                             ref={ref=> {this.bidIncrement=ref;}} onKeyUp={this.bidIncrementHandlerChange} onBlur={this.autoAddData}/>
                     </div>
                   </div>
-                </div>
-                <br />
-                <div className="row">
-                  <div className="col-md-6">
-                    Hide Item
-                    <div className="help-text">This is will hide item from display page</div>
+                  <div className="form-group">
+                    <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
+                            ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
+                      <option value={0} disabled >-- Select Category --</option>
+                      {this.props.item.categories && this.props.item.categories.map((value,index)=>
+                        <option value={value} key={index}>{value}</option>
+                      )}
+                    </select>
                   </div>
-                  <div className="col-md-6">
-                    <ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
-                                  defaultValue={ (this.state.item && !this.state.item.active)}
-                                  className="success activeswitch" onChange={this.hideItemChangeHandler}/>
+                <div className="form-group">
+                  <label htmlFor="marketValue">Market Value</label>
+                  <div className="input-group">
+                    <span className="input-group-addon">{this.props.currencySymbol}</span>
+                    <input className="form-control" placeholder="Market Value (optional)" data-price="true" name="marketValue" type="number"
+                           defaultValue={this.props.item.marketValue}
+                           ref={ref=> {this.marketValue=ref;}} onKeyUp={this.marketValueHandlerChange} onBlur={this.autoAddData}/>
                   </div>
                 </div>
               </div>
+              <br />
+              <div className="row">
+                <div className="col-md-6">
+                  Hide Item
+                  <div className="help-text">This is will hide item from display page</div>
+                </div>
+                <div className="col-md-6">
+                  <ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
+                                defaultValue={ (this.state.item && !this.state.item.active)}
+                                className="success activeswitch" onChange={this.hideItemChangeHandler}/>
+                </div>
               </div>
             </div>
-             <i className="fa fa-trash delete-item red"  onClick={this.deleteAction}/>
+            </div>
+          </div>
+           <i className="fa fa-trash delete-item red"  onClick={this.deleteAction}/>
           <PopupModel
             id="mapPopup"
             showModal={this.state.showPopup}
