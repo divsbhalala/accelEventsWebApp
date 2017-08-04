@@ -218,6 +218,16 @@ class BuyRaffleTicketsModal extends React.Component {
 		//this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
 
 	};
+
+	cardNumberDownValidateHandler = (e) => {
+		if ([69, 187, 188, 189, 190].includes(e.keyCode)) {
+		    e.preventDefault();
+		 }
+		 if((this.cardNumber.value && this.cardNumber.value.toString().length == 16) && e.keyCode != 8 && e.keyCode != 46){
+		 	e.preventDefault();
+		 }
+	};
+
 	cardNumberValidateHandler = (e) => {
     this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
@@ -241,6 +251,15 @@ class BuyRaffleTicketsModal extends React.Component {
 		}
 		//  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
 	};
+	cvvDownValidateHandler = (e) => {
+		if ([69, 187, 188, 189, 190].includes(e.keyCode)) {
+		    e.preventDefault();
+		 }
+		 if((this.cvv.value && this.cvv.value.toString().length == 4) && e.keyCode != 8 && e.keyCode != 46){
+		 	e.preventDefault();
+		 }
+	};
+
 	cvvValidateHandler = (e) => {
     this.cvv.value=this.cvv.value.substr(0,4);
 		this.setState({
@@ -257,7 +276,7 @@ class BuyRaffleTicketsModal extends React.Component {
 		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
-				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+				errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
 			});
 		} else {
 			this.setState({
@@ -942,6 +961,7 @@ componentDidMount() {
 															       ref={ref => {
                                      this.cardNumber = ref;
                                    }}
+                                   								   onKeyDown={this.cardNumberDownValidateHandler}
 															       onKeyUp={this.cardNumberValidateHandler}/>
 															{ this.state.cardNumberFeedBack && this.state.cardNumber &&
 															<i
@@ -1030,6 +1050,7 @@ componentDidMount() {
 																	       ref={ref => {
                                          this.cvv = ref;
                                        }}
+                                       									   onKeyDown={this.cvvDownValidateHandler}
 																	       onKeyUp={this.cvvValidateHandler}/>
 																	{ this.state.cvvFeedBack && this.state.cvv &&
 																	<i

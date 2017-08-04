@@ -15,7 +15,6 @@ import history from './../../history';
 import { Button, FormGroup, ControlLabel, Alert, Radio, HelpBlock, Form, FormControl } from 'react-bootstrap';
 import InlineEdit from 'react-edit-inline';
 
-
 class MyProfile extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -25,7 +24,7 @@ class MyProfile extends React.Component {
     super();
     this.state = {
       isValidData: false,
-      activeTab: 'Event',
+      activeTab: "Events",
       password: null,
       error: null,
       emailFeedBack: false,
@@ -35,6 +34,7 @@ class MyProfile extends React.Component {
       data: null,
     };
     this.setActiveTabState = this.setActiveTabState.bind(this);
+    this.updateAllProfile = this.updateAllProfile.bind(this);
   }
   componentDidMount() {
     this.props.getProfileData().then((resp) => {
@@ -45,11 +45,23 @@ class MyProfile extends React.Component {
     }).catch((error) => {
       history.push('/404');
     });
-  }
-  setActiveTabState = (label) => {
-    this.setState({
-      activeTab: label,
+ }
+	setActiveTabState = (label) => {
+		if(label){this.setState({
+			activeTab: label,
     });
+	}};
+
+  updateAllProfile = (fieldName,value) => {
+    if(this.state && this.state.user && this.state.user[fieldName] && value){
+      if(this.state.user[fieldName] != value){
+        let newUser = this.state.user;
+        newUser[fieldName] = value
+        this.setState({
+          user: newUser
+        });
+      }
+    }
   };
 
   render() {
@@ -112,16 +124,16 @@ class MyProfile extends React.Component {
                           </div>
                           <div className="tab-pane fade active in" id="tab-profile">
 
-                            <ProfileField title="Firstname" fieldName="firstName" fieldValue={this.state.user && this.state.user.firstName ? this.state.user.firstName : 'Empty'} />
-                            <ProfileField title="LastName" fieldName="LastName" fieldValue={this.state.user && this.state.user.lastName ? this.state.user.lastName : 'Empty'} />
-                            <ProfileField title="Email" fieldName="email" fieldValue={this.state.user && this.state.user.email ? this.state.user.email : 'Empty'} />
-                            <ProfileField title="Phone" fieldName="phoneNumber" fieldValue={this.state.user && this.state.user.phoneNumber ? this.state.user.phoneNumber : 'Empty'} />
-                            <ProfileField title="Address Line 1" fieldName="address1" fieldValue={this.state.user && this.state.user.address1 ? this.state.user.address1 : 'Empty'} />
-                            <ProfileField title="Address Line 2" fieldName="address2" fieldValue={this.state.user && this.state.user.address2 ? this.state.user.address2 : 'Empty'} />
-                            <ProfileField title="State" fieldName="state" fieldValue={this.state.user && this.state.user.state ? this.state.user.state : 'Empty'} />
-                            <ProfileField title="City" fieldName="cityOrProvidence" fieldValue={this.state.user && this.state.user.cityOrProvidence ? this.state.user.cityOrProvidence : 'Empty'} />
-                            <ProfileField title="Country" fieldName="country" fieldValue={this.state.user && this.state.user.country ? this.state.user.country : 'Empty'} />
-                            <ProfileField title="Zip" fieldName="zipcode" fieldValue={this.state.user && this.state.user.zipcode ? this.state.user.zipcode : 'Empty'} />
+                            <ProfileField title="Firstname" fieldName="firstName" fieldValue={this.state.user && this.state.user.firstName ? this.state.user.firstName : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="LastName" fieldName="LastName" fieldValue={this.state.user && this.state.user.lastName ? this.state.user.lastName : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="Email" fieldName="email" fieldValue={this.state.user && this.state.user.email ? this.state.user.email : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="Phone" fieldName="phoneNumber" fieldValue={this.state.user && this.state.user.phoneNumber ? this.state.user.phoneNumber : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="Address Line 1" fieldName="address1" fieldValue={this.state.user && this.state.user.address1 ? this.state.user.address1 : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="Address Line 2" fieldName="address2" fieldValue={this.state.user && this.state.user.address2 ? this.state.user.address2 : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="State" fieldName="state" fieldValue={this.state.user && this.state.user.state ? this.state.user.state : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="City" fieldName="cityOrProvidence" fieldValue={this.state.user && this.state.user.cityOrProvidence ? this.state.user.cityOrProvidence : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="Country" fieldName="country" fieldValue={this.state.user && this.state.user.country ? this.state.user.country : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="Zip" fieldName="zipcode" fieldValue={this.state.user && this.state.user.zipcode ? this.state.user.zipcode : 'Empty' } updatePProfile={this.updateAllProfile}/>
 
                           </div>
                         </div>

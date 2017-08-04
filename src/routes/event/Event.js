@@ -133,10 +133,20 @@ class Event extends React.Component {
 				})
 			} else {
 				this.setState({
-					tab: 'donation'
+					tab: 'Donate'
 				})
 			}
-			this.setActiveTabState(this.state.tab)
+			this.setActiveTabState(this.state.tab);
+			if(window.location.hash){
+				let query = window.location.hash.split('#');
+				if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+					this.setState({
+						tab: query[1]
+					},function changeAfter(){
+						this.setActiveTabState(query[1])
+					})
+				}
+			}
 		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
@@ -147,6 +157,16 @@ class Event extends React.Component {
 			history.push('/404');
 		});
 		this.props.isVolunteer(this.props.params && this.props.params.params);
+		if(window.location.hash){
+			let query = window.location.hash.split('#');
+			if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+				this.setState({
+					tab: query[1]
+				},function changeAfter(){
+					this.setActiveTabState(query[1])
+				})
+			}
+		}
 	}
 
 	componentDidMount() {
@@ -293,7 +313,7 @@ class Event extends React.Component {
 		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
-				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+				errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
 			});
 		} else {
 			this.setState({
@@ -582,12 +602,14 @@ class Event extends React.Component {
 			tickettypeid: e.target.name
 		};
 		let totalPrice = 0;
+		let totalNoTickets = 0;
 		totalTickets.map(item => {
 			totalPrice += item.price * item.numberofticket;
+			totalNoTickets += (item.numberofticket ? parseInt(item.numberofticket) : 0);
 		});
 		this.setState({
 			totalTickets: totalTickets,
-			totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
+			totalTicketQty: totalNoTickets,
 			totalTicketPrice: totalPrice,
 		});
 	}
@@ -769,6 +791,7 @@ class Event extends React.Component {
 						<div className="col-lg-9 col-md-8 col-sm-8 ">
 							{ this.state.tab && this.state.isLoaded && <div className="main-box">
 								<Tabs onSelect={ (index, label) => {
+									window.location.hash = '#'+label;
                   this.setActiveTabState(label)
                 } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
 
@@ -934,7 +957,7 @@ class Event extends React.Component {
 													( <span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
-															<select className="form-control" name={item.typeId} data-price={item.price}
+															<select className="form-control all-select-values" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>

@@ -620,7 +620,18 @@ class EventDonation extends React.Component {
                       utilsScript="./libphonenumber.js"
                       separateDialCode
                       onPhoneNumberChange={this.changePhone}
-                    /> : <input className="form-control" value={this.state.phone} disabled /> }
+                    /> :
+
+                      <IntlTelInput
+                      css={['intl-tel-input', 'form-control intl-tel']}
+                      utilsScript="./libphonenumber.js"
+                      separateDialCode={true}
+                      disabled={true}
+                      value={this.state.phone ? this.state.phone.toString() : ''}
+                      onPhoneNumberChange={this.changePhone}
+                    />
+
+                     }
                     { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                     { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&

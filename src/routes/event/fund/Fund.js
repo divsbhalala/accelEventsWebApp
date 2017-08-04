@@ -994,7 +994,7 @@ class Fund extends React.Component {
                                                              loading={this.state.loading} >
                             Submit Pledge
                           </Button></div>
-                          <div className="col-sm-5"><Link to={this.props.params && "/events/" + this.props.params.params } className="btn btn-success">
+                          <div className="col-sm-5"><Link to={this.props.params && "/events/" + this.props.params.params + '#Fund a Need'} className="btn btn-success">
                             Go back to All Items
                           </Link></div>
                         </div>
@@ -1022,7 +1022,8 @@ class Fund extends React.Component {
             </div>
           </div>
         </PopupModel>
-        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params}/>
+        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params} modelFooter={<button className="btn btn-info center-block" data-dismiss="modal" onClick={() => {this.hideLoginModal()
+           }}>Close</button>}/>
       </div>
     );
   }
