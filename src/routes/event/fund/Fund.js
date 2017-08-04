@@ -412,7 +412,7 @@ class Fund extends React.Component {
     let amount=true;
     let errorMsgAmount="";
     if (this.amount.value.trim() == '') {
-      errorMsgAmount= "Bid Amount can't be empty";
+      errorMsgAmount= "Pledge Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
       errorMsgAmount= "Submitted pledge amount should be greater than or equal to the stated pledge amount.";
