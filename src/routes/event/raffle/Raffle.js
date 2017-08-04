@@ -329,7 +329,7 @@ class Raffle extends React.Component {
       errorMsgTickets= "Number Of Tickets can't be empty";
       tickets=false;
     }else if ( this.state.raffleData.availableTickets  < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
-      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets;
+      errorMsgTickets= "Tickets should be more than 0 and less then "+this.state.raffleData.availableTickets;
       tickets=false
     } else {
       tickets=true
