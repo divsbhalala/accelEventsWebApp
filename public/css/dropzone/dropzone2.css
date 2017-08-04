@@ -64,7 +64,7 @@
 .dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details
 {
     width: 100px;
-    height: 100px;
+    height: 80px;
     position: relative;
     background: #ebebeb;
     padding: 5px;
@@ -423,13 +423,7 @@ min--moz-device-pixel-ratio :1.5) , ( -o-min-device-pixel-ratio
 }
 
 100%{
-    background-position
-    :
-            -7px
-
-            -400
-            px
-;
+    background-position: -7px -400px;
 }
 }
 @
@@ -438,13 +432,7 @@ min--moz-device-pixel-ratio :1.5) , ( -o-min-device-pixel-ratio
 }
 
 100%{
-    background-position
-    :
-            -7px
-
-            -400
-            px
-;
+    background-position: -7px -400px;
 }
 }
 @
@@ -453,13 +441,7 @@ min--moz-device-pixel-ratio :1.5) , ( -o-min-device-pixel-ratio
 }
 
 100%{
-    background-position
-    :
-            -7px
-
-            -400
-            px
-;
+    background-position: -7px -400px;
 }
 }
 @
@@ -468,28 +450,15 @@ min--moz-device-pixel-ratio :1.5) , ( -o-min-device-pixel-ratio
 }
 
 100%{
-    background-position
-    :
-            -7px
-
-            -400
-            px
-;
+    background-position:-7px -400px ;
 }
 }
 @
 keyframes loading { 0%{
     background-position: 0 -400px;
 }
-
 100%{
-    background-position
-    :
-            -7px
-
-            -400
-            px
-;
+    background-position:-7px -400px;
 }
 }
 .dz-browser-not-supported {

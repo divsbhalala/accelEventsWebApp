@@ -147,6 +147,15 @@ handleImageUpload(file) {
       this.autoAddData();
     })
   }
+  imageRemove = (index) =>{
+    console.log("------>>>>",index)
+    if(this.state.item && this.state.item.images) {
+      let item = this.state.item;
+      item.images.splice(index, 1);
+      this.setState({item});
+     this.imageUploaded();
+    }
+  }
   autoAddData =() => {
     setTimeout(()=>{
     if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate && this.state.buyItNowPrice ){
@@ -248,7 +257,7 @@ render() {
                     { name: 'colors', groups: [ 'colors' ] },
                   ],height : 100}} onBlur={this.autoAddData}/>
                 <div>
-                  <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageUploaded = { this.imageUploaded }/>
+                  <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageRemove={this.imageRemove} imageUploaded = { this.imageUploaded }/>
                 </div>
               </div>
               <div className="col-md-4">
