@@ -9,7 +9,7 @@ export function getDashboard() {
     return axios({
       method: 'get',
       url: API_URL + 'host/home'  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
 				dispatch(storeDashboardData(resp.data));
@@ -27,7 +27,7 @@ export function getStoreDesingData() {
     return axios({
       method: 'get',
       url: API_URL + 'host/eventDetails'  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
 				//dispatch(storeDashboardData(resp.data));
@@ -65,7 +65,7 @@ export function dashboardSubmitBid(countryCode,phoneNumber) {
     return axios({
       method: 'post',
       url: API_URL + 'host/auction/submitBid/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -81,7 +81,7 @@ export function dashboardSubmitPledge(countryCode,phoneNumber) {
     return axios({
       method: 'post',
       url: API_URL + 'host/fundANeed/submitPledge/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -97,7 +97,7 @@ export function dashboardRafflePurchaseTicket(countryCode,phoneNumber) {
     return axios({
       method: 'post',
       url: API_URL + 'host/raffle/purchaseTicket/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -115,7 +115,7 @@ export function getItemList(type) {
     return axios({
       method: 'get',
       url: API_URL + 'host/'+type+'/items',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       //   dispatch(storeItemUpdate("getList","success"));
       return resp;
@@ -129,7 +129,7 @@ export function updateItemListPosition(type,item,topItem,topBottom) {
     return axios({
       method: 'post',
       url: API_URL + 'host/'+type+'/item/'+item+'/topItem/'+topItem+'/topBottom/'+topBottom  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         dispatch(storeItemUpdate(["PositionChange","success"]));
@@ -148,7 +148,7 @@ export function addItemList(type,data) {
       method: 'post',
       url: API_URL + 'host/'+type+'/item',
       data : data,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       dispatch(storeItemUpdate(["Inserted","success"]));
       return resp;
@@ -165,7 +165,7 @@ export function updateItemList(type,id,data) {
       method: 'put',
       url: API_URL + 'host/'+type+'/item/' + id,
       data : data,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       dispatch(storeItemUpdate(["Updated","success"]));
       return resp;
@@ -180,7 +180,7 @@ export function deleteItemList(type,id) {
     return axios({
       method: 'DELETE',
       url: API_URL + 'host/'+type+'/item/' + id,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       dispatch(storeItemUpdate(["Deleted","success"]));
       return resp;
@@ -195,7 +195,7 @@ export function getItemCategories(type) {
     return axios({
       method: 'get',
       url: API_URL + 'host/'+type+'/itemCategories',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -208,7 +208,7 @@ export function enableModules(data) {
     return axios({
       method: 'put',
       url: API_URL + 'host/enableModules?'+data,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {

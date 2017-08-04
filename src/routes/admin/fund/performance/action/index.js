@@ -8,7 +8,6 @@ export function getPerformancefundANeedItem() {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/items' ,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -24,7 +23,6 @@ export function getPerformancefundANeedItemCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/donor/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
@@ -42,7 +40,6 @@ export function getPerformancefundANeedItemByItemCode(itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/pledges/itemCode/'+itemCode ,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -59,7 +56,6 @@ export function deletePledge(pledgeId) {
     return axios({
       method: 'DELETE',
       url: API_URL + 'host/performance/fundANeed/pledge/'+ pledgeId ,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -74,8 +70,7 @@ export function markAsPaidPledge(pledgeId) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'host/performance/fundANeed/manuallyPay/pledge/'+ pledgeId ,
-      headers: {Authorization: localStorage.getItem('token')}
+      url: API_URL + 'host/performance/fundANeed/manuallyPay/pledge/'+ pledgeId,
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -90,8 +85,7 @@ export function requestPaymentPledge(pledgeId) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'host/performance/fundANeed/notify/checkout/pledge/'+ pledgeId ,
-      headers: {Authorization: localStorage.getItem('token')}
+      url: API_URL + 'host/performance/fundANeed/notify/checkout/pledge/'+ pledgeId,
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

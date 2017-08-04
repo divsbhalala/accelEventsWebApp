@@ -12,6 +12,24 @@ const ContextType = {
   // http://redux.js.org/docs/basics/UsageWithReact.html
   ...ReduxProvider.childContextTypes,
 };
+import axios from 'axios';
+axios.interceptors.request.use(function (config) {
+	// Do something before request is sent
+	 config.headers.common['Authorization'] = localStorage.getItem('token');
+	return config;
+}, function (error) {
+	// Do something with request error
+	return Promise.reject(error);
+});
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+	// Do something with response data
+	return response;
+}, function (error) {
+	// Do something with response error
+	return Promise.reject(error);
+});
 /**
  * The top-level React component setting context (global) variables
  * that can be accessed from all the child components.

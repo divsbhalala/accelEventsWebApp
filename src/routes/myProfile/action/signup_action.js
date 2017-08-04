@@ -46,7 +46,7 @@ export function getProfileData() {
       method: 'get',
       url: API_URL + '/u/myprofile',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
 
     })
   }
@@ -56,7 +56,7 @@ export function updateProfile(field,value) {
     return axios({
       method: 'put',
       url: API_URL + 'u/myprofile/updatefield/field/'+field+'/value/'+value,
-      headers: {Authorization: localStorage.getItem('token')}
+
 
     })
   }
@@ -67,7 +67,7 @@ export function getUserAcivity() {
       method: 'get',
       url: API_URL + 'u/activity',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
 
     })
   }

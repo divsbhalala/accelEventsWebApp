@@ -810,6 +810,7 @@ componentDidMount() {
                              this.email = ref;
                            }}
 											       onKeyUp={this.emailValidateHandler}
+											       onBlur={this.emailValidateHandler}
 											/>
 											{ this.state.emailFeedBack && this.state.email &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
