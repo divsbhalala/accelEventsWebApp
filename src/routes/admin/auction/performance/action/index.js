@@ -8,7 +8,7 @@ export function getPerformanceAuctionItem() {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/auction/items' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -24,7 +24,7 @@ export function getPerformanceAuctionItemByItemCode(itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/auction/bids/itemCode/'+itemCode ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -40,7 +40,7 @@ export function getPerformanceAuctionBidderCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/auction/bidder/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
+
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
@@ -58,7 +58,7 @@ export function getPerformanceAuctionWinnerCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/auction/winner/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
+
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
@@ -76,7 +76,7 @@ export function deleteAuctionbid(bid) {
     return axios({
       method: 'DELETE',
       url: API_URL + 'host/performance/auction/bid/'+ bid ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -92,7 +92,7 @@ export function markAsPaidBid(bid) {
     return axios({
       method: 'post',
       url: API_URL + 'host/performance/auction/manuallyPay/bid/'+ bid ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -108,7 +108,7 @@ export function requestPaymentBid(bid) {
     return axios({
       method: 'post',
       url: API_URL + 'host/performance/auction/notify/payment/confirm/bid/'+ bid ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

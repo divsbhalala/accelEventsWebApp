@@ -8,7 +8,7 @@ export function getPerformanceDonation() {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/donations' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -24,7 +24,7 @@ export function getPerformanceDonationCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/donation/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
+
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){

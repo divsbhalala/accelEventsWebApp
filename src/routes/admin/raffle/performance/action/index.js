@@ -7,8 +7,7 @@ export function getPerformanceRaffleItem() {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'host/performance/raffle/items' ,
-      headers: {Authorization: localStorage.getItem('token')}
+      url: API_URL + 'host/performance/raffle/items',
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -24,7 +23,7 @@ export function getPerformanceRaffleItemByItemCode(itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/raffle/data/itemCode/'+itemCode ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -40,7 +39,6 @@ export function getPerformanceRafflePurchasedTicketCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/raffle/purchased/ticket/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
@@ -58,7 +56,6 @@ export function getPerformanceRaffleParticipantTicketCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/raffle/participant/ticket/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
@@ -76,7 +73,7 @@ export function getPerformanceRaffleWinnerCSV(name) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/raffle/winner/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')},
+
       responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
