@@ -80,6 +80,9 @@ class Html extends React.Component {
           {/* For add item toggles */}
           {isAdmin ? <link rel="stylesheet" href="/css/add-items.css"/> : ""}
 
+          {/* For dropzone */}
+          {isAdmin ? <link rel="stylesheet" href="/css/dropzone/dropzone2.css"/> : ""}
+
           <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDtLyd6ZZn_g4NaPstiJ8QgOLeWnPu0zas"></script>
           <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
           {styles.map(style =>
