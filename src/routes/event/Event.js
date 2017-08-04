@@ -16,6 +16,7 @@ import EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox'
 import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
+import GoogleMap from "../../components/GoogleMaps";
 
 import {
 	doGetEventData,
@@ -995,8 +996,13 @@ class Event extends React.Component {
 					headerText={<p>Event Location</p>}
 					onCloseFunc={this.hideMapPopup}
 				>
-					<div><h1>Location</h1></div>
-				</PopupModel>
+					<div className="row">
+						<div className="col-md-12"> <b>Location</b> : {this.state.settings && this.state.settings.address}</div>
+						<div className="col-md-12"> {this.state.settings &&
+								<GoogleMap height={500} eventAddress={this.state.settings.address}/>
+							}</div>
+					</div>
+					</PopupModel>
 				{ this.state.showFormError &&
 				<PopupModel
 					id="mapPopup"
@@ -1078,7 +1084,6 @@ class GMap extends React.Component {
 		this.map = this.createMap();
 		this.marker = this.createMarker();
 		this.infoWindow = this.createInfoWindow();
-		this.initMap();
 
 		// have to define google maps event listeners here too
 		// because we can't add listeners on the map until its created
@@ -1197,56 +1202,6 @@ class GMap extends React.Component {
 		infowindow.setContent(from_htmls);
 		infowindow.open(map, markers);
 	}
-
-	initMap() {
-		let geocoder = new google.maps.Geocoder;
-		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				let uluru = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
-				map = new google.maps.Map(document.getElementById('location-map'), {
-					zoom: 17,
-					center: uluru
-				});
-				marker = new google.maps.Marker({
-					position: uluru,
-					map: map,
-					animation: google.maps.Animation.DROP,
-					title: 'Event Location'
-				});
-				directionsDisplay.setMap(map);
-				directionsDisplay.setPanel(document.getElementById("directionsPanel"));
-				google.maps.event.addListener(map, 'click', function () {
-					infowindow.close();
-				});
-
-				let html = '<div class="directions-container">' +
-					'  <form action="javascript:getDirections()">' +
-					'    <h4>Directions:</h4>' +
-					'    <div class="form-group">' +
-					'       <label>Start address:</label>' +
-					'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
-					'    </div>' +
-					'    <div class="form-group">' +
-					'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick={()=>{this.getDirections()}}>' +
-					'    </div>' +
-					'    <div class="form-group">' +
-					'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +
-					'      <input type="checkbox" name="highways" id="highways"> <label for="highways">Avoid Highways</label>' +
-					'    </div>' +
-					'    <input type="hidden" id="daddr" value="' + uluru.lat + ',' + uluru.lng + '">' +
-					'  </form>' +
-					'</div>';
-				let contentString = html;
-				google.maps.event.addListener(marker, 'click', function () {
-					map.setZoom(15);
-					map.setCenter(marker.getPosition());
-					infowindow.setContent(contentString);
-					infowindow.open(map, marker);
-				});
-			}
-		});
-	}
-
 }
 
 let initialCenter = {lng: -90.1056957, lat: 29.9717272};

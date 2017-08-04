@@ -402,7 +402,7 @@ class CreateTicket extends React.Component {
 										</div>
 										<div className="col-md-6">
 											<div className="form-group">
-												<GoogleMap lat={42.3531276} lon={-71.0790255} eventAddress={this.state.eventData.eventAddress} setEventAddress={this.setEventAddress}/>
+												<GoogleMap eventAddress={this.state.eventData.eventAddress} setEventAddress={this.setEventAddress} height={250}/>
 											</div>
 										</div>
 									</div>
