@@ -8,11 +8,9 @@ import {
 	updateItemListPosition,
 	deleteItemList
 } from './../../routes/admin/action';
-import {uploadImage} from '../Widget/UploadFile/action';
 import ToggleSwitch from '../Widget/ToggleSwitch';
 import PopupModel from './../PopupModal/index'
 import Button from 'react-bootstrap-button-loader';
-import Dropzone from 'react-dropzone';
 import CKEditor from 'react-ckeditor-wrapper';
 import UploadImage from '../Widget/UploadFile/UploadImage'
 
@@ -91,11 +89,22 @@ class RowItemList extends React.Component {
 		item.startingBid = this.startingBid.value;
 		this.setState({item, isDataUpdate: true})
 	};
-	imageUploaded = () => {
-		this.setState({isDataUpdate: true}, function stateChange() {
-			this.autoAddData();
-		})
-	};
+  imageUploaded = (imageUrl) =>{
+    let item=this.state.item;
+    item.images.push({'imageUrl':imageUrl});
+    this.setState({isDataUpdate:true},function stateChange() {
+      this.autoAddData();
+    })
+  };
+  imageRemove = (index) =>{
+    if(this.state.item && this.state.item.images) {
+      let item = this.state.item;
+      item.images.splice(index, 1);
+      this.setState({item,isDataUpdate:true},function stateChange() {
+        this.autoAddData();
+      });
+    }
+  };
 	autoAddData = () => {
 		setTimeout(() => {
 			if (this.state.item.name && this.state.item.code && this.state.item.startingBid && this.state.isDataUpdate) {
@@ -219,11 +228,9 @@ class RowItemList extends React.Component {
 												{name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
 												{name: 'styles', groups: ['styles']},
 												{name: 'colors', groups: ['colors']},
-											]
-										}} onBlur={this.autoAddData}/>
+											],height : 100}} onBlur={this.autoAddData}/>
 									<div>
-										<UploadImage item={this.props.item} { ...this.state } { ...this.props }
-																 imageUploaded={ this.imageUploaded }/>
+                    <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageRemove={this.imageRemove} imageUploaded = { this.imageUploaded }/>
 									</div>
 								</div>
 								<div className="col-md-4">
@@ -252,8 +259,6 @@ class RowItemList extends React.Component {
 							<div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
 								{ this.state && this.state.errorMsg }
 								<div className="modal-footer">
-									{/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
-									{/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
 									{this.state.popupType === "Delete-Confirmation" ?
 										<Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteItemList}>Confirm</Button> : ""}
 									<button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
@@ -274,7 +279,6 @@ const mapDispatchToProps = {
 	updateItemList: (type, id, data) => updateItemList(type, id, data),
 	updateItemListPosition: (type, itemId, topItem, topBottom) => updateItemListPosition(type, itemId, topItem, topBottom),
 	deleteItemList: (type, id) => deleteItemList(type, id),
-	uploadImage: (file) => uploadImage(file),
 };
 
 const mapStateToProps = (state) => ({

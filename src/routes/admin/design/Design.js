@@ -12,6 +12,9 @@ import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
 import CKEditor from 'react-ckeditor-wrapper';
 import {EditableTextField} from 'react-bootstrap-xeditable';
+import UploadImageModel from '../../../components/Widget/UploadFile/UploadImageModel';
+import {uploadImage} from '../../../components/Widget/UploadFile/action';
+import { getStoreDesingData } from './../../../routes/admin/action/index';
 
 class Design extends React.Component {
   static propTypes = {
@@ -25,6 +28,8 @@ class Design extends React.Component {
       loading:false,
       isError:false,
       message:null,
+      showPopup:false,
+      showBannerPopup:false,
     };
     this.submitSettings = this.submitSettings.bind(this);
   };
@@ -40,12 +45,13 @@ class Design extends React.Component {
     })
   };
 
-  submitSettings = (e) => {
-    e.preventDefault();
+  submitSettings = () => {
+   // e.preventDefault();
     this.setState({loading:true})
     this.props.updateDesignSetting( this.state.settings).then(resp =>{
       if(resp && resp.message){
         this.setState({loading:false,message:resp.message,isError:false})
+        this.props.getStoreDesingData();
       }else{
         this.setState({loading:false,message:"Something wrong",isError:true})
       }
@@ -78,7 +84,45 @@ class Design extends React.Component {
     let settings = this.state.settings;
     settings.eventName = this.eventName.value;
     this.setState({settings})
-  }
+  };
+  imageUploaded = (imageUrl) =>{
+    let settings =this.state.settings;
+    settings.logoImage=imageUrl;
+    this.setState({
+      settings,showPopup:false
+    },function stateChange() {
+      this.submitSettings();
+    });
+  };
+  bannerUploaded = (imageUrl) =>{
+    let settings =this.state.settings;
+    settings.bannerImage=imageUrl;
+    this.setState({
+      settings,showBannerPopup:false
+    },function stateChange() {
+      this.submitSettings();
+    });
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+    });
+  };
+  showPopup = () => {
+    this.setState({
+      showPopup: true,
+    });
+  };
+  showBannerPopup = () => {
+    this.setState({
+      showBannerPopup: true,
+    });
+  };
+  hideBannerPopup = () => {
+    this.setState({
+      showBannerPopup: false,
+    });
+  };
   render() {
     return (
       <div>
@@ -144,9 +188,8 @@ class Design extends React.Component {
                             </div>
                             <div className="col-md-3">
                               <div className="event-logo">
-                                {/*<img src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png" alt className="img-responsive" />*/}
                                 <img src={this.state.settings.logoImage  ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/"+this.state.settings.logoImage  : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} alt className="img-responsive" />
-                                <a role="button" href="#eventlogo" data-toggle="modal" className="change-image-text">
+                                <a role="button"  onClick={this.showPopup} className="change-image-text">
                                   <img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
                                 </a>
                               </div>
@@ -168,8 +211,8 @@ class Design extends React.Component {
                               <div className="event-logo">
                               <div className="banner-img">
                                 <img src={this.state.settings.bannerImage ? "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/"+this.state.settings.bannerImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} alt className="img-responsive " />
-                                <a role="button" href="#event-logo" data-toggle="modal" className="change-image-text">
-                                  <img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Logo
+                                <a role="button" onClick={this.showBannerPopup} className="change-image-text">
+                                  <img src="http://www.stagingaccel.com:8080/AccelEventsWebApp/img/photo-camera.png" /> Change Banner
                                 </a>
                               </div>
                             </div>
@@ -263,6 +306,8 @@ class Design extends React.Component {
       </div>
         :<div id="app" className="loader" />
       }
+         <UploadImageModel showPopup={this.state.showPopup}  popupHeader="Upload Event Logo" imageUploaded = { this.imageUploaded } hidePopup={this.hidePopup}  />
+         <UploadImageModel showPopup={this.state.showBannerPopup}  popupHeader="Upload Event Banner" imageUploaded = { this.bannerUploaded } hidePopup={this.hideBannerPopup}  />
       </div>
     );
   }
@@ -272,7 +317,10 @@ class Design extends React.Component {
 const mapDispatchToProps = {
   getDesignSetting: () => getDesignSetting(),
   updateDesignSetting: (data) => updateDesignSetting(data),
-  updateEventUrlDesingSetting: (value) => updateEventUrlDesingSetting(value)
+  updateEventUrlDesingSetting: (value) => updateEventUrlDesingSetting(value),
+  uploadImage: (file) => uploadImage(file),
+  uploadImage: (file) => uploadImage(file),
+  getStoreDesingData: () => getStoreDesingData()
 };
 
 const mapStateToProps = (state) => ({});

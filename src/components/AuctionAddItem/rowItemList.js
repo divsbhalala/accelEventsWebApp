@@ -2,11 +2,9 @@ import React from 'react';
 import cx from 'classnames';
 import {connect} from 'react-redux';
 import {getItemList, addItemList, updateItemList,updateItemListPosition,deleteItemList} from './../../routes/admin/action';
-import {uploadImage} from '../Widget/UploadFile/action';
 import ToggleSwitch from '../Widget/ToggleSwitch';
 import PopupModel from './../PopupModal/index'
 import Button from 'react-bootstrap-button-loader';
-import Dropzone from 'react-dropzone';
 import CKEditor from 'react-ckeditor-wrapper';
 import UploadImage from '../Widget/UploadFile/UploadImage'
 
@@ -42,12 +40,6 @@ componentWillMount(){
     item:this.props.item
   })
 };
-onImageDrop(files) {
-  this.setState({
-    uploadedFile: files[0],
-  });
-  this.handleImageUpload(files[0]);
-}
 showPopup = () => {
   this.setState({
     showPopup: true,
@@ -58,24 +50,6 @@ hidePopup = () => {
     showPopup: false,
   });
 };
-handleImageUpload(file) {
-  const upload = request.post(CLOUDINARY_UPLOAD_URL)
-    .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
-    .field('file', file);
-
-  upload.end((err, response) => {
-    if (err) {
-      console.error(err);
-    }
-
-    if (response.body.secure_url !== '') {
-      this.setState({
-        uploadedFileCloudinaryUrl: response.body.secure_url,
-      });
-    }
-  });
-}
-
   descriptionChangeHandler = (value) =>{
     let item=this.state.item;
     item.description=value;
@@ -142,20 +116,22 @@ handleImageUpload(file) {
     item.category=this.category.value;
       this.setState({item,isDataUpdate:true})
   }
-  imageUploaded = () =>{
+  imageUploaded = (imageUrl) =>{
+    let item=this.state.item;
+    item.images.push({'imageUrl':imageUrl});
     this.setState({isDataUpdate:true},function stateChange() {
       this.autoAddData();
     })
   }
   imageRemove = (index) =>{
-    console.log("------>>>>",index)
     if(this.state.item && this.state.item.images) {
       let item = this.state.item;
       item.images.splice(index, 1);
-      this.setState({item});
-     this.imageUploaded();
+      this.setState({item,isDataUpdate:true},function stateChange() {
+        this.autoAddData();
+      });
     }
-  }
+  };
   autoAddData =() => {
     setTimeout(()=>{
     if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate && this.state.buyItNowPrice ){
@@ -314,8 +290,6 @@ render() {
             <div className="ticket-type-container"><input type="hidden"  name="tickettypeid"/>
               { this.state && this.state.errorMsg }
               <div className="modal-footer">
-                {/*{this.state.popupType == "Invitation-Confirmation" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.resendInvitationUserManagementStaff} >Confirm</Button> : ""}*/}
-                {/*{this.state.popupType == "Edit-Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.updatedUserManagementStaff} >Confirm</Button> : ""}*/}
                 {this.state.popupType == "Delete-Confirmation" ? <Button className="btn btn-danger" loading={this.state.loading} onClick={this.deleteItemList} >Confirm</Button> : ""}
                 <button className="btn btn-primary" onClick={this.hidePopup}>Close</button>
               </div>
@@ -335,7 +309,6 @@ const mapDispatchToProps = {
   updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
   deleteItemList : (type,id) => deleteItemList(type,id),
-  uploadImage :(file) => uploadImage(file),
 };
 
 const mapStateToProps = (state) => ({

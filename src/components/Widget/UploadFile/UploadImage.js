@@ -1,7 +1,9 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
+import {uploadImage} from './action';
+import {connect} from 'react-redux';
 
-export default class UploadImage extends React.Component {
+ class UploadImage extends React.Component {
 
   constructor(props) {
       super(props);
@@ -16,31 +18,24 @@ export default class UploadImage extends React.Component {
   }
   onImageDrop(files) {
     for (let file in files) {
-      console.log(files[file]);
       this.props.uploadImage(files[file]).then(resp => {
         if (resp && resp.data && resp.status===200) {
-          this.props.item.images.push({ "imageUrl": resp.data.message });
-          this.props.imageUploaded();
+        //  this.props.item.images.push({ "imageUrl": resp.data.message });
+          this.props.imageUploaded(resp.data.message);
         } else {
           console.log(resp);
         }
       }).catch((error, code, status) => error && error.response && error.response.data);
     }
   };
- // imageRemove = (imageUrl) =>{
-   // console.log("------>>>>",imageUrl)
-   // this.props.item.images.splice(imageUrl,1);
-   // this.props.imageUploaded();
- // }
   render() {
     return (
-      <Dropzone multiple className="dropzone dz-clickable" accept="image/*" onDrop={this.onImageDrop.bind(this)}  onClick={e => e.stopPropagation()} >
+      <Dropzone  className="dropzone dz-clickable" accept="image/*" onDrop={this.onImageDrop.bind(this)}  onClick={e => e.stopPropagation()} >
         <div className="dz-default dz-message">
           <span>Drop files here to upload</span>
         </div>
         { this.props.item && this.props.item.images.map((item,index)=>
           <div key={index} className="dz-preview dz-image-preview" onClick={e => e.stopPropagation()} >
-            {/*<ImagePreview key={index} imageUrl={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/"+item.imageUrl} />*/}
             <div className="dz-details" >
               <div className="dz-filename">
                 <span data-dz-name>{item.imageUrl}</span>
@@ -58,22 +53,12 @@ export default class UploadImage extends React.Component {
       );
     }
 }
-class ImagePreview extends React.Component {
-    render(){
-      return(
-      <div className="dz-preview dz-image-preview">
-        <div className="dz-details">
-          <div className="dz-filename">
-            <span data-dz-name>{this.props.imageUrl}</span>
-          </div>
-          <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>
-          <img data-dz-thumbnail alt={this.props.imageUrl} src={this.props.imageUrl} /></div>
-        <div className="dz-progress"><span className="dz-upload"  /></div>
-        <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>
-        <div className="dz-error-message"><span data-dz-errormessage /></div>
-        <a className="dz-remove" href="#" >Remove file</a>
-      </div>
-      );
-    }
-}
+const mapDispatchToProps = {
+  uploadImage: (file) => uploadImage(file),
+};
+
+const mapStateToProps = (state) => ({
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UploadImage);
 
