@@ -74,11 +74,11 @@ class Html extends React.Component {
 
 
           {/* for temporary changes */}
-          {isAdmin ? <link rel="stylesheet" href="/css/style2.css"/> : ""}
-          {isAdmin ? <link rel="stylesheet" href="/css/custom.css" /> : ""}
-          {isAdmin ? <link rel="stylesheet" href="/css/admin-style.min.css"/> : ""}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/style2.css"/> : "" */}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/custom.css" /> : "" */}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/admin-style.min.css"/> : "" */}
           {/* For add item toggles */}
-          {isAdmin ? <link rel="stylesheet" href="/css/add-items.css"/> : ""}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/add-items.css"/> : "" */}
 
           <script src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDtLyd6ZZn_g4NaPstiJ8QgOLeWnPu0zas"></script>
           <script src="https://cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
