@@ -30,7 +30,7 @@ export function updateAuctionSettings(auctionDTO) {
       method: 'put',
       url: API_URL + 'host/auction/settings',
       data : auctionDTO,
-      headers: {Authorization: localStorage.getItem('token')}
+
     })
   }
 }
@@ -40,7 +40,7 @@ export function resetAuctionSettings() {
     return axios({
       method: 'put',
       url: API_URL + 'host/auction/reset',
-      headers: {Authorization: localStorage.getItem('token')}
+
     })
   }
 }
@@ -50,7 +50,7 @@ export function getAuctionSettings() {
     return axios({
       method: 'get',
       url: API_URL + 'host/auction/settings',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -64,7 +64,7 @@ export function getAuctionCategories() {
     return axios({
       method: 'get',
       url: API_URL + 'host/auction/itemCategories',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -79,7 +79,7 @@ export function addAuctionCategory(itemCategory) {
       method: 'post',
       url: API_URL + 'host/auction/itemCategory',
       data : {itemCategoryDto:itemCategory},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -93,7 +93,7 @@ export function removeAuctionCategory(id) {
     return axios({
       method: 'delete',
       url: API_URL + 'host/auction/itemCategory/'+ id,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -108,7 +108,7 @@ export function updateAuctionCategory(id, itemCategory) {
       method: 'put',
       url: API_URL + 'host/auction/itemCategory/'+ id,
       data : itemCategory,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -122,7 +122,7 @@ export function getAuctionItems(page, size) {
     return axios({
       method: 'get',
       url: API_URL + 'host/auction/items?page='+ page +'&size='+ size,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -137,7 +137,7 @@ export function addAuctionItem(auctionDTO) {
       method: 'post',
       url: API_URL + 'host/auction/item',
       data : auctionDTO,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -152,7 +152,7 @@ export function updateAuctionItem(id, auctionDTO) {
       method: 'put',
       url: API_URL + 'host/auction/item/' + id,
       data : auctionDTO,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -165,7 +165,7 @@ export function getGeneralSettings() {
     return axios({
       method: 'get',
       url: API_URL + 'host/settings/general',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
@@ -180,7 +180,7 @@ export function getItemCatalog() {
       method: 'get',
       url: API_URL + 'host/auction/export/itemCatalog/pdf',
       responseType:'blob',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       fileDownload(resp.data, 'catalog.pdf');
     }).catch(error => {
@@ -195,7 +195,7 @@ export function getItemsPDF() {
       method: 'get',
       url: API_URL + 'host/auction/export/items/pdf',
       responseType:'blob',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       fileDownload(resp.data, 'items.pdf');
     }).catch(error => {
@@ -210,7 +210,7 @@ export function getItemsCSV() {
       method: 'get',
       url: API_URL + 'host/auction/download/item/CSV',
       responseType:'blob',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       fileDownload(resp.data, 'items.csv');
     }).catch(error => {
@@ -224,7 +224,7 @@ export function removeItem(id) {
     return axios({
       method: 'delete',
       url: API_URL + 'host/auction/item/'+ id,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {

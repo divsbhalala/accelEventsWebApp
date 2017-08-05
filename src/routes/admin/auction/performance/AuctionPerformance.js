@@ -23,11 +23,11 @@ class AuctionPerformance extends React.Component {
     };
   }
   getPerformanceAuctionWinnerCSV = () => {
-    this.props.getPerformanceAuctionWinnerCSV().then((resp) => {
+    this.props.getPerformanceAuctionWinnerCSV('Auction Winner Data.csv').then((resp) => {
     });
   };
   getPerformanceAuctionBidderCSV = () => {
-    this.props.getPerformanceAuctionBidderCSV().then((resp) => {
+    this.props.getPerformanceAuctionBidderCSV('All Bidder Data.csv').then((resp) => {
     });
   };
   getPerformanceAuctionItemByItemCode = () => {
@@ -89,8 +89,8 @@ class AuctionPerformance extends React.Component {
 const mapDispatchToProps = {
   getPerformanceAuctionItem: () => getPerformanceAuctionItem(),
   getPerformanceAuctionItemByItemCode: ItemCode => getPerformanceAuctionItemByItemCode(ItemCode),
-  getPerformanceAuctionWinnerCSV: () => getPerformanceAuctionWinnerCSV(),
-  getPerformanceAuctionBidderCSV: () => getPerformanceAuctionBidderCSV(),
+  getPerformanceAuctionWinnerCSV: (name) => getPerformanceAuctionWinnerCSV(name),
+  getPerformanceAuctionBidderCSV: (name) => getPerformanceAuctionBidderCSV(name),
 };
 
 const mapStateToProps = state => ({

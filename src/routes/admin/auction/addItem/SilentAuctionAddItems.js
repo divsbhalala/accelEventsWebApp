@@ -15,16 +15,16 @@ class SilentAuctionAddItems extends React.Component {
     };
   }
   getItemSheetPdf = () => {
-    this.props.getItemSheetPdf().then((resp) => {
+    this.props.getItemSheetPdf("auction-items.pdf").then((resp) => {
     });
   };
   getItemCatalogPdf= () => {
-    this.props.getItemCatalogPdf().then((resp) => {
+    this.props.getItemCatalogPdf("auction-catalog.pdf").then((resp) => {
 
     });
   };
   getItemListCsv=() => {
-    this.props.getItemListCsv().then((resp) => {
+    this.props.getItemListCsv("All Items.csv").then((resp) => {
     });
   };
 
@@ -46,7 +46,7 @@ class SilentAuctionAddItems extends React.Component {
                                 Add Silent Auction Items
                                 {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">{this.state.items.length}</span>)</span>*/}
                             <div className="pull-right">
-                              {/*<button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>*/}
+                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                           </h1>
                         </div>
@@ -90,9 +90,9 @@ class SilentAuctionAddItems extends React.Component {
 
 
 const mapDispatchToProps = {
-  getItemListCsv: () => getItemListCsv(),
-  getItemCatalogPdf: () => getItemCatalogPdf(),
-  getItemSheetPdf: () => getItemSheetPdf(),
+  getItemListCsv: (name) => getItemListCsv(name),
+  getItemCatalogPdf: (name) => getItemCatalogPdf(name),
+  getItemSheetPdf: (name) => getItemSheetPdf(name),
 };
 
 const mapStateToProps = state => ({

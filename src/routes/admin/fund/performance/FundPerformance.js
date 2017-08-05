@@ -22,7 +22,7 @@ class FundPerformance extends React.Component {
     };
   }
   getPerformancefundANeedItemCSV = () => {
-    this.props.getPerformancefundANeedItemCSV().then((resp) => {
+    this.props.getPerformancefundANeedItemCSV('All Donor Data.csv').then((resp) => {
     });
   }
   componentWillMount() {
@@ -79,7 +79,7 @@ class FundPerformance extends React.Component {
 
 const mapDispatchToProps = {
   getPerformancefundANeedItem: () => getPerformancefundANeedItem(),
-  getPerformancefundANeedItemCSV: () => getPerformancefundANeedItemCSV(),
+  getPerformancefundANeedItemCSV: (name) => getPerformancefundANeedItemCSV(name),
 };
 
 const mapStateToProps = state => ({});

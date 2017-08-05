@@ -7,7 +7,7 @@ export function getDesignSetting() {
     return axios({
       method: 'get',
       url: API_URL + 'host/design/setting' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -23,7 +23,7 @@ export function getDesignDetails() {
     return axios({
       method: 'get',
       url: API_URL + 'host/eventDetails' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
 				dispatch(storeDesignData(resp.data));
@@ -47,7 +47,7 @@ export function updateDesignSetting(data) {
       method: 'put',
       url: API_URL + 'host/design/setting' ,
       data:data,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -63,7 +63,7 @@ export function updateDesignSetting(data) {
     return axios({
       method: 'put',
       url: API_URL + 'host/design/url/value/'+value ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

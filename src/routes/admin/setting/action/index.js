@@ -7,7 +7,7 @@ export function doGetHostSettings(type) {
 			method: 'get',
 			url: API_URL + 'host/settings/' + type || "general",
 			data: {},
-			headers: {Authorization: localStorage.getItem('token')}
+
 		})
 	}
 }
@@ -17,7 +17,7 @@ export function putGetHostSettings(type, data) {
 			method: 'put',
 			url: API_URL + 'host/settings/' + type || "general",
 			data: data,
-			headers: {Authorization: localStorage.getItem('token')}
+
 		})
 	}
 }
@@ -27,7 +27,7 @@ export function makePyment(data) {
       method: 'post',
       url: API_URL + 'settings/billing' ,
       data:data,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

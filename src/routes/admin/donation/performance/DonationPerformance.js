@@ -21,7 +21,7 @@ class DonationPerformance extends React.Component {
     }
   }
   getPerformanceDonationCSV = () => {
-    this.props.getPerformanceDonationCSV().then((resp) => {
+    this.props.getPerformanceDonationCSV('All Donation Performance Data.csv').then((resp) => {
     });
   };
   componentWillMount() {
@@ -108,7 +108,7 @@ class DonationPerformance extends React.Component {
 
 const mapDispatchToProps = {
   getPerformanceDonation: () => getPerformanceDonation(),
-  getPerformanceDonationCSV: () => getPerformanceDonationCSV(),
+  getPerformanceDonationCSV: (name) => getPerformanceDonationCSV(name),
 };
 
 const mapStateToProps = (state) => ({

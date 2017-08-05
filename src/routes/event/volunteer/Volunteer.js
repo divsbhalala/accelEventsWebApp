@@ -488,6 +488,8 @@ class Volunteer extends React.Component {
     }
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
+  	var isnum = /^\d+$/.test(value);
+  	if(!isnum && value) return false;
     this.setState({
       phone: value,
       countryPhone: countryData.iso2,
@@ -1099,13 +1101,15 @@ class Volunteer extends React.Component {
       tickettypeid: e.target.name,
     };
     let totalPrice = 0;
+    let totalNoTic = 0;
     totalTickets.map((item) => {
       // console.log(item)
       totalPrice += item.price * item.numberofticket;
+      totalNoTic += (item.numberofticket ? parseInt(item.numberofticket) : 0);
     });
     this.setState({
       totalTickets,
-      totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
+      totalTicketQty: totalNoTic,
       totalTicketPrice: totalPrice,
     });
   }

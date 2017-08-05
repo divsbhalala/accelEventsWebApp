@@ -9,7 +9,7 @@ export function getDashboard() {
     return axios({
       method: 'get',
       url: API_URL + 'host/home'  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -25,7 +25,7 @@ export function dashboardSubmitBid(countryCode,phoneNumber) {
     return axios({
       method: 'post',
       url: API_URL + 'host/auction/submitBid/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -41,7 +41,7 @@ export function dashboardSubmitPledge(countryCode,phoneNumber) {
     return axios({
       method: 'post',
       url: API_URL + 'host/fundANeed/submitPledge/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -57,7 +57,7 @@ export function dashboardRafflePurchaseTicket(countryCode,phoneNumber) {
     return axios({
       method: 'post',
       url: API_URL + 'host/raffle/purchaseTicket/countrycode/'+countryCode+'/phoneNumber/'+phoneNumber  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

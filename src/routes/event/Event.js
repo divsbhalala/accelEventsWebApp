@@ -16,6 +16,7 @@ import EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox'
 import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
+import GoogleMap from "../../components/GoogleMaps";
 
 import {
 	doGetEventData,
@@ -132,10 +133,20 @@ class Event extends React.Component {
 				})
 			} else {
 				this.setState({
-					tab: 'donation'
+					tab: 'Donate'
 				})
 			}
-			this.setActiveTabState(this.state.tab)
+			this.setActiveTabState(this.state.tab);
+			if(window.location.hash){
+				let query = window.location.hash.split('#');
+				if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+					this.setState({
+						tab: query[1]
+					},function changeAfter(){
+						this.setActiveTabState(query[1])
+					})
+				}
+			}
 		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
@@ -146,6 +157,16 @@ class Event extends React.Component {
 			history.push('/404');
 		});
 		this.props.isVolunteer(this.props.params && this.props.params.params);
+		if(window.location.hash){
+			let query = window.location.hash.split('#');
+			if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+				this.setState({
+					tab: query[1]
+				},function changeAfter(){
+					this.setActiveTabState(query[1])
+				})
+			}
+		}
 	}
 
 	componentDidMount() {
@@ -292,7 +313,7 @@ class Event extends React.Component {
 		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
-				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+				errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
 			});
 		} else {
 			this.setState({
@@ -581,12 +602,14 @@ class Event extends React.Component {
 			tickettypeid: e.target.name
 		};
 		let totalPrice = 0;
+		let totalNoTickets = 0;
 		totalTickets.map(item => {
 			totalPrice += item.price * item.numberofticket;
+			totalNoTickets += (item.numberofticket ? parseInt(item.numberofticket) : 0);
 		});
 		this.setState({
 			totalTickets: totalTickets,
-			totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
+			totalTicketQty: totalNoTickets,
 			totalTicketPrice: totalPrice,
 		});
 	}
@@ -768,6 +791,7 @@ class Event extends React.Component {
 						<div className="col-lg-9 col-md-8 col-sm-8 ">
 							{ this.state.tab && this.state.isLoaded && <div className="main-box">
 								<Tabs onSelect={ (index, label) => {
+									window.location.hash = '#'+label;
                   this.setActiveTabState(label)
                 } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
 
@@ -933,7 +957,7 @@ class Event extends React.Component {
 													( <span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
-															<select className="form-control" name={item.typeId} data-price={item.price}
+															<select className="form-control all-select-values" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
@@ -995,8 +1019,13 @@ class Event extends React.Component {
 					headerText={<p>Event Location</p>}
 					onCloseFunc={this.hideMapPopup}
 				>
-					<div><h1>Location</h1></div>
-				</PopupModel>
+					<div className="row">
+						<div className="col-md-12"> <b>Location</b> : {this.state.settings && this.state.settings.address}</div>
+						<div className="col-md-12"> {this.state.settings &&
+								<GoogleMap height={500} eventAddress={this.state.settings.address}/>
+							}</div>
+					</div>
+					</PopupModel>
 				{ this.state.showFormError &&
 				<PopupModel
 					id="mapPopup"
@@ -1078,7 +1107,6 @@ class GMap extends React.Component {
 		this.map = this.createMap();
 		this.marker = this.createMarker();
 		this.infoWindow = this.createInfoWindow();
-		this.initMap();
 
 		// have to define google maps event listeners here too
 		// because we can't add listeners on the map until its created
@@ -1197,56 +1225,6 @@ class GMap extends React.Component {
 		infowindow.setContent(from_htmls);
 		infowindow.open(map, markers);
 	}
-
-	initMap() {
-		let geocoder = new google.maps.Geocoder;
-		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				let uluru = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
-				map = new google.maps.Map(document.getElementById('location-map'), {
-					zoom: 17,
-					center: uluru
-				});
-				marker = new google.maps.Marker({
-					position: uluru,
-					map: map,
-					animation: google.maps.Animation.DROP,
-					title: 'Event Location'
-				});
-				directionsDisplay.setMap(map);
-				directionsDisplay.setPanel(document.getElementById("directionsPanel"));
-				google.maps.event.addListener(map, 'click', function () {
-					infowindow.close();
-				});
-
-				let html = '<div class="directions-container">' +
-					'  <form action="javascript:getDirections()">' +
-					'    <h4>Directions:</h4>' +
-					'    <div class="form-group">' +
-					'       <label>Start address:</label>' +
-					'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
-					'    </div>' +
-					'    <div class="form-group">' +
-					'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick={()=>{this.getDirections()}}>' +
-					'    </div>' +
-					'    <div class="form-group">' +
-					'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +
-					'      <input type="checkbox" name="highways" id="highways"> <label for="highways">Avoid Highways</label>' +
-					'    </div>' +
-					'    <input type="hidden" id="daddr" value="' + uluru.lat + ',' + uluru.lng + '">' +
-					'  </form>' +
-					'</div>';
-				let contentString = html;
-				google.maps.event.addListener(marker, 'click', function () {
-					map.setZoom(15);
-					map.setCenter(marker.getPosition());
-					infowindow.setContent(contentString);
-					infowindow.open(map, marker);
-				});
-			}
-		});
-	}
-
 }
 
 let initialCenter = {lng: -90.1056957, lat: 29.9717272};

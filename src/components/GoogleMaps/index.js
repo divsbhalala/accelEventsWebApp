@@ -12,8 +12,7 @@ export default class GoogleMap extends Component {
   componentDidMount(){
     this.setState({eventData : this.props.eventData});
     let map = new google.maps.Map(this.refs.map,{
-      zoom:17,
-      center :{ lat : this.props.lat, lng : this.props.lon }
+      zoom:17
     });
     let geocoder = new google.maps.Geocoder();
     let _this = this;
@@ -60,7 +59,7 @@ export default class GoogleMap extends Component {
   render(){
     return(<div>
       <script type="text/javascript" src="//maps.google.com/maps/api/js?key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
-      <div ref="map" style={{height: 250, position: "relative", overflow: "hidden"}}/></div>
+      <div ref="map" style={{height: this.props.height, position: "relative", overflow: "hidden"}}/></div>
     );
   };
 }

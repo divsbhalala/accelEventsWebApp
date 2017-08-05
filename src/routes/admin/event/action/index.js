@@ -9,7 +9,7 @@ export function eventsList(offset,limit,search="") {
     return axios({
       method: 'get',
       url: API_URL + 'superadmin/events?offset='+offset+'&limit='+limit +'&search[value]='+search,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -25,7 +25,7 @@ export function whitLableEeventsList(label) {
     return axios({
       method: 'get',
       url: API_URL + 'whiteLabelURL/'+label+'/events',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -41,7 +41,7 @@ export function createWhiteLabelUrl(label) {
     return axios({
       method: 'post',
       url: API_URL + 'superadmin/create/whitelabel/'+label,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -57,7 +57,7 @@ export function whiteLabelUrl() {
     return axios({
       method: 'get',
       url: API_URL + 'superadmin/whiteLabelUrl'  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{0
       if(resp && resp.data){
         return resp.data;
@@ -73,7 +73,7 @@ export function setWhiteLabelUrlEvents(eventId,whiteLabelURL) {
     return axios({
       method: 'post',
       url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/setEvent/'+ eventId ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -89,7 +89,7 @@ export function setEvents(eventId) {
     return axios({
       method: 'post',
       url: API_URL + 'superadmin/setEvent/'+ eventId  ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -105,7 +105,7 @@ export function getOrganizationSettings(whiteLabelURL) {
     return axios({
       method: 'get',
       url: API_URL + 'whiteLabelURL/'+ whiteLabelURL + '/settings',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -122,7 +122,7 @@ export function setOrganizationSettings(whiteLabelURL,data) {
       method: 'put',
       url: API_URL + 'whiteLabelURL/'+ whiteLabelURL + '/settings',
       data:data,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -142,7 +142,7 @@ export function getUserManagementStaff(whiteLabelURL) {
       method: 'get',
       url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staffs',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     })
   }
 }
@@ -152,7 +152,7 @@ export function addUserManagementStaff(staff,whiteLabelURL) {
       method: 'post',
       url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staff',
       data: staff,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -169,7 +169,7 @@ export function deleteUserManagementStaff(staffId,whiteLabelURL) {
       method: 'DELETE',
       url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staff/'+staffId,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -187,7 +187,7 @@ export function updatedUserManagementStaff(staffId,staff,whiteLabelURL) {
       method: 'put',
       url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/staff/'+staffId,
       data: staff,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -205,7 +205,7 @@ export function resendInvitationUserManagementStaff(staffId,whiteLabelURL) {
       method: 'post',
       url: API_URL + 'whiteLabelURL/'+whiteLabelURL+'/users/resendConfirmation/staff/'+staffId,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

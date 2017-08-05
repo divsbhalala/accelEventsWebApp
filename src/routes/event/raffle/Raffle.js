@@ -248,7 +248,7 @@ class Raffle extends React.Component {
     } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
       this.setState({
         cvv: false,
-        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+        errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
       });
     } else {
       this.setState({
@@ -622,12 +622,12 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} disabled={!this.state.isValidData } role="button"
+          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled={!this.state.isValidData } role="button"
                    type="submit"  loading={this.state.loading}> Submit Ticket </Button>
 
         </div>
         <div className="col-md-6 col-lg-5">
-          <Link to={this.props.params && "/events/" + this.props.params.params } role="button" className="btn btn-success btn-block" >
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } role="button" className="btn btn-success btn-block" >
               Go back to All Items
           </Link>
         </div>
@@ -644,7 +644,7 @@ class Raffle extends React.Component {
       <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
-         to={this.props.params && "/events/" + this.props.params.params } >Go back to All Items</Link>
+         to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } >Go back to All Items</Link>
     </div>;
     return (
       <div className="row">

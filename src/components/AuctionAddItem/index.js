@@ -86,7 +86,7 @@ class AuctionAddItem extends React.Component {
 		setTimeout(() => {
 			this.setState({message: ""})
 		}, 4000)
-	}
+	};
 
 	getItemList = () => {
 		this.props.getItemList("auction").then(resp => {

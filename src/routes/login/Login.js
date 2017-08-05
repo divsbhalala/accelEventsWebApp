@@ -51,7 +51,8 @@ class Login extends React.Component {
         if (!resp.errorMessage) {
           this.setState({error: "Log In SuccessFully...",loading:false});
           setTimeout(()=>{
-            history.push(resp.data.redirectUrl)
+             history.push(resp.data.redirectUrl)
+            //window.location.replace(resp.data.redirectUrl)
           },2000)
         }
         else {
@@ -60,7 +61,6 @@ class Login extends React.Component {
 
       });
     }
-
   };
 
   emailValidateHandler = (e) => {
@@ -113,6 +113,7 @@ class Login extends React.Component {
      */
     if (this.props.authenticated) {
        history.push('/u/superadmin/events');
+       // window.location.replace('/u/superadmin/events');
     }
   }
 
@@ -134,7 +135,7 @@ class Login extends React.Component {
               </div>
               <div className="js-notification notification-register mrg-t-md" style={{display: 'none'}}>
                 Looks like you don't have an account yet. Let's change that!
-                <a href="/AccelEventsWebApp/u/signup">Sign up for free.</a>
+                <a href="/u/signup">Sign up for free.</a>
               </div>
               <div
                 className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>

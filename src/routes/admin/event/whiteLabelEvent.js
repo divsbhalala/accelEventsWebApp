@@ -35,7 +35,8 @@ class WhiteLabelEventList extends React.Component {
   setActiveEvents = (row) => {
     this.props.setWhiteLabelUrlEvents(row.eventId,this.props.params && this.props.params.params).then((resp) => {
       setTimeout(()=>{
-        history.push("/host/dashboard/home")
+      //  history.push("/host/dashboard/home")
+        window.location.replace('/host/dashboard/home');
       },2000);
       // this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
       // }).catch(error => {
