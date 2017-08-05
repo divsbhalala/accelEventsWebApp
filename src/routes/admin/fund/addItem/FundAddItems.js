@@ -13,11 +13,11 @@ class FundAddItems extends React.Component {
     title: PropTypes.string,
   };
   getItemSheetPdf = () => {
-    this.props.getItemSheetPdf('causeauction-items.pdf').then((resp) => {
+    this.props.getItemSheetPdf(this.props.eventName+'-causeauction-items.pdf').then((resp) => {
     });
   };
   getItemCatalogPdf= () => {
-    this.props.getItemCatalogPdf('causeauction-catalog.pdf').then((resp) => {
+    this.props.getItemCatalogPdf(this.props.eventName+'-causeauction-catalog.pdf').then((resp) => {
 
     });
   };
@@ -99,7 +99,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = state => ({
-	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
+  eventName : (state.host && state.host.eventDetails && state.host.eventName ) || "file"
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundAddItems));

@@ -4,8 +4,7 @@ import cx from 'classnames';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
-import { getDashboard, getStoreDesingData } from './../../routes/admin/action/index';
-import {updateDesignSetting} from './../../routes/admin/design/action/index';
+import { getDashboard, getStoreDesingData,updateLogo } from './../../routes/admin/action/index';
 import UploadImageModel from './../Widget/UploadFile/UploadImageModel';
 
 class AdminSidebar extends React.Component {
@@ -26,9 +25,9 @@ class AdminSidebar extends React.Component {
 	}
   imageUploaded = (imageUrl) =>{
 	  this.setState({showPopup:false})
-    let settings =this.props.eventDetails.eventDesignDetailDto;
-    settings.logoImage=imageUrl;
-    this.props.updateDesignSetting(settings).then(resp =>{
+    // let settings =this.props.eventDetails.eventDesignDetailDto;
+    // settings.logoImage=imageUrl;
+    this.props.updateLogo(imageUrl).then(resp =>{
       if(resp && resp.message){
         this.props.getStoreDesingData();
       }else{
@@ -240,7 +239,7 @@ class AdminSidebar extends React.Component {
 const mapDispatchToProps = {
 	getDashboard: () => getDashboard(),
 	getStoreDesingData: () => getStoreDesingData(),
-  updateDesignSetting: (data) => updateDesignSetting(data)
+  updateLogo: (logoImageUrl) => updateLogo(logoImageUrl)
 };
 
 const mapStateToProps = (state) => ({

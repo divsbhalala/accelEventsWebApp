@@ -195,6 +195,22 @@ export function doGetRaffleSetting(eventUrl) {
   }
 
 }
+export function getRaffleTickets() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/raffle/tickets',
+      data: {},
+
+    }).then(response => {
+      return response;
+
+    })
+      .catch(error => {
+        return error;
+      });
+  }
+}
 
 export function doGetRaffleItemByCode(eventUrl, itemCode) {
   return (dispatch) => {

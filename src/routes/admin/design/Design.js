@@ -233,7 +233,13 @@ class Design extends React.Component {
                             </div>
                             <div className="col-md-9">
                               <CKEditor value={this.state.settings.desc}
-                                        onChange={this.updateContent.bind(this)} />
+                                onChange={this.updateContent.bind(this)}
+                                  // config={
+                                  // {
+                                  //   filebrowserBrowseUrl : '/browser/browse.php',
+                                  //   filebrowserUploadUrl : '/uploader/upload.php'
+                                  // }}
+                              />
                             </div>
                           </div>
                           <div className="row form-group">
