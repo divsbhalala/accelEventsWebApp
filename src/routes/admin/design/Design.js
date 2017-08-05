@@ -15,7 +15,7 @@ import {EditableTextField} from 'react-bootstrap-xeditable';
 import UploadImageModel from '../../../components/Widget/UploadFile/UploadImageModel';
 import {uploadImage} from '../../../components/Widget/UploadFile/action';
 import { getStoreDesingData } from './../../../routes/admin/action/index';
-
+import {serverUrl } from './../../../clientConfig';
 class Design extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -154,7 +154,7 @@ class Design extends React.Component {
                         <p>
                           Design your display page. View your changes on your
                           page here:
-                          <a href={"http://www.stagingaccel.com:8080/AccelEventsWebApp/events/"+this.state.settings.eventUrl} title="Display page" target="_blank">http://www.stagingaccel.com:8080/AccelEventsWebApp/events/{this.state.settings.eventUrl}</a>.
+                          <a href={serverUrl+"/events/"+this.state.settings.eventUrl} title="Display page" target="_blank">{serverUrl}/events/{this.state.settings.eventUrl}</a>.
                         </p>
 
                         <form id="form" className="form ajax-form" data-validate-function="validateValues" action="design" method="post"><div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span className="fa fa-spinner fa-pulse fa-fw" /> <span className="resp-message" /></div>
@@ -174,7 +174,7 @@ class Design extends React.Component {
                             </div>
                             <div className="col-md-6">
                               <div className=" event-url">
-                               <span className="text">http://www.stagingaccel.com:8080/AccelEventsWebApp/events/</span>
+                               <span className="text">{serverUrl}/events/</span>
                                <span className="new-tab-link"> <EditableTextField onUpdate={this.updateEventUrl} value={this.state.settings.eventUrl } name='EventUrl'/></span>
                               </div>
                               <div id="urlAlert" />
