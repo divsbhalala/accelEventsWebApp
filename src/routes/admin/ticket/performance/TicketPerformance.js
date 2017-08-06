@@ -84,66 +84,60 @@ class TicketPerformance extends React.Component {
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
           <div className="col-sm-12">
-           <div className="row" style={{opacity: 1}}>
-                <div className="col-lg-12">
-                  <div id className="clearfix">
+            <div className="main-box no-header">
+              <div className="main-box-body clearfix">
+                <div className="performance-table-wrap">
+                  <div className="page-title">
+                    <h1 className="page-header">Ticket Sales Performance</h1>
                   </div>
-                </div>
-              </div>
-              <div className="row" style={{opacity: 1}}>
-                <div className="col-lg-12">
-                  <div className="main-box no-header">
-                    <div className="main-box-body clearfix">
-                      <div className="page-title">
-                        <h1 className="page-header">Ticket Sales Performance</h1>
+                  <section className="gross-sales">
+                    <div className="section-title">
+                      <strong>Gross Sales</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                      <strong><span className="sales">{self_TicketPerformance.props.currencySymbol}{this.state.total}</span></strong>
+                    </div>
+                    <div className="section-data">
+                      {this.state.sales ?
+                      <BootstrapTable data={this.state.sales} striped hover search  pagination={ true }   options={ options }>
+                        <TableHeaderColumn  isKey={true} dataField='ticketTypeName'>Ticket Type</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='ticketPrice' dataFormat={priceFormate}>PRICE</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='ticketSold' dataFormat={soldFormate}>SOLD</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='status'>STATUS</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='endDate'  dataFormat={dateFormatter}>SALES END DATE</TableHeaderColumn>
+                      </BootstrapTable> : <div id="app" className="loader" /> }
+                    </div>
+                  </section>
+                  <section className="recent-orders">
+                    <div className="section-title">
+                      <strong>Recent Orders</strong>
+                    </div>
+                    <div className="section-data">
+                      {this.state.order ?
+                      <BootstrapTable data={this.state.order} striped hover search  pagination={ true }   options={ options }>
+                        <TableHeaderColumn  isKey={true} dataField='orderNo'>#ORDER</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='ticketBuyerName'>BUYER</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='quantity'>QTY</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='orderAmount' dataFormat={priceFormate} >PRICE</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='refundedAmount' dataFormat={priceFormate}>REFUNDED</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='orderDate' width="20%" dataFormat={dateFormatter}>DATE</TableHeaderColumn>
+                        <TableHeaderColumn  dataField='paymentMode'>PAYMENT</TableHeaderColumn>
+                      </BootstrapTable>: <div id="app" className="loader" /> }
+                    </div>
+                  </section>
+                  <div className="form-group operations-row mrg-t-lg">
+                    <div className="row">
+                      <div className="col-md-3" role="group">
+                        <a onClick={this.getPerformanceHolderCSV} className="btn btn-block btn-default mrg-b-md">Download Ticket Holder Data</a>
                       </div>
-                      <div className="post-page-header" />
-                        <br /><br /><br />
-                      <div className="grossSales">
-                        <strong>Gross Sales</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                        <strong><span className="sales">{self_TicketPerformance.props.currencySymbol}{this.state.total}</span></strong>
-                      </div>
-                      <div id="DataTables_Table_1_wrapper" >
-                        {this.state.sales ?
-                        <BootstrapTable data={this.state.sales} striped hover search  pagination={ true }   options={ options }>
-                          <TableHeaderColumn  isKey={true} dataField='ticketTypeName'>Ticket Type</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='ticketPrice' dataFormat={priceFormate}>PRICE</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='ticketSold' dataFormat={soldFormate}>SOLD</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='status'>STATUS</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='endDate'  dataFormat={dateFormatter}>SALES END DATE</TableHeaderColumn>
-                        </BootstrapTable>: <div id="app" className="loader" /> }
-                     </div>
-                      <div >
-                        <h4><strong>Recent Orders</strong></h4>
-                        <div id="DataTables_Table_1_wrapper" >
-                          {this.state.order ?
-                          <BootstrapTable data={this.state.order} striped hover search  pagination={ true }   options={ options }>
-                            <TableHeaderColumn  isKey={true} dataField='orderNo'>#ORDER</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='ticketBuyerName'>BUYER</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='quantity'>QTY</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='orderAmount' dataFormat={priceFormate} >PRICE</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='refundedAmount' dataFormat={priceFormate}>REFUNDED</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='orderDate' width="20%" dataFormat={dateFormatter}>DATE</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='paymentMode'>PAYMENT</TableHeaderColumn>
-                          </BootstrapTable>: <div id="app" className="loader" /> }
-                        </div>
-                      </div>
-                      <div className="form-group operations-row mrg-t-lg">
-                        <div className="row">
-                          <div className="col-md-3" role="group">
-                            <a onClick={this.getPerformanceHolderCSV} className="btn btn-block btn-default mrg-b-md">Download Ticket Holder Data</a>
-                          </div>
-                          <div className="col-md-3" role="group">
-                            <a onClick={this.getPerformanceBuyerCSV} className="btn btn-block btn-default mrg-b-md">Download Ticket Buyer Data</a>
-                          </div>
-                        </div>
+                      <div className="col-md-3" role="group">
+                        <a onClick={this.getPerformanceBuyerCSV} className="btn btn-block btn-default mrg-b-md">Download Ticket Buyer Data</a>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-         </div>
+          </div>
+        </div>
       </div>
     );
   }

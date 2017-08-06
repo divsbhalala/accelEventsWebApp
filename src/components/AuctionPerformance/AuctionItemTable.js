@@ -69,7 +69,7 @@ class AuctionItemTable extends React.Component {
 			clickToSelect: true,
 		};
 		return (
-			<div>
+			<div className="performance-table-wrap">
 				<div className="page-title">
 					<h1 className="page-header">Auction Item Performance</h1>
 				</div>
@@ -86,10 +86,10 @@ class AuctionItemTable extends React.Component {
 					}} search
 				>
 
-					<TableHeaderColumn dataField="itemName" width="50%">Item Name</TableHeaderColumn>
-					<TableHeaderColumn dataField="itemCode" isKey>Item Code</TableHeaderColumn>
-					<TableHeaderColumn dataField="bid">Highest Bidder</TableHeaderColumn>
-					<TableHeaderColumn dataField="bidder">Current Bid</TableHeaderColumn>
+					<TableHeaderColumn dataField="itemName" width="50%" dataSort={true}>Item Name</TableHeaderColumn>
+					<TableHeaderColumn dataField="itemCode" isKey dataSort={true}>Item Code</TableHeaderColumn>
+					<TableHeaderColumn dataField="bid" dataSort={true}>Highest Bidder</TableHeaderColumn>
+					<TableHeaderColumn dataField="bidder" dataSort={true}>Current Bid</TableHeaderColumn>
 					<TableHeaderColumn dataField="paid" dataFormat={formatPaid}>Paid ?</TableHeaderColumn>
 
 				</BootstrapTable>
