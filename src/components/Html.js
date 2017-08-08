@@ -70,7 +70,7 @@ class Html extends React.Component {
           <link rel="stylesheet" href="/css/style.min.css"/>
           <link rel="stylesheet" href="/css/theme.min.css"/>
           <link rel="stylesheet" href="/css/display.min.css"/>
-          {isAdmin ? <link rel="stylesheet" href="/css/host.min.css"/> : ""}
+          <link rel="stylesheet" href="/css/host.min.css"/>
 
 
           {/* for temporary changes */}
