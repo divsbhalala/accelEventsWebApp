@@ -4,7 +4,9 @@ import cx from 'classnames';
 import {sessionService} from 'redux-react-session';
 import {connect} from 'react-redux';
 import $ from 'jquery'
-import { getDashboard, getStoreDesingData } from './../../routes/admin/action/index';
+import { getDashboard, getStoreDesingData,updateLogo } from './../../routes/admin/action/index';
+import UploadImageModel from './../Widget/UploadFile/UploadImageModel';
+
 class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -13,12 +15,35 @@ class AdminSidebar extends React.Component {
       toggle:false,
 			nav : "dashboard",
 			subNav : "",
+      showPopup:false,
+      showBannerPopup:false,
 		};
 		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
 		this.toggleUl = this.toggleUl.bind(this);
 		this.setNav = this.setNav.bind(this);
 	//	this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 	}
+  imageUploaded = (imageUrl) =>{
+	  this.setState({showPopup:false})
+    // let settings =this.props.eventDetails.eventDesignDetailDto;
+    // settings.logoImage=imageUrl;
+    this.props.updateLogo(imageUrl).then(resp =>{
+      if(resp && resp.message){
+        this.props.getStoreDesingData();
+      }else{
+      }
+    });
+  };
+  hidePopup = () => {
+    this.setState({
+      showPopup: false,
+    });
+  };
+  showPopup = () => {
+    this.setState({
+      showPopup: true,
+    });
+  };
   toggleUl = () => {
 	  this.setState({
       toggle:!this.state.toggle
@@ -49,9 +74,10 @@ class AdminSidebar extends React.Component {
 							<div id="user-left-box" className="clearfix hidden-sm hidden-xs dropdown profile2-dropdown">
 								<div className="event-logo">
 									<img src={this.props.eventDetails && this.props.eventDetails.eventDesignDetailDto && this.props.eventDetails.eventDesignDetailDto && this.props.eventDetails.eventDesignDetailDto.logoImage ? 'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/'+this.props.eventDetails.eventDesignDetailDto.logoImage : "http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/937320cf-a809-49c5-916d-e7436a1cfcaeaccelevents-logo-black.png"} className="img-responsive" />
-                	<a role="button" href="#eventlogo-nav" data-toggle="modal" className="change-image-text">
+                	<a role="button" onClick={this.showPopup} className="change-image-text">
 										<img src="/images/photo-camera.png" /> Change Logo
 									</a>
+                  <UploadImageModel showPopup={this.state.showPopup}  popupHeader="Upload Event Logo" imageUploaded = { this.imageUploaded } hidePopup={this.hidePopup}  />
 								</div>
 							</div>
 							<div className="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
@@ -212,7 +238,8 @@ class AdminSidebar extends React.Component {
 }
 const mapDispatchToProps = {
 	getDashboard: () => getDashboard(),
-	getStoreDesingData: () => getStoreDesingData()
+	getStoreDesingData: () => getStoreDesingData(),
+  updateLogo: (logoImageUrl) => updateLogo(logoImageUrl)
 };
 
 const mapStateToProps = (state) => ({

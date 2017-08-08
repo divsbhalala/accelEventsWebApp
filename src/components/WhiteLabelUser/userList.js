@@ -226,7 +226,7 @@ class UserList extends React.Component {
       let staff={ "email": this.email.value,
         "firstName": this.firstName.value,
         "lastName": this.lastName.value,
-        // "role": this.role.value
+         "role": "whitelabeladmin"
       };
       if(this.state.userData.id) {
         this.updatedUserManagementStaff(staff);
