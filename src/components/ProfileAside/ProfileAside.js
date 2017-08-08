@@ -41,7 +41,7 @@ class ProfileAside extends React.Component {
 							<ul className="fa-ul">
 								{this.props.user && this.props.user.email ? <li><i className="fa-li fa fa-envelope-o" />{this.props.user && this.props.user.email}</li>: ""}
 								{this.props.user && this.props.user.phoneNumber ? <li><i className="fa-li fa fa-phone" />{this.props.user && this.props.user.phoneNumber}</li> : ""}
-								<li><i className="fa-li fa fa-building-o" />{this.props.user && (this.props.user.address1 || "") + " " +  (this.props.user.address2 || "")  + " " + (this.props.user.cityOrProvidence || "")  + " " + (this.props.user.state || "") + "&nbsp;" + (this.props.user.zipcode || "") } </li>
+								<li><i className="fa-li fa fa-building-o" />&nbsp;{this.props.user && (this.props.user.address1 || "") + " " +  (this.props.user.address2 || "")  + " " + (this.props.user.cityOrProvidence || "")  + " " + (this.props.user.state || "") + " " + (this.props.user.zipcode || "") } </li>
 							</ul>
 						</div>
 						<div className="profile-message-btn center-block text-center">
