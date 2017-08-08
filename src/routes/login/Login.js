@@ -34,18 +34,18 @@ class Login extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.email.value.trim() == '') {
+    if(this.email.value && this.email.value.trim() === ''){
       this.setState({
         email: false
       });
     }
 
-    if (this.password.value.trim() == '') {
+    if(this.password.value && this.password.value.trim() === ''){
       this.setState({
         password: false
       });
     }
-    if (this.state.isValidData) {
+    if(this.state.isValidData) {
       this.props.doLogin(this.email.value.trim(), this.password.value.trim()).then((resp) => {
         //console.log(resp.data.redirectUrl);
         if (!resp.errorMessage) {
@@ -70,7 +70,7 @@ class Login extends React.Component {
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if(this.password.value && this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -90,7 +90,7 @@ class Login extends React.Component {
       passwordFeedBack: true
     });
 
-    if (this.password.value == '') {
+    if (this.password.value === '') {
 
       this.setState({
         password: false

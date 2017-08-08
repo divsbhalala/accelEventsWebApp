@@ -17,7 +17,7 @@ const ContextType = {
 import axios from 'axios';
 axios.interceptors.request.use(function (config) {
 	// Do something before request is sent
-	 config.headers.common['Authorization'] = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJhdWRpZW5jZSI6IndlYiIsImNyZWF0ZWQiOjE1MDE2MTMxMDA5NjgsImV4cCI6MTUwMTY5OTUwMH0.iVNtJPFsi7WLXKvxVk2-R4IaOWmtgRjwSvnAALVtfiIHZDnjBe36QYQG5KiBwUWt1x0mFf186jn9Qic_TLfCng";// localStorage.getItem('token');
+	 config.headers.common['Authorization'] = localStorage.getItem('token');
 	return config;
 }, function (error) {
 	// Do something with request error
