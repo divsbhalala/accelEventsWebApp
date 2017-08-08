@@ -27,29 +27,28 @@ class ProfileAside extends React.Component {
 	render() {
 		return (
 			<div id="user-profile">{console.log("user",this.props.user)}
-				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
+				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"/>
 				<div className={cx("main-box", "clearfix")}>
 					<header className={cx("main-box-header", "clearfix")}>
-						<h2></h2>
+						<h2/>
 					</header>
 					<div className={cx("main-box-body clearfix")}>
 						<img src="/images/user-icon-placeholder.png" className="profile-img img-responsive center-block" />
-						<div className="profile-label">
+						{ this.props.user && this.props.user.userLabel ? <div className="profile-label">
 							<span className="label label-info">{this.props.user && this.props.user.userLabel} </span>
-						</div>
+						</div> : ""}
 						<div className="profile-details">
 							<ul className="fa-ul">
-								<li><i className="fa-li fa fa-envelope-o" />{this.props.user && this.props.user.email}</li>
-								<li><i className="fa-li fa fa-phone" />{this.props.user && this.props.user.phoneNumber}</li>
-								<li><i className="fa-li fa fa-building-o" />{this.props.user && this.props.user.address1 + " " +  this.props.user.address2  + " " +this.props.user.cityOrProvidence  + " " +this.props.user.state + " " +this.props.user.zipcode  }</li>
+								{this.props.user && this.props.user.email ? <li><i className="fa-li fa fa-envelope-o" />{this.props.user && this.props.user.email}</li>: ""}
+								{this.props.user && this.props.user.phoneNumber ? <li><i className="fa-li fa fa-phone" />{this.props.user && this.props.user.phoneNumber}</li> : ""}
+								<li><i className="fa-li fa fa-building-o" />{this.props.user && (this.props.user.address1 || "") + " " +  (this.props.user.address2 || "")  + " " + (this.props.user.cityOrProvidence || "")  + " " + (this.props.user.state || "") + " " + (this.props.user.zipcode || "") }</li>
 							</ul>
 						</div>
 						<div className="profile-message-btn center-block text-center">
 							<a  className="btn btn-success edit-profile" onClick={()=>{
 								this.props.setActiveTabState("Profile");
 							}}>
-								<i className="fa fa-pencil" />
-								Edit Profile
+								<i className="fa fa-pencil" />&nbsp;Edit Profile
 							</a>
 						</div>
 					</div>

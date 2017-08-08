@@ -514,7 +514,7 @@ class HeaderNew extends React.Component {
   </MenuItem>
   <MenuItem
     eventKey="2" onClick={() => {
-      history.push('/u/my-profile');
+      history.push('/u/myprofile');
     }}
   >
     <span> <i className="fa fa-user fa-fw" /> User Profile </span>

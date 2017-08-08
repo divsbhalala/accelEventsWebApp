@@ -49,8 +49,9 @@ class myActivity extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.userData && this.state.userData.silentActivitys.map((data, index) =>
+                    {this.state.userData && this.state.userData.silentActivitys && this.state.userData.silentActivitys.length ? this.state.userData.silentActivitys.map((data, index) =>
                       <ActivityData userData={data} key={index} />)
+											: <td colSpan="3" className="text-center" > No Data Found</td>
                   }
                   </tbody>
                 </table>
@@ -71,8 +72,9 @@ class myActivity extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.userData && this.state.userData.raffleActivitys.map((data, index) =>
+                    {this.state.userData && this.state.userData.raffleActivitys && this.state.userData.raffleActivitys.length? this.state.userData.raffleActivitys.map((data, index) =>
                       <ActivityItem userData={data} key={index} />)
+                      : <td colSpan="2" className="text-center" > No Data Found</td>
                   }
                   </tbody>
                 </table>
@@ -93,8 +95,9 @@ class myActivity extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.userData && this.state.userData.causeAuctionActivitys.map((data, index) =>
+                    {this.state.userData && this.state.userData.causeAuctionActivitys && this.state.userData.causeAuctionActivitys.length ? this.state.userData.causeAuctionActivitys.map((data, index) =>
                       <ActivityItem userData={data} key={index} />)
+											: <td colSpan="2" className="text-center" > No Data Found</td>
                   }
                   </tbody>
                 </table>

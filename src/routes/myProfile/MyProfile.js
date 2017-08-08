@@ -54,9 +54,9 @@ class MyProfile extends React.Component {
 
   updateAllProfile = (fieldName,value) => {
     if(this.state && this.state.user && this.state.user[fieldName] && value){
-      if(this.state.user[fieldName] != value){
+      if(this.state.user[fieldName] !== value){
         let newUser = this.state.user;
-        newUser[fieldName] = value
+        newUser[fieldName] = value;
         this.setState({
           user: newUser
         });
@@ -125,7 +125,7 @@ class MyProfile extends React.Component {
                           <div className="tab-pane fade active in" id="tab-profile">
 
                             <ProfileField title="Firstname" fieldName="firstName" fieldValue={this.state.user && this.state.user.firstName ? this.state.user.firstName : 'Empty' } updatePProfile={this.updateAllProfile}/>
-                            <ProfileField title="LastName" fieldName="LastName" fieldValue={this.state.user && this.state.user.lastName ? this.state.user.lastName : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                            <ProfileField title="LastName" fieldName="lastName" fieldValue={this.state.user && this.state.user.lastName ? this.state.user.lastName : 'Empty' } updatePProfile={this.updateAllProfile}/>
                             <ProfileField title="Email" fieldName="email" fieldValue={this.state.user && this.state.user.email ? this.state.user.email : 'Empty' } updatePProfile={this.updateAllProfile}/>
                             <ProfileField title="Phone" fieldName="phoneNumber" fieldValue={this.state.user && this.state.user.phoneNumber ? this.state.user.phoneNumber : 'Empty' } updatePProfile={this.updateAllProfile}/>
                             <ProfileField title="Address Line 1" fieldName="address1" fieldValue={this.state.user && this.state.user.address1 ? this.state.user.address1 : 'Empty' } updatePProfile={this.updateAllProfile}/>
