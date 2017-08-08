@@ -69,23 +69,23 @@ class DonationPerformance extends React.Component {
                 <div className="col-lg-12">
                   <div className="main-box no-header">
                     <div className="main-box-body clearfix">
-                      <div className="page-title">
-                        <h1 className="page-header">Donation Performance</h1>
+                      <div className="performance-table-wrap">
+                        <div className="page-title">
+                          <h1 className="page-header">Donation Performance</h1>
+                        </div>
+                        <div id="DataTables_Table_1_wrapper" >
+                          {this.state.donation ?
+                          <BootstrapTable data={this.state.donation} striped hover search  pagination={ true }   options={ options }>
+                            <TableHeaderColumn  isKey={true} dataField='firstName'>First Name</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='email' >Email Address</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormat}>Donation Amount</TableHeaderColumn>
+                          </BootstrapTable>: <div id="app" className="loader" />
+                          }
+                        </div>
                       </div>
-                      <br />
-                      <div id="DataTables_Table_1_wrapper" >
-                        {this.state.donation ?
-                        <BootstrapTable data={this.state.donation} striped hover search  pagination={ true }   options={ options }>
-                          <TableHeaderColumn  isKey={true} dataField='firstName'>First Name</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='email' >Email Address</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormat}>Donation Amount</TableHeaderColumn>
-                        </BootstrapTable>: <div id="app" className="loader" />
-                        }
-                      </div>
-
                       <div className="form-group operations-row">
                         <div className="row">
                           <div className="col-md-4" role="group">

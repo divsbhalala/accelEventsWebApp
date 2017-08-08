@@ -59,11 +59,10 @@ class FundItemTable extends React.Component {
       clickToSelect: true,
     };
     return (
-      <div>
+			<div className="performance-table-wrap">
         <div className="page-title">
           <h1 className="page-header">Cause Item Performance</h1>
         </div>
-        <br />
         <BootstrapTable
           data={this.props.items}
           options={options}
@@ -76,10 +75,10 @@ class FundItemTable extends React.Component {
             columnWidth: 50,
           }} search
         >
-          <TableHeaderColumn dataField="itemName" >Item Name</TableHeaderColumn>
-          <TableHeaderColumn dataField="itemCode" isKey>Item Code</TableHeaderColumn>
-          <TableHeaderColumn dataField="bid">Highest Bidder</TableHeaderColumn>
-          <TableHeaderColumn dataField="bidder">Current Bid</TableHeaderColumn>
+          <TableHeaderColumn dataField="itemName" dataSort={true}>Item Name</TableHeaderColumn>
+          <TableHeaderColumn dataField="itemCode" isKey dataSort={true}>Item Code</TableHeaderColumn>
+          <TableHeaderColumn dataField="bid" dataSort={true}>Highest Bidder</TableHeaderColumn>
+          <TableHeaderColumn dataField="bidder" dataSort={true}>Current Bid</TableHeaderColumn>
           <TableHeaderColumn dataField="paid" dataFormat={formtPaid}>Paid ?</TableHeaderColumn>
 
         </BootstrapTable>

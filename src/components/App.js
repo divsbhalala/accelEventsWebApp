@@ -2,6 +2,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider as ReduxProvider} from 'react-redux';
+import {sessionService} from 'redux-react-session';
+import history from './../history';
 const ContextType = {
   // Enables critical path CSS rendering
   // https://github.com/kriasoft/isomorphic-style-loader
@@ -28,6 +30,25 @@ axios.interceptors.response.use(function (response) {
 	return response;
 }, function (error) {
 	// Do something with response error
+  console.log("error", error, error.response);
+  let response = error && error.response;
+  if(response && response.status === 401){
+		localStorage.clear();
+		sessionService.deleteSession();
+		sessionService.deleteUser();
+    let url = response && response.config && response.config.url;
+    if((url && url.indexOf("/host") > -1) || (url && url.indexOf("/superadmin") > -1)){
+			history.push("/u/login");
+    }
+    else {
+
+    }
+  }
+  else if(response && response.status === 403){
+    setTimeout(()=>{
+			history.push("/u/myprofile");
+    },3000);
+  }
 	return Promise.reject(error);
 });
 /**

@@ -74,11 +74,11 @@ class Html extends React.Component {
 
 
           {/* for temporary changes */}
-          {isAdmin ? <link rel="stylesheet" href="/css/style2.css"/> : ""}
-          {isAdmin ? <link rel="stylesheet" href="/css/custom.css" /> : ""}
-          {isAdmin ? <link rel="stylesheet" href="/css/admin-style.min.css"/> : ""}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/style2.css"/> : "" */}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/custom.css" /> : "" */}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/admin-style.min.css"/> : "" */}
           {/* For add item toggles */}
-          {isAdmin ? <link rel="stylesheet" href="/css/add-items.css"/> : ""}
+          {/* isAdmin ? <link rel="stylesheet" href="/css/add-items.css"/> : "" */}
 
           {/* For dropzone */}
           {isAdmin ? <link rel="stylesheet" href="/css/dropzone/dropzone2.css"/> : ""}

@@ -367,16 +367,20 @@ class HeaderNew extends React.Component {
               { this.props.eventData &&
 							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
-							{ this.props.admin && this.props.hostDesign &&  ( this.props.hostDesign.headerLogoImage  ? <a href="" id="logo"
-								 className="navbar-brand" >
-								<img
-									src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/'+this.props.hostDesign.headerLogoImage}
-									alt className="normal-logo logo-white has-custom"/>
-          		</a>:
-                <img
-                  src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png'}
-                  alt className="normal-logo logo-white has-custom"/>
-              )}
+							{ this.props.admin &&
+								<a href="" id="logo"
+									 className="navbar-brand" >
+									 {this.props.hostDesign &&  ( this.props.hostDesign.headerLogoImage  ?
+										 <img
+										 		src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/'+this.props.hostDesign.headerLogoImage}
+												alt className="normal-logo logo-white has-custom"/>
+          						:
+                		 <img
+                  			src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png'}
+                  			alt className="normal-logo logo-white has-custom"/>
+              			)}
+								</a>
+							}
 							{  this.props.admin && !this.props.superAdmin &&  <button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}}>
@@ -510,7 +514,7 @@ class HeaderNew extends React.Component {
   </MenuItem>
   <MenuItem
     eventKey="2" onClick={() => {
-      history.push('/u/my-profile');
+      history.push('/u/myprofile');
     }}
   >
     <span> <i className="fa fa-user fa-fw" /> User Profile </span>

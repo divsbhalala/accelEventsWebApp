@@ -11,7 +11,7 @@ export default {
   path: '/u',
   children: [
     {
-      path: '/my-profile',
+      path: '/myprofile',
   action() {
     return {
       title,
@@ -23,7 +23,7 @@ export default {
       path: '/my-activity',
       action() {
         return {
-          title,
+          title : "My Activity",
           component: <Layout class="eventPage" title={title}><MyActivity title={title}/></Layout>,
         };
       }

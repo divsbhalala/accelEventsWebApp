@@ -59,11 +59,10 @@ class RaffleItemTable extends React.Component {
       clickToSelect: true
     };
   return (
-	<div>
+	<div className="performance-table-wrap">
 		<div className="page-title">
 			<h1 className="page-header">Raffle Item Performance</h1>
 		</div>
-    <br/>
 		<BootstrapTable data={ this.props.items }
 			                options={ options }
 			                expandableRow={ this.isExpandableRow }
