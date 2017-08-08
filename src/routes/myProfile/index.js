@@ -15,7 +15,7 @@ export default {
   action() {
     return {
       title,
-      component: <Layout class="eventPage" title={title} ><MyProfile title={title}/></Layout>,
+      component: <Layout class="display eventPage" title={title} ><MyProfile title={title}/></Layout>,
     };
   }
     },
@@ -24,7 +24,7 @@ export default {
       action() {
         return {
           title,
-          component: <Layout class="eventPage" title={title}><MyActivity title={title}/></Layout>,
+          component: <Layout class="display eventPage" title={title}><MyActivity title={title}/></Layout>,
         };
       }
     }
