@@ -51,7 +51,7 @@ path: '/u',
       async action(props) {
         return {
           title: "Organization Settings",
-          component: <AdminWLLayout><OrganizationSettings params={props.params} title="Organization Settings"/></AdminWLLayout>,
+          component: <AdminWLLayout isAdmin={true}><OrganizationSettings params={props.params} title="Organization Settings"/></AdminWLLayout>,
         };
       }
     },

@@ -203,7 +203,7 @@ class RowItemList extends React.Component {
 												{name: 'colors', groups: ['colors']},
 											],height : 100}} onBlur={this.autoAddData}/>
 									<div>
-                    <UploadImage item={this.props.item} { ...this.state } { ...this.props } imageRemove={this.imageRemove} imageUploaded = { this.imageUploaded }/>
+                    <UploadImage multiple={true} item={this.props.item} { ...this.state } { ...this.props } imageRemove={this.imageRemove} imageUploaded = { this.imageUploaded }/>
 									</div>
 								</div>
 								<div className="col-md-4">

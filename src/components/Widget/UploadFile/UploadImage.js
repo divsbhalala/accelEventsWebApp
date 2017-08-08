@@ -20,7 +20,6 @@ import {connect} from 'react-redux';
     for (let file in files) {
       this.props.uploadImage(files[file]).then(resp => {
         if (resp && resp.data && resp.status===200) {
-        //  this.props.item.images.push({ "imageUrl": resp.data.message });
           this.props.imageUploaded(resp.data.message);
         } else {
           console.log(resp);
@@ -30,10 +29,11 @@ import {connect} from 'react-redux';
   };
   render() {
     return (
-      <Dropzone  className="dropzone dz-clickable" accept="image/*" onDrop={this.onImageDrop.bind(this)}  onClick={e => e.stopPropagation()} >
+      <Dropzone multiple={this.props.multiple} className="dropzone dz-clickable" accept="image/*" onDrop={this.onImageDrop.bind(this)}  onClick={e => e.stopPropagation()} >
         <div className="dz-default dz-message">
           <span>Drop files here to upload</span>
         </div>
+        {console.log(this.props.item)}
         { this.props.item && this.props.item.images.map((item,index)=>
           <div key={index} className="dz-preview dz-image-preview" onClick={e => e.stopPropagation()} >
             <div className="dz-details" >
