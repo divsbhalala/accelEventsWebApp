@@ -360,7 +360,7 @@ class HeaderNew extends React.Component {
 	render() {
 		let event = this.props.params && this.props.params.params;
 		return (
-			<div className={cx("top-header-wrap")} style={{background:this.props.hostDesign &&  this.props.hostDesign.headerColor,color:this.props.hostDesign &&  this.props.hostDesign.headerFontColor}}>
+			<div className={cx("top-header-wrap")} style={{background:this.props.hostDesign ?  this.props.hostDesign.headerColor : this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.headerColor ,color:this.props.hostDesign ?  this.props.hostDesign.headerFontColor : this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.headerFontColor}}>
 				<Navbar fluid={true} style={ {margin: 0} }>
 					<Brand className={cx(this.props.admin)}>
             <span >

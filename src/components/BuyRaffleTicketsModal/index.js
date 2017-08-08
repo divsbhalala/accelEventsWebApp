@@ -93,17 +93,19 @@ class BuyRaffleTicketsModal extends React.Component {
       phone: null,
       isError: false,
       settings:null,
+      hideTicketsPopup:true,
     };
     //  this.purchaseTicket=this.purchaseTicket.bind(this);
   }
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    this.props.getRaffleTickets().then(resp=>{
-      this.setState({settings:resp.data})
-    });
+    //this.props.getRaffleTickets().then(resp=>{
+      this.setState({settings:this.props.ticketPackages})
+    //});
   }
   componentWillReceiveProps() {
+    this.setState({settings:this.props.ticketPackages})
     setTimeout(()=>{
       if (this.props.showModal && !this.state.isShowAlertPopup){
         this.reRender();
@@ -423,12 +425,6 @@ class BuyRaffleTicketsModal extends React.Component {
 
   componentReRender() {
   };
-  componentDidMount() {
-    this.setState({
-
-
-    })
-  };
 
   onFormClick = (e) => {
     e.preventDefault();
@@ -464,8 +460,9 @@ class BuyRaffleTicketsModal extends React.Component {
             popupHeader: "Confirm",
             loading: false,
             isError: false,
+            hideTicketsPopup:false,
           });
-          this.props.onCloseFunc();
+          //this.props.onCloseFunc();
         }
         else {
           this.setState({
@@ -489,8 +486,9 @@ class BuyRaffleTicketsModal extends React.Component {
             popupHeader: "Confirm",
             popupAlertHeader: "Confirm",
             loading: false,
+            hideTicketsPopup:false,
           });
-          this.props.onCloseFunc();
+        //  this.props.onCloseFunc();
         } else {
           this.setState({
             loading: false,
@@ -616,6 +614,10 @@ class BuyRaffleTicketsModal extends React.Component {
     this.setState({
       //  showPopup: false,
       isShowAlertPopup: false,
+      hideTicketsPopup: true,
+      errorMsg: "You declined the transaction.",
+      popupHeader: "Failed",
+      loading: false,
     })
   };
   hideTicketsPopup = () => {
@@ -642,8 +644,6 @@ class BuyRaffleTicketsModal extends React.Component {
   };
   reRender = () => {
     this.setState({
-      tab: 'The Event',
-      showBookingTicketPopup: false,
       showMapPopup: true,
       firstNameFeedBack: false,
       ticketsFeedBack: false,
@@ -659,32 +659,32 @@ class BuyRaffleTicketsModal extends React.Component {
       passwordFeedBack: false,
       auctionData: null,
       isValidBidData: false,
-      firstName: null,
-      lastName: null,
-      cardNumber: null,
-      cardHolder: null,
-      amount: null,
-      cvv: null,
-      month: null,
-      year: null,
-      expMonth: null,
-      expYear: null,
-      phoneNumber: null,
-      popupHeader: null,
-      firstNameValue: null,
-      lastNameValue: null,
-      cardNumberValue: null,
-      cardHolderValue: null,
-      amountValue: null,
-      cvvValue: null,
-      monthValue: null,
-      yearValue: null,
-      expMonthValue: null,
-      expYearValue: null,
-      emailValue: null,
-      passwordValue: null,
-      phoneNumberValue: null,
-      tickets: null,
+      // firstName: null,
+      // lastName: null,
+      // cardNumber: null,
+      // cardHolder: null,
+      // amount: null,
+      // cvv: null,
+      // month: null,
+      // year: null,
+      // expMonth: null,
+      // expYear: null,
+      // phoneNumber: null,
+      // popupHeader: null,
+      // firstNameValue: null,
+      // lastNameValue: null,
+      // cardNumberValue: null,
+      // cardHolderValue: null,
+      // amountValue: null,
+      // cvvValue: null,
+      // monthValue: null,
+      // yearValue: null,
+      // expMonthValue: null,
+      // expYearValue: null,
+      // emailValue: null,
+      // passwordValue: null,
+      // phoneNumberValue: null,
+      // tickets: null,
       cardNumberFeedBack: false,
       cardHolderFeedBack: false,
       expYearFeedBack: false,
@@ -702,13 +702,12 @@ class BuyRaffleTicketsModal extends React.Component {
       errorMsgcvv: null,
       errorMsgEmail: null,
       errorMsgPhoneNumber: null,
-      errorMsg: null,
+      // errorMsg: null,
       errorMsgTickets: null,
       showPopup: false,
       stripeToken: null,
       submittedTickets: null,
       raffleTicketValue: null,
-      popupTicketHeader: "Pay Now",
       loading: false,
       countryPhone: null,
       phone: null,
@@ -759,6 +758,7 @@ class BuyRaffleTicketsModal extends React.Component {
     let event = this.props.params && this.props.params.params;
     return (
       <div >
+        {this.state.hideTicketsPopup &&
         <Modal show={!!this.props.showModal} onHide={this.props.onCloseFunc}>
           <Modal.Header closeButton>
             {!this.props.authenticated && <h4 className="modal-title"><a role="button" onClick={this.showLoginModal} data-form="login">Log in</a> or
@@ -770,8 +770,6 @@ class BuyRaffleTicketsModal extends React.Component {
             <div className="main-box-body clearfix">
               <div className="payment-area collapse in">
                 <form className="ajax-form validated fv-form fv-form-bootstrap"
-                      id="donate-payment-form" method="post" action="/AccelEventsWebApp/events/12/D"
-                      noValidate="novalidate"
                       onSubmit={this.buyRaffleTicket}>
 
                   { this.state.errorMsg && 	<div
@@ -901,7 +899,6 @@ class BuyRaffleTicketsModal extends React.Component {
                       this.raffleTicket = ref;
                     }} onChange={this.raffleTicketValidateHandler}>
                       <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
-                      {console.log(this.state.settings)}
                       { this.state.settings &&  this.state.settings.map((value ,index)=>
                         <option value={value.id} data-ticket={value.numberOfTickets} data-price={value.price} key={index} >
                           {value.numberOfTickets + " Ticket For "+this.props.currencySymbol+ value.price}
@@ -1074,7 +1071,7 @@ class BuyRaffleTicketsModal extends React.Component {
               </div>
             </div>
           </Modal.Body>
-        </Modal>
+        </Modal> }
         <PopupModel
           id="alertPopup"
           showModal={this.state.isShowAlertPopup}

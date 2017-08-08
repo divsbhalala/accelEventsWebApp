@@ -54,7 +54,7 @@ hidePopup = () => {
     let item=this.state.item;
     item.description=value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   itemNameHandlerChange = (e) =>{
     this.setState({ itemNameFeedBack: true,});
     if (this.itemName.value.trim() == '') {
@@ -64,7 +64,7 @@ hidePopup = () => {
     let item=this.state.item;
     item.name=this.itemName.value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   itemCodeHandlerChange = (e) =>{
   this.itemCode.value= this.itemCode.value.replace(/[^a-zA-Z]/g, '');
     this.setState({ itemCodeFeedBack: true,});
@@ -75,7 +75,7 @@ hidePopup = () => {
     let item=this.state.item;
     item.code=this.itemCode.value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   startingBidHandlerChange = (e) =>{
     this.setState({ startingBidFeedBack: true,});
     if (this.startingBid.value.trim() == '') {
@@ -85,7 +85,7 @@ hidePopup = () => {
     let item=this.state.item;
     item.startingBid=this.startingBid.value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   buyItNowPriceHandlerChange = (e) =>{
 
     this.setState({ buyItNowPriceFeedBack: true,});
@@ -100,22 +100,22 @@ hidePopup = () => {
       this.setState({item,isDataUpdate:true})
     },100)
 
-  }
+  };
   bidIncrementHandlerChange = (e) =>{
     let item=this.state.item;
     item.bidIncrement=this.bidIncrement.value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   marketValueHandlerChange = (e) =>{
     let item=this.state.item;
     item.marketValue=this.marketValue.value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   categoryHandlerChange = (e) =>{
     let item=this.state.item;
     item.category=this.category.value;
       this.setState({item,isDataUpdate:true})
-  }
+  };
   imageUploaded = (imageUrl) =>{
     let item=this.state.item;
     item.images.push({'imageUrl':imageUrl});
@@ -146,14 +146,14 @@ hidePopup = () => {
       }
       this.setState({isDataUpdate:false})
   }},100)
-}
+};
 deleteItemList =() => {
   this.setState({loading:true});
     this.state.item && this.state.item.id &&
       this.props.deleteItemList('auction', this.state.item.id ).then(resp => {
        this.setState({loading:false})
      })
-}
+};
   deleteAction = () => {
     this.setState({
       showPopup: true,
@@ -168,7 +168,7 @@ deleteItemList =() => {
     this.setState({item,isDataUpdate:true},function stateChange() {
       this.autoAddData();
     })
-  }
+  };
 
   getDragHeight() { return 60; };
   doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };

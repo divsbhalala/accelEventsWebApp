@@ -33,7 +33,6 @@ import {connect} from 'react-redux';
         <div className="dz-default dz-message">
           <span>Drop files here to upload</span>
         </div>
-        {console.log(this.props.item)}
         { this.props.item && this.props.item.images.map((item,index)=>
           <div key={index} className="dz-preview dz-image-preview" onClick={e => e.stopPropagation()} >
             <div className="dz-details" >

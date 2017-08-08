@@ -42,7 +42,7 @@ path: '/u',
     async action(props) {
       return {
         title: "WhiteLabel User Management",
-        component: <AdminWLLayout><WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/></AdminWLLayout>,
+        component: <AdminWLLayout isAdmin={true}><WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/></AdminWLLayout>,
       };
     }
   },
@@ -60,7 +60,7 @@ path: '/u',
       async action(props) {
         return {
           title: "EditEvent",
-          component: <AdminWLLayout><EditEvent params={props.params} title="EditEvent"/></AdminWLLayout>,
+          component: <AdminWLLayout isAdmin={true}><EditEvent  params={props.params} title="EditEvent"/></AdminWLLayout>,
         };
       }
     },
@@ -69,7 +69,7 @@ path: '/u',
       async action(props) {
         return {
           title: "Events",
-          component: <AdminWLLayout><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
+          component: <AdminWLLayout  ><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
         };
       }
     }

@@ -121,6 +121,7 @@ class EventAside extends React.Component {
 		return (
 			<div className="sidebar-wrap">
 				<BuyRaffleTicketsModal
+					ticketPackages={this.props.settings && this.props.settings.ticketPackages}
           showModal={this.state.isHowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
