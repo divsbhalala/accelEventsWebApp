@@ -14,7 +14,7 @@ import cx from 'classnames';
 import ColorPicker from 'react-color-picker'
 import 'react-color-picker/index.css'
 import Link from "../../../components/Link/Link";
-
+import UploadImage from './../../../components/Widget/UploadFile/UploadImage'
 
 class OrganizationSettings extends React.Component {
 
@@ -56,11 +56,12 @@ class OrganizationSettings extends React.Component {
   componentWillMount() {
     this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
       console.log("resp", resp);
+    //  let logoImage={'images':{'imageUrl':this.state.settings.logoImage}};
       this.setState({
         settings: resp,
         headerBgColor :resp.headerColor,
         headerTextColor:resp.headerFontColor,
-      })
+      });
       this.firmName.value=resp.firmName;
     }).catch(error => {
       console.log('error', error)
@@ -79,7 +80,54 @@ class OrganizationSettings extends React.Component {
     });
     console.log(e, e.target, this.state.settings)
   };
-
+  logoImageUploaded = (imageUrl) =>{
+     let settings =this.state.settings;
+     settings.logoImage=imageUrl;
+     this.setState({settings});
+  };
+  logoImageRemove =(index) => {
+    if(this.state.settings && this.state.settings.logoImage) {
+      let settings = this.state.settings;
+      settings.logoImage=null;
+      this.setState({settings});
+    }
+  };
+  defaultItemImageUploaded = (imageUrl) =>{
+     let settings =this.state.settings;
+     settings.defaultItemImage=imageUrl;
+     this.setState({settings});
+  };
+  defaultItemImageRemove =(index) => {
+    if(this.state.settings && this.state.settings.defaultItemImage) {
+      let settings = this.state.settings;
+      settings.defaultItemImage=null;
+      this.setState({settings});
+    }
+  };
+  bannerImageUploaded = (imageUrl) =>{
+     let settings =this.state.settings;
+     settings.bannerImage=imageUrl;
+     this.setState({settings});
+  };
+  bannerImageRemove =(index) => {
+    if(this.state.settings && this.state.settings.bannerImage) {
+      let settings = this.state.settings;
+      settings.bannerImage=null;
+      this.setState({settings});
+    }
+  };
+  headerLogoImageUploaded = (imageUrl) =>{
+     let settings =this.state.settings;
+     settings.headerLogoImage=imageUrl;
+     this.setState({settings});
+  };
+  headerLogoImageRemove =(index) => {
+    if(this.state.settings && this.state.settings.headerLogoImage) {
+      let settings = this.state.settings;
+      settings.headerLogoImage=null;
+      this.setState({settings});
+    }
+  };
   render() {
     return (
       <div>
@@ -99,8 +147,7 @@ class OrganizationSettings extends React.Component {
           <div className="row">
             <div className="main-box no-header">
               <div className="main-box-body clearfix">
-                <form modelattribute="whiteLabel" action="/AccelEventsWebApp/u/wl/JonsBigWLL/updatesettings" method="POST" id="form">
-                  <input type="hidden" className="form-control" name="whiteLabelUrl" defaultValue="JonsBigWLL" />
+                <form >
                   <div className="form-group row mrg-t-lg">
                     <div className="col-md-3">
                       <label>Organization Name</label>
@@ -118,15 +165,7 @@ class OrganizationSettings extends React.Component {
                       <div className="help-text" />
                     </div>
                     <div className="col-md-4">
-                      <div className="dropzone-container">
-                        <div className="dropzone-alert" />
-                        <input type="hidden" name="logoImage" className="form-control" defaultValue="a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" />
-                        <div className="dropzone dz-clickable">
-                          <div className="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                          <div className="dz-preview dz-image-preview">  <div className="dz-details">    <div className="dz-filename"><span data-dz-name>Logo</span></div>    <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>    <img data-dz-thumbnail alt="Logo" src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-130x70/a08ed5d6-e0dc-4c23-b57c-b7eddfc7db93_unnamed.png" /></div>  <div className="dz-progress"><span className="dz-upload" data-dz-uploadprogress /></div>  <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>  <div className="dz-error-message"><span data-dz-errormessage /></div><a className="dz-remove" href="javascript:undefined;">Remove file</a></div></div>
-                      </div>
+                      <UploadImage  multiple={false} item={ this.state.settings.logoImage && {'images':[{'imageUrl':this.state.settings.logoImage}]}} imageRemove={this.logoImageRemove} imageUploaded = {this.logoImageUploaded }/>
                     </div>
                   </div>
                   <div className="row form-group">
@@ -135,18 +174,7 @@ class OrganizationSettings extends React.Component {
                       <div className="help-text" />
                     </div>
                     <div className="col-md-4">
-                      <div className="dropzone-container">
-                        <div className="dropzone-alert" />
-                        <input type="hidden" name="bannerImage" className="form-control" defaultValue="2e238c13-1fb8-4dd5-bb26-a5faa1462f22_jellyfish.jpg" />
-                        <div className="dropzone dz-clickable">
-                          <div className="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                          <div className="dz-preview dz-image-preview">  <div className="dz-details">    <div className="dz-filename"><span data-dz-name>Logo</span></div>    <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>    <img data-dz-thumbnail alt="Logo" src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-130x70/2e238c13-1fb8-4dd5-bb26-a5faa1462f22_jellyfish.jpg" /></div>  <div className="dz-progress"><span className="dz-upload" data-dz-uploadprogress /></div>  <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>  <div className="dz-error-message"><span data-dz-errormessage /></div><a className="dz-remove" href="javascript:undefined;">Remove file</a></div></div>
-                      </div>
-                    </div>
-                    <div className="col-md-3">
-                      <input type="hidden" name="bannerImageEnabled" defaultValue="off" />
+                      <UploadImage  multiple={false} item={ this.state.settings.bannerImage && {'images':[{'imageUrl':this.state.settings.bannerImage}]}} imageRemove={this.bannerImageRemove} imageUploaded = {this.bannerImageUploaded }/>
                     </div>
                   </div>
                   <div className="row form-group">
@@ -155,18 +183,7 @@ class OrganizationSettings extends React.Component {
                       <div className="help-text" />
                     </div>
                     <div className="col-md-4">
-                      <div className="dropzone-container">
-                        <div className="dropzone-alert" />
-                        <input type="hidden" name="defaultItemImage" defaultValue="8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg" />
-                        <div className="dropzone dz-clickable">
-                          <div className="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                          <div className="dz-preview dz-image-preview">  <div className="dz-details">    <div className="dz-filename"><span data-dz-name>Logo</span></div>    <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>    <img data-dz-thumbnail alt="Logo" src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-130x70/8921aa81-cc4e-4d9b-a19a-2d5f07fc0aa5_lighthouse.jpg" /></div>  <div className="dz-progress"><span className="dz-upload" data-dz-uploadprogress /></div>  <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>  <div className="dz-error-message"><span data-dz-errormessage /></div><a className="dz-remove" href="javascript:undefined;">Remove file</a></div></div>
-                      </div>
-                    </div>
-                    <div className="col-md-3">
-                      <input type="hidden" name="defaultItemImageUpload" defaultValue="off" />
+                      <UploadImage  multiple={false} item={ this.state.settings.defaultItemImage && {'images':[{'imageUrl':this.state.settings.defaultItemImage}]}} imageRemove={this.defaultItemImageRemove} imageUploaded = {this.defaultItemImageUploaded }/>
                     </div>
                   </div>
                   <div className="row form-group">
@@ -175,18 +192,7 @@ class OrganizationSettings extends React.Component {
                       <div className="help-text" />
                     </div>
                     <div className="col-md-4">
-                      <div className="dropzone-container">
-                        <div className="dropzone-alert" />
-                        <input type="hidden" name="headerLogoImage" className="form-control" defaultValue="2bf48224-cdf8-4612-8068-8729e2e64dc8_fall_formal_2015.png" />
-                        <div className="dropzone dz-clickable">
-                          <div className="dz-default dz-message">
-                            <span>Drop files here to upload</span>
-                          </div>
-                          <div className="dz-preview dz-image-preview">  <div className="dz-details">    <div className="dz-filename"><span data-dz-name>Logo</span></div>    <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>    <img data-dz-thumbnail alt="Logo" src="http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-130x70/2bf48224-cdf8-4612-8068-8729e2e64dc8_fall_formal_2015.png" /></div>  <div className="dz-progress"><span className="dz-upload" data-dz-uploadprogress /></div>  <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>  <div className="dz-error-message"><span data-dz-errormessage /></div><a className="dz-remove" href="javascript:undefined;">Remove file</a></div></div>
-                      </div>
-                    </div>
-                    <div className="col-md-3">
-                      <input type="hidden" name="headerLogoImageUpload" defaultValue="off" />
+                      <UploadImage  multiple={false} item={ this.state.settings.headerLogoImage && {'images':[{'imageUrl':this.state.settings.headerLogoImage}]}} imageRemove={this.headerLogoImageRemove} imageUploaded = {this.headerLogoImageUploaded }/>
                     </div>
                   </div>
                   <div className="row form-group">

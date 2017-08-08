@@ -13,11 +13,11 @@ class RaffleAddItems extends React.Component {
     title: PropTypes.string,
   };
   getItemSheetPdf = () => {
-    this.props.getItemSheetPdf('raffle-items.pdf').then((resp) => {
+    this.props.getItemSheetPdf(this.props.eventName+'-raffle-items.pdf').then((resp) => {
     });
   }
   getItemCatalogPdf= () => {
-    this.props.getItemCatalogPdf('raffle-catalog.pdf').then((resp) => {
+    this.props.getItemCatalogPdf(this.props.eventName+'-raffle-catalog.pdf').then((resp) => {
 
     });
   }
@@ -92,7 +92,9 @@ const mapDispatchToProps = {
 
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  eventName : (state.host && state.host.eventDetails && state.host.eventName ) || "file"
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(RaffleAddItems));
 

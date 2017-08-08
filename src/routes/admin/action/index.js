@@ -41,6 +41,23 @@ export function getStoreDesingData() {
     });
   }
 }
+export function updateLogo(logoImageUrl) {
+  console.log(logoImageUrl)
+  return (dispatch) => {
+    return axios({
+      method: 'put',
+      url: API_URL + 'host/design/updateLogo'  ,
+      data: {logoImageUrl},
+    }).then(resp=>{
+      if(resp && resp.data){
+				return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 export function storeDashboardData(data) {
 	return {
 		type: 'STORE_HOST_DATA',
