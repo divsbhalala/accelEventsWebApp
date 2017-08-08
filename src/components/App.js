@@ -17,7 +17,7 @@ const ContextType = {
 import axios from 'axios';
 axios.interceptors.request.use(function (config) {
 	// Do something before request is sent
-	 config.headers.common['Authorization'] = localStorage.getItem('token');
+	 config.headers.common['Authorization'] = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJhdWRpZW5jZSI6IndlYiIsImNyZWF0ZWQiOjE1MDE2MTMxMDA5NjgsImV4cCI6MTUwMTY5OTUwMH0.iVNtJPFsi7WLXKvxVk2-R4IaOWmtgRjwSvnAALVtfiIHZDnjBe36QYQG5KiBwUWt1x0mFf186jn9Qic_TLfCng";// localStorage.getItem('token');
 	return config;
 }, function (error) {
 	// Do something with request error
@@ -37,7 +37,7 @@ axios.interceptors.response.use(function (response) {
 		sessionService.deleteSession();
 		sessionService.deleteUser();
     let url = response && response.config && response.config.url;
-    if((url && url.indexOf("/host") > -1) || (url && url.indexOf("/superadmin") > -1)){
+    if((url && url.indexOf("/host") > -1) || (url && url.indexOf("/superadmin") > -1) || (url && url.indexOf("/myprofile") > -1) || (url && url.indexOf("/activity") > -1)){
 			history.push("/u/login");
     }
     else {
@@ -108,9 +108,9 @@ class App extends React.Component {
           <div className="loader-pace">
             <div className="pace pace-active">
               <div className="pace-progress">
-                <div className="pace-progress-inner"></div>
+                <div className="pace-progress-inner"/>
               </div>
-              <div className="pace-activity"></div>
+              <div className="pace-activity"/>
             </div>
           </div>
         </div>);
