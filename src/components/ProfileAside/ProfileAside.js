@@ -35,7 +35,7 @@ class ProfileAside extends React.Component {
 					<div className={cx("main-box-body clearfix")}>
 						<img src="/images/user-icon-placeholder.png" className="profile-img img-responsive center-block" />
 						{ this.props.user && this.props.user.userLabel ? <div className="profile-label">
-							<span className="label label-info">{this.props.user && this.props.user.userLabel} </span>
+							<span className="label label-danger">{this.props.user && this.props.user.userLabel} </span>
 						</div> : ""}
 						<div className="profile-details">
 							<ul className="fa-ul">
