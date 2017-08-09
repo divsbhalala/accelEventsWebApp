@@ -115,7 +115,7 @@ class Register extends React.Component {
         <div className="onboardpage center-block">
 					{ this.state.error ? <Alert bsStyle="danger">{this.state.error}</Alert> : ""}
           <form id="signupform" onSubmit={this.onFormClick} className="createpwdform fv-form fv-form-bootstrap"
-                noValidate="novalidate">
+                noValidate="novalidate" autoComplete="off">
             <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
             <div
               className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
@@ -129,11 +129,14 @@ class Register extends React.Component {
                        name="email"
                        id="login-email"
                        required="required"
+                       autoComplete="off"
                        ref={(input) => {
                          this.email = input;
                        }}
                        onKeyUp={this.emailValidateHandler}/>
               </div>
+              <input type="text" style={{display:'none'}}/>
+              <input type="password" style={{display:'none'}}/>
               { this.state.emailFeedBack && this.state.email &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
               { this.state.emailFeedBack && !this.state.email &&
@@ -148,10 +151,15 @@ class Register extends React.Component {
                 <div className="input-group-addon">
                   <i className="fa fa-key" aria-hidden="true"/>
                 </div>
-                <input type="password" className={cx("form-control")} name="password" required="required"
+                <input type="password"
+                      className="form-control"
+                      name="signup-password"
+                      id="signup-password"
+                      required="required"
                        ref={(input) => {
                          this.password = input;
                        }}
+                       autoComplete="new-password"
                        onKeyUp={this.passwordValidateHandler}/>
               </div>
               { this.state.passwordFeedBack && this.state.password &&
