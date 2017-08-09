@@ -52,8 +52,8 @@ class ResetNewPassword extends React.Component {
 
 			}).catch(error => {
 				this.setState({
-					passwordResponseError: (error && error.response && error.response.errorMessage) || "Error while processing your request"
-				})
+					passwordResponseError: (error && error.response && error.response.data && error.response.data.errorMessage) || "Error while processing your request"
+				});
 			});
 		}
 
@@ -110,7 +110,7 @@ class ResetNewPassword extends React.Component {
 								<div
 									className={cx("mrg-t-sm form-group")}>
 									<label htmlFor="newpassword" className="control-label text-center">New Password</label>
-									<input className="form-control input-lg" type="text" placeholder="New Password" name="newPassword"
+									<input className="form-control input-lg" type="password" placeholder="New Password" name="newPassword"
 												 required="required"
 												 autoFocus
 												 ref={ref => {
@@ -123,7 +123,7 @@ class ResetNewPassword extends React.Component {
 									className={cx("mrg-t-sm form-group")}>
 									<label htmlFor="confirmPassword" className="control-label text-center">Confirm
 										Password<sup>*</sup></label>
-									<input className="form-control input-lg" type="text" placeholder="Confirm Password"
+									<input className="form-control input-lg" type="password" placeholder="Confirm Password"
 												 name="confirmPassword"
 												 required="required"
 												 ref={ref => {
@@ -133,7 +133,7 @@ class ResetNewPassword extends React.Component {
 									/>
 								</div>
 								{ this.state.passwordResponseError ?
-									<Alert bsStyle="danger">{this.state.emailResponseError}</Alert> : ""}
+									<Alert bsStyle="danger">{this.state.passwordResponseError}</Alert> : ""}
 								{ this.state.emailSend &&
 								<Alert bsStyle="success">Password reset link sent successfully, Please check your mail</Alert>}
 								<input type="hidden" name defaultValue/>
