@@ -51,7 +51,7 @@ class RaffleAddItems extends React.Component {
                   <div className="col-lg-12">
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
-                         <p>Add items for your raffle! There is no limit on the number of items that you can add. Attendees can submit their ‘tickets’ online or by texting your event text message number (see dashboard), with the 3 letter item code followed by the number of tickets they would like to submit.ADD ITEM</p>
+                         <p>Add items for your raffle! There is no limit on the number of items that you can add. Attendees can submit their ‘tickets’ online or by texting your event text message number (see dashboard), with the 3 letter item code followed by the number of tickets they would like to submit.</p>
                         <RaffleAddItem />
                         <div className="table prizes-table">
                           <div className="form-group operations-row">

@@ -172,8 +172,7 @@ class AuctionAddItem extends React.Component {
 				<p>Add the items that will be available at your silent auction. There are not limits on the number of items
 					which you can add. Attendees will submit bids for an item by replying to the event text message number with
 					the 3 letter item code followed by the dollar amount they would like to place for that item. After their first
-					bid they will be asked to confirm their bid by replying to the text message with their first and last name.ADD
-					ITEM
+					bid they will be asked to confirm their bid by replying to the text message with their first and last name.
 				</p>
 				<div className="text-left mrg-t-md">
 					<button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add
