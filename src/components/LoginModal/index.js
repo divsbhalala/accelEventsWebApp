@@ -217,7 +217,7 @@ class LoginPopup extends React.Component {
                           Or, <a className={s.link} onClick={this.showRegister}>sign up.</a>
                         </h4>
                         {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
-                        <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClickLogin}>
+                        <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClickLogin} autoComplete="off">
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                           <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
                             <span className="fa fa-spinner fa-pulse fa-fw"/>
@@ -250,6 +250,8 @@ class LoginPopup extends React.Component {
                             { this.state.emailFeedBack && !this.state.email &&
                             <small className="help-block">This value is not valid</small> }
                           </div>
+                          <input type="text" style={{display:'none'}}/>
+                          <input type="password" style={{display:'none'}}/>
                           <div
                             className={cx("mrg-t-sm form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
                             <label className="sr-only" htmlFor="login-password">Password</label>
@@ -257,7 +259,7 @@ class LoginPopup extends React.Component {
                                    placeholder="Password"
                                    id="login-password"
                                    type="password"
-                                   autoComplete="off"
+                                   autoComplete="new-password"
                                    className="form-control input-lg"
                                    ref={ref => {
                                      this.password = ref;
@@ -294,7 +296,7 @@ class LoginPopup extends React.Component {
                           Or Already have an account? &nbsp;&nbsp;<a className={s.link} onClick={this.showLogin}> Log in</a>
                         </h4>
                         {this.state.error && <div id="alertmessage" className="js-notification notification-signup mrg-t-md">{this.state.error}</div>}
-                        <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick}>
+                        <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick} autoComplete="off">
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                           <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
                             <span className="fa fa-spinner fa-pulse fa-fw"/>
@@ -304,6 +306,8 @@ class LoginPopup extends React.Component {
                             Looks like you don't have an account yet. Let's change that!
                             <a href="/AccelEventsWebApp/u/signup">Sign up for free.</a>
                           </div>
+                          <input type="text" style={{display:'none'}}/>
+                          <input type="password" style={{display:'none'}}/>
                           <div
                             className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                             <label className="sr-only" htmlFor="login-email">Email</label>
@@ -357,7 +361,7 @@ class LoginPopup extends React.Component {
                                    placeholder="Password"
                                    id="login-password"
                                    type="password"
-                                   autoComplete="off"
+                                   autoComplete="new-password"
                                    className="form-control input-lg"
                                    ref={ref => {
                                      this.password = ref;

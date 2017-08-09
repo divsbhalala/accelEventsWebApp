@@ -127,7 +127,7 @@ class Login extends React.Component {
               Or &nbsp;&nbsp;<Link className={s.link} to="/u/signup">Signup</Link>
             </h4>
             {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
-            <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick}>
+            <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick} autoComplete="off">
               <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
               <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
                 <span className="fa fa-spinner fa-pulse fa-fw"/>
@@ -137,6 +137,7 @@ class Login extends React.Component {
                 Looks like you don't have an account yet. Let's change that!
                 <a href="/u/signup">Sign up for free.</a>
               </div>
+              <input type="password" style={{display:'none'}}/>
               <div
                 className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
                 <label className="sr-only" htmlFor="login-email">Email</label>
@@ -168,7 +169,7 @@ class Login extends React.Component {
                        placeholder="Password"
                        id="login-password"
                        type="password"
-                       autoComplete="off"
+                       autoComplete="new-password"
                        required="required"
                        className="form-control input-lg"
                        ref={ref => {
