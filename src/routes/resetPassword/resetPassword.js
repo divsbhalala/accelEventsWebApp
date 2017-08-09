@@ -26,6 +26,7 @@ class ResetPassword extends React.Component {
       error: null,
       emailFeedBack: false,
       emailSend: false,
+      emailResponseError: "",
     };
 
   }
@@ -33,22 +34,20 @@ class ResetPassword extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.email.value.trim() == '') {
+    if(this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false
       });
     }
-    if (this.state.isValidData) {
+    else {
       this.props.doResetPassword(this.email.value.trim()).then((resp) => {
-        ;
-        if (!resp.error) {
-          history.push('/');
-          this.setState({error: ""});
-        }
-        else {
-          this.setState({error: "Invalid Email"});
-        }
+        let data = resp && resp.data;
+				this.setState({error: "Invalid Email", emailResponseError : data.message});
 
+			}).catch(error=>{
+          this.setState({
+					emailResponseError : "Error while processing your request"
+				})
       });
     }
 
@@ -65,7 +64,7 @@ class ResetPassword extends React.Component {
       emailFeedBack: true
     });
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false
       });
@@ -95,70 +94,7 @@ class ResetPassword extends React.Component {
     return (
 
       <div className="password-reset">
-        {/*<div className="login-signup-container login  has-cell-number ">
-         <div className="login-form" id="ResetPasswordAttempt">
-         <h1 className="text-center">Log in</h1>
-         <h4 className="text-center">
-         Or &nbsp;&nbsp;<Link className={s.link} to="/signup">Signup</Link>
-         </h4>
-         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick}>
-         <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
-         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
-         <span className="fa fa-spinner fa-pulse fa-fw" />
-         <span className="resp-message" />
-         </div>
-         <div className="js-notification notification-register mrg-t-md" style={{display: 'none'}}>
-         Looks like you don't have an account yet. Let's change that!
-         <a href="/AccelEventsWebApp/u/signup">Sign up for free.</a>
-         </div>
-         <div className={cx("mrg-t-sm form-group" , this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
-         <label className="sr-only" htmlFor="login-email">Email</label>
-         <input name="username"
-         id="login-email"
-         autoComplete="off"
-         placeholder="Email"
-         type="text"
-         required="required"
-         className="form-control input-lg"
-         autoFocus
-         ref={ref => { this.email = ref; }}
-         onKeyUp={this.emailValidateHandler}
-         />
-         { this.state.emailFeedBack && this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
-         { this.state.emailFeedBack && !this.state.email && <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-         { this.state.emailFeedBack && !this.state.email && <small className="help-block" >This value is not valid</small> }
-         </div>
-         <div className={cx("mrg-t-sm form-group", this.state.passwordFeedBack && 'has-feedback', this.state.passwordFeedBack && this.state.email && 'has-success', this.state.passwordFeedBack && (!this.state.password) && 'has-error')}>
-         <label className="sr-only" htmlFor="login-password">Password</label>
-         <input name="password"
-         placeholder="Password"
-         id="login-password"
-         type="password"
-         autoComplete="off"
-         required="required"
-         className="form-control input-lg"
-         ref={ref => { this.password = ref; }}
-         onKeyUp={this.passwordValidateHandler}
-         />
-         { this.state.passwordFeedBack && this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
-         { this.state.passwordFeedBack && !this.state.password &&  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-         { this.state.passwordFeedBack && !this.state.password && <small className="help-block" >This value is not valid</small> }
-         </div>
-         <input type="hidden" name defaultValue />
-         <div className="mrg-t-sm">
-         <button type="submit" className="btn btn-square btn-green btn-block btn-lg">Log in</button>
-         </div>
-         <div className="mrg-t-sm ">
-         <div className="form-group">
-         <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox" />
-         <label htmlFor="remember-me" className="text-small">Remember me</label>
-         <Link className="pull-right small" to="/password-reset">Forgot password?</Link>
-         </div>
-         </div>
-         </form>
-         </div>
-         </div>*/}
-        <div className="row">
+         <div className="row">
           <div className="col-md-4 col-md-offset-4">
             <h2 className="text-center"><strong>Password Reset</strong></h2>
             <p className="help-text text-center mrg-b-lg">Enter your email to reset you password</p>
@@ -175,8 +111,8 @@ class ResetPassword extends React.Component {
                          onKeyUp={this.emailValidateHandler}
                   />
                 </div>
-                { this.state.emailFeedBack && !this.state.email &&
-                <Alert bsStyle="danger">Invalid Email address</Alert>}
+                { this.state.emailFeedBack && !this.state.email && <Alert bsStyle="danger">Invalid Email address</Alert>}
+                { this.state.emailResponseError ? <Alert bsStyle="danger">{this.state.emailResponseError}</Alert> : ""}
                 { this.state.emailSend &&
                 <Alert bsStyle="success">Password reset link sent successfully, Please check your mail</Alert>}
                 <input type="hidden" name defaultValue/>
@@ -184,11 +120,6 @@ class ResetPassword extends React.Component {
               </form>
               {/* /.login-form */}
             </div>
-            {/* /.form */}
-            {/* created just in case we decide to add these later.
-             <p class="help-text text-center"><a href='/AccelEventsWebApp/u/login'>Login here.</a></p>
-             <p class="help-text text-center">New User? <a href='/AccelEventsWebApp/u/signup'>Signup now.</a></p>
-             */}
           </div>
         </div>
 

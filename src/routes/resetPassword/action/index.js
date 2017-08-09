@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import {apiUrl as API_URL} from './../../../clientConfig';
 
-let API_URL = 'http://35.161.147.220:3333/api/';
 export function onFormSubmit(e) {
   alert('hello');
   let test = ReactDOM.findDOMNode(ref);
@@ -14,18 +14,11 @@ export function doResetPassword(email) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'users/login',
+      url: API_URL + 'u/reset/password',
       data: {
-        email: email,
+				userEmailOrPhoneNumber: email,
       }
-    }).then(response => {
-      return response;
-
-    })
-      .catch(error => {
-        console.log(error);
-        return error;
-      });
+    });
   }
 
 }
