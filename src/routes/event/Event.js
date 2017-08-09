@@ -202,7 +202,7 @@ class Event extends React.Component {
 			firstNameFeedBack: true,
 			firstNameValue: this.firstName.value.trim(),
 		});
-		if (this.firstName.value.trim() == '') {
+		if (this.firstName.value && this.firstName.value.trim() === '') {
 
 			this.setState({
 				firstName: false
@@ -218,7 +218,7 @@ class Event extends React.Component {
 			lastNameFeedBack: true,
 			lastNameValue: this.lastName.value.trim(),
 		});
-		if (this.lastName.value.trim() == '') {
+		if (this.lastName.value && this.lastName.value.trim() === '') {
 			this.setState({
 				lastName: false
 			});
@@ -234,7 +234,7 @@ class Event extends React.Component {
 			cardHolderFeedBack: true
 		});
 
-		if (this.cardHolder.value.trim() == '') {
+		if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
 
 			this.setState({
 				cardHolder: false,
@@ -258,7 +258,7 @@ class Event extends React.Component {
 		this.setState({
 			cardNumberFeedBack: true
 		});
-		if (this.cardNumber.value.trim() == '') {
+		if (this.cardNumber.value && this.cardNumber.value.trim() === '') {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: "Enter Card Number ",
@@ -282,7 +282,7 @@ class Event extends React.Component {
 		let bid = 0;
 		bid = this.state.itemData && this.state.itemData.currentBid + 20;
 
-		if (this.amount.value.trim() == '') {
+		if (this.amount.value && this.amount.value.trim() === '') {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "Bid Amount can't be empty",
@@ -304,7 +304,7 @@ class Event extends React.Component {
 			cvvFeedBack: true
 		});
 
-		if (this.cvv.value.trim() == '') {
+		if (this.cvv.value && this.cvv.value.trim() === '') {
 
 			this.setState({
 				cvv: false,
@@ -379,22 +379,22 @@ class Event extends React.Component {
 	setActiveTabState = (label) => {
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
 
-		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donate' )) {
-			if (label == 'Auction') {
+		if (label && (label === 'Auction' || label === 'Raffle' || label === 'Fund a Need' || label === 'The Event' || label === 'Donate' )) {
+			if (label === 'Auction') {
 				label = 'auction';
 				this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'Raffle') {
+			} else if (label === 'Raffle') {
 				label = 'raffle';
 				this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'Fund a Need') {
+			} else if (label === 'Fund a Need') {
 				label = 'fundaneed';
 				this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'The Event') {
+			} else if (label === 'The Event') {
 				label = 'ticketing';
-			} else if (label == 'Donate') {
+			} else if (label === 'Donate') {
 				label = 'donation';
 			}
 			this.setState({tab: label});
@@ -618,8 +618,8 @@ class Event extends React.Component {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
 			this.setState({
 				selectedCategory: category
-			})
-			if (label == 'Auction') {
+			});
+			if (label === 'Auction') {
 				this.setState({
 					auctionPageCategory: category,
 					auctionPageLoading: true,
@@ -630,16 +630,16 @@ class Event extends React.Component {
 					this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 				}, 500);
 
-			} else if (label == 'Raffle') {
+			} else if (label === 'Raffle') {
 				this.setState({
 					rafflePageCategory: category,
 					rafflePageLoading: true,
 					rafflePageCount: 0,
 					rafflePageItems: [],
-				})
+				});
     		this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'Fund a Need') {
+			} else if (label === 'Fund a Need') {
 				this.setState({
 					fundANeedPageCategory: category,
 					fundANeedPageCount: 0,
@@ -657,7 +657,7 @@ class Event extends React.Component {
 			this.setState({
 				selectedSearchString: searchString
 			});
-			if (label == 'Auction') {
+			if (label === 'Auction') {
 				this.setState({
 					auctionPageSearchString: searchString,
 				});
@@ -665,14 +665,14 @@ class Event extends React.Component {
 					this.doGetAuctionItemBySearch(this.props.params && this.props.params.params);
 				}, 500);
 
-			} else if (label == 'Raffle') {
+			} else if (label === 'Raffle') {
 				this.setState({
 					rafflePageSearchString: searchString,
 				});
 				setTimeout(() => {
 					this.doGetRaffleItemBySearch(this.props.params && this.props.params.params);
 				}, 500);
-			} else if (label == 'Fund a Need') {
+			} else if (label === 'Fund a Need') {
 				this.setState({
 					fundANeedPageSearchString: searchString,
 				});
@@ -699,7 +699,7 @@ class Event extends React.Component {
 		Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
 		let ticketings = this.state.totalTickets;
 		ticketings = ticketings.filter(function (n) {
-			return n != null
+			return n !== null
 		});
 		ticketings = ticketings.map(function (obj) {
 			return {"numberOfTicket": parseInt(obj.numberofticket), "ticketTypeId": parseInt(obj.tickettypeid)};
