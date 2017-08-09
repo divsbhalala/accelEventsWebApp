@@ -274,7 +274,7 @@ class Checkout extends React.Component {
 			});
 		}
 		else {
-			if((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + this.cardExpMonth.value.toString()) >= parseInt( (new Date()).getUTCFullYear().toString() + (new Date()).getMonth().toString())))){
+			if((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + (this.cardExpMonth.value.toString().length == 1 ? ('0'+this.cardExpMonth.value.toString()) : this.cardExpMonth.value.toString())) >= parseInt( (new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length == 1 ? '0'+(new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))){
 				this.setState({
 					isInvalidDate: false,
 					cardExpMonth: true,
@@ -295,7 +295,7 @@ class Checkout extends React.Component {
 			});
 		}
 		else {
-			if((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + this.cardExpMonth.value.toString()) >= parseInt( (new Date()).getUTCFullYear().toString() + (new Date()).getMonth().toString())))){
+			if((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + (this.cardExpMonth.value.toString().length == 1 ? ('0'+this.cardExpMonth.value.toString()) : this.cardExpMonth.value.toString())) >= parseInt( (new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length == 1 ? '0'+(new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))){
 				this.setState({
 					isInvalidDate: false,
 					cardExpYear: true,
@@ -1132,7 +1132,7 @@ class Checkout extends React.Component {
 																				</div>
 																				<div className={cx("form-group expiration-date",
 																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
-																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate && 'has-success',
+																					(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate) && 'has-success',
 																					(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) || this.state.isInvalidDate) && 'has-error')
 																				}>
 																					<div className="row">
@@ -1142,7 +1142,7 @@ class Checkout extends React.Component {
 																						<div className={cx("col-md-8 text-left")}>
 																							<div className={cx("input-group",
 																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
-																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate && 'has-success',
+																								(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate) && 'has-success',
 																								(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) || this.state.isInvalidDate) && 'has-error')
 																							}>
 																								<div className="input-group-addon">
