@@ -438,6 +438,7 @@ class BuyRaffleTicketsModal extends React.Component {
       cardNumberFeedBack: true,
       firstNameFeedBack: true,
       lastNameFeedBack: true,
+      phoneNumberFeedBack:true,
       cvvFeedBack: true,
       popupHeader: "",
       errorMsg: "",
@@ -749,10 +750,10 @@ class BuyRaffleTicketsModal extends React.Component {
 
   close() {
     this.setState({showModal: false});
-  }
+  };
   open() {
     this.setState({showModal: true});
-  }
+  };
 
   render() {
     let event = this.props.params && this.props.params.params;

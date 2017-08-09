@@ -712,7 +712,7 @@ class Event extends React.Component {
 		this.props.doOrderTicket(eventUrl, Data)
 			.then(resp => {
 				if (resp && resp.data && resp.data.orderId) {
-					history.push('/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
+					history.push('/u/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
 				}
 				else {
 					this.setState({
