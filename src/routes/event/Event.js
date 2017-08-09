@@ -900,7 +900,7 @@ class Event extends React.Component {
 												next={this.doGetLoadMoreFundANeedItem}
 												hasMore={this.state.fundANeedPageLoading}
 												loader={<div className="text-center"><span
-                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>}>
 												{
 													this.state.fundANeedPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
@@ -954,7 +954,7 @@ class Event extends React.Component {
 										<div className="flex-row">
 											<div className="flex-col">
 												<div className="type-name"><strong style={{"fontWeight":700}}>{item.name} </strong>
-													( <span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price} </span>)
+													( <span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price.toFixed(2)} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
 															<select className="form-control all-select-values" name={item.typeId} data-price={item.price}

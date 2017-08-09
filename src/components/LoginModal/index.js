@@ -60,15 +60,15 @@ class LoginPopup extends React.Component {
     this.setState({
       emailFeedBack: true,
       passwordFeedBack: true,
-      phoneNumberFeedBack: true,})
+      phoneNumberFeedBack: true,});
     if (this.state.phoneNumber && this.state.email && this.state.password) {
-      this.setState({loading:true})
+      this.setState({loading:true});
       let user = {
         countryCode: this.state.countryPhone,
         email: this.email.value,
         password: this.password.value,
         phoneNumber: this.state.phone,
-      }
+      };
       this.props.doSignUp(this.props.params && this.props.params.params, user).then((resp) => {
         if (!resp.errorMessage) {
           this.setState({error: "Your account has been created",loading:true});
@@ -84,13 +84,13 @@ class LoginPopup extends React.Component {
     e.preventDefault();
     this.setState({
       emailFeedBack: true,
-      passwordFeedBack: true,})
+      passwordFeedBack: true,});
     if (this.state.email && this.state.password) {
-      this.setState({loading:true})
+      this.setState({loading:true});
       this.props.doLogin(this.email.value, this.password.value).then((resp) => {
         if (!resp.errorMessage) {
           this.setState({error: "Log In SuccessFully",loading:false});
-          setTimeout(()=>{window.location.reload();},3000)
+          setTimeout(()=>{window.location.reload();},3000);
          // window.location.reload();
           this.props.onCloseFunc();
         }
@@ -109,7 +109,7 @@ class LoginPopup extends React.Component {
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
@@ -133,7 +133,7 @@ class LoginPopup extends React.Component {
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -145,14 +145,16 @@ class LoginPopup extends React.Component {
         errorMsgEmail: "Invalid Email.",
       });
     }
-  };
+		this.setState({isValidData: !!(this.email.value && this.password.value)});
+
+	};
   passwordValidateHandler = (e) => {
 
     this.setState({
       passwordFeedBack: true
     });
 
-    if (this.password.value == '') {
+    if (this.password.value === '') {
 
       this.setState({
         password: false
@@ -190,7 +192,7 @@ class LoginPopup extends React.Component {
     this.setState({
       showLoginPopup: false,
     })
-  }
+  };
   close() {
     this.setState({showModal: false});
   }
@@ -204,7 +206,7 @@ class LoginPopup extends React.Component {
       <div >
         <div className="static-modal" id={this.props.id + '-containter'}>
           <div id="login-user">
-            <Modal id="login-user" show={this.props.showModal   ? true : false} onHide={this.props.onCloseFunc} dialogClassName="" >
+            <Modal id="login-user" show={!!this.props.showModal} onHide={this.props.onCloseFunc} dialogClassName="" >
               <Modal.Body>
                 <div className="login-signup-wrap">
                   { this.state.toggle ?
@@ -239,6 +241,7 @@ class LoginPopup extends React.Component {
                                      this.email = ref;
                                    }}
                                    onKeyUp={this.emailValidateHandler}
+                                   onChange={this.emailValidateHandler}
                             />
                             { this.state.emailFeedBack && this.state.email &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -260,6 +263,7 @@ class LoginPopup extends React.Component {
                                      this.password = ref;
                                    }}
                                    onKeyUp={this.passwordValidateHandler}
+                                   onChange={this.passwordValidateHandler}
                             />
                             { this.state.passwordFeedBack && this.state.password &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -270,7 +274,8 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            <Button loading={this.state.loading}  type="submit" bsStyle="link" className="btn-green btn-square btn-block btn-lg">Log in</Button>
+                            {this.state.isValidData ? <Button loading={this.state.loading}  type="submit"  className="btn-green btn-square btn-block btn-lg">Log in</Button> :
+                            <Button loading={this.state.loading}  type="submit"  className="btn-green btn-square btn-block btn-lg" disabled>Log in test</Button> }
                           </div>
                           <div className="mrg-t-sm ">
                             <div className="form-group">
@@ -314,6 +319,7 @@ class LoginPopup extends React.Component {
                                      this.email = ref;
                                    }}
                                    onKeyUp={this.emailValidateHandler}
+                                   onChange={this.emailValidateHandler}
                             />
                             { this.state.emailFeedBack && this.state.email &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -357,6 +363,7 @@ class LoginPopup extends React.Component {
                                      this.password = ref;
                                    }}
                                    onKeyUp={this.passwordValidateHandler}
+                                   onChange={this.passwordValidateHandler}
                             />
                             { this.state.passwordFeedBack && this.state.password &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
