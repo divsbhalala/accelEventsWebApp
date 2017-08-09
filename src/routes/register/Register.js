@@ -34,7 +34,7 @@ class Register extends React.Component {
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
-    }
+    };
 
     this.emailValidateHandler = this.emailValidateHandler.bind(this);
     this.passwordValidateHandler = this.passwordValidateHandler.bind(this);
@@ -43,15 +43,15 @@ class Register extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.password.value.trim() == '') {
+    if (this.password.value && this.password.value.trim() === '') {
       this.setState({
         password: false
       });
     }
     if (this.state.isValidData) {
       this.props.doRegister(this.email.value.trim(), this.password.value.trim()).then((resp) => {
-        if (resp.error) {
-          browserHistory.push('/');
+        let data = resp && resp.data;
+        if (data) {
           this.setState({error: ""});
         }
         else {
@@ -67,8 +67,8 @@ class Register extends React.Component {
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true
-    })
-    if (this.email.value.trim() == '') {
+    });
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false
       });
@@ -86,7 +86,7 @@ class Register extends React.Component {
       passwordFeedBack: true
     });
 
-    if (this.password.value.trim() == '') {
+    if(this.password.value && this.password.value.trim() === '') {
 
       this.setState({
         password: false
