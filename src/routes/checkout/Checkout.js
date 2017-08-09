@@ -337,7 +337,7 @@ class Checkout extends React.Component {
 		let purchaserDetail = orderData && orderData.purchaserDetail;
 		let ticketAttribute = orderData && orderData.ticketAttribute;
 		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
-		if (ticketAttribute.buyerInformationFields && !purchaserDetail) {
+		if (ticketAttribute.buyerInformationFields) {
 			ticketAttribute.buyerInformationFields.map((item, index) => {
 				if (!buyerInformationFields[index]) {
 					buyerInformationFields[index] = {};
@@ -754,7 +754,7 @@ class Checkout extends React.Component {
 				})
 		}
 	})
-	}
+	};
 
 	showMapPopup = (e) => {
 		e.preventDefault();
@@ -771,7 +771,7 @@ class Checkout extends React.Component {
 		this.setState({
 			ticketPurchaseSuccessPopup:false
 		});
-	}
+	};
 	getSelectOptions = (itemValue) => {
 		if(!itemValue || !itemValue.length){
 			return [];
@@ -791,7 +791,7 @@ class Checkout extends React.Component {
 		this.setState({
 			showFormError:false
 		});
-	}
+	};
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -900,8 +900,31 @@ class Checkout extends React.Component {
 															<div className="project-box-content">
 																<div className="red pull-right">* Required information</div>
 																<h4 className="text-left"><strong>Ticket Buyer</strong></h4>
+																{ this.props.orderData && this.props.orderData.purchaserDetail &&
+																<div className="buyerInformation">
+																	<div className="form-group mrg-t-md">
+																		<div className="row">
+																			<div className="col-md-4 text-right">
+																				<strong className="text-right"><strong>Name: </strong></strong>
+																			</div>
+																			<div className="col-md-6 text-left">
+																				{this.props.orderData.purchaserDetail.firstName} {this.props.orderData.purchaserDetail.lastName}
+																			</div>
+																		</div>
+																	</div>
+																	<div className="form-group">
+																		<div className="row">
+																			<div className="col-md-4 text-right">
+																				<strong className="text-right"><strong>Email: </strong></strong>
+																			</div>
+																			<div className="col-md-6 text-left">
+																				{this.props.orderData.purchaserDetail.email}
+																			</div>
+																		</div>
+																	</div>
+																</div>}
 
-																{ this.props.orderData && this.props.orderData.ticketAttribute && !this.props.orderData.purchaserDetail &&
+																{ this.props.orderData && this.props.orderData.ticketAttribute &&
 																this.props.orderData.ticketAttribute.buyerInformationFields && this.props.orderData.ticketAttribute.buyerInformationFields.length &&
 																<div className="buyerInformation">
 																	{
@@ -920,7 +943,7 @@ class Checkout extends React.Component {
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value&& 'has-success'
 																							)}>
-																							{item.type != 'dropdown' &&
+																							{item.type !== 'dropdown' &&
 																								<input
 																									type={item.type}
 																									className="form-control"
@@ -941,7 +964,7 @@ class Checkout extends React.Component {
 																							}
 
 																							{
-																								item.type == 'dropdown' && item.value && 
+																								item.type === 'dropdown' && item.value &&
 																								<select className="form-control"
 																									name={item.name}
 																									placeholder={item.name}
@@ -968,7 +991,7 @@ class Checkout extends React.Component {
 																			</div>)
 																	}
 																	{  _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
-																		return item.type == 'email';
+																		return item.type === 'email';
 																	}) && <div className="custom-attribute">
 																		<div className="form-group mrg-t-md">
 																			<div className="row">
@@ -994,29 +1017,6 @@ class Checkout extends React.Component {
 																	</div> }
 																</div> }
 
-																{ this.props.orderData && this.props.orderData.purchaserDetail &&
-																<div className="buyerInformation">
-																	<div className="form-group mrg-t-md">
-																		<div className="row">
-																			<div className="col-md-4 text-right">
-																				<strong className="text-right"><strong>Name: </strong></strong>
-																			</div>
-																			<div className="col-md-6 text-left">
-																				{this.props.orderData.purchaserDetail.firstName} {this.props.orderData.purchaserDetail.lastName}
-																			</div>
-																		</div>
-																	</div>
-																	<div className="form-group">
-																		<div className="row">
-																			<div className="col-md-4 text-right">
-																				<strong className="text-right"><strong>Email: </strong></strong>
-																			</div>
-																			<div className="col-md-6 text-left">
-																				{this.props.orderData.purchaserDetail.email}
-																			</div>
-																		</div>
-																	</div>
-																</div>}
 																<div className="buyerQuestion">
 																</div>
 																{ this.props.orderData && this.props.orderData.discountCoupon &&
@@ -1076,7 +1076,7 @@ class Checkout extends React.Component {
 																												 this.cardHolderName = ref;
 																											 }}
 																											 onKeyUp={this.cardHolderNameValidateHandler}
-																											 onKeyDown={this.cardHolderNameDownValidateHandler}
+																											 onChange={this.cardHolderNameDownValidateHandler}
 																											 onBlur={this.cardHolderNameBlurValidateHandler}/>
 																							</div>
 																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName &&
@@ -1116,6 +1116,7 @@ class Checkout extends React.Component {
 																												 this.cardNumber = ref;
 																											 }}
 																											 onKeyUp={this.cardNumberValidateHandler}
+																											 onChange={this.cardNumberValidateHandler}
 																											 required="required" data-fv-field="cardnumber"/>
 																							</div>
 																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber &&
