@@ -56,7 +56,6 @@ const NavMain = {
 const BasicSideNav = (props) => (
 	<div id="nav-col">
 		<SideNav highlightBgColor='#00bcd4' defaultSelected={props.selected} onItemSelection={ (id, parent) => {
-    console.log(id, parent, props, this.props);
   }}>
 			<Title> Basic SideNav </Title>
 

@@ -92,7 +92,6 @@ class AuctionAddItem extends React.Component {
 		this.props.getItemList("auction").then(resp => {
 			if (resp && resp.data && resp.data.items.length) {
 				this.setState({list: resp.data.items, categories: resp.data.items[0].categories});
-				console.log(this.state.items);
 			}
 			else {
 				this.props.getItemCategories("auction").then(resp => {
@@ -103,10 +102,9 @@ class AuctionAddItem extends React.Component {
 					});
 					this.addEmptyRow()
 				});
-				console.log(resp);
 			}
 		}).catch((error) => {
-			console.log(error);
+
 		});
 	};
 
@@ -122,13 +120,11 @@ class AuctionAddItem extends React.Component {
 			this.props.updateItemListPosition('auction', newList[newIndex].id, topItem, bottomItem).then(resp => {
 				if (resp && resp.data && resp.data.items.length) {
 					this.setState({list: resp.data.items});
-					console.log(this.state.items);
 				}
 				else {
-					console.log(resp);
 				}
 			}).catch((error) => {
-				console.log(error);
+
 			});
 		}
 	}

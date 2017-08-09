@@ -548,7 +548,6 @@ class Auction extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
       history.push('/404');
     });
   };
@@ -569,7 +568,6 @@ class Auction extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
     this.setState({
       amountFeedBack:false,

@@ -73,14 +73,12 @@ class PlanetItem extends React.Component {
     this.props.getItemList("raffle").then(resp => {
       if(resp && resp.data && resp.data.items.length){
        this.setState({list:resp.data.items});
-        console.log(this.state.items);
       }
       else{
         this.addEmptyRow();
-        console.log(resp);
       }
     }).catch((error) => {
-      console.log(error);
+
     });
   };
   componentWillMount(){
@@ -94,13 +92,11 @@ class PlanetItem extends React.Component {
       this.props.updateItemListPosition('raffle', newList[newIndex].id, topItem, bottomItem).then(resp => {
         if(resp && resp.data && resp.data.items.length){
           this.setState({list:resp.data.items});
-          console.log(this.state.items);
         }
         else{
-          console.log(resp);
         }
       }).catch((error) => {
-        console.log(error);
+
       });
     }
   }

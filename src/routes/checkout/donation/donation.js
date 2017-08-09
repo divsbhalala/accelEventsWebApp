@@ -336,7 +336,6 @@ class Donation extends React.Component {
       "stripeToken": this.state.stripeToken
     }
     this.props.confirmDonationCheckout(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -357,7 +356,6 @@ class Donation extends React.Component {
   componentDidMount(){
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.getdDonationCheckout(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId).then(resp => {
-      console.log(resp)
       this.setState({
         settings:resp.data,
         phone:resp.data.userInfo.phonenumber,
@@ -366,9 +364,7 @@ class Donation extends React.Component {
         firstNameValue:resp.data.userInfo.firstName,
         lastNameValue:resp.data.userInfo.lastName,
       })
-      console.log("resp",resp)
     }).catch((error) => {
-      console.log("resp",error)
     })
   };
 

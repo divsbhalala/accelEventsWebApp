@@ -60,10 +60,9 @@ class AuctionSetting extends React.Component {
         this.handleAlertShow(resp.data.message,'success');
       }
       else{
-        console.log(resp);
       }
     }).catch((error) => {
-      console.log(error);
+
     });
   };
 
@@ -71,7 +70,7 @@ class AuctionSetting extends React.Component {
     this.props.getHostSettings(this.state.moduleType).then(resp => {
       this.setState({settings:resp.data});
     }).catch((error) => {
-      console.log(error);
+
     });
 
     this.props.getHostCategories(this.state.moduleType).then(resp=> {
@@ -79,10 +78,9 @@ class AuctionSetting extends React.Component {
         this.setState({itemCategories : resp.data.itemCategories});
       }
       else{
-        console.log(resp);
       }
     }).catch(error=>{
-      console.log(error);
+
     });
 
   };
@@ -95,7 +93,6 @@ class AuctionSetting extends React.Component {
     else {
       settings.defaultBidIncrement = this.defaultBidIncrement.value;
       this.setState({settings,bidIncrement: false, isValidData:true});
-      console.log(this.state.settings);
     }
   };
 
@@ -122,10 +119,9 @@ class AuctionSetting extends React.Component {
         this.handleAlertShow(resp.data.message,'success');
       }
       else{
-        console.log(resp);
       }
     }).catch((error) => {
-      console.log(error);
+
     });
   };
   handleEvent = (event, picker) => {

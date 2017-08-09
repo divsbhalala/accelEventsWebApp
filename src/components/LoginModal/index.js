@@ -103,7 +103,6 @@ class LoginPopup extends React.Component {
 
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone:countryData.iso2,
@@ -117,7 +116,6 @@ class LoginPopup extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-        console.log(resp)
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",

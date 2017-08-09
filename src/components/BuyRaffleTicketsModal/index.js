@@ -38,8 +38,8 @@ class BuyRaffleTicketsModal extends React.Component {
       passwordFeedBack: false,
       auctionData: null,
       isValidBidData: false,
-      firstName: null,
-      lastName: null,
+      firstName: false,
+      lastName: false,
       cardNumber: null,
       cardHolder: null,
       amount: null,
@@ -167,7 +167,7 @@ class BuyRaffleTicketsModal extends React.Component {
       firstNameFeedBack: true,
       firstNameValue: this.firstName.value && this.firstName.value.trim()
     });
-    if (this.firstName.value && this.firstName.value.trim() === '') {
+    if (this.firstName.value.trim() === '') {
       this.setState({
         firstName: false
       });
@@ -185,7 +185,7 @@ class BuyRaffleTicketsModal extends React.Component {
       lastNameValue: this.lastName.value && this.lastName.value.trim(),
     });
 
-    if (this.lastName.value && this.lastName.value.trim() === '') {
+    if (this.lastName.value.trim() === '') {
 
       this.setState({
         lastName: false
@@ -292,7 +292,6 @@ class BuyRaffleTicketsModal extends React.Component {
     //this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone: countryData.iso2,
@@ -321,7 +320,7 @@ class BuyRaffleTicketsModal extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -619,6 +618,12 @@ class BuyRaffleTicketsModal extends React.Component {
       errorMsg: "You declined the transaction.",
       popupHeader: "Failed",
       loading: false,
+      firstNameFeedBack: false,
+      lastNameFeedBack: false,
+      cardNumberFeedBack: false,
+      cardHolderFeedBack: false,
+      expYearFeedBack: false,
+      expMonthFeedBack: false,
     })
   };
   hideTicketsPopup = () => {
@@ -653,9 +658,9 @@ class BuyRaffleTicketsModal extends React.Component {
       showTicketsPopup: false,
       errorMsgCard: null,
       isValidData: false,
-      email: null,
-      password: null,
-      error: null,
+      // email: null,
+      // password: null,
+      // error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
       auctionData: null,
@@ -703,7 +708,7 @@ class BuyRaffleTicketsModal extends React.Component {
       errorMsgcvv: null,
       errorMsgEmail: null,
       errorMsgPhoneNumber: null,
-      // errorMsg: null,
+       errorMsg: null,
       errorMsgTickets: null,
       showPopup: false,
       stripeToken: null,
@@ -790,9 +795,9 @@ class BuyRaffleTicketsModal extends React.Component {
                                  this.firstName = ref;
                                }}
                                onKeyUp={this.firstNameValidateHandler}/>
-                        { this.state.firstNameFeedBack && this.state.email &&
+                        { this.state.firstNameFeedBack && this.state.firstName &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
-                        { this.state.firstNameFeedBack && !this.state.email &&
+                        { this.state.firstNameFeedBack && !this.state.firstName &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                       </div>
                       { this.state.firstNameFeedBack && !this.state.firstName &&

@@ -44,8 +44,6 @@ class TicketSetting extends React.Component {
 					auctionPageLoading: false
 				})
 			}
-
-			console.log(resp);
 		}).catch(error => {
 			let orderError = error && error.response && error.response.data;
 			this.setState({
@@ -54,7 +52,6 @@ class TicketSetting extends React.Component {
 				isLoaded: true,
 				developerMessage: "Please activate Event Ticketing to start selling tickets."
 			});
-			console.log(orderError)
 		});
 		setTimeout(() => {
 			this.setState({

@@ -110,11 +110,9 @@ class RowItemList extends React.Component {
 			if (this.state.item.name && this.state.item.code && this.state.item.startingBid && this.state.isDataUpdate) {
 				if (this.state.item.id) {
 					this.props.updateItemList('fundANeed', this.state.item.id, this.state.item).then(resp => {
-						console.log("Updated ", this.props.isItemAdded)
 					})
 				} else {
 					this.props.addItemList('fundANeed', this.state.item).then(resp => {
-						console.log("Insert ", this.props.isItemAdded)
 					})
 				}
 				this.setState({isDataUpdate: false})

@@ -315,7 +315,6 @@ class FundANeed extends React.Component {
       "stripeToken": this.state.stripeToken
     }
     this.props.confirmfundANeedCheckout(this.props.params &&  this.props.params.params ,donationPurchaseDto).then(resp => {
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -348,9 +347,7 @@ class FundANeed extends React.Component {
         countryPhone: resp.data.userInfo.countryCode,
         pldegeIds: pldegeIds,
       })
-      console.log("resp",pldegeIds)
     }).catch((error) => {
-      console.log("resp",error)
     })
   };
 

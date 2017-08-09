@@ -138,7 +138,6 @@ class TicketSetting extends React.Component {
 				this.getCouponCodes();
 				this.throwError("Success", this.state.isCouponEdit ? "Coupon updated successfully" : "Coupon created successfully");
 			}).catch(error=>{
-				console.log(error);
 				this.onError(error);
 			})
 		}
@@ -178,7 +177,6 @@ class TicketSetting extends React.Component {
 		this.props.doPostTicketingSettings('settings', this.state.settings).then(resp=>{
 			this.throwError("Success", "Setting save successfully");
 		}).catch(error=>{
-			console.log('error', error);
 			this.onError(error);
 		})
 

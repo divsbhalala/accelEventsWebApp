@@ -90,7 +90,7 @@ class FundNeedAddItem extends React.Component {
 				this.addEmptyRow();
 			}
 		}).catch((error) => {
-			console.log(error);
+			
 		});
 	};
 
@@ -110,7 +110,7 @@ class FundNeedAddItem extends React.Component {
 				else {
 				}
 			}).catch((error) => {
-				console.log(error);
+				
 			});
 		}
 	};

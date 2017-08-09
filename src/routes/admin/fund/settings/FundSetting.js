@@ -82,16 +82,14 @@ class FundSetting extends React.Component {
     settings.moduleHidden = this.state.settings.moduleHidden;
     settings.socialSharingEnabled = this.state.settings.socialSharingEnabled;
     settings.userTime = this.state.settings.userTime;
-    console.log(settings);
     this.props.updateHostSettings(this.state.moduleType, settings).then(resp => {
       if(resp && resp.data){
         this.handleAlertShow(resp.data.message,'success');
       }
       else{
-        console.log(resp);
       }
     }).catch((error) => {
-      console.log(error);
+
     });
   };
 
@@ -99,7 +97,6 @@ class FundSetting extends React.Component {
     this.props.getHostSettings(this.state.moduleType).then(resp => {
       this.setState({settings:resp.data});
     }).catch((error) => {
-      console.log(error);
     });
 
     this.props.getHostCategories(this.state.moduleType).then(resp=> {
@@ -107,10 +104,8 @@ class FundSetting extends React.Component {
         this.setState({itemCategories : resp.data.itemCategories});
       }
       else{
-        console.log(resp);
       }
     }).catch(error=>{
-      console.log(error);
     });
   };
 

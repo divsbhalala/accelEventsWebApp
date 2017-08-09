@@ -18,7 +18,6 @@ export default class CategoryTable extends React.Component {
   };
 
   addItemCategory(categoryDTO){
-      console.log(categoryDTO);
       if(categoryDTO){
         this.props.addHostCategory(this.props.moduleType, categoryDTO).then(resp => {
           this.props.getHostCategories(this.props.moduleType).then(resp=> {
@@ -27,10 +26,10 @@ export default class CategoryTable extends React.Component {
               this.setState({tableData : this.categories.slice(0, this.props.sizePerPage),totalDataSize: this.categories.length});
             }
           }).catch(error=>{
-            console.log(error);
+
           });
         }).catch((error) => {
-          console.log(error);
+
         });
       }
   };
@@ -44,10 +43,10 @@ export default class CategoryTable extends React.Component {
               this.setState({tableData : this.categories.slice(0, this.props.sizePerPage),totalDataSize: this.categories.length});
             }
           }).catch(error=>{
-            console.log(error);
+
           });
         }).catch((error) => {
-          console.log(error);
+
         });
       }
   };

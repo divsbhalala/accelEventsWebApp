@@ -137,11 +137,9 @@ hidePopup = () => {
     if(this.state.item.name && this.state.item.code &&  this.state.item.startingBid && this.state.isDataUpdate && this.state.buyItNowPrice ){
       if (this.state.item.id ) {
         this.props.updateItemList('auction', this.state.item.id, this.state.item).then(resp => {
-          console.log("Updated ",this.props.isItemAdded)
         })
       } else {
         this.props.addItemList('auction', this.state.item).then(resp => {
-          console.log("Insert ",this.props.isItemAdded)
         })
       }
       this.setState({isDataUpdate:false})

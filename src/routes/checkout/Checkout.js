@@ -352,7 +352,6 @@ class Checkout extends React.Component {
 			this.setState({
 				errorBuyer: buyerInformationFields
 			});
-			console.log('buyerInformationFields', buyerInformationFields)
 		}
 		if (hasHolderAttributes) {
 			if (ticketAttribute && ticketAttribute.attendees) {
@@ -371,7 +370,6 @@ class Checkout extends React.Component {
 							if (field.mandatory && !attendee[index][key][field.name].value) {
 								attendee[index][key][field.name]['error'] = true;
 							}
-							console.log(attendee[index][key], field)
 						})
 					}
 					if (item.questions && questions && questions.length) {
@@ -385,7 +383,6 @@ class Checkout extends React.Component {
 							if (field.mandatory && !questions[index][key][field.name].value) {
 								questions[index][key][field.name]['error'] = true;
 							}
-							console.log(questions[index][key], field)
 						})
 					}
 
@@ -393,7 +390,6 @@ class Checkout extends React.Component {
 				this.setState({
 					errorAttendee: attendee
 				});
-				console.log('a', attendee)
 			}
 		}
 
@@ -401,7 +397,6 @@ class Checkout extends React.Component {
 			let emailIndex = _.findIndex(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
 				return item.type == 'email';
 			});
-			console.log(emailIndex, buyerInformationFields, buyerInformationFields[emailIndex]);
 			validData = document.getElementsByClassName("has-error").length == 0;
 			if (validData) {
 				if (!this.props.authenticated) {
@@ -499,7 +494,6 @@ class Checkout extends React.Component {
 								})
 							})
 						}
-						console.log('holder', holder);
 						request.holder = [
 							{
 								"attributes": holder,
@@ -533,14 +527,12 @@ class Checkout extends React.Component {
 							this.showTicketPurchaseSuccessPopup();
 						}
 						else {
-							console.log('error of request', error);
 							this.setState({
 								showFormError : true,
 								formError : "Oops! Error while checkout"
 							});
 						}
 					}).catch(error => {
-						console.log('error of request', error);
 						this.setState({
 							showFormError : true,
 							formError : "Oops! Error while checkout"
@@ -1578,7 +1570,6 @@ class Checkout extends React.Component {
 								</div>
 							</div>
 						</PopupModel>
-						{console.log("fdsfdsfsfds", this.state.formError)}
 						<PopupModel
 							id="showFormErroralertPopup"
 							showModal={ this.state.showFormError}

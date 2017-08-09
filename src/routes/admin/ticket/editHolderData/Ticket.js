@@ -43,7 +43,7 @@ class TicketHolderData extends React.Component {
 					holderData : item && item.data
 				})
 			}).catch(error=>{
-				console.log(error);
+
 				let orderRefundError = error && error.response && error.response.data;
 				this.setState({
 					dialogTitle : "Error",
@@ -242,7 +242,7 @@ class TicketHolderData extends React.Component {
 							this.toggleDialog();
 						},10);
 					}).catch(error=>{
-						console.log(error);
+
 						let orderRefundError = error && error.response && error.response.data;
 						this.setState({
 							dialogTitle : "Error",

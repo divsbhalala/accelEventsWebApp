@@ -138,7 +138,6 @@ class TicketList extends React.Component {
   submiteAction = () => {
     if(this.state.action==="Edit"){
       let ticketDTO={"numberOfTickets": this.numberOfTickets.value,"price": this.price.value,"id":0, "complementary":false};
-      console.log(this.state.ticket);
       if(this.state.ticket.id) {
         ticketDTO.id = this.state.ticket.id;
         this.updateTicket(ticketDTO);

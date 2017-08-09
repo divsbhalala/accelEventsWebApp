@@ -36,12 +36,10 @@ class Design extends React.Component {
 
   componentWillMount() {
     this.props.getDesignSetting("general").then(resp => {
-      console.log("resp", resp);
       this.setState({
         settings: resp
       })
     }).catch(error => {
-      console.log('error', error)
     })
   };
 
@@ -56,7 +54,6 @@ class Design extends React.Component {
         this.setState({loading:false,message:"Something wrong",isError:true})
       }
     });
-    console.log(e, e.target, this.state.settings)
   };
   updateContent = (value) =>{
     let settings =this.state.settings;
@@ -78,7 +75,6 @@ class Design extends React.Component {
         this.setState({loading:false,message:"Something wrong",isError:true})
       }
     });
-    console.log(settings,value)
   };
   eventNameChangeHandler = () => {
     let settings = this.state.settings;

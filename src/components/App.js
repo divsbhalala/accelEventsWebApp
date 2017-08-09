@@ -30,7 +30,6 @@ axios.interceptors.response.use(function (response) {
 	return response;
 }, function (error) {
 	// Do something with response error
-  console.log("error", error, error.response);
   let response = error && error.response;
   if(response && response.status === 401){
 		localStorage.clear();

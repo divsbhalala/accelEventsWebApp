@@ -115,7 +115,7 @@ class EventAside extends React.Component {
 		},1000)
 	}
 	componentWillUnmount(){
-		clearInterval(countDownInterval);
+		//clearInterval(countDownInterval);
 	}
 	render() {
 		return (

@@ -153,7 +153,7 @@ class Raffle extends React.Component {
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value.trim()
     });
-    if (this.firstName.value && this.firstName.value.trim() === '') {
+    if ( this.firstName.value.trim() === '') {
       this.setState({
         firstName: false
       });
@@ -171,7 +171,7 @@ class Raffle extends React.Component {
       lastNameValue: this.lastName.value.trim(),
     });
 
-    if (this.lastName.value && this.lastName.value.trim() === '') {
+    if (this.lastName.value.trim() === '') {
 
       this.setState({
         lastName: false
@@ -287,7 +287,7 @@ class Raffle extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -385,7 +385,6 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
       history.push('/404');
     });
   };
@@ -398,7 +397,6 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
   };
 
@@ -534,7 +532,7 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
+
       history.push('/404');
     });
   };

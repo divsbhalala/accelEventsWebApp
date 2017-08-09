@@ -20,14 +20,12 @@ class myActivity extends React.Component {
   }
   componentWillMount() {
     this.props.getUserAcivity().then((resp) => {
-      console.log('activ data1', resp.data);
       if (resp && resp.data) {
         this.setState({
           userData: resp.data,
         });
       }
     }).catch((error) => {
-      console.log('error', error);
     });
   }
   render() {

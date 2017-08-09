@@ -131,7 +131,6 @@ class Volunteer extends React.Component {
        this.setState({
          isloaded: true,
        });
-       console.log(this.props.is_volunteer, 'here');
      });
    }		else {
 
@@ -274,7 +273,6 @@ class Volunteer extends React.Component {
   this.setState({
     itemStatusMsg: null,
   });
-  console.log(error);
 });
     }
   };
@@ -292,7 +290,6 @@ class Volunteer extends React.Component {
   this.setState({
     itemStatusMsg: null,
   });
-  console.log(error);
 });
   };
   attendeesFilterHandler = (e) => {
@@ -327,7 +324,6 @@ class Volunteer extends React.Component {
     itemStatusMsg: 0,
     itemCode: false,
   });
-  console.log(error);
 });
    }
   };
@@ -340,7 +336,6 @@ class Volunteer extends React.Component {
     });
   }
 }).catch((error) => {
-  console.log(error);
 });
   }
   checkAuctionUser = (e) => {
@@ -389,7 +384,6 @@ class Volunteer extends React.Component {
     userData: null,
     errorMsgEmailCheck: 'User Does Not Exists. Account Will be created.',
   });
-  console.log(error);
 });
     }
   };
@@ -431,7 +425,6 @@ class Volunteer extends React.Component {
     userData: null,
     errorMsgEmailCheck: 'User Does Not Exists. Account Will be created.',
   });
-  console.log(error);
 });
     }
   };
@@ -1045,7 +1038,6 @@ class Volunteer extends React.Component {
   submiteDonation = (user) => {
     this.props.submitDonate(this.props.params && this.props.params.params, user)
       .then((resp) => {
-        console.log(resp);
         if (resp && resp.message) {
           this.setState({
             loading: false,

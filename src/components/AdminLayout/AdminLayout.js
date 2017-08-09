@@ -69,7 +69,6 @@ class AdminLayout extends React.Component {
     });
   }
   _handleScrollbar() {
-    console.log("TODO: pending for now");
     /*$('.admin-sidebar-wrap #col-left').nanoScroller({
       alwaysVisible : false,
       iOSNativeScrolling : false,

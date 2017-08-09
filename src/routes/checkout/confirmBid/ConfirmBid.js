@@ -350,7 +350,6 @@ class ConfirmBid extends React.Component {
       "stripeToken": this.state.stripeToken
     }
     this.props.confirmAuctionBid(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -382,7 +381,6 @@ class ConfirmBid extends React.Component {
         total:resp.data.items[0].currentBid
       })
     }).catch((error) => {
-      console.log("resp",error)
     })
   };
 

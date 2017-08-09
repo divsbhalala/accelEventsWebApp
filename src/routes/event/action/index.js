@@ -18,7 +18,7 @@ export function doGetEventData(eventUrl) {
 
     })
       .catch(error => {
-        console.log(error);
+
         return error;
       });
   }

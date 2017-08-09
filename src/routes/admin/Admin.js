@@ -68,7 +68,6 @@ class Admin extends React.Component {
         });
       }
     }
-    console.log(this.state)
   };
   enableModule =(e)=>{
     e.preventDefault();

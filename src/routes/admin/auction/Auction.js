@@ -54,7 +54,7 @@ export function getAuctionSettings() {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -68,7 +68,7 @@ export function getAuctionCategories() {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -83,7 +83,7 @@ export function addAuctionCategory(itemCategory) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -97,7 +97,7 @@ export function removeAuctionCategory(id) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -112,7 +112,7 @@ export function updateAuctionCategory(id, itemCategory) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -126,7 +126,7 @@ export function getAuctionItems(page, size) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -141,7 +141,7 @@ export function addAuctionItem(auctionDTO) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -156,7 +156,7 @@ export function updateAuctionItem(id, auctionDTO) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -169,7 +169,7 @@ export function getGeneralSettings() {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -184,7 +184,7 @@ export function getItemCatalog() {
     }).then(resp => {
       fileDownload(resp.data, 'catalog.pdf');
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -199,7 +199,7 @@ export function getItemsPDF() {
     }).then(resp => {
       fileDownload(resp.data, 'items.pdf');
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -214,7 +214,7 @@ export function getItemsCSV() {
     }).then(resp => {
       fileDownload(resp.data, 'items.csv');
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -228,7 +228,7 @@ export function removeItem(id) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }

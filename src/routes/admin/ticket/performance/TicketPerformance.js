@@ -36,17 +36,14 @@ class TicketPerformance extends React.Component {
 		self_TicketPerformance = this;
     let total =0;
     this.props.getPerformanceSale().then(resp => {
-      console.log("resp", resp);
       resp.map(function(value){total +=value.ticketPrice });
       this.setState({
         sales: resp,
       });
-      console.log("total",total)
     }).catch(error => {
       console.log('error', error)
     });
     this.props.getPerformanceBuyer().then(resp => {
-      console.log("resp", resp);
       resp.map(function(value){total +=value.orderAmount  });
       this.setState({
         order: resp,

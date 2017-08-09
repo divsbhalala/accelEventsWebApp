@@ -748,7 +748,7 @@ class Event extends React.Component {
 				});
 			})
 				.catch(error => {
-					console.log(error);
+
 					// history.push('/404');
 				});
 		}

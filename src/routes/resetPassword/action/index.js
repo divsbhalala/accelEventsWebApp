@@ -23,7 +23,7 @@ export function doResetPassword(email) {
 
     })
       .catch(error => {
-        console.log(error);
+
         return error;
       });
   }

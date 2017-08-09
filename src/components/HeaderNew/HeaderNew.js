@@ -66,7 +66,6 @@ class HeaderNew extends React.Component {
 
 	componentWillReceiveProps() {
 		eventUrl = this.props.params && this.props.params.params;
-		console.log("even", eventUrl);
 		if (this.props.authenticated && this.props.params && this.props.params.params) {
 			this.props.isVolunteer(this.props.params && this.props.params.params);
 		}
@@ -297,7 +296,6 @@ class HeaderNew extends React.Component {
 	};
 
 	doContactRequest = () => {
-		console.log("here", "this.props.authenticated", this.props.authenticated, (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)), this.message && this.message.value, !this.message.value);
 		if ((this.props.authenticated || (this.email && this.name && this.email.value.trim() !== '' && this.name.value.trim() !== '')) && this.message && this.message.value.trim() !== '') {
 			let contactData = {};
 			if (!this.props.authenticated) {
@@ -309,7 +307,6 @@ class HeaderNew extends React.Component {
 			contactData.message = this.message.value;
 			if (eventUrl) {
 				this.props.doContactSupport(eventUrl, contactData).then(resp => {
-					console.log("resp", resp);
 					if (resp && resp.status === 200) {
 						this.setState({
 							formMessage: resp.data && resp.data.message || "Thank you for writing to us, we will get back to you soon!",
@@ -330,7 +327,6 @@ class HeaderNew extends React.Component {
 						showFormMessagePopup: true,
 						showContactPopup: false,
 					});
-					console.log("error", error);
 				})
 			}
 			else {

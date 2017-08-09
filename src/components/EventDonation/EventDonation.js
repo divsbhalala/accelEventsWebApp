@@ -265,7 +265,6 @@ class EventDonation extends React.Component {
     this.setState({ isValidData: !!(this.email.value && this.password.value) });
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-    console.log(isValid, value, countryData, number, ext);
     this.setState({
       phone: value,
       countryPhone: countryData.iso2,
@@ -279,7 +278,6 @@ class EventDonation extends React.Component {
       });
     } else {
       this.props.doValidateMobileNumber(number).then((resp) => {
-        console.log(resp);
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: 'Invalid phone number',
@@ -440,7 +438,6 @@ class EventDonation extends React.Component {
     }
     this.props.giveDonate(this.props.eventUrl, user)
       .then((resp) => {
-       // console.log("------",resp)
         this.hideDonationConfirmationPopup();
         if (resp && resp.message) {
           this.setState({

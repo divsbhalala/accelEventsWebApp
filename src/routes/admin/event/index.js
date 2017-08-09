@@ -69,7 +69,6 @@ class EventList extends React.Component {
   }
   onSortChange(sizePerPage) {
     //this.fetchData(1, sizePerPage);
-    console.log("sizePerPage=>",sizePerPage)
   }
 
   getEventsList = () => {
