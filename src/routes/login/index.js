@@ -24,7 +24,7 @@ path: '/u',
       return {
         title,
         chunk: 'login',
-        component: <LoginLayout><Login title={title} showFeedBack={showFeedBack}/></LoginLayout>,
+        component: <LoginLayout isAdmin={true}><Login title={title} showFeedBack={showFeedBack}/></LoginLayout>,
       };
     },
   },
@@ -33,7 +33,7 @@ path: '/u',
     async action() {
       return {
         title: "Events",
-        component: <AdminWLLayout><EventsList title="Events"/></AdminWLLayout>,
+        component: <AdminWLLayout isAdmin={true}><EventsList title="Events"/></AdminWLLayout>,
       };
     }
   },
@@ -69,7 +69,7 @@ path: '/u',
       async action(props) {
         return {
           title: "Events",
-          component: <AdminWLLayout  ><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
+          component: <AdminWLLayout isAdmin={true} ><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
         };
       }
     }

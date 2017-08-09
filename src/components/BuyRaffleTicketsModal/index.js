@@ -148,8 +148,7 @@ class BuyRaffleTicketsModal extends React.Component {
       passwordFeedBack: true,
       passwordValue: this.password.value && this.password.value.trim(),
     });
-
-    if (this.password.value && this.password.value.trim() === '') {
+    if (this.password.value.trim() === '') {
 
       this.setState({
         password: false
@@ -204,9 +203,7 @@ class BuyRaffleTicketsModal extends React.Component {
       cardHolderFeedBack: true,
       cardHolderValue: this.cardHolder.value,
     });
-
-    if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
-
+    if (this.cardHolder.value.trim() === '') {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
@@ -215,6 +212,11 @@ class BuyRaffleTicketsModal extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
       });
     } else {
       this.setState({
@@ -441,8 +443,8 @@ class BuyRaffleTicketsModal extends React.Component {
       cvvFeedBack: true,
       popupHeader: "",
       errorMsg: "",
-      //expMonthValue:this.expMonth.value,
-     // expYearValue:this.expYear.value,
+      expMonthValue:this.expMonth && this.expMonth.value,
+      expYearValue:this.expYear && this.expYear.value,
     });
     if (!this.props.authenticated && this.state.emailValue && this.state.passwordValue && this.state.phone && this.state.cardHolderValue && this.state.cardNumberValue && this.state.cvvValue) {
       let userData = {
@@ -611,12 +613,17 @@ class BuyRaffleTicketsModal extends React.Component {
     })
   };
   hideAlertPopup = () => {
+    if( this.state.popupHeader !== 'Failed' ){
+      this.setState({
+        errorMsg: "You declined the transaction.",
+        popupHeader: "Failed",
+      })
+    }
     this.setState({
       //  showPopup: false,
       isShowAlertPopup: false,
       hideTicketsPopup: true,
-      errorMsg: "You declined the transaction.",
-      popupHeader: "Failed",
+
       loading: false,
       firstNameFeedBack: false,
       lastNameFeedBack: false,
@@ -624,6 +631,12 @@ class BuyRaffleTicketsModal extends React.Component {
       cardHolderFeedBack: false,
       expYearFeedBack: false,
       expMonthFeedBack: false,
+      cvvFeedBack: false,
+      cvv :null,
+      cardHolder:null,
+      cardNumber:null,
+      firstName:null,
+      lastName:null,
     })
   };
   hideTicketsPopup = () => {

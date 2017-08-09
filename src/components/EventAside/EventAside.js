@@ -111,11 +111,37 @@ class EventAside extends React.Component {
 	};
 	componentDidMount(){
 		countDownInterval = setInterval(()=>{
-			this.setCountDown(countDownInterval);
+		//	this.setCountDown(countDownInterval);
+      if(this.props.settings && this.props.settings.endDate){
+        let eventTime=moment();
+        if(this.props.settings && this.props.settings.endDate){
+          eventTime = moment(this.props.settings.endDate);
+        }
+        let days =  moment(eventTime).diff(moment(), 'days');
+        let hours = moment(eventTime).add(-days, 'days').diff(moment(), 'hours');
+        let minute = moment(eventTime).add(-days, 'days').add(-hours, 'hours').diff(moment(), 'minutes');
+        let seconds = moment(eventTime).add(-days, 'days').add(-hours, 'hours').add(-minute, 'minutes').diff(moment(), 'seconds');
+
+        // let duration = moment.duration(duration - interval, 'milliseconds');
+        this.setState({
+          days: days <= 0 ? "00": days,
+          hours: hours <= 0 ? "00": hours <=9 ? ("0" +hours).slice(-2) : hours,
+          minute: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
+          seconds: seconds <= 0 ? "00": seconds <=9 ? ("0" +seconds).slice(-2) : seconds,
+        });
+
+        if( !days && !hours && !minute && !seconds && !isEventEnd){
+          this.props.onEnd();
+          isEventEnd = true;
+        }
+        else {
+          isEventEnd = false;
+        }
+      }
 		},1000)
 	}
 	componentWillUnmount(){
-		//clearInterval(countDownInterval);
+		clearInterval(countDownInterval);
 	}
 	render() {
 		return (

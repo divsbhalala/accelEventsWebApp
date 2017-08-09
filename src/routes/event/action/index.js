@@ -462,7 +462,7 @@ export function doLogin(email, password,rememberme=false) {
         updateUserData(resp.data);
       }).catch(err => {
         return err;
-      })
+      });
       return response;
     })
       .catch((error, code, status)=>{

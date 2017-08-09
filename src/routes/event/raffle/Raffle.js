@@ -202,6 +202,11 @@ class Raffle extends React.Component {
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      });
     } else {
       this.setState({
         cardHolder: true

@@ -365,6 +365,13 @@ class Fund extends React.Component {
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      },function afterStateChange() {
+        this.checkIsValidBidData()
+      });
     } else {
       this.setState({
         cardHolder: true

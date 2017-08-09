@@ -50,8 +50,8 @@ class Login extends React.Component {
         if (!resp.errorMessage) {
           this.setState({error: "Log In SuccessFully...",loading:false});
           setTimeout(()=>{
-             history.push(resp.data.redirectUrl)
-            //window.location.replace(resp.data.redirectUrl)
+            // history.push(resp.data.redirectUrl)
+            window.location.replace(resp.data.redirectUrl)
           },2000)
         }
         else {

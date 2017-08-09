@@ -350,9 +350,16 @@ class Auction extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
-      }, function afterStateChange() {
+      },function afterStateChange() {
         this.checkIsValidBidData()
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      },function afterStateChange() {
+      this.checkIsValidBidData()
+    });
     } else {
       this.setState({
         cardHolder: true
