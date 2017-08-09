@@ -2692,6 +2692,12 @@ class Volunteer extends React.Component {
             <div className="order-form">
               <form method="POST">
                 <div className="ticket-type-container">
+                <label className="center-block text-center mrg-t-lg">Select payment option</label>
+                    <div onChange={this.changePaymentType} id="payment-type-selection" className="form-group text-center">
+                      <input type="radio" name="paymenttype" autoComplete="off" defaultValue="CC" defaultChecked="checked" />
+      								Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
+      								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash" /> Cash
+      							</div>
                   {
                     this.state.settings && this.state.settings.tickeTypes && (this.state.settings.tickeTypes).map(item =>
                       <div className="sale-card" key={item.typeId.toString()}>
@@ -2751,7 +2757,7 @@ class Volunteer extends React.Component {
                       <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                       <span
                         className="total-price"
-                      >{this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
+                      >{this.state.totalTicketPrice ? this.props.currencySymbol : ''} {this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
                     </div>
                     <div className="pull-right">
                       <button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
