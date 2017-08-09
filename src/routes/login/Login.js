@@ -63,7 +63,8 @@ class Login extends React.Component {
   };
 
   emailValidateHandler = (e) => {
-    this.setState({
+
+		this.setState({
       emailFeedBack: true,
       emailValue:this.email.value.trim(),
     });
@@ -84,7 +85,7 @@ class Login extends React.Component {
     this.setState({isValidData: !!(this.email.value && this.password.value)});
   };
   passwordValidateHandler = (e) => {
-
+    debugger;
     this.setState({
       passwordFeedBack: true
     });
@@ -151,6 +152,7 @@ class Login extends React.Component {
                          this.email = ref;
                        }}
                        onKeyUp={this.emailValidateHandler}
+                       onChange={this.emailValidateHandler}
                 />
                 { this.state.emailFeedBack && this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -173,6 +175,7 @@ class Login extends React.Component {
                          this.password = ref;
                        }}
                        onKeyUp={this.passwordValidateHandler}
+                       onChange={this.passwordValidateHandler}
                 />
                 { this.state.passwordFeedBack && this.state.password &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -183,7 +186,7 @@ class Login extends React.Component {
               </div>
               <input type="hidden" name defaultValue/>
               <div className="mrg-t-sm">
-                <button type="submit" className="btn btn-square btn-green btn-block btn-lg">Log in</button>
+                <button type="submit" className="btn btn-square btn-green btn-block btn-lg" disabled={!this.state.isValidData}>Log in</button>
               </div>
               <div className="mrg-t-sm ">
                 <div className="form-group">
