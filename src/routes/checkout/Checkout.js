@@ -352,7 +352,6 @@ class Checkout extends React.Component {
 			this.setState({
 				errorBuyer: buyerInformationFields
 			});
-			console.log('buyerInformationFields', buyerInformationFields)
 		}
 		if (hasHolderAttributes) {
 			if (ticketAttribute && ticketAttribute.attendees) {
@@ -371,7 +370,6 @@ class Checkout extends React.Component {
 							if (field.mandatory && !attendee[index][key][field.name].value) {
 								attendee[index][key][field.name]['error'] = true;
 							}
-							console.log(attendee[index][key], field)
 						})
 					}
 					if (item.questions && questions && questions.length) {
@@ -385,7 +383,6 @@ class Checkout extends React.Component {
 							if (field.mandatory && !questions[index][key][field.name].value) {
 								questions[index][key][field.name]['error'] = true;
 							}
-							console.log(questions[index][key], field)
 						})
 					}
 
@@ -393,20 +390,18 @@ class Checkout extends React.Component {
 				this.setState({
 					errorAttendee: attendee
 				});
-				console.log('a', attendee)
 			}
 		}
 
 		setTimeout(() => {
 			let emailIndex = _.findIndex(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
-				return item.type == 'email';
+				return item.type === 'email';
 			});
-			console.log(emailIndex, buyerInformationFields, buyerInformationFields[emailIndex]);
-			validData = document.getElementsByClassName("has-error").length == 0;
+			validData = document.getElementsByClassName("has-error").length === 0;
 			if (validData) {
 				if (!this.props.authenticated) {
 					let requestData;
-					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error == false) {
+					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error === false) {
 						let Email = buyerInformationFields[emailIndex]['Email'];
 						requestData = {
 							email: buyerInformationFields[emailIndex]['Email'].value,
@@ -499,7 +494,6 @@ class Checkout extends React.Component {
 								})
 							})
 						}
-						console.log('holder', holder);
 						request.holder = [
 							{
 								"attributes": holder,
@@ -516,7 +510,7 @@ class Checkout extends React.Component {
 						}
 						if (ticketAttribute.buyerInformationFields) {
 							let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
-								return item.type == 'email';
+								return item.type === 'email';
 							});
 							if (index > -1) {
 								request.purchaser.attributes = [];
@@ -529,18 +523,16 @@ class Checkout extends React.Component {
 					let eventUrl = this.props.params && this.props.params.params;
 					let orderId = this.props.params && this.props.params.orderId;
 					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
-						if (resp && resp.data && resp.data.message == 'Success') {
+						if (resp && resp.data && resp.data.message === 'Success') {
 							this.showTicketPurchaseSuccessPopup();
 						}
 						else {
-							console.log('error of request', error);
 							this.setState({
 								showFormError : true,
 								formError : "Oops! Error while checkout"
 							});
 						}
 					}).catch(error => {
-						console.log('error of request', error);
 						this.setState({
 							showFormError : true,
 							formError : "Oops! Error while checkout"
@@ -560,17 +552,17 @@ class Checkout extends React.Component {
 			}).catch((error, status, msg) => {
 				let respError = error && error.response && error.response.data && error.response.data.error && error.response.data.error;
 				if(respError){
-					if(respError.param == 'exp_year'){
+					if(respError.param === 'exp_year'){
 						this.setState({
 							cardExpYear: false,
 						});
 					}
-					if(respError.param == 'exp_month'){
+					if(respError.param === 'exp_month'){
 						this.setState({
 							cardExpMonth: false,
 						});
 					}
-					if(respError.param == 'number'){
+					if(respError.param === 'number'){
 						this.setState({
 							cardNumber: false,
 						});

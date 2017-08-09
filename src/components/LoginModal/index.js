@@ -278,7 +278,7 @@ class LoginPopup extends React.Component {
                             <div className="form-group">
                               <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox"/>
                               <label htmlFor="remember-me" className="text-small">Remember me</label>
-                              <Link className="pull-right small" to="/password-reset">Forgot password?</Link>
+                              <Link className="pull-right small" to="/u/password-reset">Forgot password?</Link>
                             </div>
                           </div>
                         </form>

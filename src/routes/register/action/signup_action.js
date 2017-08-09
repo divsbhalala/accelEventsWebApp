@@ -17,10 +17,8 @@ export function doRegister(email, password) {
       method: 'post',
       url: API_URL + 'u/signup/admin',
       data: {
-				signupDto : {
 				  email: email,
 					password: password
-				},
       }
     }).then(response => {
       dispatch(storeLoginData(response.data));
@@ -29,7 +27,7 @@ export function doRegister(email, password) {
 
     })
       .catch(error => {
-        return error;
+        return error && error.response && error.response.data;
       });
   }
 

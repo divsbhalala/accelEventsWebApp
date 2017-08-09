@@ -50,13 +50,12 @@ class Register extends React.Component {
     }
     if (this.state.isValidData) {
       this.props.doRegister(this.email.value.trim(), this.password.value.trim()).then((resp) => {
-        let data = resp && resp.data;
-        if (data) {
+        if (resp && resp.data) {
           this.setState({error: ""});
         }
         else {
-          alert('invalid Data');
-          this.setState({error: "Invalid Data"});
+          let errorMessage = resp && resp.errorMessage;
+          this.setState({error: errorMessage || "Error while processing your request"});
         }
 
       });
@@ -114,7 +113,7 @@ class Register extends React.Component {
           alt="" className="logo-img img-responsive center-block"/>
         <h1 className="text-center mrg-t-md">Get started with a free account</h1>
         <div className="onboardpage center-block">
-          <div id="alertmessage" className="hide"/>
+					{ this.state.error ? <Alert bsStyle="danger">{this.state.error}</Alert> : ""}
           <form id="signupform" onSubmit={this.onFormClick} className="createpwdform fv-form fv-form-bootstrap"
                 noValidate="novalidate">
             <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
@@ -174,7 +173,7 @@ class Register extends React.Component {
             </div>
           </form>
         </div>
-        <Footer></Footer>
+        <Footer/>
       </div>
     );
   }
