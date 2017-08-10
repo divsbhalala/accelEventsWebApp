@@ -24,9 +24,27 @@ path: '/u',
       return {
         title,
         chunk: 'login',
-        component: <LoginLayout isAdmin={true}><Login title={title} showFeedBack={showFeedBack}/></LoginLayout>,
+        component: <LoginLayout isAdmin={true}><Login title={title} loginType="generalLogin" showFeedBack={showFeedBack}/></LoginLayout>,
       };
     },
+  },
+  {
+    path: '/superadmin/login',
+    async action(props) {
+      return {
+        title: "Events",
+        component: <LoginLayout isAdmin={true}><Login title={title}  params={props.params} loginType="superadmin" showFeedBack={showFeedBack}/></LoginLayout>,
+      };
+    }
+  },
+  {
+    path: '/wl-login/:params',
+    async action(props) {
+      return {
+        title: "Login",
+        component: <LoginLayout isAdmin={true}><Login title={title}  params={props.params} loginType="whiteLabel" showFeedBack={showFeedBack}/></LoginLayout>,
+      };
+    }
   },
   {
     path: '/superadmin/events',
