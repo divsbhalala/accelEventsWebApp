@@ -277,8 +277,8 @@ class Volunteer extends React.Component {
     }
   };
   setAttendeesHandler = (view, index) => {
-    const status = view.status == 'Checked In' ? 'false' : 'true';
-    const statusValue = view.status == 'Checked In' ? 'Booked' : 'Checked In';
+    const status = view.status === 'Checked In' ? 'false' : 'true';
+    const statusValue = view.status === 'Checked In' ? 'Booked' : 'Checked In';
     this.props.setAttendees(this.props.params && this.props.params.params, view.barcode, status)
 			.then((resp) => {
   if (resp && resp.data) {
@@ -341,13 +341,13 @@ class Volunteer extends React.Component {
   checkAuctionUser = (e) => {
     if (this.state.email) {
       let modeltype = 'auction';
-      if (this.state.activeViews == 'select-action') {
+      if (this.state.activeViews === 'select-action') {
         modeltype = 'auction';
       }
-      if (this.state.activeViews == 'sell-raffle-tickets') {
+      if (this.state.activeViews === 'sell-raffle-tickets') {
         modeltype = 'raffle';
       }
-      if (this.state.activeViews == 'submit-raffle-tickets') {
+      if (this.state.activeViews === 'submit-raffle-tickets') {
         modeltype = 'raffle';
       }
       this.props.getUserByEmail(this.props.params && this.props.params.params, this.email.value.trim(), modeltype)
@@ -428,7 +428,6 @@ class Volunteer extends React.Component {
 });
     }
   };
-
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -482,7 +481,7 @@ class Volunteer extends React.Component {
     }
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-  	var isnum = /^\d+$/.test(value);
+  	let isnum = /^\d+$/.test(value);
   	if(!isnum && value) return false;
     this.setState({
       phone: value,
