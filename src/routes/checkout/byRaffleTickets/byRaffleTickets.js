@@ -10,7 +10,7 @@ import { doValidateMobileNumber} from './../../event/action/index';
 
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
 
@@ -22,16 +22,13 @@ class ByRaffleTickets extends React.Component {
     super(props);
     this.state = {
       isVisibleConfirmBid : false,
-
       isValidData: false,
       email: null,
       password: null,
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
-
       isValidBidData: false,
-
       cardNumber: null,
       cardHolder: null,
       amount: null,
@@ -42,7 +39,6 @@ class ByRaffleTickets extends React.Component {
       expYear: null,
       phoneNumber: null,
       popupHeader:null,
-
       cardNumberValue: null,
       cardHolderValue: null,
       amountValue: null,
@@ -55,13 +51,11 @@ class ByRaffleTickets extends React.Component {
       passwordValue:null,
       phoneNumberValue:null,
       errorMsgCard:null,
-
       cardNumberFeedBack: false,
       cardHolderFeedBack: false,
       amountFeedBack: false,
       cvvFeedBack: false,
       phoneNumberFeedBack: false,
-
       errorMsgcardNumber: null,
       errorMsgcardHolder: null,
       errorMsgamount: null,
@@ -141,6 +135,11 @@ class ByRaffleTickets extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
       });
     } else {
       this.setState({
@@ -418,6 +417,7 @@ class ByRaffleTickets extends React.Component {
                               utilsScript="./libphonenumber.js"
                               separateDialCode={true}
                               value={ this.state.phone || "" }
+                              defaultCountry={this.props.country || ""}
                               maxLength={16} data-stripe="number"
                               onPhoneNumberChange={this.changePhone}
                               disabled={this.state.settings.userInfo && this.state.settings.userInfo.phonenumber}
@@ -620,7 +620,9 @@ const mapDispatchToProps = {
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
   getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
+});
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(ByRaffleTickets));
 

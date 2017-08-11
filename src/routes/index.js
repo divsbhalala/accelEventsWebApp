@@ -22,6 +22,7 @@ export default {
    // require('./goal').default,
     require('./checkout').default,
     require('./myProfile').default,
+    require('./resetNewPassword').default,
 
 
     // Wildcard routes, e.g. { path: '*', ... } (must go last)

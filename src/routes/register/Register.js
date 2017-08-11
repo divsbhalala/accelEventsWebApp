@@ -34,7 +34,7 @@ class Register extends React.Component {
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
-    }
+    };
 
     this.emailValidateHandler = this.emailValidateHandler.bind(this);
     this.passwordValidateHandler = this.passwordValidateHandler.bind(this);
@@ -43,20 +43,19 @@ class Register extends React.Component {
   onFormClick = (e) => {
     e.preventDefault();
 
-    if (this.password.value.trim() == '') {
+    if (this.password.value && this.password.value.trim() === '') {
       this.setState({
         password: false
       });
     }
     if (this.state.isValidData) {
       this.props.doRegister(this.email.value.trim(), this.password.value.trim()).then((resp) => {
-        if (resp.error) {
-          browserHistory.push('/');
+        if (resp && resp.data) {
           this.setState({error: ""});
         }
         else {
-          alert('invalid Data');
-          this.setState({error: "Invalid Data"});
+          let errorMessage = resp && resp.errorMessage;
+          this.setState({error: errorMessage || "Error while processing your request"});
         }
 
       });
@@ -67,8 +66,8 @@ class Register extends React.Component {
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true
-    })
-    if (this.email.value.trim() == '') {
+    });
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false
       });
@@ -86,7 +85,7 @@ class Register extends React.Component {
       passwordFeedBack: true
     });
 
-    if (this.password.value.trim() == '') {
+    if(this.password.value && this.password.value.trim() === '') {
 
       this.setState({
         password: false
@@ -114,9 +113,9 @@ class Register extends React.Component {
           alt="" className="logo-img img-responsive center-block"/>
         <h1 className="text-center mrg-t-md">Get started with a free account</h1>
         <div className="onboardpage center-block">
-          <div id="alertmessage" className="hide"/>
+					{ this.state.error ? <Alert bsStyle="danger">{this.state.error}</Alert> : ""}
           <form id="signupform" onSubmit={this.onFormClick} className="createpwdform fv-form fv-form-bootstrap"
-                noValidate="novalidate">
+                noValidate="novalidate" autoComplete="off">
             <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
             <div
               className={cx("form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
@@ -130,11 +129,14 @@ class Register extends React.Component {
                        name="email"
                        id="login-email"
                        required="required"
+                       autoComplete="off"
                        ref={(input) => {
                          this.email = input;
                        }}
                        onKeyUp={this.emailValidateHandler}/>
               </div>
+              <input type="text" style={{display:'none'}}/>
+              <input type="password" style={{display:'none'}}/>
               { this.state.emailFeedBack && this.state.email &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
               { this.state.emailFeedBack && !this.state.email &&
@@ -149,10 +151,15 @@ class Register extends React.Component {
                 <div className="input-group-addon">
                   <i className="fa fa-key" aria-hidden="true"/>
                 </div>
-                <input type="password" className={cx("form-control")} name="password" required="required"
+                <input type="password"
+                      className="form-control"
+                      name="signup-password"
+                      id="signup-password"
+                      required="required"
                        ref={(input) => {
                          this.password = input;
                        }}
+                       autoComplete="new-password"
                        onKeyUp={this.passwordValidateHandler}/>
               </div>
               { this.state.passwordFeedBack && this.state.password &&
@@ -174,7 +181,7 @@ class Register extends React.Component {
             </div>
           </form>
         </div>
-        <Footer></Footer>
+        <Footer/>
       </div>
     );
   }

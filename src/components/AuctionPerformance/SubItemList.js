@@ -64,7 +64,6 @@ class SubItemList extends React.Component {
   deleteAuctionbid = () =>{
     this.setState({loading:true});
 	  this.props.deleteAuctionbid(this.state.bid).then(resp =>{
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -87,7 +86,6 @@ class SubItemList extends React.Component {
   requestPayment = () =>{
     this.setState({loading:true});
 	  this.props.requestPaymentBid(this.state.bid).then(resp =>{
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -110,7 +108,6 @@ class SubItemList extends React.Component {
   markAsPaid = () =>{
     this.setState({loading:true});
 	  this.props.markAsPaidBid(this.state.bid).then(resp =>{
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,

@@ -24,7 +24,6 @@ class UserManage extends React.Component {
         });
       }
     }).catch((error) => {
-      console.log('error', error);
     });
   }
   addRow =() => {
@@ -56,7 +55,6 @@ class UserManage extends React.Component {
           });
         }
       }).catch((error) => {
-        console.log('error', error);
       });
     }
   };

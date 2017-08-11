@@ -26,7 +26,7 @@ class ProfileAside extends React.Component {
 
 	render() {
 		return (
-			<div id="user-profile">{console.log("user",this.props.user)}
+			<div id="user-profile">
 				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"/>
 				<div className={cx("main-box", "clearfix")}>
 					<header className={cx("main-box-header", "clearfix")}>

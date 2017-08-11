@@ -37,12 +37,10 @@ class AuctionPerformance extends React.Component {
   };
   componentWillMount() {
     this.props.getPerformanceAuctionItem().then((resp) => {
-      console.log('resp', resp);
       this.setState({
         items: resp,
       });
     }).catch((error) => {
-      console.log('error', error);
     });
   }
   render() {

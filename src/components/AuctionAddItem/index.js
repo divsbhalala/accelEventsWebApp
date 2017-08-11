@@ -10,7 +10,7 @@ import {
 	updateItemListPosition,
 	getItemCategories
 } from './../../routes/admin/action';
-
+import {getHostSettings} from '../HostSettings/action/RestActions';
 
 class PlanetItem extends React.Component {
 	state: Object = {
@@ -92,7 +92,6 @@ class AuctionAddItem extends React.Component {
 		this.props.getItemList("auction").then(resp => {
 			if (resp && resp.data && resp.data.items.length) {
 				this.setState({list: resp.data.items, categories: resp.data.items[0].categories});
-				console.log(this.state.items);
 			}
 			else {
 				this.props.getItemCategories("auction").then(resp => {
@@ -103,14 +102,17 @@ class AuctionAddItem extends React.Component {
 					});
 					this.addEmptyRow()
 				});
-				console.log(resp);
 			}
 		}).catch((error) => {
-			console.log(error);
+
 		});
 	};
 
 	componentWillMount() {
+    this.props.getHostSettings('auction').then(resp => {
+      this.setState({settings:resp.data});
+    }).catch((error) => {
+    });
 		this.getItemList()
 	};
 
@@ -122,13 +124,11 @@ class AuctionAddItem extends React.Component {
 			this.props.updateItemListPosition('auction', newList[newIndex].id, topItem, bottomItem).then(resp => {
 				if (resp && resp.data && resp.data.items.length) {
 					this.setState({list: resp.data.items});
-					console.log(this.state.items);
 				}
 				else {
-					console.log(resp);
 				}
 			}).catch((error) => {
-				console.log(error);
+
 			});
 		}
 	}
@@ -149,7 +149,7 @@ class AuctionAddItem extends React.Component {
 			"active": false,
 			"bidIncrement": 0,
 			"buyItNowPrice": 0,
-			"categories": this.state.categories,
+			"category": this.state.categories,
 			"code": "",
 			"description": "",
 			"images": [
@@ -172,8 +172,7 @@ class AuctionAddItem extends React.Component {
 				<p>Add the items that will be available at your silent auction. There are not limits on the number of items
 					which you can add. Attendees will submit bids for an item by replying to the event text message number with
 					the 3 letter item code followed by the dollar amount they would like to place for that item. After their first
-					bid they will be asked to confirm their bid by replying to the text message with their first and last name.ADD
-					ITEM
+					bid they will be asked to confirm their bid by replying to the text message with their first and last name.
 				</p>
 				<div className="text-left mrg-t-md">
 					<button className="btn btn-info add-new-item mrg-t-lg" onClick={this.addNewRow}> &nbsp; Add
@@ -215,6 +214,7 @@ const mapDispatchToProps = {
 	updateItemList: (type, id, data) => updateItemList(type, id, data),
 	updateItemListPosition: (type, itemId, topItem, topBottom) => updateItemListPosition(type, itemId, topItem, topBottom),
 	getItemCategories: (type) => getItemCategories(type),
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
 };
 
 const mapStateToProps = (state) => ({

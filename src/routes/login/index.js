@@ -24,16 +24,34 @@ path: '/u',
       return {
         title,
         chunk: 'login',
-        component: <LoginLayout><Login title={title} showFeedBack={showFeedBack}/></LoginLayout>,
+        component: <LoginLayout isAdmin={true}><Login title={title} loginType="generalLogin" showFeedBack={showFeedBack}/></LoginLayout>,
       };
     },
+  },
+  {
+    path: '/superadmin/login',
+    async action(props) {
+      return {
+        title: "Events",
+        component: <LoginLayout isAdmin={true}><Login title={title}  params={props.params} loginType="superadmin" showFeedBack={showFeedBack}/></LoginLayout>,
+      };
+    }
+  },
+  {
+    path: '/wl-login/:params',
+    async action(props) {
+      return {
+        title: "Login",
+        component: <LoginLayout isAdmin={true}><Login title={title}  params={props.params} loginType="whiteLabel" showFeedBack={showFeedBack}/></LoginLayout>,
+      };
+    }
   },
   {
     path: '/superadmin/events',
     async action() {
       return {
         title: "Events",
-        component: <AdminWLLayout><EventsList title="Events"/></AdminWLLayout>,
+        component: <AdminWLLayout isAdmin={true}><EventsList title="Events"/></AdminWLLayout>,
       };
     }
   },
@@ -42,7 +60,7 @@ path: '/u',
     async action(props) {
       return {
         title: "WhiteLabel User Management",
-        component: <AdminWLLayout><WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/></AdminWLLayout>,
+        component: <AdminWLLayout isAdmin={true}><WhiteLabelUserManagement params={props.params} title="WhiteLabel User Management"/></AdminWLLayout>,
       };
     }
   },
@@ -60,7 +78,7 @@ path: '/u',
       async action(props) {
         return {
           title: "EditEvent",
-          component: <AdminWLLayout><EditEvent params={props.params} title="EditEvent"/></AdminWLLayout>,
+          component: <AdminWLLayout isAdmin={true}><EditEvent  params={props.params} title="EditEvent"/></AdminWLLayout>,
         };
       }
     },
@@ -69,7 +87,7 @@ path: '/u',
       async action(props) {
         return {
           title: "Events",
-          component: <AdminWLLayout><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
+          component: <AdminWLLayout isAdmin={true} ><WhiteLabelEventList params={props.params} title="WhiteLabelEventList"/></AdminWLLayout>,
         };
       }
     }

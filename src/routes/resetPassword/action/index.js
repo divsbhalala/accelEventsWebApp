@@ -14,9 +14,9 @@ export function doResetPassword(email) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'users/login',
+      url: API_URL + 'u/reset/password',
       data: {
-        email: email,
+				userEmailOrPhoneNumber: email,
       }
     }).then(response => {
       return response;

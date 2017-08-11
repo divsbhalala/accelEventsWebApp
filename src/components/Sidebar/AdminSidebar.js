@@ -220,7 +220,7 @@ class AdminSidebar extends React.Component {
 													Credit Card Processing
 												</Link>
 											</li>
-											{ this.props.eventDetails &&  this.props.eventDetails.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
+											{ this.props.eventDetails &&  this.props.eventDetails.eventDesignDetailDto  &&  this.props.eventDetails.eventDesignDetailDto.biillingPageEnabled ? <li className={cx(this.state.subNav === "billing" && "active")}>
 												<Link to="/host/settings/account" onClick={()=>{ this.setNav("settings", "billing")}}>
 													Billing
 												</Link>

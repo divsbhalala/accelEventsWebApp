@@ -62,7 +62,7 @@ export function removeHostCategory(moduleType, id) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }

@@ -44,12 +44,10 @@ class RafflePerformance extends React.Component {
   };
   componentWillMount() {
     this.props.getPerformanceRaffleItem().then(resp => {
-      console.log("resp", resp);
       this.setState({
         items: resp,
       })
     }).catch(error => {
-      console.log('error', error)
     })
   }
   render() {

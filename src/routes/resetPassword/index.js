@@ -7,7 +7,7 @@ const showFeedBack = false;
 
 export default {
 
-  path: '/password-reset',
+  path: '/u/password-reset',
 
   action() {
     return {

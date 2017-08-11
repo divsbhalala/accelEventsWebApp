@@ -34,12 +34,10 @@ class Setting extends React.Component {
 
   componentWillMount() {
     this.props.doGetHostSettings('general').then((resp) => {
-      console.log('resp', resp);
       this.setState({
         settings: resp && resp.data,
       });
     }).catch((error) => {
-      console.log('error', error);
     });
   }
 
@@ -53,7 +51,6 @@ class Setting extends React.Component {
     }).catch((error) => {
       this.setState({ loading: false, message: 'Something wrong', isError: true });
     });
-    console.log(e, e.target, this.state.settings);
   };
   changeGoalStartingAmount = (event) => {
     if (this.goalStartingAmount && this.goalStartingAmount.value) {

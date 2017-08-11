@@ -119,8 +119,12 @@ class RowItemList extends React.Component {
 		this.props.deleteItemList('raffle', this.state.item.id).then(resp => {
 			this.setState({loading: false,showPopup: false,})
 		})
-
 	};
+  categoryHandlerChange = (e) =>{
+    let item=this.state.item;
+    item.category=this.category.value;
+    this.setState({item,isDataUpdate:true})
+  };
 	hideItemChangeHandler = () => {
 		let item = this.state.item;
 		item.active = !item.active;
@@ -207,17 +211,30 @@ class RowItemList extends React.Component {
 									</div>
 								</div>
 								<div className="col-md-4">
-									<div className="row">
-										<div className="col-md-6">
-											Hide Item
-											<div className="help-text">This is will hide item from display page</div>
-										</div>
-										<div className="col-md-6">
-											<ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
-																		defaultValue={ (this.state.item && this.state.item.active)}
-																		className="success activeswitch" onChange={this.hideItemChangeHandler}/>
-										</div>
-									</div>
+                  <div className="row">
+                    <div className="form-group">
+                      <span>Category</span>
+                      <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
+                              ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
+                        <option value={0} disabled >-- Select Category --</option>
+                        {this.props.item.categories && this.props.item.categories.map((value,index)=>
+                          <option value={value} key={index}>{value}</option>
+                        )}
+                      </select>
+                    </div>
+                  </div>
+                  <br/>
+                  <div className="row">
+                    <div className="col-md-6">
+                      Hide Item
+                      <div className="help-text">This is will hide item from display page</div>
+                    </div>
+                    <div className="col-md-6">
+                      <ToggleSwitch name="requireBidderAddress" id={this.state.item.id + "logoEnabled"}
+                                    defaultValue={ (this.state.item && this.state.item.active)}
+                                    className="success activeswitch" onChange={this.hideItemChangeHandler}/>
+                    </div>
+                  </div>
 								</div>
 							</div>
 						</div>

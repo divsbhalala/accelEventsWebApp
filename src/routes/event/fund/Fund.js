@@ -16,7 +16,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -365,6 +365,13 @@ class Fund extends React.Component {
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      },function afterStateChange() {
+        this.checkIsValidBidData()
+      });
     } else {
       this.setState({
         cardHolder: true
@@ -412,7 +419,7 @@ class Fund extends React.Component {
     let amount=true;
     let errorMsgAmount="";
     if (this.amount.value.trim() == '') {
-      errorMsgAmount= "Bid Amount can't be empty";
+      errorMsgAmount= "Pledge Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
       errorMsgAmount= "Submitted pledge amount should be greater than or equal to the stated pledge amount.";
@@ -602,7 +609,6 @@ class Fund extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
   };
   reRender = ()=>{
@@ -776,6 +782,7 @@ class Fund extends React.Component {
                                 <IntlTelInput
                                   css={['intl-tel-input', 'form-control intl-tel']}
                                   utilsScript="./libphonenumber.js"
+                                  defaultCountry={this.props.country || ""}
                                   separateDialCode={true}
                                   value={ this.state.phone || "" }
                                   maxLength={16} data-stripe="number"
@@ -1017,13 +1024,18 @@ class Fund extends React.Component {
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.submiteFundForm} >Confirm</Button> : ""}
+              {this.state.popupHeader === "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.submiteFundForm} >Confirm</Button> : ""}
               <button className="btn btn-danger" onClick={this.hidePopup}> Close </button>
             </div>
           </div>
         </PopupModel>
-        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params} modelFooter={<button className="btn btn-info center-block" data-dismiss="modal" onClick={() => {this.hideLoginModal()
-           }}>Close</button>}/>
+
+        <LoginModal
+             showModal={this.state.isShowLoginModal}
+             onCloseFunc={this.hideLoginModal}
+              params={this.props.params }
+             modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
+          />
       </div>
     );
   }
@@ -1058,6 +1070,7 @@ const mapStateToProps = (state) => ({
   user: state.session.user,
   authenticated: state.session.authenticated,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Fund));

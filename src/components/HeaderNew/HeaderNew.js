@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Link from '../Link';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -23,6 +22,7 @@ import {
 	doContactSupport,
 	doGetEventData,
 	isVolunteer,
+	doGetIpInfo,
 } from './../../routes/event/action/index';
 
 import LoginModal from './../../components/LoginModal/index';
@@ -66,13 +66,13 @@ class HeaderNew extends React.Component {
 
 	componentWillReceiveProps() {
 		eventUrl = this.props.params && this.props.params.params;
-		console.log("even", eventUrl);
-		if (this.props.authenticated && this.props.params && this.props.params.params) {
-			this.props.isVolunteer(this.props.params && this.props.params.params);
+		if (this.props.authenticated && eventUrl) {
+			this.props.isVolunteer(eventUrl);
 		}
 	}
 
 	componentDidMount() {
+		this.props.doGetIpInfo();
 		if (this.props.params && this.props.params.params) {
 			this.props.doGetEventData(this.props.params && this.props.params.params);
 		}
@@ -243,13 +243,17 @@ class HeaderNew extends React.Component {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-    setTimeout(()=>{history.push('/u/login');},1000)
+		setTimeout(() => {
+			history.push('/u/login');
+		}, 1000)
 	};
 	logoutSuperUser = () => {
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
-		setTimeout(()=>{history.push('/u/login');},1000)
+		setTimeout(() => {
+			history.push('/u/login');
+		}, 1000)
 	};
 	showContactPopup = () => {
 		this.setState({
@@ -297,7 +301,6 @@ class HeaderNew extends React.Component {
 	};
 
 	doContactRequest = () => {
-		console.log("here", "this.props.authenticated", this.props.authenticated, (this.props.authenticated || (this.email && this.name && this.email.value && this.name.value)), this.message && this.message.value, !this.message.value);
 		if ((this.props.authenticated || (this.email && this.name && this.email.value.trim() !== '' && this.name.value.trim() !== '')) && this.message && this.message.value.trim() !== '') {
 			let contactData = {};
 			if (!this.props.authenticated) {
@@ -309,7 +312,6 @@ class HeaderNew extends React.Component {
 			contactData.message = this.message.value;
 			if (eventUrl) {
 				this.props.doContactSupport(eventUrl, contactData).then(resp => {
-					console.log("resp", resp);
 					if (resp && resp.status === 200) {
 						this.setState({
 							formMessage: resp.data && resp.data.message || "Thank you for writing to us, we will get back to you soon!",
@@ -330,7 +332,6 @@ class HeaderNew extends React.Component {
 						showFormMessagePopup: true,
 						showContactPopup: false,
 					});
-					console.log("error", error);
 				})
 			}
 			else {
@@ -360,7 +361,10 @@ class HeaderNew extends React.Component {
 	render() {
 		let event = this.props.params && this.props.params.params;
 		return (
-			<div className={cx("top-header-wrap")} style={{background:this.props.hostDesign &&  this.props.hostDesign.headerColor,color:this.props.hostDesign &&  this.props.hostDesign.headerFontColor}}>
+			<div className={cx("top-header-wrap")} style={{
+				background: this.props.hostDesign ? this.props.hostDesign.headerColor : this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.headerColor,
+				color: this.props.hostDesign ? this.props.hostDesign.headerFontColor : this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.headerFontColor
+			}}>
 				<Navbar fluid={true} style={ {margin: 0} }>
 					<Brand className={cx(this.props.admin)}>
             <span >
@@ -368,32 +372,34 @@ class HeaderNew extends React.Component {
 							<Link to={"/events/" + this.props.eventData.eventURL} title={this.props.eventData.name}
 										rel="home">{this.props.eventData.name}</Link>}
 							{ this.props.admin &&
-								<a href="" id="logo"
-									 className="navbar-brand" >
-									 {this.props.hostDesign &&  ( this.props.hostDesign.headerLogoImage  ?
-										 <img
-										 		src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/'+this.props.hostDesign.headerLogoImage}
-												alt className="normal-logo logo-white has-custom"/>
-          						:
-                		 <img
-                  			src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png'}
-                  			alt className="normal-logo logo-white has-custom"/>
-              			)}
-								</a>
+							<a href="" id="logo"
+								 className="navbar-brand">
+								{this.props.hostDesign && ( this.props.hostDesign.headerLogoImage ?
+										<img
+											src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/' + this.props.hostDesign.headerLogoImage}
+											alt className="normal-logo logo-white has-custom"/>
+										:
+										<img
+											src={'http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-300x300/6bafabd0-5f33-4dcc-a95c-602babb11761accelevents-logo-white.png'}
+											alt className="normal-logo logo-white has-custom"/>
+								)}
+							</a>
 							}
-							{  this.props.admin && !this.props.superAdmin &&  <button type="button" className="navbar-toggle" onClick={() => {
+							{  this.props.admin && !this.props.superAdmin &&
+							<button type="button" className="navbar-toggle" onClick={() => {
 								toggleMenu();
 							}}>
-                  <span className="sr-only">Toggle navigation</span>
-                  <span className="icon-bar"/>
-                  <span className="icon-bar"/>
-                  <span className="icon-bar"/>
-                </button>}
+								<span className="sr-only">Toggle navigation</span>
+								<span className="icon-bar"/>
+								<span className="icon-bar"/>
+								<span className="icon-bar"/>
+							</button>}
 
             </span>
 
 					</Brand>
-					{ this.props.admin && !this.props.superAdmin && <div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
+					{ this.props.admin && !this.props.superAdmin &&
+					<div className="nav-no-collapse navbar-left pull-left hidden-sm hidden-xs">
 						<ul className="nav navbar-nav pull-left">
 							<li>
 								<a className="btn" id="make-small-nav" onClick={() => {
@@ -422,7 +428,9 @@ class HeaderNew extends React.Component {
 							Volunteer
 						</MenuItem>}
 						{ event && !this.props.admin &&
-						<NavDropdown title={<span><i className="fa fa-th-list fa-fw"/> <span className="hidden-xs">Views</span> </span>} id="navDropdown3">
+						<NavDropdown
+							title={<span><i className="fa fa-th-list fa-fw"/> <span className="hidden-xs">Views</span> </span>}
+							id="navDropdown3">
 
 							<MenuItem eventKey="5" onClick={() => {
 								history.push("/events/" + event + "/auction/scroll")
@@ -474,11 +482,11 @@ class HeaderNew extends React.Component {
 
 						</NavDropdown>}
 
-						{ !this.props.authenticated &&  <MenuItem eventKey="8" onClick={this.showLoginPopup}>
+						{ !this.props.authenticated && <MenuItem eventKey="8" onClick={this.showLoginPopup}>
 							<i className="fa fa-user fa-fw"/> <span className="hidden-xs"> Login</span>
 						</MenuItem>}
 
-						{ !this.props.authenticated  &&  <MenuItem eventKey="9"
+						{ !this.props.authenticated && <MenuItem eventKey="9"
 							// onClick={this.showLoginPopup}
 																										 onClick={(event) => {
 																											 history.push('/u/signup');
@@ -493,36 +501,37 @@ class HeaderNew extends React.Component {
 						{ this.props.admin && !this.props.superAdmin && <MenuItem eventKey="10" className="white">
 							<i className="fa fa-question-circle"/>Help
 						</MenuItem> }
-						{ this.props.admin && this.props.superAdmin && <MenuItem eventKey="10" className="white"  onClick={this.logoutSuperUser}>
-              <span> <i className="fa fa-sign-out fa-fw"   /> Logout </span>
+						{ this.props.admin && this.props.superAdmin &&
+						<MenuItem eventKey="10" className="white" onClick={this.logoutSuperUser}>
+							<span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
 						</MenuItem> }
 
-            {
-							this.props.authenticated && !this.props.superAdmin &&  <NavDropdown
-  className=" profile-dropdown pointer" title={<span><img
-    src="/images/user-icon-placeholder.png"
-    alt="{this.props.user.firstName}"
-  /> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
+						{
+							this.props.authenticated && !this.props.superAdmin && <NavDropdown
+								className=" profile-dropdown pointer" title={<span><img
+								src="/images/user-icon-placeholder.png"
+								alt="{this.props.user.firstName}"
+							/> {this.props.user && this.props.user.firstName && <label>{this.props.user.firstName}</label>}
   </span>} id="navDropdown4"
 							>
-  <MenuItem
-    eventKey="2" onClick={() => {
-      history.push('/u/my-activity');
-    }}
-  >
-    <span> <i className="fa fa fa-money fa-fw" /> My Activity </span>
-  </MenuItem>
-  <MenuItem
-    eventKey="2" onClick={() => {
-      history.push('/u/myprofile');
-    }}
-  >
-    <span> <i className="fa fa-user fa-fw" /> User Profile </span>
-  </MenuItem>
-  <MenuItem divider />
-  <MenuItem eventKey="4" onClick={this.logout}>
-    <span> <i className="fa fa-sign-out fa-fw" /> Logout </span>
-  </MenuItem>
+								<MenuItem
+									eventKey="2" onClick={() => {
+									history.push('/u/my-activity');
+								}}
+								>
+									<span> <i className="fa fa fa-money fa-fw"/> My Activity </span>
+								</MenuItem>
+								<MenuItem
+									eventKey="2" onClick={() => {
+									history.push('/u/myprofile');
+								}}
+								>
+									<span> <i className="fa fa-user fa-fw"/> User Profile </span>
+								</MenuItem>
+								<MenuItem divider/>
+								<MenuItem eventKey="4" onClick={this.logout}>
+									<span> <i className="fa fa-sign-out fa-fw"/> Logout </span>
+								</MenuItem>
 							</NavDropdown>
 						}
 
@@ -647,9 +656,10 @@ class HeaderNew extends React.Component {
 					headerText={<p/>}
 					onCloseFunc={this.hideLoginPopup}
 					params={this.props.params }
-					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={() => {
-						this.hideLoginPopup()
-					}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
+					modelFooter={ <button type="button" className="btn btn-info center-block" data-dismiss="modal"
+																onClick={() => {
+																	this.hideLoginPopup()
+																}}> &nbsp; &nbsp; &nbsp; Close &nbsp; &nbsp; &nbsp; </button>}
 				/>
 			</div>
 		)
@@ -658,6 +668,7 @@ class HeaderNew extends React.Component {
 
 //export default HeaderNew;
 const mapDispatchToProps = {
+	doGetIpInfo: () => doGetIpInfo(),
 	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
 	doGetEventData: (eventUrl) => doGetEventData(eventUrl),
 	doContactSupport: (eventUrl, contact) => doContactSupport(eventUrl, contact),
@@ -670,8 +681,9 @@ const mapStateToProps = (state) => ({
 	is_volunteer: state.event && state.event.is_volunteer,
 	user: state.session && state.session.user,
 	authenticated: state.session && state.session.authenticated,
-  hostData : state.host && state.host.data,
-  hostDesign : state.host && state.host.eventDetails && state.host.eventDetails.eventDesignDetailDto,
+	hostData: state.host && state.host.data,
+	hostDesign: state.host && state.host.eventDetails && state.host.eventDetails.eventDesignDetailDto,
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 function toggleSide() {

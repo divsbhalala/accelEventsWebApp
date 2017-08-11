@@ -60,12 +60,10 @@ class RaffleSetting extends React.Component {
     this.props.getHostSettings(this.state.moduleType).then(resp => {
       this.setState({settings:resp.data, startDate : resp.data.userTime});
     }).catch((error) => {
-      console.log(error);
     });
     this.props.getHostTickets(this.state.moduleType).then(resp => {
       this.setState({tickets:resp.data});
     }).catch((error) => {
-      console.log(error);
     });
 
     this.props.getHostCategories(this.state.moduleType).then(resp=> {
@@ -73,10 +71,8 @@ class RaffleSetting extends React.Component {
         this.setState({itemCategories : resp.data.itemCategories});
       }
       else{
-        console.log(resp);
       }
     }).catch(error=>{
-      console.log(error);
     });
   };
 
@@ -90,7 +86,6 @@ class RaffleSetting extends React.Component {
   updateCompTicket = (e) =>{
     let settings = this.state.settings;
     settings.compTicketCode = e.target.value;
-    console.log(settings);
     this.setState({settings});
   };
 
@@ -106,23 +101,19 @@ class RaffleSetting extends React.Component {
     settings.compTicketCode = this.state.settings.compTicketCode;
     settings.limiteTotalTicket = this.state.settings.limiteTotalTicket,
 	  settings.autoSubmitOnPurchase = this.state.settings.autoSubmitOnPurchase,
-    console.log(settings);
     this.props.updateHostSettings(this.state.moduleType, settings).then(resp => {
       if(resp && resp.data){
         this.handleAlertShow(resp.data.message,'success');
       }
       else{
-        console.log(resp);
       }
       this.setState({loading:false});
     }).catch((error) => {
       this.setState({loading:false});
-      console.log(error);
     });
   };
 
   handleChange = (newDate) => {
-      console.log("newDate", newDate);
       return this.setState({date: newDate});
   };
 
@@ -173,7 +164,6 @@ class RaffleSetting extends React.Component {
           this.setState({tickets:resp.data});
         }
       }).catch(error => {
-        console.log(error);
       });
     }
   }

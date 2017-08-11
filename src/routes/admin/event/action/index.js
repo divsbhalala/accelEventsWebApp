@@ -100,6 +100,22 @@ export function setEvents(eventId) {
     });
   }
 }
+export function setEventsByUrl(eventUrl) {
+  return (dispatch) => {
+    return axios({
+      method: 'post',
+      url: API_URL + 'u/setEvent/eventUrl/'+ eventUrl  ,
+
+    }).then(resp=>{
+      if(resp && resp.data){
+        return resp.data;
+      }
+      return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 export function getOrganizationSettings(whiteLabelURL) {
   return (dispatch) => {
     return axios({

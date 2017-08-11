@@ -4,6 +4,22 @@ import {sessionService, loadSession} from 'redux-react-session';
 
 import {apiUrl as API_URL} from './../../../clientConfig';
 // axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+export function doGetIpInfo() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: 'http://ipinfo.io',
+      data: {},
+    }).then(response => {
+      dispatch(storeLocation(response.data));
+      return response;
+    })
+      .catch(error => {
+        return error;
+      });
+  }
+
+}
 export function doGetEventData(eventUrl) {
   return (dispatch) => {
     return axios({
@@ -18,7 +34,7 @@ export function doGetEventData(eventUrl) {
 
     })
       .catch(error => {
-        console.log(error);
+
         return error;
       });
   }
@@ -370,6 +386,12 @@ export function storeIsVolunteer(data) {
     data,
   }
 }
+export function storeLocation(data) {
+  return {
+    type: 'LOCATION',
+    data,
+  }
+}
 //*************  Volunteer   ****************//
 
 export function getItemStatusByCode(eventUrl, itemCode,module) {
@@ -462,12 +484,27 @@ export function doLogin(email, password,rememberme=false) {
         updateUserData(resp.data);
       }).catch(err => {
         return err;
-      })
+      });
       return response;
     })
       .catch((error, code, status)=>{
         return error && error.response && error.response.data;
       });
+  }
+}
+export function whiteLabelURL(url) {
+  return (dispatch) => {
+   return axios({
+    method: 'get',
+    url: API_URL + 'whiteLabelURL/'+url,
+  }).then(resp=>{
+    if(resp && resp.data){
+      return resp.data;
+    }
+    return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
   }
 }
 //********* Auction ************//

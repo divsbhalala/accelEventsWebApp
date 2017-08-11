@@ -15,7 +15,7 @@ const getUserDetails = (token) => {
     url: API_URL + 'u/userdetail/event/jkazarian0',
     headers: {Authorization: token}
   })
-}
+};
 
 export function doLogin(email, password) {
   return (dispatch) => {
@@ -32,7 +32,7 @@ export function doLogin(email, password) {
         dispatch(storeLoginData(resp.data));
         localStorage.setItem('user', JSON.stringify(resp.data));
       }).catch(err => {
-      })
+      });
       localStorage.setItem('token', response.data.access_token);
       return response;
     })

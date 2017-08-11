@@ -35,13 +35,11 @@ class Design extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getDesignSetting("general").then(resp => {
-      console.log("resp", resp);
+    this.props.getDesignSetting().then(resp => {
       this.setState({
         settings: resp
       })
     }).catch(error => {
-      console.log('error', error)
     })
   };
 
@@ -56,7 +54,6 @@ class Design extends React.Component {
         this.setState({loading:false,message:"Something wrong",isError:true})
       }
     });
-    console.log(e, e.target, this.state.settings)
   };
   updateContent = (value) =>{
     let settings =this.state.settings;
@@ -78,7 +75,6 @@ class Design extends React.Component {
         this.setState({loading:false,message:"Something wrong",isError:true})
       }
     });
-    console.log(settings,value)
   };
   eventNameChangeHandler = () => {
     let settings = this.state.settings;
@@ -125,10 +121,8 @@ class Design extends React.Component {
   };
   render() {
     return (
-      <div>
-      {this.state.settings ?
       <div id="content-wrapper" className="admin-content-wrapper">
-        <div className="row">
+        {this.state.settings ? <div className="row">
           <div className="col-sm-12">
             <div className="row" style={{opacity: 1}}>
                 <div className="col-lg-12">
@@ -308,14 +302,11 @@ class Design extends React.Component {
               </div>
             </div>
 
-          </div>
+          </div> :<div id="app" className="loader" />}
+        <UploadImageModel showPopup={this.state.showPopup}  popupHeader="Upload Event Logo" imageUploaded = { this.imageUploaded } hidePopup={this.hidePopup}  />
+        <UploadImageModel showPopup={this.state.showBannerPopup}  popupHeader="Upload Event Banner" imageUploaded = { this.bannerUploaded } hidePopup={this.hideBannerPopup}  />
       </div>
-        :<div id="app" className="loader" />
-      }
-         <UploadImageModel showPopup={this.state.showPopup}  popupHeader="Upload Event Logo" imageUploaded = { this.imageUploaded } hidePopup={this.hidePopup}  />
-         <UploadImageModel showPopup={this.state.showBannerPopup}  popupHeader="Upload Event Banner" imageUploaded = { this.bannerUploaded } hidePopup={this.hideBannerPopup}  />
-      </div>
-    );
+      );
   }
 }
 

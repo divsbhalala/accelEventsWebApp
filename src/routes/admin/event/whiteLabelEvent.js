@@ -40,7 +40,6 @@ class WhiteLabelEventList extends React.Component {
       },2000);
       // this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
       // }).catch(error => {
-      //   console.log('error', error)
       // })
      // window.location = "/host/dashboard";
       {/*<Link to="/admin/settings-account" >*/}

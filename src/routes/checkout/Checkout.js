@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -9,6 +8,8 @@ import history from './../../history';
 import Moment from 'react-moment';
 import moment from 'moment';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import IntlTelInput from './../../components/IntTelInput';
+import NumericInput from 'react-numeric-input';
 
 import EventAside from './../../components/EventAside/EventAside';
 import PopupModel from './../../components/PopupModal';
@@ -71,7 +72,7 @@ class Checkout extends React.Component {
 			cardHolderNameFeedBackMsg: null,
 			cardExpMonth: false,
 			cardExpYear: false,
-			isInvalidDate:false,
+			isInvalidDate: false,
 			cardExpFeedBackMsg: null,
 			cardCVV: false,
 			cardCVVFeedBack: false,
@@ -84,11 +85,11 @@ class Checkout extends React.Component {
 			state: false,
 			zipCode: false,
 			zipCodeFeedBack: false,
-			discount:null,
-			coupon:null,
+			discount: null,
+			coupon: null,
 			showMapPopup: false,
-			popupAlertHeader:null,
-			errorMsg:null,
+			popupAlertHeader: null,
+			errorMsg: null,
 		};
 		this.ticketCheckout = this.ticketCheckout.bind(this);
 		this.ticketTimeOut = this.ticketTimeOut.bind(this);
@@ -97,8 +98,12 @@ class Checkout extends React.Component {
 		this.hideTicketPurchaseSuccessPopup = this.hideTicketPurchaseSuccessPopup.bind(this);
 		this.showTicketPurchaseSuccessPopup = this.showTicketPurchaseSuccessPopup.bind(this);
 		this.getDiscount = this.getDiscount.bind(this);
+		// this.phoneNumberValidateHandler = this.phoneNumberValidateHandler.bind(this);
+		this.setAttendeesAddressValue = this.setAttendeesAddressValue.bind(this);
+		this.setBuyerAddressValue = this.setBuyerAddressValue.bind(this);
 
 	}
+
 	componentWillMount() {
 		eventUrl = this.props.params && this.props.params.params;
 		this.props.doGetEventData(eventUrl);
@@ -129,7 +134,7 @@ class Checkout extends React.Component {
 		this.setState({
 			emailFeedBack: true
 		});
-		if (this.email.value.trim() == ' ') {
+		if (this.email.value.trim() === ' ') {
 			this.email.value = '';
 		}
 
@@ -145,41 +150,40 @@ class Checkout extends React.Component {
 		}
 	};
 	couponValidateHandler = (e) => {
-			this.setState({
-				coupon: this.coupon.value
-			});
+		this.setState({
+			coupon: this.coupon.value
+		});
 	};
 	addressZipValidateHandler = (e) => {
 		if ([69, 187, 188, 189, 190].includes(e.keyCode)) {
-		    e.preventDefault();
-		  }
-	};
-
-	cardHolderNameDownValidateHandler = (e) => {
-		if(this.cardHolderName && !this.cardHolderName.value){
-			if (e.keyCode == 32){
-		    	e.preventDefault();
-		    }
+			e.preventDefault();
 		}
 	};
-
+	cardHolderNameDownValidateHandler = (e) => {
+		if (this.cardHolderName && !this.cardHolderName.value) {
+			if (e.keyCode === 32) {
+				e.preventDefault();
+			}
+		}
+	};
 	cardHolderNameBlurValidateHandler = () => {
-		if(this.cardHolderName && this.cardHolderName.value){
+		if (this.cardHolderName && this.cardHolderName.value) {
+			this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
 			let nameLen = this.cardHolderName.value.length;
-			if (this.cardHolderName.value[nameLen-1] == ' '){
-		    	this.setState({
+			if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
+				this.setState({
 					cardHolderName: false,
 					cardHolderNameFeedBackMsg: "The card holder name can't end with a space"
 				});
-		    }
+			}
 		}
 	};
-
 	cardHolderNameValidateHandler = (e) => {
+		this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
 		this.setState({
 			cardHolderNameFeedBack: true
 		});
-		if (this.cardHolderName.value.trim() == ' ') {
+		if (this.cardHolderName.value && this.cardHolderName.value.trim() === ' ') {
 			this.cardHolderName.value = '';
 		}
 
@@ -204,12 +208,13 @@ class Checkout extends React.Component {
 		}
 	};
 	cardNumberValidateHandler = (e) => {
-    this.cardNumber.value=this.cardNumber.value.substr(0,16);
+		this.cardNumber.value = this.cardNumber.value && this.cardNumber.value.trim();
+		this.cardNumber.value = this.cardNumber.value.substr(0, 16);
 		this.setState({
 			cardNumberFeedBack: true
 		});
 
-		if (this.cardNumber.value.trim() == ' ') {
+		if (this.cardNumber.value && this.cardNumber.value.trim() === ' ') {
 			this.cardNumber.value = '';
 		}
 
@@ -219,7 +224,7 @@ class Checkout extends React.Component {
 				cardNumberFeedBackMsg: "The credit card number is required and can't be empty",
 			});
 		}
-		else if (this.cardNumber.value &&  this.cardNumber.value.length != 16 && this.cardNumber.value.length != 15 ){
+		else if (this.cardNumber.value && this.cardNumber.value.length !== 16 && this.cardNumber.value.length !== 15) {
 			this.setState({
 				cardNumber: false,
 				cardNumberFeedBackMsg: "Invalid credit card number",
@@ -235,12 +240,12 @@ class Checkout extends React.Component {
 		}
 	};
 	cardCVVValidateHandler = (e) => {
-
+		this.cardCVV.value = this.cardCVV.value && this.cardCVV.value.trim();
 		this.setState({
 			cardCVVFeedBack: true
 		});
 
-		if (this.cardCVV.value.trim() == ' ') {
+		if (this.cardCVV.value && this.cardCVV.value.trim() === ' ') {
 			this.cardCVV.value = '';
 		}
 
@@ -267,49 +272,51 @@ class Checkout extends React.Component {
 
 	};
 	cardExpMonthValidateHandler = (e) => {
+		this.cardExpMonth.value = this.cardExpMonth.value && this.cardExpMonth.value.trim();
 		if (!this.cardExpMonth.value) {
 			this.setState({
 				cardExpMonth: false,
-				isInvalidDate:true
+				isInvalidDate: true
 			});
 		}
 		else {
-			if((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + this.cardExpMonth.value.toString()) >= parseInt( (new Date()).getUTCFullYear().toString() + (new Date()).getMonth().toString())))){
+			if ((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + (this.cardExpMonth.value.toString().length === 1 ? ('0' + this.cardExpMonth.value.toString()) : this.cardExpMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
 				this.setState({
 					isInvalidDate: false,
 					cardExpMonth: true,
 				});
-			}else{
+			} else {
 				this.setState({
 					cardExpMonth: true,
-					isInvalidDate:true
+					isInvalidDate: true
 				});
 			}
 		}
 	};
 	cardExpYearValidateHandler = (e) => {
+		this.cardExpYear.value = this.cardExpYear.value && this.cardExpYear.value.trim();
 		if (!this.cardExpYear.value) {
 			this.setState({
 				cardExpYear: false,
-				isInvalidDate:true
+				isInvalidDate: true
 			});
 		}
 		else {
-			if((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + this.cardExpMonth.value.toString()) >= parseInt( (new Date()).getUTCFullYear().toString() + (new Date()).getMonth().toString())))){
+			if ((this.cardExpMonth.value && this.cardExpYear.value && (parseInt(this.cardExpYear.value.toString() + (this.cardExpMonth.value.toString().length === 1 ? ('0' + this.cardExpMonth.value.toString()) : this.cardExpMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
 				this.setState({
 					isInvalidDate: false,
 					cardExpYear: true,
 				});
-			}else{
+			} else {
 				this.setState({
 					cardExpYear: true,
-					isInvalidDate:true
+					isInvalidDate: true
 				});
 			}
 		}
 	};
 	passwordValidateHandler = (e) => {
-
+		this.password.value = this.password.value && this.password.value.trim();
 		this.setState({
 			passwordFeedBack: true
 		});
@@ -336,8 +343,7 @@ class Checkout extends React.Component {
 		let orderData = this.props.orderData;
 		let purchaserDetail = orderData && orderData.purchaserDetail;
 		let ticketAttribute = orderData && orderData.ticketAttribute;
-		let hasHolderAttributes = ticketAttribute && ticketAttribute.hasHolderAttributes;
-		if (ticketAttribute.buyerInformationFields && !purchaserDetail) {
+		if (ticketAttribute.buyerInformationFields) {
 			ticketAttribute.buyerInformationFields.map((item, index) => {
 				if (!buyerInformationFields[index]) {
 					buyerInformationFields[index] = {};
@@ -345,95 +351,134 @@ class Checkout extends React.Component {
 				if (!buyerInformationFields[index][item.name]) {
 					buyerInformationFields[index][item.name] = {};
 				}
-				if (item.mandatory && !buyerInformationFields[index][item.name].value) {
+				if (item.mandatory && item.name && /address/i.test(item.name)) {
+					if(!buyerInformationFields[index][item.name + " 1"]){
+            buyerInformationFields[index][item.name + " 1"] = {};
+					}
+					if(!buyerInformationFields[index][item.name + " 2"]){
+            buyerInformationFields[index][item.name + " 2"] = {};
+					}
+					if(!buyerInformationFields[index][item.name + " City"]){
+            buyerInformationFields[index][item.name + " City"] = {};
+					}
+					if(!buyerInformationFields[index][item.name + " State"]){
+            buyerInformationFields[index][item.name + " State"] = {};
+					}
+					if(!buyerInformationFields[index][item.name + " Zip Code"]){
+            buyerInformationFields[index][item.name + " Zip Code"] = {};
+					}
+          buyerInformationFields[index][item.name + " 1"]['error'] = !!buyerInformationFields[index][item.name + " 1"];
+          buyerInformationFields[index][item.name + " 2"]['error'] = !!buyerInformationFields[index][item.name + " 2"];
+          buyerInformationFields[index][item.name + " City"]['error'] = !!buyerInformationFields[index][item.name + " City"];
+          buyerInformationFields[index][item.name + " State"]['error'] = !!buyerInformationFields[index][item.name + " State"];
+          buyerInformationFields[index][item.name + " Zip Code"]['error'] = !!buyerInformationFields[index][item.name + " Zip Code"];
+
+        }
+				else if (item.mandatory && !buyerInformationFields[index][item.name].value) {
 					buyerInformationFields[index][item.name]['error'] = true;
 				}
 			});
 			this.setState({
 				errorBuyer: buyerInformationFields
 			});
-			console.log('buyerInformationFields', buyerInformationFields)
 		}
-		if (hasHolderAttributes) {
-			if (ticketAttribute && ticketAttribute.attendees) {
-				ticketAttribute.attendees.map((item, index) => {
-					if (!attendee[index]) {
-						attendee[index] = {};
-					}
-					if (item.attributes) {
-						item.attributes.map((field, key) => {
-							if (!attendee[index][key]) {
-								attendee[index][key] = {};
+		if (ticketAttribute && ticketAttribute.attendees) {
+			ticketAttribute.attendees.map((item, index) => {
+				if (!attendee[index]) {
+					attendee[index] = {};
+				}
+				if (item.attributes) {
+					item.attributes.map((field, key) => {
+						if (!attendee[index][key]) {
+							attendee[index][key] = {};
+						}
+						if (!attendee[index][key][field.name]) {
+							attendee[index][key][field.name] = {};
+						}
+						if (field.mandatory && field.name && /address/i.test(field.name)) {
+							if(!attendee[index][key][field.name + " 1"]){
+								attendee[index][key][field.name + " 1"]['error'] = {};
 							}
-							if (!attendee[index][key][field.name]) {
-								attendee[index][key][field.name] = {};
+							if(!attendee[index][key][field.name + " 2"]){
+								attendee[index][key][field.name + " 2"]['error'] = {};
 							}
-							if (field.mandatory && !attendee[index][key][field.name].value) {
-								attendee[index][key][field.name]['error'] = true;
+							if(!attendee[index][key][field.name + " City"]){
+								attendee[index][key][field.name + " City"]['error'] = {};
 							}
-							console.log(attendee[index][key], field)
-						})
-					}
-					if (item.questions && questions && questions.length) {
-						item.questions.map((field, key) => {
-							if (!questions[index][key]) {
-								questions[index][key] = {};
+							if(!attendee[index][key][field.name + " State"]){
+								attendee[index][key][field.name + " State"]['error'] = {};
 							}
-							if (!questions[index][key][field.name]) {
-								questions[index][key][field.name] = {};
+							if(!attendee[index][key][field.name + " Zip Code"]){
+								attendee[index][key][field.name + " Zip Code"]['error'] = {};
 							}
-							if (field.mandatory && !questions[index][key][field.name].value) {
-								questions[index][key][field.name]['error'] = true;
-							}
-							console.log(questions[index][key], field)
-						})
-					}
+              attendee[index][key][field.name + " 1"]['error'] = !!attendee[index][key][field.name + " 1"];
+              attendee[index][key][field.name + " 2"]['error'] = !!attendee[index][key][field.name + " 2"];
+              attendee[index][key][field.name + " City"]['error'] = !!attendee[index][key][field.name + " City"];
+              attendee[index][key][field.name + " State"]['error'] = !!attendee[index][key][field.name + " State"];
+              attendee[index][key][field.name + " Zip Code"]['error'] = !!attendee[index][key][field.name + " Zip Code"];
+            }
+						else if (field.mandatory && !attendee[index][key][field.name].value) {
+							attendee[index][key][field.name]['error'] = true;
+						}
+					})
+				}
+				if (item.questions && questions && questions.length) {
+					item.questions.map((field, key) => {
+						if (!questions[index][key]) {
+							questions[index][key] = {};
+						}
+						if (!questions[index][key][field.name]) {
+							questions[index][key][field.name] = {};
+						}
+						if (field.mandatory && !questions[index][key][field.name].value) {
+							questions[index][key][field.name]['error'] = true;
+						}
+					})
+				}
 
-				});
-				this.setState({
-					errorAttendee: attendee
-				});
-				console.log('a', attendee)
-			}
+			});
+			this.setState({
+				errorAttendee: attendee
+			});
 		}
 
 		setTimeout(() => {
 			let emailIndex = _.findIndex(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
-				return item.type == 'email';
+				return item.type === 'email';
 			});
-			console.log(emailIndex, buyerInformationFields, buyerInformationFields[emailIndex]);
-			validData = document.getElementsByClassName("has-error").length == 0;
+			console.log(ticketAttribute, orderData);
+			validData = document.getElementsByClassName("has-error").length === 0;
 			if (validData) {
 				if (!this.props.authenticated) {
 					let requestData;
-					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error == false) {
+					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error === false) {
 						let Email = buyerInformationFields[emailIndex]['Email'];
 						requestData = {
 							email: buyerInformationFields[emailIndex]['Email'].value,
 							password: this.password && this.password.value
 						};
 						this.props.doSignUp(eventUrl, requestData).then(resp => {
-						if (resp && !resp.errorCode) {
+							if (resp && !resp.errorCode) {
 								this.doCheckout(ticketAttribute, orderData);
 							}
 							else {
-							this.setState({
-								showFormError : true,
-								formError : resp.errorMessage
-							});
+								this.setState({
+									showFormError: true,
+									formError: resp.errorMessage
+								});
 							}
 						}).catch(error => {
 							this.setState({
-								showFormError : true,
-								formError : "Oops! Error while processing"
+								showFormError: true,
+								formError: "Oops! Error while processing"
 							});
 
 						})
 					}
 					else {
 						this.setState({
-							showFormError : true,
-							formError : "Invalid Email Address"
+							showFormError: true,
+							formError: "Invalid Email Address"
 						});
 					}
 
@@ -444,8 +489,8 @@ class Checkout extends React.Component {
 			}
 			else {
 				this.setState({
-					showFormError : true,
-					formError : "Invalid Data"
+					showFormError: true,
+					formError: "Invalid Data"
 				});
 			}
 
@@ -453,14 +498,13 @@ class Checkout extends React.Component {
 
 		return false;
 	};
-
 	doCheckout = (ticketAttribute, orderData) => {
 		if (
-      this.cardNumber.value &&
-      this.cardExpMonth.value &&
-      this.cardExpYear.value &&
-      this.cardExpMonth.value &&
-      this.cardCVV.value ) {
+			this.cardNumber.value &&
+			this.cardExpMonth.value &&
+			this.cardExpYear.value &&
+			this.cardExpMonth.value &&
+			this.cardCVV.value) {
 			this.props.createCardToken(this.props.eventData && this.props.eventData.stripeKey, this.cardNumber.value, this.cardExpMonth.value, this.cardExpYear.value, this.cardCVV.value).then(resp => {
 				if (resp && resp.data && resp.data.id) {
 					let request = {
@@ -470,45 +514,42 @@ class Checkout extends React.Component {
 						"stripeToken": resp.data.id
 					};
 
-					if (request.hasholderattributes) {
-						let holder = [];
-						let holderQuestions = [];
-						if (attendee && attendee[0]) {
-							attendee[0].map((item, itemKey) => {
-								let keys = _.keys(item);
-								keys.map(keyItem => {
-									if (item[keyItem].key) {
-										holder.push({
-											key: item[keyItem].key,
-											value: item[keyItem].value,
-										})
-									}
-								})
+					let holder = [];
+					let holderQuestions = [];
+					if (attendee && attendee[0]) {
+						attendee[0].map((item, itemKey) => {
+							let keys = _.keys(item);
+							keys.map(keyItem => {
+								if (item[keyItem].key) {
+									holder.push({
+										key: item[keyItem].key,
+										value: item[keyItem].value,
+									})
+								}
 							})
-						}
-						if (questions && questions[0]) {
-							questions[0].map((item, itemKey) => {
-								let keys = _.keys(item);
-								keys.map(keyItem => {
-									if (item[keyItem].key) {
-										holderQuestions.push({
-											key: item[keyItem].key,
-											value: item[keyItem].value,
-										})
-									}
-								})
-							})
-						}
-						console.log('holder', holder);
-						request.holder = [
-							{
-								"attributes": holder,
-								"questions": holderQuestions,
-								"tableid": 0,
-								"tickettypeid": 0
-							}
-						];
+						})
 					}
+					if (questions && questions[0]) {
+						questions[0].map((item, itemKey) => {
+							let keys = _.keys(item);
+							keys.map(keyItem => {
+								if (item[keyItem].key) {
+									holderQuestions.push({
+										key: item[keyItem].key,
+										value: item[keyItem].value,
+									})
+								}
+							})
+						})
+					}
+					request.holder = [
+						{
+							"attributes": holder,
+							"questions": holderQuestions,
+							"tableid": 0,
+							"tickettypeid": 0
+						}
+					];
 
 					if (ticketAttribute) {
 						if (ticketAttribute.buyerQuestions) {
@@ -516,7 +557,7 @@ class Checkout extends React.Component {
 						}
 						if (ticketAttribute.buyerInformationFields) {
 							let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
-								return item.type == 'email';
+								return item.type === 'email';
 							});
 							if (index > -1) {
 								request.purchaser.attributes = [];
@@ -529,56 +570,54 @@ class Checkout extends React.Component {
 					let eventUrl = this.props.params && this.props.params.params;
 					let orderId = this.props.params && this.props.params.orderId;
 					this.props.orderTicket(eventUrl, orderId, request).then(resp => {
-						if (resp && resp.data && resp.data.message == 'Success') {
+						if (resp && resp.data && resp.data.message === 'Success') {
 							this.showTicketPurchaseSuccessPopup();
 						}
 						else {
-							console.log('error of request', error);
 							this.setState({
-								showFormError : true,
-								formError : "Oops! Error while checkout"
+								showFormError: true,
+								formError: "Oops! Error while checkout"
 							});
 						}
 					}).catch(error => {
-						console.log('error of request', error);
 						this.setState({
-							showFormError : true,
-							formError : "Oops! Error while checkout"
+							showFormError: true,
+							formError: "Oops! Error while checkout"
 						});
 					})
 
 				}
 				else {
-				//	alert('Invalid Data');
+					//	alert('Invalid Data');
 					this.setState({
-						showFormError : true,
-						formError : "Invalid"
+						showFormError: true,
+						formError: "Invalid"
 					});
 
 				}
 
 			}).catch((error, status, msg) => {
 				let respError = error && error.response && error.response.data && error.response.data.error && error.response.data.error;
-				if(respError){
-					if(respError.param == 'exp_year'){
+				if (respError) {
+					if (respError.param === 'exp_year') {
 						this.setState({
 							cardExpYear: false,
 						});
 					}
-					if(respError.param == 'exp_month'){
+					if (respError.param === 'exp_month') {
 						this.setState({
 							cardExpMonth: false,
 						});
 					}
-					if(respError.param == 'number'){
+					if (respError.param === 'number') {
 						this.setState({
 							cardNumber: false,
 						});
 					}
 				}
 				this.setState({
-					showFormError : true,
-					formError : (respError && respError.message) || "Invalid Data"
+					showFormError: true,
+					formError: (respError && respError.message) || "Invalid Data"
 				});
 				// alert('Opps! Error while getting card token ');
 			})
@@ -591,7 +630,138 @@ class Checkout extends React.Component {
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
 	};
-
+	phoneNumberValidateHandler( isValid, value, name, countryData, number, ext, field, key, itemKey, event) {
+		let object = attendee || {};
+		if (!object[key]) {
+			object[key] = [];
+		}
+		if (!object[key][itemKey]) {
+			object[key][itemKey] = {};
+		}
+		if (!object[key][itemKey][field.name]) {
+			object[key][itemKey][field.name] = {};
+		}
+		object[key][itemKey][field.name] = {
+			"key": field.name,
+			"value": value
+		};
+		event = document.getElementById(field.name + key + itemKey);
+		if (field.mandatory) {
+			if (!value) {
+				object[key][itemKey][field.name]['error'] = true;
+				event.parentElement.classList.add('has-error');
+				event.parentElement.classList.remove('has-success');
+			}
+			else {
+				object[key][itemKey][field.name]['error'] = false;
+			}
+		}
+		event.parentElement.classList.add('has-feedback');
+		if (value && field && field.type === 'email') {
+			object[key][itemKey][field.name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.parentElement.classList.remove('has-error');
+				event.parentElement.classList.add('has-success');
+			}
+			else {
+				event.parentElement.classList.add('has-error');
+				event.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.parentElement) {
+			event.parentElement.classList.add('has-success');
+			event.parentElement.classList.remove('has-error');
+		}
+		attendee = object;
+	};
+	buyerPhoneNumberValidateHandler( isValid, value, name, countryData, number, ext, field, key, event) {
+		let object = attendee || {};
+		if (!object[key]) {
+			object[key] = [];
+		}
+		if (!object[key][field.name]) {
+			object[key][field.name] = {};
+		}
+		object[key][field.name] = {
+			"key": field.name,
+			"value": value
+		};
+		event = document.getElementById(field.name + key);
+		if (field.mandatory) {
+			if (!value) {
+				object[key][field.name]['error'] = true;
+				event.parentElement.classList.add('has-error');
+				event.parentElement.classList.remove('has-success');
+			}
+			else {
+				object[key][itemKey][field.name]['error'] = false;
+			}
+		}
+		event.parentElement.classList.add('has-feedback');
+		if (value && field && field.type === 'email') {
+			object[key][field.name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.parentElement.classList.remove('has-error');
+				event.parentElement.classList.add('has-success');
+			}
+			else {
+				event.parentElement.classList.add('has-error');
+				event.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.parentElement) {
+			event.parentElement.classList.add('has-success');
+			event.parentElement.classList.remove('has-error');
+		}
+		attendee = object;
+	};
+	setAttendeesAddressValue = (field, name, key, itemKey, event) => {
+		//If the input fields were directly within this
+		//this component, we could use this.refs.[FIELD].value
+		//Instead, we want to save the data for when the form is submitted
+		let object = attendee || {};
+		let value = event.target.value;
+		if (!object[key]) {
+			object[key] = [];
+		}
+		if (!object[key][itemKey]) {
+			object[key][itemKey] = {};
+		}
+		if (!object[key][itemKey][name]) {
+			object[key][itemKey][name] = {};
+		}
+		object[key][itemKey][name] = {
+			"key": name,
+			"value": value
+		};
+		if (field.mandatory) {
+			if (!event.target.value) {
+				object[key][itemKey][name]['error'] = true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+			else {
+				object[key][itemKey][name]['error'] = false;
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if (value && field && field.type === 'email') {
+			object[key][itemKey][name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else {
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.target.parentElement) {
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+		}
+		attendee = object;
+	};
 	setAttendeesValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
@@ -725,7 +895,50 @@ class Checkout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 	};
-
+	setBuyerAddressValue = (field, name, key, event) => {
+		//If the input fields were directly within this
+		//this component, we could use this.refs.[FIELD].value
+		//Instead, we want to save the data for when the form is submitted
+		let object = attendee || {};
+		let value = event.target.value;
+		if (!object[key]) {
+			object[key] = [];
+		}
+		if (!object[key][name]) {
+			object[key][name] = {};
+		}
+		object[key][name] = {
+			"key": name,
+			"value": value
+		};
+		if (field.mandatory) {
+			if (!event.target.value) {
+				object[key][name]['error'] = true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+			else {
+				object[key][name]['error'] = false;
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if (value && field && field.type === 'email') {
+			object[key][name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else {
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.target.parentElement) {
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+		}
+		attendee = object;
+	};
 	hideFormError = () => {
 		this.setState({
 			showFormError: false
@@ -744,26 +957,25 @@ class Checkout extends React.Component {
 	getDiscount = (e) => {
 		let eventUrl = this.props.params && this.props.params.params;
 		let orderId = this.props.params && this.props.params.orderId;
-		this.props.couponCode(eventUrl,orderId ,this.state.coupon ).then(resp => {
-			if (resp && !resp.errorMessage ) {
+		this.props.couponCode(eventUrl, orderId, this.state.coupon).then(resp => {
+			if (resp && !resp.errorMessage) {
 				this.setState({
-					popupAlertHeader:"Success",
-					showMapPopup:true,
-					errorMsg:'Coupon Applied Successfully',
-					totalPrice:resp.totalPrice,
-					discount:resp.discountAmount,
+					popupAlertHeader: "Success",
+					showMapPopup: true,
+					errorMsg: 'Coupon Applied Successfully',
+					totalPrice: resp.totalPrice,
+					discount: resp.discountAmount,
 				})
 			}
 			else {
 				this.setState({
-					popupAlertHeader:"Error",
-					showMapPopup:true,
-					errorMsg:resp.errorMessage
+					popupAlertHeader: "Error",
+					showMapPopup: true,
+					errorMsg: resp.errorMessage
 				})
-		}
-	})
-	}
-
+			}
+		})
+	};
 	showMapPopup = (e) => {
 		e.preventDefault();
 		this.setState({
@@ -777,29 +989,30 @@ class Checkout extends React.Component {
 	};
 	hideSuccessAlertPopup = () => {
 		this.setState({
-			ticketPurchaseSuccessPopup:false
+			ticketPurchaseSuccessPopup: false
 		});
-	}
+	};
 	getSelectOptions = (itemValue) => {
-		if(!itemValue || !itemValue.length){
+		if (!itemValue || !itemValue.length) {
 			return [];
 		}
 		let itemValueString = itemValue.toString();
 		let splitedValue;
-		try{
+		try {
 			splitedValue = itemValueString.split('</dafultvalue><dafultvalue>').join("],[").split('<dafultvalues>').join('[').split('<dafultvalue>').join('[').split('</dafultvalue>').join(']').split('</dafultvalues>').join(']').split('<label>').join('"').split('</label>').join('"').split('<value>').join(',"').split('</value>').join('"');
-			if(splitedValue) return JSON.parse(splitedValue);
+			if (splitedValue) return JSON.parse(splitedValue);
 			else return [];
-		}catch(err){
-			if(splitedValue) return JSON.parse(splitedValue);
+		} catch (err) {
+			if (splitedValue) return JSON.parse(splitedValue);
 			else return [];
 		}
 	};
-	hideformErrorPopup = () => {
+	hideFormErrorPopup = () => {
 		this.setState({
-			showFormError:false
+			showFormError: false
 		});
-	}
+	};
+
 	render() {
 		let makeItem = function (i) {
 			let item = [];
@@ -826,14 +1039,15 @@ class Checkout extends React.Component {
 									<div className="col-lg-9 col-md-8 col-sm-8 ">
 										<div className="main-box clearfix">
 											<Timer
-												class="time-left"
+												className="time-left"
 												time={this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.remainingSeconds}
 												onEnd={this.ticketTimeOut}/>
 											<form className="validated fv-form fv-form-bootstrap" noValidate="novalidate"
 														onSubmit={this.ticketCheckout}>
 												<div className="row">
 													<div className="col-md-10 col-md-offset-1">
-														<h3 className="type-name">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData  && this.props.orderData.ticketAttribute.orderData.length  && this.props.orderData.ticketAttribute.orderData[0].ticketTypeName}</h3>
+														<h3
+															className="type-name">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData[0].ticketTypeName}</h3>
 														{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData &&
 														<div className="project-box gray-box card">
 															<div className="project-box-header gray-bg">
@@ -876,7 +1090,7 @@ class Checkout extends React.Component {
 																			</tr>
 																		)
 																		}
-																		{ this.state.discount &&  <tr className="total-price-tr">
+																		{ this.state.discount && <tr className="total-price-tr">
 																			<td colSpan={4} className="text-right">
 																				<strong>Discount:</strong>
 																			</td>
@@ -908,8 +1122,31 @@ class Checkout extends React.Component {
 															<div className="project-box-content">
 																<div className="red pull-right">* Required information</div>
 																<h4 className="text-left"><strong>Ticket Buyer</strong></h4>
+																{ this.props.orderData && this.props.orderData.purchaserDetail &&
+																<div className="buyerInformation">
+																	<div className="form-group mrg-t-md">
+																		<div className="row">
+																			<div className="col-md-4 text-right">
+																				<strong className="text-right"><strong>Name: </strong></strong>
+																			</div>
+																			<div className="col-md-6 text-left">
+																				{this.props.orderData.purchaserDetail.firstName} {this.props.orderData.purchaserDetail.lastName}
+																			</div>
+																		</div>
+																	</div>
+																	<div className="form-group">
+																		<div className="row">
+																			<div className="col-md-4 text-right">
+																				<strong className="text-right"><strong>Email: </strong></strong>
+																			</div>
+																			<div className="col-md-6 text-left">
+																				{this.props.orderData.purchaserDetail.email}
+																			</div>
+																		</div>
+																	</div>
+																</div>}
 
-																{ this.props.orderData && this.props.orderData.ticketAttribute && !this.props.orderData.purchaserDetail &&
+																{ this.props.orderData && this.props.orderData.ticketAttribute &&
 																this.props.orderData.ticketAttribute.buyerInformationFields && this.props.orderData.ticketAttribute.buyerInformationFields.length &&
 																<div className="buyerInformation">
 																	{
@@ -921,48 +1158,49 @@ class Checkout extends React.Component {
 																							<label className="text-right">{item.name} { item.mandatory &&
 																							<span className="red">*</span>}</label>
 																						</div>
-																						<div
+																						{!/address/i.test(item.name) && !/phone/i.test(item.name) ? <div
 																							className={cx("col-md-6 text-left")}>
 																							<div className={cx("form-group ",
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && 'has-feedback',
 																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
-																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value&& 'has-success'
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value && 'has-success'
 																							)}>
-																							{item.type != 'dropdown' &&
-																								<input
-																									type={item.type}
-																									className="form-control"
-																									name={item.mandatory}
-																									placeholder={item.name}
-																									onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
-																									required={item.mandatory}
-																									defaultValue={item.value ||
-																									(
-																										this.state.errorBuyer &&
-																										this.state.errorBuyer[key] &&
-																										this.state.errorBuyer[key][item.name] &&
-																										this.state.errorBuyer[key][item.name].value
-																									)
-																									}
-																								/>
+																								{item.type !== 'dropdown' ?
+																									<input
+																										type={item.type}
+																										className="form-control"
+																										name={item.mandatory}
+																										placeholder={item.name}
+																										onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
+																										required={item.mandatory}
+																										defaultValue={item.value ||
+																										(
+																											this.state.errorBuyer &&
+																											this.state.errorBuyer[key] &&
+																											this.state.errorBuyer[key][item.name] &&
+																											this.state.errorBuyer[key][item.name].value
+																										)
+																										}
+																									/> : ""
 
-																							}
+																								}
 
-																							{
-																								item.type == 'dropdown' && item.value && 
-																								<select className="form-control"
-																									name={item.name}
-																									placeholder={item.name}
-																									onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
-																									required={item.mandatory}>
-																									{
-																											this.getSelectOptions(item.value).map((oitem,okey) =>
-																												<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
-																												</option>
-																											)
-																									}
-																								</select>
-																							}
+																								{
+																									item.type === 'dropdown' && item.value ?
+																										<select className="form-control"
+																														name={item.name}
+																														placeholder={item.name}
+																														onChange={this.buyerInformationFieldsHandler.bind(this, item, key)}
+																														required={item.mandatory}>
+																											<option value="">Please Select</option>
+																											{
+																												this.getSelectOptions(item.value).map((oitem, okey) =>
+																													<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
+																													</option>
+																												)
+																											}
+																										</select> : ""
+																								}
 																								<i
 																									className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																								<i
@@ -970,13 +1208,232 @@ class Checkout extends React.Component {
 																								<small
 																									className="help-block">{ "The " + item.name + " is invalid."}</small>
 																							</div>
-																						</div>
+																						</div> : ""}
+																						{ /phone/i.test(item.name) ? <div className="col-md-6 text-left">
+																							<div className={cx("form-group",
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && 'has-feedback',
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].error && 'has-error',
+																								this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name] && this.state.errorBuyer[key][item.name].value && 'has-success'
+																							)}>
+
+																								<IntlTelInput
+																									css={['intl-tel-input', 'form-control intl-tel']}
+																									utilsScript="./libphonenumber.js"
+																									fieldName={item.name}
+																									fieldId={item.name  + key}
+																									separateDialCode
+																									defaultCountry={this.props.country || ""}
+																									placeholder={item.name}
+																									value={item.value ||
+																									(this.state.errorBuyer &&
+																										this.state.errorBuyer[key] &&
+																										this.state.errorBuyer[key][item.name] &&
+																										this.state.errorBuyer[key][item.name].value
+																									)
+																									}
+																									onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
+																										this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																									}}
+																									onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																										this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																									}}
+																								/>
+
+																								<i
+																									className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																								<i
+																									className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																								<small
+																									className="help-block">{ "The " + item.name + " is invalid."}</small>
+																							</div>
+																						</div> : ""}
+																						{ /address/i.test(item.name) ? <div className="col-md-6 text-left">
+																							<div className={cx("address-field")}>
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 1"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 1"] && this.state.errorBuyer[key][item.name  + " 1"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 1"] && this.state.errorBuyer[key][item.name  + " 1"].value && 'has-success'
+                                                )}>
+																									<input data-attribute-type="text"
+																												 type="text"
+																												 className="form-control"
+																												 placeholder="Address 1"
+																												 name={item.name + " 1"}
+																												 defaultValue={item.value ||
+																												 (
+																												 this.state.errorBuyer &&
+																												 this.state.errorBuyer[key] &&
+																												 this.state.errorBuyer[key][item.name] &&
+																												 this.state.errorBuyer[key][item.name].value
+																												 &&
+																												 this.state.attendee[key][item.name + " 1"]) || (this.state.errorAttendee && this.state.errorAttendee[key] && this.state.errorAttendee[key][item.name + " 1"] && this.state.errorAttendee[key][item.name + " 1"].value
+																												 )
+																												 }
+																												 required={ item.mandatory}
+																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " 1", key)}
+																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " 1 is invalid."}</small>
+																								</div>
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 2"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 2"] && this.state.errorBuyer[key][item.name  + " 2"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 2"] && this.state.errorBuyer[key][item.name  + " 2"].value && 'has-success'
+                                                )}>
+																									<input data-attribute-type="text"
+																												 type="text"
+																												 className="form-control"
+																												 placeholder="Address 2"
+																												 name={item.name + " 2"}
+																												 defaultValue={item.value ||
+																												 (this.state.errorBuyer &&
+																													 this.state.errorBuyer[key] &&
+																													 this.state.errorBuyer[key][item.name + " 2"] &&
+																													 this.state.errorBuyer[key][item.name + " 2"].value
+																												 )
+																												 }
+																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " 2", key)}
+																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " 2 is invalid."}</small>
+																								</div>
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " City"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " City"] && this.state.errorBuyer[key][item.name + " City"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " City"] && this.state.errorBuyer[key][item.name + " City"].value && 'has-success'
+                                                )}>
+																									<input data-attribute-type="text"
+																												 type="text"
+																												 className="form-control"
+																												 placeholder="City"
+																												 name={item.name + " City"}
+																												 defaultValue={item.value ||
+																												 (this.state.errorBuyer &&
+																													 this.state.errorBuyer[key] &&
+																													 this.state.errorBuyer[key][item.name + " City"] &&
+																													 this.state.errorBuyer[key][item.name + " City"].value
+																												 )
+																												 }
+																												 required={ item.mandatory}
+																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " City", key)}
+																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " City is invalid."}</small>
+																								</div>
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " State"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " State"] && this.state.errorBuyer[key][item.name  + " State"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " State"] && this.state.errorBuyer[key][item.name  + " State"].value && 'has-success'
+                                                )}>
+																									<select className="form-control" required={ item.mandatory}
+																													name={item.name + " State"}
+																													onChange={this.setBuyerAddressValue.bind(this, item, item.name + " State", key)}
+																									>
+																										<option value="">State</option>
+																										<option value="AL">ALABAMA</option>
+																										<option value="AK">ALASKA</option>
+																										<option value="AZ">ARIZONA</option>
+																										<option value="AR">ARKANSAS</option>
+																										<option value="CA">CALIFORNIA</option>
+																										<option value="CO">COLORADO</option>
+																										<option value="CT">CONNECTICUT</option>
+																										<option value="DE">DELAWARE</option>
+																										<option value="FL">FLORIDA</option>
+																										<option value="GA">GEORGIA</option>
+																										<option value="HI">HAWAII</option>
+																										<option value="ID">IDAHO</option>
+																										<option value="IL">ILLINOIS</option>
+																										<option value="IN">INDIANA</option>
+																										<option value="IA">IOWA</option>
+																										<option value="KS">KANSAS</option>
+																										<option value="KY">KENTUCKY</option>
+																										<option value="LA">LOUISIANA</option>
+																										<option value="ME">MAINE</option>
+																										<option value="MD">MARYLAND</option>
+																										<option value="MA">MASSACHUSETTS</option>
+																										<option value="MI">MICHIGAN</option>
+																										<option value="MN">MINNESOTA</option>
+																										<option value="MS">MISSISSIPPI</option>
+																										<option value="MO">MISSOURI</option>
+																										<option value="MT">MONTANA</option>
+																										<option value="NE">NEBRASKA</option>
+																										<option value="NV">NEVADA</option>
+																										<option value="NH">NEW HAMPSHIRE</option>
+																										<option value="NJ">NEW JERSEY</option>
+																										<option value="NM">NEW MEXICO</option>
+																										<option value="NY">NEW YORK</option>
+																										<option value="NC">NORTH CAROLINA</option>
+																										<option value="ND">NORTH DAKOTA</option>
+																										<option value="OH">OHIO</option>
+																										<option value="OK">OKLAHOMA</option>
+																										<option value="OR">OREGON</option>
+																										<option value="PA">PENNSYLVANIA</option>
+																										<option value="RI">RHODE ISLAND</option>
+																										<option value="SC">SOUTH CAROLINA</option>
+																										<option value="SD">SOUTH DAKOTA</option>
+																										<option value="TN">TENNESSEE</option>
+																										<option value="TX">TEXAS</option>
+																										<option value="UT">UTAH</option>
+																										<option value="VT">VERMONT</option>
+																										<option value="VA">VIRGINIA</option>
+																										<option value="WA">WASHINGTON</option>
+																										<option value="WV">WEST VIRGINIA</option>
+																										<option value="WI">WISCONSIN</option>
+																										<option value="WY">WYOMING</option>
+																									</select>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " State is invalid."}</small>
+																								</div>
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " Zip Code"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " Zip Code"] && this.state.errorBuyer[key][item.name  + " Zip Code"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " Zip Code"] && this.state.errorBuyer[key][item.name  + " Zip Code"].value && 'has-success'
+                                                )}>
+																									<input type="number"
+																												 className="form-control"
+																												 placeholder="Zip Code"
+																												 name={item.name + " Zip Code"}
+																												 defaultValue={item.value ||
+																												 (this.state.errorBuyer &&
+																													 this.state.errorBuyer[key] &&
+																													 this.state.errorBuyer[key][item.name + " Zip Code"] &&
+																													 this.state.errorBuyer[key][item.name + " Zip Code"].value
+																												 )
+																												 }
+																												 required={ item.mandatory}
+																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " Zip Code", key)}
+																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " Zip Code is invalid."}</small>
+																								</div>
+																							</div>
+																						</div> : ""}
 																					</div>
 																				</div>
 																			</div>)
 																	}
 																	{  _.find(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
-																		return item.type == 'email';
+																		return item.type === 'email';
 																	}) && <div className="custom-attribute">
 																		<div className="form-group mrg-t-md">
 																			<div className="row">
@@ -1002,29 +1459,6 @@ class Checkout extends React.Component {
 																	</div> }
 																</div> }
 
-																{ this.props.orderData && this.props.orderData.purchaserDetail &&
-																<div className="buyerInformation">
-																	<div className="form-group mrg-t-md">
-																		<div className="row">
-																			<div className="col-md-4 text-right">
-																				<strong className="text-right"><strong>Name: </strong></strong>
-																			</div>
-																			<div className="col-md-6 text-left">
-																				{this.props.orderData.purchaserDetail.firstName} {this.props.orderData.purchaserDetail.lastName}
-																			</div>
-																		</div>
-																	</div>
-																	<div className="form-group">
-																		<div className="row">
-																			<div className="col-md-4 text-right">
-																				<strong className="text-right"><strong>Email: </strong></strong>
-																			</div>
-																			<div className="col-md-6 text-left">
-																				{this.props.orderData.purchaserDetail.email}
-																			</div>
-																		</div>
-																	</div>
-																</div>}
 																<div className="buyerQuestion">
 																</div>
 																{ this.props.orderData && this.props.orderData.discountCoupon &&
@@ -1041,11 +1475,12 @@ class Checkout extends React.Component {
 																							 this.coupon = ref;
 																						 }}
 																						 onChange={this.couponValidateHandler}
-																						 />
+																			/>
 																		</div>
 																		<div className="col-md-2">
 																	<span className="input-group-btn">
-																		<button type="button" className="btn btn-primary" id="discoupon" onClick={this.getDiscount} >Apply</button>
+																		<button type="button" className="btn btn-primary" id="discoupon"
+																						onClick={this.getDiscount}>Apply</button>
 																	</span>
 																		</div>
 																	</div>
@@ -1078,13 +1513,14 @@ class Checkout extends React.Component {
 																								<div className="input-group-addon">
 																									<i className="fa fa-user" aria-hidden="true"/>
 																								</div>
+
 																								<input type="text" className="form-control" id="cardname"
 																											 placeholder="Name on the card"
 																											 ref={ref => {
 																												 this.cardHolderName = ref;
 																											 }}
 																											 onKeyUp={this.cardHolderNameValidateHandler}
-																											 onKeyDown={this.cardHolderNameDownValidateHandler}
+																											 onChange={this.cardHolderNameDownValidateHandler}
 																											 onBlur={this.cardHolderNameBlurValidateHandler}/>
 																							</div>
 																							{ (this.state.cardHolderNameFeedBack || this.state.isFormSubmited) && this.state.cardHolderName &&
@@ -1124,6 +1560,7 @@ class Checkout extends React.Component {
 																												 this.cardNumber = ref;
 																											 }}
 																											 onKeyUp={this.cardNumberValidateHandler}
+																											 onChange={this.cardNumberValidateHandler}
 																											 required="required" data-fv-field="cardnumber"/>
 																							</div>
 																							{ (this.state.cardNumberFeedBack || this.state.isFormSubmited) && this.state.cardNumber &&
@@ -1140,7 +1577,7 @@ class Checkout extends React.Component {
 																				</div>
 																				<div className={cx("form-group expiration-date",
 																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
-																					((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate && 'has-success',
+																					(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate) && 'has-success',
 																					(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) || this.state.isInvalidDate) && 'has-error')
 																				}>
 																					<div className="row">
@@ -1150,7 +1587,7 @@ class Checkout extends React.Component {
 																						<div className={cx("col-md-8 text-left")}>
 																							<div className={cx("input-group",
 																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && 'has-feedback',
-																								((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate && 'has-success',
+																								(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && ((this.state.cardExpYear && this.state.cardExpMonth)) && !this.state.isInvalidDate) && 'has-success',
 																								(((this.state.cardExpYear && this.state.cardExpMonth) || this.state.isFormSubmited) && (!(this.state.cardExpYear && this.state.cardExpMonth)) || this.state.isInvalidDate) && 'has-error')
 																							}>
 																								<div className="input-group-addon">
@@ -1338,8 +1775,7 @@ class Checkout extends React.Component {
 																							<div className="input-group-addon">
 																								<i className="fa fa-map-o" aria-hidden="true"/></div>
 																							<select className="form-control" data-stripe="address_state"
-																											data-attribute-type="text" name="address_state">
-																								<option value={-1}>State</option>
+																										data-attribute-type="text" name="address_state">																	<option value={-1}>State</option>
 																								<option value="AL">ALABAMA</option>
 																								<option value="AK">ALASKA</option>
 																								<option value="AZ">ARIZONA</option>
@@ -1408,9 +1844,9 @@ class Checkout extends React.Component {
 																							<input type="number" className="form-control" size={6}
 																										 data-stripe="address_zip" name="address_zip"
 																										 data-fv-field="address_zip" ref={ref => {
-																												 this.address_zip = ref;
-																											 }}
-																											 onKeyDown={this.addressZipValidateHandler} />
+																								this.address_zip = ref;
+																							}}
+																										 onKeyDown={this.addressZipValidateHandler}/>
 																						</div>
 																						<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																							 data-fv-icon-for="address_zip"/>
@@ -1443,27 +1879,88 @@ class Checkout extends React.Component {
 																											{ attrib.mandatory && <span className="red">*</span>}
 																										</label>
 																									</div>
-																									<div className="col-md-6 text-left">
+																									{!/address/i.test(attrib.name) && !/phone/i.test(attrib.name) ?
+																										<div className="col-md-6 text-left">
+																											<div className={cx("form-group",
+																												this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
+																												this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
+																												this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value && 'has-success',
+																											)}>
+																												{attrib.type !== 'dropdown' ?
+																													<input type="text"
+																																 placeholder={attrib.name}
+																																 className="form-control"
+																																 name={attrib.name}
+																																 required={ attrib.mandatory}
+																																 defaultValue={attrib.value ||
+																																 (this.state.attendee &&
+																																 this.state.attendee[itemKey] &&
+																																 this.state.attendee[itemKey][key] &&
+																																 this.state.attendee[itemKey][key][attrib.name]) || (this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
+																																 )
+																																 }
+																																 onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
+
+																													/> : ""
+																												}
+
+																												{
+																													attrib.type === 'dropdown' && attrib.value ?
+																														<select className="form-control"
+																																		name={attrib.name}
+																																		placeholder={attrib.name}
+																																		onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
+																																		required={attrib.mandatory}>
+																															<option value="">Please Select</option>
+																															{
+																																this.getSelectOptions(attrib.value).map((oitem, okey) =>
+																																	<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
+																																	</option>
+																																)
+																															}
+																														</select> : ""
+																												}
+
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " is invalid."}</small>
+																											</div>
+																										</div> : ""}
+																									{/phone/i.test(attrib.name) ? <div className="col-md-6 text-left">
 																										<div className={cx("form-group",
 																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && (this.state.errorAttendee[itemKey][key][attrib.name].key || this.state.errorAttendee[itemKey][key][attrib.name].error) && 'has-feedback',
 																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].error && 'has-error',
-																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value&& 'has-success',
+																											this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value && 'has-success',
 																										)}>
-																											<input type="text"
-																														 placeholder={attrib.name}
-																														 className="form-control"
-																														 name={attrib.name}
-																														 required={ attrib.mandatory}
-																														 defaultValue={attrib.value ||
-																														 (this.state.attendee &&
-																														 this.state.attendee[itemKey] &&
-																														 this.state.attendee[itemKey][key] &&
-																														 this.state.attendee[itemKey][key][attrib.name]) || (
-																															 this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
-																														 )
-																														 }
-																														 onChange={this.setAttendeesValue.bind(this, attrib, itemKey, key)}
+
+																											<IntlTelInput
+																												css={['intl-tel-input', 'form-control intl-tel']}
+																												utilsScript="./libphonenumber.js"
+																												fieldName={attrib.name}
+																												fieldId={attrib.name + itemKey + key}
+																												separateDialCode
+																												defaultCountry={this.props.country || ""}
+																												placeholder={attrib.name}
+																												value={attrib.value ||
+																												(this.state.attendee &&
+																												this.state.attendee[itemKey] &&
+																												this.state.attendee[itemKey][key] &&
+																												this.state.attendee[itemKey][key][attrib.name]) || (
+																													this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name] && this.state.errorAttendee[itemKey][key][attrib.name].value
+																												)
+																												}
+																												onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
+																													this.phoneNumberValidateHandler(name, isValid, value, countryData, number, ext, attrib, itemKey, key, this)
+																												}}
+																												onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																													this.phoneNumberValidateHandler(name, isValid, value, countryData, number, ext, attrib, itemKey, key, this)
+																												}}
 																											/>
+
+
 																											<i
 																												className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																											<i
@@ -1471,11 +1968,191 @@ class Checkout extends React.Component {
 																											<small
 																												className="help-block">{ "The " + attrib.name + " is invalid."}</small>
 																										</div>
-																									</div>
+																									</div> : ""}
+																									{ /address/i.test(attrib.name) ? <div className="col-md-6 text-left">
+																										<div className="address-field">
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && (this.state.errorAttendee[itemKey][key][attrib.name + " 1"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " 1"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"].value && 'has-success',
+                                                        )}>
+																												<input data-attribute-type="text"
+																															 type="text"
+																															 className="form-control"
+																															 placeholder="Address 1"
+																															 name={attrib.name + " 1"}
+																															 defaultValue={attrib.value ||
+																															 (this.state.attendee &&
+																															 this.state.attendee[itemKey] &&
+																															 this.state.attendee[itemKey][key] &&
+																															 this.state.attendee[itemKey][key][attrib.name + " 1"]) || (this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"].value
+																															 )
+																															 }
+																															 required={ attrib.mandatory}
+																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " 1", itemKey, key)}
+																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " 1 is invalid."}</small>
+																											</div>
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && (this.state.errorAttendee[itemKey][key][attrib.name + " 2"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " 2"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"].value && 'has-success',
+                                                        )}>
+																												<input data-attribute-type="text"
+																															 type="text"
+																															 className="form-control"
+																															 placeholder="Address 2"
+																															 name={attrib.name + " 2"}
+																															 defaultValue={attrib.value ||
+																															 (this.state.attendee &&
+																															 this.state.attendee[itemKey] &&
+																															 this.state.attendee[itemKey][key] &&
+																															 this.state.attendee[itemKey][key][attrib.name + " 2"]) || (this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"].value
+																															 )
+																															 }
+																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " 2", itemKey, key)}
+																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " 2 is invalid."}</small>
+																											</div>
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"] && (this.state.errorAttendee[itemKey][key][attrib.name  + " City"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " City"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"].value && 'has-success',
+                                                        )}>
+																												<input data-attribute-type="text"
+																															 type="text"
+																															 className="form-control"
+																															 placeholder="City"
+																															 name={attrib.name + " City"}
+																															 defaultValue={attrib.value ||
+																															 (this.state.attendee &&
+																															 this.state.attendee[itemKey] &&
+																															 this.state.attendee[itemKey][key] &&
+																															 this.state.attendee[itemKey][key][attrib.name + " City"]) || (this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " City"] && this.state.errorAttendee[itemKey][key][attrib.name + " City"].value
+																															 )
+																															 }
+																															 required={ attrib.mandatory}
+																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " City", itemKey, key)}
+																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " City is invalid."}</small>
+																											</div>
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"] && (this.state.errorAttendee[itemKey][key][attrib.name  + " State"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " State"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"].value && 'has-success',
+                                                        )}>
+																												<select className="form-control" required={ attrib.mandatory}
+																																name={attrib.name + " State"}>
+																													<option value="">State</option>
+																													<option value="AL">ALABAMA</option>
+																													<option value="AK">ALASKA</option>
+																													<option value="AZ">ARIZONA</option>
+																													<option value="AR">ARKANSAS</option>
+																													<option value="CA">CALIFORNIA</option>
+																													<option value="CO">COLORADO</option>
+																													<option value="CT">CONNECTICUT</option>
+																													<option value="DE">DELAWARE</option>
+																													<option value="FL">FLORIDA</option>
+																													<option value="GA">GEORGIA</option>
+																													<option value="HI">HAWAII</option>
+																													<option value="ID">IDAHO</option>
+																													<option value="IL">ILLINOIS</option>
+																													<option value="IN">INDIANA</option>
+																													<option value="IA">IOWA</option>
+																													<option value="KS">KANSAS</option>
+																													<option value="KY">KENTUCKY</option>
+																													<option value="LA">LOUISIANA</option>
+																													<option value="ME">MAINE</option>
+																													<option value="MD">MARYLAND</option>
+																													<option value="MA">MASSACHUSETTS</option>
+																													<option value="MI">MICHIGAN</option>
+																													<option value="MN">MINNESOTA</option>
+																													<option value="MS">MISSISSIPPI</option>
+																													<option value="MO">MISSOURI</option>
+																													<option value="MT">MONTANA</option>
+																													<option value="NE">NEBRASKA</option>
+																													<option value="NV">NEVADA</option>
+																													<option value="NH">NEW HAMPSHIRE</option>
+																													<option value="NJ">NEW JERSEY</option>
+																													<option value="NM">NEW MEXICO</option>
+																													<option value="NY">NEW YORK</option>
+																													<option value="NC">NORTH CAROLINA</option>
+																													<option value="ND">NORTH DAKOTA</option>
+																													<option value="OH">OHIO</option>
+																													<option value="OK">OKLAHOMA</option>
+																													<option value="OR">OREGON</option>
+																													<option value="PA">PENNSYLVANIA</option>
+																													<option value="RI">RHODE ISLAND</option>
+																													<option value="SC">SOUTH CAROLINA</option>
+																													<option value="SD">SOUTH DAKOTA</option>
+																													<option value="TN">TENNESSEE</option>
+																													<option value="TX">TEXAS</option>
+																													<option value="UT">UTAH</option>
+																													<option value="VT">VERMONT</option>
+																													<option value="VA">VIRGINIA</option>
+																													<option value="WA">WASHINGTON</option>
+																													<option value="WV">WEST VIRGINIA</option>
+																													<option value="WI">WISCONSIN</option>
+																													<option value="WY">WYOMING</option>
+																												</select>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " State is invalid."}</small>
+																											</div>
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"] && (this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].value && 'has-success',
+                                                        )}>
+																												<input type="number"
+																															 className="form-control"
+																															 placeholder="Zip Code"
+																															 name={attrib.name + " Zip Code"}
+																															 defaultValue={attrib.value ||
+																															 (this.state.attendee &&
+																															 this.state.attendee[itemKey] &&
+																															 this.state.attendee[itemKey][key] &&
+																															 this.state.attendee[itemKey][key][attrib.name + " Zip Code"]) || (this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " Zip Code"] && this.state.errorAttendee[itemKey][key][attrib.name + " Zip Code"].value
+																															 )
+																															 }
+																															 required={ attrib.mandatory}
+																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " Zip Code", itemKey, key)}
+																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " Zip Code is invalid."}</small>
+																											</div>
+																										</div>
+																									</div> : ""}
 																								</div>
 																							</div>
 																						</div>
-																						<input type="hidden" name="tableId" defaultValue={0}/>
 																					</div>
 																				) : ""
 																		}
@@ -1497,8 +2174,11 @@ class Checkout extends React.Component {
 																											<div className={cx("form-group",
 																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && (this.state.errorQuestions[itemKey][key][attrib.name].key || this.state.errorQuestions[itemKey][key][attrib.name].error) && 'has-feedback',
 																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].error && 'has-error',
-																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value&& 'has-success',
+																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value && 'has-success',
 																											)}>
+
+																											{	
+																													attrib.type != 'dropdown' && 
 																												<input type="text"
 																															 placeholder={attrib.name}
 																															 className="form-control"
@@ -1514,6 +2194,31 @@ class Checkout extends React.Component {
 																															 }
 																															 onChange={this.setQuestionsValue.bind(this, attrib, itemKey, key)}
 																												/>
+
+																												}
+
+																												{	
+																													attrib.type == 'dropdown' && attrib.value && 
+																													<select className="form-control"
+																														name={attrib.name}
+																														placeholder={attrib.name}
+																														onChange={this.setQuestionsValue.bind(this, attrib, itemKey, key)}
+																														required={attrib.mandatory}>
+																														{
+																																this.getSelectOptions(attrib.value ||
+																															 (this.state.questions &&
+																															 this.state.questions[itemKey] &&
+																															 this.state.questions[itemKey][key] &&
+																															 this.state.questions[itemKey][key][attrib.name]) || (
+																																 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value
+																															 )).map((oitem,okey) =>
+																																	<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
+																																	</option>
+																																)
+																														}
+																														</select>
+																												}
+
 																												<i
 																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																												<i
@@ -1525,7 +2230,6 @@ class Checkout extends React.Component {
 																									</div>
 																								</div>
 																							</div>
-																							<input type="hidden" name="tableId" defaultValue={0}/>
 																						</div>
 																					) : ""
 																			}
@@ -1574,26 +2278,27 @@ class Checkout extends React.Component {
 								<p>Thank you for supporting the event. Please check your inbox for your tickets.</p>
 								<div className="modal-footer">
 									<button className="btn btn-green" onClick={() => {
-													history.push('/events/' + eventUrl)}}>Close</button>
+										history.push('/events/' + eventUrl)
+									}}>Close
+									</button>
 								</div>
 							</div>
 						</PopupModel>
-						{console.log("fdsfdsfsfds", this.state.formError)}
 						<PopupModel
 							id="showFormErroralertPopup"
 							showModal={ this.state.showFormError}
 							headerText={<p>Faild</p>}
 							modelBody={<p>{ this.state.formError || "Invalid Data"}</p>}
-							onCloseFunc={this.hideformErrorPopup}>
+							onCloseFunc={this.hideFormErrorPopup}>
 							<div className="ticket-type-container">
 								<p>{ this.state.formError || "Invalid Data"}</p>
 								<div className="modal-footer">
-									<button className="btn btn-green" onClick={this.hideformErrorPopup}>Close</button>
+									<button className="btn btn-green" onClick={this.hideFormErrorPopup}>Close</button>
 								</div>
 							</div>
 						</PopupModel>
 					</div> : <TimeOut eventUrl={eventUrl}/>
-				: <div></div>
+				: <div />
 		);
 	}
 }
@@ -1612,6 +2317,7 @@ const mapStateToProps = (state) => ({
 	user: state.session.user,
 	authenticated: state.session.authenticated,
 	orderData: state.event && state.event.order_data,
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Checkout));

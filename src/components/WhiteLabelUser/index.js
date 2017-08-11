@@ -17,7 +17,6 @@ class WhiteLabelUserList extends React.Component {
     };
   }
   componentWillMount() {
-    console.log("props-->",this.props.params.params)
     this.props.getUserManagementStaff(this.props.params.params).then((resp) => {
       if (resp && resp.data) {
         this.setState({
@@ -25,7 +24,6 @@ class WhiteLabelUserList extends React.Component {
         });
       }
     }).catch((error) => {
-      console.log('error', error);
     });
   }
 
@@ -54,7 +52,6 @@ class WhiteLabelUserList extends React.Component {
           });
         }
       }).catch((error) => {
-        console.log('error', error);
       });
     }
   };

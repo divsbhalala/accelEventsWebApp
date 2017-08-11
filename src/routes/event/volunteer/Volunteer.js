@@ -11,7 +11,7 @@ import PopupModel from './../../../components/PopupModal/index';
 import ProgressIndicator from './../../../components/ProgressIndicator';
 import Moment from 'react-moment';
 import moment from 'moment';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 import { doValidateMobileNumber, doGetEventData } from './../action/index';
 import { getCardToken } from './../../checkout/action/index';
 import NumericInput from 'react-numeric-input';
@@ -131,7 +131,6 @@ class Volunteer extends React.Component {
        this.setState({
          isloaded: true,
        });
-       console.log(this.props.is_volunteer, 'here');
      });
    }		else {
 
@@ -274,13 +273,12 @@ class Volunteer extends React.Component {
   this.setState({
     itemStatusMsg: null,
   });
-  console.log(error);
 });
     }
   };
   setAttendeesHandler = (view, index) => {
-    const status = view.status == 'Checked In' ? 'false' : 'true';
-    const statusValue = view.status == 'Checked In' ? 'Booked' : 'Checked In';
+    const status = view.status === 'Checked In' ? 'false' : 'true';
+    const statusValue = view.status === 'Checked In' ? 'Booked' : 'Checked In';
     this.props.setAttendees(this.props.params && this.props.params.params, view.barcode, status)
 			.then((resp) => {
   if (resp && resp.data) {
@@ -292,7 +290,6 @@ class Volunteer extends React.Component {
   this.setState({
     itemStatusMsg: null,
   });
-  console.log(error);
 });
   };
   attendeesFilterHandler = (e) => {
@@ -315,21 +312,20 @@ class Volunteer extends React.Component {
    	if (this.itemCode.value && this.itemCode.value.trim().length === 3) {
      this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim(), this.state.modelType)
 				.then((resp) => {
-  if (resp && resp.data) {
-    this.setState({
-      itemData: resp.data,
-      itemStatusMsg: null,
-      itemCode: true,
-    });
-  }
-}).catch((error) => {
-  this.setState({
-    itemStatusMsg: 0,
-    itemCode: false,
-  });
-  console.log(error);
-});
-   }
+          if (resp && resp.data) {
+            this.setState({
+              itemData: resp.data,
+              itemStatusMsg: null,
+              itemCode: true,
+            });
+          }
+        }).catch((error) => {
+          this.setState({
+            itemStatusMsg: 0,
+            itemCode: false,
+          });
+        });
+      }
   };
   getAttendeesList() {
     this.props.getAttendees(this.props.params && this.props.params.params)
@@ -340,19 +336,18 @@ class Volunteer extends React.Component {
     });
   }
 }).catch((error) => {
-  console.log(error);
 });
   }
   checkAuctionUser = (e) => {
     if (this.state.email) {
       let modeltype = 'auction';
-      if (this.state.activeViews == 'select-action') {
+      if (this.state.activeViews === 'select-action') {
         modeltype = 'auction';
       }
-      if (this.state.activeViews == 'sell-raffle-tickets') {
+      if (this.state.activeViews === 'sell-raffle-tickets') {
         modeltype = 'raffle';
       }
-      if (this.state.activeViews == 'submit-raffle-tickets') {
+      if (this.state.activeViews === 'submit-raffle-tickets') {
         modeltype = 'raffle';
       }
       this.props.getUserByEmail(this.props.params && this.props.params.params, this.email.value.trim(), modeltype)
@@ -389,7 +384,6 @@ class Volunteer extends React.Component {
     userData: null,
     errorMsgEmailCheck: 'User Does Not Exists. Account Will be created.',
   });
-  console.log(error);
 });
     }
   };
@@ -431,11 +425,9 @@ class Volunteer extends React.Component {
     userData: null,
     errorMsgEmailCheck: 'User Does Not Exists. Account Will be created.',
   });
-  console.log(error);
 });
     }
   };
-
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -489,7 +481,7 @@ class Volunteer extends React.Component {
     }
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-  	var isnum = /^\d+$/.test(value);
+  	let isnum = /^\d+$/.test(value);
   	if(!isnum && value) return false;
     this.setState({
       phone: value,
@@ -573,7 +565,7 @@ class Volunteer extends React.Component {
 		if (value === '' || value === null) {
 			this.setState({
 				availTickets: false,
-				errorMsgAvailTickets: "Please enter tickets you want to submit.",
+				errorMsgAvailTickets: "",
 			});
 		}
 		else if(this.state.userData){
@@ -618,7 +610,7 @@ class Volunteer extends React.Component {
     if (value === '' || value === null) {
       this.setState({
         amount: false,
-        errorMsgAmount: "Submitted pledge Amount can't be empty",
+        errorMsgAmount: "",
       });
     } else if (bid > value) {
       this.setState({
@@ -1045,7 +1037,6 @@ class Volunteer extends React.Component {
   submiteDonation = (user) => {
     this.props.submitDonate(this.props.params && this.props.params.params, user)
       .then((resp) => {
-        console.log(resp);
         if (resp && resp.message) {
           this.setState({
             loading: false,
@@ -1077,7 +1068,7 @@ class Volunteer extends React.Component {
     this.props.doOrderTicket(eventUrl, Data)
       .then((resp) => {
         if (resp && resp.data && resp.data.orderId) {
-          history.push('/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
+          history.push('/u/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
         } else {
           this.setState({
             formError: 'Error while Ordering Tickets',
@@ -1283,6 +1274,7 @@ class Volunteer extends React.Component {
                       utilsScript="./libphonenumber.js"
                       separateDialCode
                       value={this.state.phone || ''}
+                      defaultCountry={this.props.country || ""}
                       onPhoneNumberChange={this.changePhone}
                       onPhoneNumberBlur={this.checkMobileUser}
                       disabled={!this.state.phoneEnable}
@@ -1427,7 +1419,7 @@ class Volunteer extends React.Component {
                 { this.state.itemCodeFeedBack && !this.state.itemCode &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 { this.state.itemCodeFeedBack && !this.state.itemCodeValue &&
-                <small className="text-danger" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
 							</div>
               <h5 id="infoMessage"
 							    className='text-danger'> { this.state.itemStatusMsg == 0 && 'Invalid Item Code' } </h5>
@@ -1665,7 +1657,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -1682,6 +1675,7 @@ class Volunteer extends React.Component {
                     utilsScript="./libphonenumber.js"
                     separateDialCode
                     value={this.state.phone || ''}
+                    defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
                     disabled={!this.state.phoneEnable}
@@ -1826,6 +1820,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.itemCodeFeedBack && !this.state.itemCode &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                { this.state.itemCodeFeedBack && !this.state.itemCodeValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
               </div>
               <h5
                 id="infoMessage"
@@ -1861,6 +1857,8 @@ class Volunteer extends React.Component {
 											{ this.state.amountFeedBack && !this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 										</div>
+                    { this.state.amountFeedBack && !this.state.amountValue &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">Submitted pledge Amount can not be empty</small>}
 										{ this.state.amountFeedBack && !this.state.amount &&
 										<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
 									</div>
@@ -2069,7 +2067,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2085,6 +2084,7 @@ class Volunteer extends React.Component {
                     utilsScript="./libphonenumber.js"
                     separateDialCode
                     value={this.state.phone || ''}
+                    defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
                     disabled={!this.state.phoneEnable}
@@ -2161,6 +2161,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -2253,6 +2254,7 @@ class Volunteer extends React.Component {
                   className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs" ref={(ref) => {
                     this.raffleTicket = ref;
                   }} onChange={this.raffleTicketValidateHandler}
+
                 >
                   <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
                   <option value={847} data-ticket={1} data-price={5}>
@@ -2483,7 +2485,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2498,6 +2501,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
@@ -2647,6 +2651,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.itemCodeFeedBack && !this.state.itemCode &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                { this.state.itemCodeFeedBack && !this.state.itemCodeValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
               </div>
               <h5
                 id="infoMessage"
@@ -2675,7 +2681,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                 { this.state.availTicketsFeedBack && !this.state.availTickets &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-
+                { this.state.availTicketsFeedBack && !this.state.amountValue &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Please enter tickets you want to submit.</small>}
                 { this.state.availTicketsFeedBack && !this.state.availTickets &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
 							</div>
@@ -2700,6 +2707,12 @@ class Volunteer extends React.Component {
             <div className="order-form">
               <form method="POST">
                 <div className="ticket-type-container">
+                <label className="center-block text-center mrg-t-lg">Select payment option</label>
+                    <div onChange={this.changePaymentType} id="payment-type-selection" className="form-group text-center">
+                      <input type="radio" name="paymenttype" autoComplete="off" defaultValue="CC" defaultChecked="checked" />
+      								Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
+      								<input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash" /> Cash
+      							</div>
                   {
                     this.state.settings && this.state.settings.tickeTypes && (this.state.settings.tickeTypes).map(item =>
                       <div className="sale-card" key={item.typeId.toString()}>
@@ -2759,7 +2772,7 @@ class Volunteer extends React.Component {
                       <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                       <span
                         className="total-price"
-                      >{this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
+                      >{this.state.totalTicketPrice ? this.props.currencySymbol : ''} {this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
                     </div>
                     <div className="pull-right">
                       <button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
@@ -2852,7 +2865,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2870,6 +2884,7 @@ class Volunteer extends React.Component {
                       css={['intl-tel-input', 'form-control intl-tel']}
                       utilsScript="./libphonenumber.js"
                       separateDialCode
+                      defaultCountry={this.props.country || ""}
                       value={this.state.phone || ''}
                       onPhoneNumberChange={this.changePhone}
                     />
@@ -2940,6 +2955,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -3033,6 +3049,8 @@ class Volunteer extends React.Component {
 											{ this.state.amountFeedBack && !this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 										</div>
+                    { this.state.amountFeedBack && !this.state.amountValue &&
+                      <small className="help-block" data-fv-result="NOT_VALIDATED">Donation Amount can not be empty</small>}
 										{ this.state.amountFeedBack && !this.state.amount &&
 										<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
 									</div>
@@ -3253,6 +3271,7 @@ const mapStateToProps = (state) => ({
 	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   eventData: state.event && state.event.data,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Volunteer));

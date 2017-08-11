@@ -312,7 +312,6 @@ class TicketRow extends React.Component { // eslint-disable-line
 														onApply={this.handleDateRangeApply}
 														autoUpdateInput = {true}
 														isInvalidDate = {(date)=>{
-															// console.log(a,b,c);
 															return !(date.diff(this.state.eventStartDate) > 0 && date.diff(this.state.eventEndDate) < 0);
 														}}
 													>

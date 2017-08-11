@@ -55,8 +55,6 @@ class OrganizationSettings extends React.Component {
   }
   componentWillMount() {
     this.props.getOrganizationSettings(this.props.params && this.props.params.params).then(resp => {
-      console.log("resp", resp);
-    //  let logoImage={'images':{'imageUrl':this.state.settings.logoImage}};
       this.setState({
         settings: resp,
         headerBgColor :resp.headerColor,
@@ -64,7 +62,6 @@ class OrganizationSettings extends React.Component {
       });
       this.firmName.value=resp.firmName;
     }).catch(error => {
-      console.log('error', error)
     })
   }
 
@@ -78,7 +75,6 @@ class OrganizationSettings extends React.Component {
         this.setState({loading:false,message:"Something wrong",isError:true})
       }
     });
-    console.log(e, e.target, this.state.settings)
   };
   logoImageUploaded = (imageUrl) =>{
      let settings =this.state.settings;

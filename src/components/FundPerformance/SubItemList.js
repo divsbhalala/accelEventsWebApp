@@ -62,7 +62,6 @@ class SubItemList extends React.Component {
   deletePledge = () => {
     this.setState({ loading: true });
     this.props.deletePledge(this.state.pledgeId).then((resp) => {
-      console.log('resp', resp);
       if (resp.errorMessage) {
         this.setState({
           loading: false,
@@ -85,7 +84,6 @@ class SubItemList extends React.Component {
   requestPayment = () => {
     this.setState({ loading: true });
     this.props.requestPaymentPledge(this.state.pledgeId).then((resp) => {
-      console.log('resp', resp);
       if (resp.errorMessage) {
         this.setState({
           loading: false,
@@ -108,7 +106,6 @@ class SubItemList extends React.Component {
   markAsPaid = () => {
     this.setState({ loading: true });
     this.props.markAsPaidPledge(this.state.pledgeId).then((resp) => {
-      console.log('resp', resp);
       if (resp.errorMessage) {
         this.setState({
           loading: false,

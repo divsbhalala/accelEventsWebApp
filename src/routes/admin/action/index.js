@@ -42,7 +42,6 @@ export function getStoreDesingData() {
   }
 }
 export function updateLogo(logoImageUrl) {
-  console.log(logoImageUrl)
   return (dispatch) => {
     return axios({
       method: 'put',
@@ -137,7 +136,7 @@ export function getItemList(type) {
       //   dispatch(storeItemUpdate("getList","success"));
       return resp;
     }).catch(error => {
-      console.log(error);
+
     })
   }
 }
@@ -148,7 +147,7 @@ export function updateItemListPosition(type,item,topItem,topBottom) {
       url: API_URL + 'host/'+type+'/item/'+item+'/topItem/'+topItem+'/topBottom/'+topBottom  ,
 
     }).then(resp=>{
-      if(resp && resp.data){
+      if(resp){
         dispatch(storeItemUpdate(["PositionChange","success"]));
         return resp.data;
       }
@@ -171,7 +170,7 @@ export function addItemList(type,data) {
       return resp;
     }).catch(error => {
       dispatch(storeItemUpdate(["Inserted","fail"]));
-      console.log(error);
+
     })
   }
 }
@@ -188,7 +187,7 @@ export function updateItemList(type,id,data) {
       return resp;
     }).catch(error => {
       dispatch(storeItemUpdate(["Updated","fail"]));
-      console.log(error);
+
     })
   }
 }
@@ -203,7 +202,7 @@ export function deleteItemList(type,id) {
       return resp;
     }).catch(error => {
       dispatch(storeItemUpdate(["Deleted","fail"]));
-      console.log(error);
+
     })
   }
 }
@@ -216,7 +215,7 @@ export function getItemCategories(type) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+
     })
   }
 }
@@ -229,7 +228,7 @@ export function enableModules(data) {
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+
     })
   }
 }

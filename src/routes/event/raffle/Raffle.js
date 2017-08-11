@@ -96,6 +96,7 @@ class Raffle extends React.Component {
       loading:false,
       countryPhone:null,
       phone:null,
+      isError:false,
   }
   }
   onFormClick = (e) => {
@@ -152,7 +153,7 @@ class Raffle extends React.Component {
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value.trim()
     });
-    if (this.firstName.value && this.firstName.value.trim() === '') {
+    if ( this.firstName.value.trim() === '') {
       this.setState({
         firstName: false
       });
@@ -170,7 +171,7 @@ class Raffle extends React.Component {
       lastNameValue: this.lastName.value.trim(),
     });
 
-    if (this.lastName.value && this.lastName.value.trim() === '') {
+    if (this.lastName.value.trim() === '') {
 
       this.setState({
         lastName: false
@@ -200,6 +201,11 @@ class Raffle extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
       });
     } else {
       this.setState({
@@ -286,7 +292,7 @@ class Raffle extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
@@ -329,7 +335,7 @@ class Raffle extends React.Component {
       errorMsgTickets= "Number Of Tickets can't be empty";
       tickets=false;
     }else if ( this.state.raffleData.availableTickets  < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
-      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets;
+      errorMsgTickets= "Tickets should be more than 0 and less then "+this.state.raffleData.availableTickets;
       tickets=false
     } else {
       tickets=true
@@ -367,6 +373,7 @@ class Raffle extends React.Component {
         this.setState({
           errorMsg:"Please activate this module to start accepting pledges.",
           popupHeader :'Failed',
+          isError:true,
         });
       }
       this.setState({
@@ -383,19 +390,10 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
       history.push('/404');
     });
   };
   componentReRender() {
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
     this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
       .then(resp => {
         if (resp && resp.data) {
@@ -404,9 +402,9 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
   };
+
   buyRaffleTicket = (e) => {
     e.preventDefault();
   };
@@ -426,12 +424,14 @@ class Raffle extends React.Component {
             this.setState({
               //showAlertPopup: true,
               errorMsg: resp.message,
+              isError: false,
               popupHeader:"Success. ",
               raffleData: updateraffleData,
            })
           }else{
             this.setState({
             //  showAlertPopup: true,
+              isError: true,
               errorMsg: resp.errorMessage,
               popupHeader:"Failed"
             });
@@ -529,14 +529,6 @@ class Raffle extends React.Component {
     })
   };
   successTasks = ()=> {
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
     this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
       .then(resp => {
         if (resp && resp.data) {
@@ -545,7 +537,7 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
+
       history.push('/404');
     });
   };
@@ -597,7 +589,7 @@ class Raffle extends React.Component {
         <label className="control-label"> You have <span className="available-tickets">{this.state.raffleData && this.state.raffleData.availableTickets}</span> tickets
           remaining.</label>
         <div className="row">
-          <div className="col-md-5 col-lg-5">
+          <div className="col-md-10 col-lg-10">
             <div
               className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? '' : 'disabled')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
@@ -686,7 +678,7 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
-                      {this.state.errorMsgCard  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                      {this.state.errorMsg  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError  ? 'text-success':'text-danger')} >
                         { this.state.errorMsg }</div> }
                       { this.props.authenticated ? form_login : form_normal  }
                     </div>
@@ -718,6 +710,7 @@ class Raffle extends React.Component {
           modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
         />
         <BuyRaffleTicketsModal
+          ticketPackages={this.state.settings && this.state.settings.ticketPackages}
           showModal={this.state.isshowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}

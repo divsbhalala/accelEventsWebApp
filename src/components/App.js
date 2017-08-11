@@ -30,14 +30,13 @@ axios.interceptors.response.use(function (response) {
 	return response;
 }, function (error) {
 	// Do something with response error
-  console.log("error", error, error.response);
   let response = error && error.response;
   if(response && response.status === 401){
 		localStorage.clear();
 		sessionService.deleteSession();
 		sessionService.deleteUser();
     let url = response && response.config && response.config.url;
-    if((url && url.indexOf("/host") > -1) || (url && url.indexOf("/superadmin") > -1)){
+    if((url && url.indexOf("/host") > -1) || (url && url.indexOf("/superadmin") > -1) || (url && url.indexOf("/myprofile") > -1) || (url && url.indexOf("/activity") > -1)){
 			history.push("/u/login");
     }
     else {
@@ -108,9 +107,9 @@ class App extends React.Component {
           <div className="loader-pace">
             <div className="pace pace-active">
               <div className="pace-progress">
-                <div className="pace-progress-inner"></div>
+                <div className="pace-progress-inner"/>
               </div>
-              <div className="pace-activity"></div>
+              <div className="pace-activity"/>
             </div>
           </div>
         </div>);
