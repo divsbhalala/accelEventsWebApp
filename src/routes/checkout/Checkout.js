@@ -178,14 +178,12 @@ class Checkout extends React.Component {
 		}
 	};
 	cardHolderNameValidateHandler = (e) => {
+
 		this.setState({
 			cardHolderNameFeedBack: true
 		});
-		if (this.cardHolderName.value && this.cardHolderName.value.trim() === ' ') {
-			this.cardHolderName.value = '';
-		}
 
-		if (!this.cardHolderName.value.trim()) {
+		if (this.cardHolderName.value.trim() == '') {
 			this.setState({
 				cardHolderName: false,
 				cardHolderNameFeedBackMsg: "The card holder name is required and can't be empty"
@@ -196,8 +194,12 @@ class Checkout extends React.Component {
 				cardHolderName: false,
 				cardHolderNameFeedBackMsg: "The card holder name must be more than 6 and less than 70 characters long"
 			});
-		}
-		else {
+		}else if(this.cardHolderName.value.charAt(0) === ' ' || this.cardHolderName.value.charAt(this.cardHolderName.value.length-1) === ' '){
+  		this.setState({
+        cardHolderName: false,
+        cardHolderNameFeedBackMsg: "The card holder name can not start or end with white space",
+			});
+			} else {
 			this.setState({
 				cardHolderName: true,
 				cardHolderNameFeedBackMsg: null,

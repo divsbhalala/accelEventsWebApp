@@ -157,7 +157,7 @@ class EventDonation extends React.Component {
     }
   };
   cardHolderValidateHandler = (e) => {
-		this.cardHolder.value = this.cardHolder.value && this.cardHolder.value.trim();
+		//this.cardHolder.value = this.cardHolder.value && this.cardHolder.value.trim();
 		this.setState({
       cardHolderFeedBack: true,
     });
@@ -171,6 +171,11 @@ class EventDonation extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: 'The card holder name must be more than 6 and less than 70 characters long ',
+      });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
       });
     } else {
       this.setState({
