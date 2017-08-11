@@ -3,8 +3,8 @@ import cx from 'classnames';
 import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
-import {getItemList, addItemList, updateItemList,updateItemListPosition} from './../../routes/admin/action';
-
+import {getItemList, addItemList, updateItemList,updateItemListPosition,	getItemCategories} from './../../routes/admin/action';
+import {getHostSettings} from '../HostSettings/action/RestActions';
 
 class PlanetItem extends React.Component {
   state: Object = {
@@ -14,8 +14,8 @@ class PlanetItem extends React.Component {
     status:"",
   };
 
-  getDragHeight() { return 60; }
-  doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) }
+  getDragHeight() { return 60; };
+  doToggle = () =>{ this.setState({ toggle:!this.state.toggle }) };
 
   render() {
     const {item, itemSelected, dragHandle} = this.props;
@@ -69,19 +69,30 @@ class PlanetItem extends React.Component {
      })},500);
      setTimeout(()=>{ this.setState({message:""}) },4000)
   }
-  getItemList =()=> {
-    this.props.getItemList("raffle").then(resp => {
-      if(resp && resp.data && resp.data.items.length){
-       this.setState({list:resp.data.items});
-      }
-      else{
-        this.addEmptyRow();
-      }
-    }).catch((error) => {
+   getItemList = () => {
+     this.props.getItemList("raffle").then(resp => {
+       if (resp && resp.data && resp.data.items.length) {
+         this.setState({list: resp.data.items, categories: resp.data.items[0].categories});
+       }
+       else {
+         this.props.getItemCategories("raffle").then(resp => {
+           this.setState({
+             categories: resp.data.itemCategories.map((value) => {
+               return value.name
+             })
+           });
+           this.addEmptyRow()
+         });
+       }
+     }).catch((error) => {
 
-    });
-  };
+     });
+   };
   componentWillMount(){
+    this.props.getHostSettings('raffle').then(resp => {
+      this.setState({settings:resp.data});
+    }).catch((error) => {
+    });
     this.getItemList()
   };
   onListChange(newList: Array<Object>,movedItem: Array<Object>, oldIndex: number, newIndex: number) {
@@ -112,7 +123,7 @@ addEmptyRow =()=>{
   let data={
     id:0,
     "active": false,
-    "category": "",
+    "category": this.state.categories,
     "code": "",
     "description": "",
     "images": [
@@ -165,6 +176,8 @@ const mapDispatchToProps = {
   addItemList : (type,data) => addItemList(type,data),
   updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
+  getItemCategories: (type) => getItemCategories(type),
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
 };
 
 const mapStateToProps = (state) => ({

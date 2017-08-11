@@ -11,7 +11,7 @@ import PopupModel from './../../../components/PopupModal/index';
 import ProgressIndicator from './../../../components/ProgressIndicator';
 import Moment from 'react-moment';
 import moment from 'moment';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 import { doValidateMobileNumber, doGetEventData } from './../action/index';
 import { getCardToken } from './../../checkout/action/index';
 import NumericInput from 'react-numeric-input';
@@ -277,8 +277,8 @@ class Volunteer extends React.Component {
     }
   };
   setAttendeesHandler = (view, index) => {
-    const status = view.status == 'Checked In' ? 'false' : 'true';
-    const statusValue = view.status == 'Checked In' ? 'Booked' : 'Checked In';
+    const status = view.status === 'Checked In' ? 'false' : 'true';
+    const statusValue = view.status === 'Checked In' ? 'Booked' : 'Checked In';
     this.props.setAttendees(this.props.params && this.props.params.params, view.barcode, status)
 			.then((resp) => {
   if (resp && resp.data) {
@@ -341,13 +341,13 @@ class Volunteer extends React.Component {
   checkAuctionUser = (e) => {
     if (this.state.email) {
       let modeltype = 'auction';
-      if (this.state.activeViews == 'select-action') {
+      if (this.state.activeViews === 'select-action') {
         modeltype = 'auction';
       }
-      if (this.state.activeViews == 'sell-raffle-tickets') {
+      if (this.state.activeViews === 'sell-raffle-tickets') {
         modeltype = 'raffle';
       }
-      if (this.state.activeViews == 'submit-raffle-tickets') {
+      if (this.state.activeViews === 'submit-raffle-tickets') {
         modeltype = 'raffle';
       }
       this.props.getUserByEmail(this.props.params && this.props.params.params, this.email.value.trim(), modeltype)
@@ -428,7 +428,6 @@ class Volunteer extends React.Component {
 });
     }
   };
-
   emailValidateHandler = (e) => {
     this.setState({
       emailFeedBack: true,
@@ -482,7 +481,7 @@ class Volunteer extends React.Component {
     }
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-  	var isnum = /^\d+$/.test(value);
+  	let isnum = /^\d+$/.test(value);
   	if(!isnum && value) return false;
     this.setState({
       phone: value,
@@ -1275,6 +1274,7 @@ class Volunteer extends React.Component {
                       utilsScript="./libphonenumber.js"
                       separateDialCode
                       value={this.state.phone || ''}
+                      defaultCountry={this.props.country || ""}
                       onPhoneNumberChange={this.changePhone}
                       onPhoneNumberBlur={this.checkMobileUser}
                       disabled={!this.state.phoneEnable}
@@ -1675,6 +1675,7 @@ class Volunteer extends React.Component {
                     utilsScript="./libphonenumber.js"
                     separateDialCode
                     value={this.state.phone || ''}
+                    defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
                     disabled={!this.state.phoneEnable}
@@ -2083,6 +2084,7 @@ class Volunteer extends React.Component {
                     utilsScript="./libphonenumber.js"
                     separateDialCode
                     value={this.state.phone || ''}
+                    defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
                     disabled={!this.state.phoneEnable}
@@ -2159,6 +2161,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -2498,6 +2501,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
@@ -2880,6 +2884,7 @@ class Volunteer extends React.Component {
                       css={['intl-tel-input', 'form-control intl-tel']}
                       utilsScript="./libphonenumber.js"
                       separateDialCode
+                      defaultCountry={this.props.country || ""}
                       value={this.state.phone || ''}
                       onPhoneNumberChange={this.changePhone}
                     />
@@ -2950,6 +2955,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -3265,6 +3271,7 @@ const mapStateToProps = (state) => ({
 	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   eventData: state.event && state.event.data,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Volunteer));

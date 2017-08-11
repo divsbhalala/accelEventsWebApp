@@ -245,6 +245,7 @@ render() {
                     </div>
                   </div>
                   <div className="form-group">
+                    <span>Category</span>
                     <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
                             ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
                       <option value={0} disabled >-- Select Category --</option>

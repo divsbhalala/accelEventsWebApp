@@ -5,7 +5,7 @@ import Link from '../Link';
 import cx from 'classnames';
 import PopupModel from './../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../components/IntTelInput';
 import {connect} from 'react-redux';
 import  { doValidateMobileNumber} from './../../routes/event/action/index';
 import {
@@ -189,6 +189,7 @@ dashboardRafflePurchaseTicket = () => {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode={true}
+                    defaultCountry={this.props.country || ""}
                     value={ this.state.phone || ""}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -219,7 +220,7 @@ const mapDispatchToProps = {
   dashboardSubmitBid: (countryCode,phoneNumber) => dashboardSubmitBid(countryCode,phoneNumber),
 };
 const mapStateToProps = (state) => ({
-
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)((EventChecklist));

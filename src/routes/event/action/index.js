@@ -4,6 +4,22 @@ import {sessionService, loadSession} from 'redux-react-session';
 
 import {apiUrl as API_URL} from './../../../clientConfig';
 // axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+export function doGetIpInfo() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: 'http://ipinfo.io',
+      data: {},
+    }).then(response => {
+      dispatch(storeLocation(response.data));
+      return response;
+    })
+      .catch(error => {
+        return error;
+      });
+  }
+
+}
 export function doGetEventData(eventUrl) {
   return (dispatch) => {
     return axios({
@@ -367,6 +383,12 @@ export function storeAuctionData(data) {
 export function storeIsVolunteer(data) {
   return {
     type: 'IS_VOLUNTEER',
+    data,
+  }
+}
+export function storeLocation(data) {
+  return {
+    type: 'LOCATION',
     data,
   }
 }

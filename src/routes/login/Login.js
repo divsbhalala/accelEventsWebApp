@@ -58,7 +58,12 @@ class Login extends React.Component {
           setTimeout(()=>{
             // history.push(resp.data.redirectUrl) /u/superadmin/events
             console.log(this.props.loginType);
-           window.location.replace(resp.data.redirectUrl);
+            if(this.props.loginType == "whiteLabel") {
+              window.location.replace('/u/wl/'+this.props.params.params+'/home');
+            }else{
+              window.location.replace(resp.data.redirectUrl);
+            }
+
           },2000)
         }
         else {

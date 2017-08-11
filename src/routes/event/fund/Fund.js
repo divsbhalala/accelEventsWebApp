@@ -16,7 +16,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -782,6 +782,7 @@ class Fund extends React.Component {
                                 <IntlTelInput
                                   css={['intl-tel-input', 'form-control intl-tel']}
                                   utilsScript="./libphonenumber.js"
+                                  defaultCountry={this.props.country || ""}
                                   separateDialCode={true}
                                   value={ this.state.phone || "" }
                                   maxLength={16} data-stripe="number"
@@ -1069,6 +1070,7 @@ const mapStateToProps = (state) => ({
   user: state.session.user,
   authenticated: state.session.authenticated,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Fund));

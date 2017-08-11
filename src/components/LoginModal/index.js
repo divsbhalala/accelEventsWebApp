@@ -8,7 +8,7 @@ import Link from './../Link';
 import { doLogin,doSignUp,doValidateMobileNumber} from './../../routes/event/action/index';
 import {Modal, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../components/IntTelInput';
 
 class LoginPopup extends React.Component {
   constructor(props) {
@@ -342,6 +342,7 @@ class LoginPopup extends React.Component {
                               <IntlTelInput
                                 css={['intl-tel-input', 'form-control intl-tel']}
                                 utilsScript="./libphonenumber.js"
+                                defaultCountry={this.props.country || ""}
                                 separateDialCode={true}
                                 value={ this.state.phone || ""}
                                 onPhoneNumberChange={this.changePhone}
@@ -413,6 +414,7 @@ const mapStateToProps = (state) => ({
   user : state.session && state.session.user,
   authenticated : state.session && state.session.authenticated,
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(LoginPopup));

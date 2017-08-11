@@ -51,7 +51,12 @@ class RowItemList extends React.Component {
 		let item = this.state.item;
 		item.description = value;
 		this.setState({item, isDataUpdate: true})
-	}
+	};
+  categoryHandlerChange = (e) =>{
+    let item=this.state.item;
+    item.category=this.category.value;
+    this.setState({item,isDataUpdate:true})
+  };
 	itemNameHandlerChange = (e) => {
 		this.setState({itemNameFeedBack: true,});
 		if (this.itemName.value.trim() === '') {
@@ -232,6 +237,19 @@ class RowItemList extends React.Component {
 									</div>
 								</div>
 								<div className="col-md-4">
+									<div className="row">
+										<div className="form-group">
+                      <span>Category</span>
+											<select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
+															ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
+												<option value={0} disabled >-- Select Category --</option>
+                        {this.props.item.categories && this.props.item.categories.map((value,index)=>
+													<option value={value} key={index}>{value}</option>
+                        )}
+											</select>
+										</div>
+									</div>
+									<br/>
 									<div className="row">
 										<div className="col-md-6">
 											Hide Item
