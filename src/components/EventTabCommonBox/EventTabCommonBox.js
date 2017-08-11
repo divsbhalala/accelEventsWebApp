@@ -134,14 +134,14 @@ class EventTabCommonBox extends React.Component {
             <div
               className={cx("text-center", "action-btns")}>
               { this.props.actionTitle &&
-              <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
+              <Link role="button" to={location.pathname.replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.actionClassName)}
                     >{this.props.actionTitle}</Link>}
               { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor &&
-              <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
+              <Link role="button" to={location.pathname.replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.auctionBuyNowTitle}</Link>}
               { this.props.buyItNowPrice && !this.props.auctionPurchaseFor &&
-              <Link role="button" to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
+              <Link role="button" to={location.pathname.replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.buyItNowPrice}</Link>}
               { this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
                 <div className={cx("alert alert-success mrg-b-0 alert-height")}> {this.props.auctionBuyNowTitle}</div>
