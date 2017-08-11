@@ -77,7 +77,7 @@ class EventList extends React.Component {
         event:resp.data
       })
     });
-  }
+  };
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
       setTimeout(()=>{
@@ -85,19 +85,19 @@ class EventList extends React.Component {
         window.location.replace('/host/dashboard/home');
       },2000)
     });
-  }
+  };
   getWhiteLabelUrl = () => {
     this.props.whiteLabelUrl().then((resp) => {
       this.setState({
         whiteLabelUrlList:resp
       })
     });
-  }
+  };
   componentDidMount(){
   //  this.getEventsList();
     this.fetchData();
     this.getWhiteLabelUrl();
-  }
+  };
   whiteLabelUrlValidateHandler = (e) => {
     this.setState({
       whiteLabelUrlFeedBack: true,

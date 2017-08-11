@@ -147,7 +147,7 @@ export function updateItemListPosition(type,item,topItem,topBottom) {
       url: API_URL + 'host/'+type+'/item/'+item+'/topItem/'+topItem+'/topBottom/'+topBottom  ,
 
     }).then(resp=>{
-      if(resp && resp.data){
+      if(resp){
         dispatch(storeItemUpdate(["PositionChange","success"]));
         return resp.data;
       }

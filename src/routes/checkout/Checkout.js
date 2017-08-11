@@ -1892,6 +1892,7 @@ class Checkout extends React.Component {
 																												}}
 																											/>
 
+
 																											<i
 																												className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																											<i
@@ -2052,6 +2053,9 @@ class Checkout extends React.Component {
 																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].error && 'has-error',
 																												this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value && 'has-success',
 																											)}>
+
+																											{	
+																													attrib.type != 'dropdown' && 
 																												<input type="text"
 																															 placeholder={attrib.name}
 																															 className="form-control"
@@ -2067,6 +2071,31 @@ class Checkout extends React.Component {
 																															 }
 																															 onChange={this.setQuestionsValue.bind(this, attrib, itemKey, key)}
 																												/>
+
+																												}
+
+																												{	
+																													attrib.type == 'dropdown' && attrib.value && 
+																													<select className="form-control"
+																														name={attrib.name}
+																														placeholder={attrib.name}
+																														onChange={this.setQuestionsValue.bind(this, attrib, itemKey, key)}
+																														required={attrib.mandatory}>
+																														{
+																																this.getSelectOptions(attrib.value ||
+																															 (this.state.questions &&
+																															 this.state.questions[itemKey] &&
+																															 this.state.questions[itemKey][key] &&
+																															 this.state.questions[itemKey][key][attrib.name]) || (
+																																 this.state.errorQuestions && this.state.errorQuestions[itemKey] && this.state.errorQuestions[itemKey][key] && this.state.errorQuestions[itemKey][key][attrib.name] && this.state.errorQuestions[itemKey][key][attrib.name].value
+																															 )).map((oitem,okey) =>
+																																	<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
+																																	</option>
+																																)
+																														}
+																														</select>
+																												}
+
 																												<i
 																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
 																												<i

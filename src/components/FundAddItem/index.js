@@ -3,8 +3,8 @@ import cx from 'classnames';
 import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
-import {getItemList, addItemList, updateItemList, updateItemListPosition} from './../../routes/admin/action';
-
+import {getItemList, addItemList, updateItemList, updateItemListPosition,	getItemCategories} from './../../routes/admin/action';
+import {getHostSettings} from '../HostSettings/action/RestActions';
 
 class PlanetItem extends React.Component {
 	state: Object = {
@@ -12,6 +12,7 @@ class PlanetItem extends React.Component {
 		toggle: false,
 		message: "",
 		status: "",
+    settings:'',
 	};
 
 	getDragHeight() {
@@ -81,20 +82,31 @@ class FundNeedAddItem extends React.Component {
 		}, 4000)
 	};
 
-	getItemList = () => {
-		this.props.getItemList("fundANeed").then(resp => {
-			if (resp && resp.data && resp.data.items.length) {
-				this.setState({list: resp.data.items});
-			}
-			else {
-				this.addEmptyRow();
-			}
-		}).catch((error) => {
-			
-		});
-	};
+  getItemList = () => {
+    this.props.getItemList("fundANeed").then(resp => {
+      if (resp && resp.data && resp.data.items.length) {
+        this.setState({list: resp.data.items, categories: resp.data.items[0].categories});
+      }
+      else {
+        this.props.getItemCategories("fundANeed").then(resp => {
+          this.setState({
+            categories: resp.data.itemCategories.map((value) => {
+              return value.name
+            })
+          });
+          this.addEmptyRow()
+        });
+      }
+    }).catch((error) => {
+
+    });
+  };
 
 	componentWillMount() {
+    this.props.getHostSettings('fundANeed').then(resp => {
+      this.setState({settings:resp.data});
+    }).catch((error) => {
+    });
 		this.getItemList()
 	};
 
@@ -129,7 +141,7 @@ class FundNeedAddItem extends React.Component {
 		let data = {
       id:0,
 			"active": false,
-			"category": "",
+      "category": this.state.categories,
 			"code": "",
 			"description": "",
 			"images": [
@@ -184,10 +196,12 @@ class FundNeedAddItem extends React.Component {
 };
 
 const mapDispatchToProps = {
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
 	getItemList: (type) => getItemList(type),
 	addItemList: (type, data) => addItemList(type, data),
 	updateItemList: (type, id, data) => updateItemList(type, id, data),
 	updateItemListPosition: (type, itemId, topItem, topBottom) => updateItemListPosition(type, itemId, topItem, topBottom),
+  getItemCategories: (type) => getItemCategories(type),
 };
 
 const mapStateToProps = (state) => ({
