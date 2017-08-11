@@ -1019,6 +1019,8 @@ class Auction extends React.Component {
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
+            { this.state.auctionData && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
           </div>
