@@ -23,7 +23,7 @@ import PopupModel from './../../../components/PopupModal';
 import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from './../../../components/IntTelInput/main';
+import IntlTelInput from './../../../components/IntTelInput';
 
 class Auction extends React.Component {
   static propTypes = {
@@ -36,7 +36,6 @@ class Auction extends React.Component {
       settings: null,
       showBookingTicketPopup: false,
       showMapPopup: true,
-
       isValidData: false,
       email: null,
       password: null,
@@ -671,6 +670,7 @@ class Auction extends React.Component {
                   css={['intl-tel-input', 'form-control intl-tel']}
                   utilsScript="./libphonenumber.js"
                   separateDialCode={true}
+                  defaultCountry={this.props.country || ""}
                   value={ this.state.phone || ""}
                   onPhoneNumberChange={this.changePhone}
                 />
@@ -1312,6 +1312,7 @@ const mapStateToProps = (state) => ({
   user: state.session.user,
   authenticated: state.session.authenticated,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

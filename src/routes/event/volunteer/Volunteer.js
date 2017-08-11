@@ -11,7 +11,7 @@ import PopupModel from './../../../components/PopupModal/index';
 import ProgressIndicator from './../../../components/ProgressIndicator';
 import Moment from 'react-moment';
 import moment from 'moment';
-import IntlTelInput from './../../../components/IntTelInput/main';
+import IntlTelInput from './../../../components/IntTelInput';
 import { doValidateMobileNumber, doGetEventData } from './../action/index';
 import { getCardToken } from './../../checkout/action/index';
 import NumericInput from 'react-numeric-input';
@@ -1274,6 +1274,7 @@ class Volunteer extends React.Component {
                       utilsScript="./libphonenumber.js"
                       separateDialCode
                       value={this.state.phone || ''}
+                      defaultCountry={this.props.country || ""}
                       onPhoneNumberChange={this.changePhone}
                       onPhoneNumberBlur={this.checkMobileUser}
                       disabled={!this.state.phoneEnable}
@@ -1674,6 +1675,7 @@ class Volunteer extends React.Component {
                     utilsScript="./libphonenumber.js"
                     separateDialCode
                     value={this.state.phone || ''}
+                    defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
                     disabled={!this.state.phoneEnable}
@@ -2082,6 +2084,7 @@ class Volunteer extends React.Component {
                     utilsScript="./libphonenumber.js"
                     separateDialCode
                     value={this.state.phone || ''}
+                    defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
                     disabled={!this.state.phoneEnable}
@@ -2158,6 +2161,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -2497,6 +2501,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                     onPhoneNumberBlur={this.checkMobileUser}
@@ -2879,6 +2884,7 @@ class Volunteer extends React.Component {
                       css={['intl-tel-input', 'form-control intl-tel']}
                       utilsScript="./libphonenumber.js"
                       separateDialCode
+                      defaultCountry={this.props.country || ""}
                       value={this.state.phone || ''}
                       onPhoneNumberChange={this.changePhone}
                     />
@@ -2949,6 +2955,7 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -3264,6 +3271,7 @@ const mapStateToProps = (state) => ({
 	stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   eventData: state.event && state.event.data,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Volunteer));

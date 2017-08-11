@@ -8,7 +8,7 @@ import history from './../../history';
 import Moment from 'react-moment';
 import moment from 'moment';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../components/IntTelInput';
 import NumericInput from 'react-numeric-input';
 
 import EventAside from './../../components/EventAside/EventAside';
@@ -1177,6 +1177,7 @@ class Checkout extends React.Component {
 																									fieldName={item.name}
 																									fieldId={item.name  + key}
 																									separateDialCode
+																									defaultCountry={this.props.country || ""}
 																									placeholder={item.name}
 																									value={item.value ||
 																									(this.state.errorBuyer &&
@@ -1845,6 +1846,7 @@ class Checkout extends React.Component {
 																												fieldName={attrib.name}
 																												fieldId={attrib.name + itemKey + key}
 																												separateDialCode
+																												defaultCountry={this.props.country || ""}
 																												placeholder={attrib.name}
 																												value={attrib.value ||
 																												(this.state.attendee &&
@@ -2135,6 +2137,7 @@ const mapStateToProps = (state) => ({
 	user: state.session.user,
 	authenticated: state.session.authenticated,
 	orderData: state.event && state.event.order_data,
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Checkout));

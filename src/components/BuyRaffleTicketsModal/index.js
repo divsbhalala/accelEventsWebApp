@@ -13,7 +13,7 @@ import {
 } from './../../routes/event/action/index';
 import {Modal, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
-import IntlTelInput from './../../components/IntTelInput/main';
+import IntlTelInput from './../../components/IntTelInput';
 import PopupModel from '../../components/PopupModal';
 import LoginModal from '../../components/LoginModal';
 import {getCardToken} from './../../routes/checkout/action/index';
@@ -872,6 +872,7 @@ class BuyRaffleTicketsModal extends React.Component {
                         css={['intl-tel-input', 'form-control intl-tel']}
                         utilsScript="./libphonenumber.js"
                         separateDialCode={true}
+                        defaultCountry={this.props.country || ""}
                         value={ this.state.phone || "" }
                         onPhoneNumberChange={this.changePhone}
                       />
@@ -1133,6 +1134,7 @@ const mapStateToProps = (state) => ({
   authenticated: state.session && state.session.authenticated,
   stripeKey: state.event && state.event.data && state.event.data.stripeKey,
   currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(BuyRaffleTicketsModal));
