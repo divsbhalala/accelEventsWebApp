@@ -8,7 +8,7 @@ import Link from './../Link';
 import { doLogin,doSignUp,doValidateMobileNumber} from './../../routes/event/action/index';
 import {Modal, Popover, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import Button from 'react-bootstrap-button-loader';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../components/IntTelInput/main';
 
 class LoginPopup extends React.Component {
   constructor(props) {

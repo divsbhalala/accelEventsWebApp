@@ -23,7 +23,7 @@ import PopupModel from './../../../components/PopupModal';
 import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput/main';
 
 class Auction extends React.Component {
   static propTypes = {

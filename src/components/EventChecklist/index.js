@@ -5,7 +5,7 @@ import Link from '../Link';
 import cx from 'classnames';
 import PopupModel from './../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../components/IntTelInput/main';
 import {connect} from 'react-redux';
 import  { doValidateMobileNumber} from './../../routes/event/action/index';
 import {
