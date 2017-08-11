@@ -1058,7 +1058,7 @@ class Volunteer extends React.Component {
     const Data = {};
     Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
     let ticketings = this.state.totalTickets;
-    ticketings = ticketings.filter(n => n != null);
+    ticketings = ticketings.filter(n => n !== null);
     ticketings = ticketings.map(obj => ({ numberOfTicket: parseInt(obj.numberofticket), ticketTypeId: parseInt(obj.tickettypeid) }));
     Data.ticketings = ticketings;
     this.setState({
@@ -1068,7 +1068,11 @@ class Volunteer extends React.Component {
     this.props.doOrderTicket(eventUrl, Data)
       .then((resp) => {
         if (resp && resp.data && resp.data.orderId) {
-          history.push('/u/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
+          // history.push('/u/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
+          this.setState({
+						activeViews: "purchase-event-tickets-checkout",
+						orderId: resp.data.orderId,
+          })
         } else {
           this.setState({
             formError: 'Error while Ordering Tickets',
@@ -2719,7 +2723,7 @@ class Volunteer extends React.Component {
                         <div className="flex-row">
                           <div className="flex-col">
                             <div className="type-name"><strong>{item.name}</strong>
-                              (<span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price}</span>)
+                              (<span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price && item.price.toFixed(2)}</span>)
                               <div className="pull-right">
                                 { item.remaniningTickets && item.remaniningTickets > 0 ?
                                   <select
@@ -2731,7 +2735,7 @@ class Volunteer extends React.Component {
                                     {makeItem(item.remaniningTickets > 10 ? 10 : item.remaniningTickets).map(item => item)}
                                   </select> : ''}
                                 {
-                                  (!item.remaniningTickets || item.remaniningTickets <= 0) && <span class="sold-out-text"> SOLD OUT </span>
+                                  (!item.remaniningTickets || item.remaniningTickets <= 0) && <span className="sold-out-text"> SOLD OUT </span>
                                 }
                               </div>
                             </div>
@@ -2772,7 +2776,7 @@ class Volunteer extends React.Component {
                       <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                       <span
                         className="total-price"
-                      >{this.state.totalTicketPrice ? this.props.currencySymbol : ''} {this.state.totalTicketPrice ? this.state.totalTicketPrice : 'FREE'}</span>
+                      >{this.state.totalTicketPrice ? this.props.currencySymbol : ''} {this.state.totalTicketPrice ? this.state.totalTicketPrice.toFixed(2) : 'FREE'}</span>
                     </div>
                     <div className="pull-right">
                       <button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
@@ -2786,6 +2790,21 @@ class Volunteer extends React.Component {
                 <div className="content" />
               </div>
             </div>
+            <div className="form-group text-center">
+              <button
+                className="btn btn-default" onClick={() => {
+                  this.setActiveView('select-action');
+                }}
+              >Back
+							</button>
+            </div>
+          </view> }
+          { this.state.activeViews === 'purchase-event-tickets-checkout' &&
+          <view
+            name="purchase-event-tickets-checkout"
+            className={cx(this.state.activeViews === 'purchase-event-tickets-checkout' && s.active)}
+          >
+            <h4 className="text-center"><strong>Sell Event Tickets</strong></h4>
             <div className="form-group text-center">
               <button
                 className="btn btn-default" onClick={() => {
