@@ -4,7 +4,7 @@ import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
 import {getItemList, addItemList, updateItemList,updateItemListPosition,	getItemCategories} from './../../routes/admin/action';
-
+import {getHostSettings} from '../HostSettings/action/RestActions';
 
 class PlanetItem extends React.Component {
   state: Object = {
@@ -89,6 +89,10 @@ class PlanetItem extends React.Component {
      });
    };
   componentWillMount(){
+    this.props.getHostSettings('raffle').then(resp => {
+      this.setState({settings:resp.data});
+    }).catch((error) => {
+    });
     this.getItemList()
   };
   onListChange(newList: Array<Object>,movedItem: Array<Object>, oldIndex: number, newIndex: number) {
@@ -173,6 +177,7 @@ const mapDispatchToProps = {
   updateItemList : (type,id,data) => updateItemList(type,id, data),
   updateItemListPosition : (type,itemId,topItem,topBottom) => updateItemListPosition(type,itemId,topItem,topBottom),
   getItemCategories: (type) => getItemCategories(type),
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
 };
 
 const mapStateToProps = (state) => ({

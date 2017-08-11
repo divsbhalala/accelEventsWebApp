@@ -35,7 +35,7 @@ class Design extends React.Component {
   };
 
   componentWillMount() {
-    this.props.getDesignSetting("general").then(resp => {
+    this.props.getDesignSetting().then(resp => {
       this.setState({
         settings: resp
       })
