@@ -10,7 +10,7 @@ import { doValidateMobileNumber} from './../../event/action/index';
 
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from './../../../components/IntTelInput/main';
+import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
 class Donation extends React.Component {
@@ -21,16 +21,13 @@ class Donation extends React.Component {
     super(props);
     this.state = {
       isVisibleConfirmBid : false,
-
       isValidData: false,
       email: null,
       password: null,
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
-
       isValidBidData: false,
-
       firstName: null,
       lastName: null,
       cardNumber: null,
@@ -43,7 +40,6 @@ class Donation extends React.Component {
       expYear: null,
       phoneNumber: null,
       popupHeader:null,
-
       firstNameValue: null,
       lastNameValue: null,
       cardNumberValue: null,
@@ -58,7 +54,6 @@ class Donation extends React.Component {
       passwordValue:null,
       phoneNumberValue:null,
       errorMsgCard:null,
-
       firstNameFeedBack: false,
       lastNameFeedBack: false,
       cardNumberFeedBack: false,
@@ -66,7 +61,6 @@ class Donation extends React.Component {
       amountFeedBack: false,
       cvvFeedBack: false,
       phoneNumberFeedBack: false,
-
       errorMsgcardNumber: null,
       errorMsgcardHolder: null,
       errorMsgfirstName: null,
@@ -497,6 +491,7 @@ class Donation extends React.Component {
                               separateDialCode={true}
                               value={ this.state.phone || "" }
                               maxLength={16} data-stripe="number"
+                              defaultCountry={this.props.country || ""}
                               onPhoneNumberChange={this.changePhone}
                               disabled={this.state.settings.userInfo && this.state.settings.userInfo.phonenumber}
                             />
@@ -666,7 +661,7 @@ class Donation extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupHeader == "Confirm" ? <Button  className="btn btn-success" loading={this.state.loading} onClick={this.confirmDonationCheckout} >Confirm</Button> : ""}
+              {this.state.popupHeader === "Confirm" ? <Button  className="btn btn-success" loading={this.state.loading} onClick={this.confirmDonationCheckout} >Confirm</Button> : ""}
               <button  className="btn btn-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
@@ -683,7 +678,9 @@ const mapDispatchToProps = {
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
   getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
+});
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Donation));
 

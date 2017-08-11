@@ -23,7 +23,7 @@ import PopupModel from './../../../components/PopupModal';
 import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from './../../../components/IntTelInput/main';
+import IntlTelInput from './../../../components/IntTelInput';
 
 class Auction extends React.Component {
   static propTypes = {
@@ -36,7 +36,6 @@ class Auction extends React.Component {
       settings: null,
       showBookingTicketPopup: false,
       showMapPopup: true,
-
       isValidData: false,
       email: null,
       password: null,
@@ -671,6 +670,7 @@ class Auction extends React.Component {
                   css={['intl-tel-input', 'form-control intl-tel']}
                   utilsScript="./libphonenumber.js"
                   separateDialCode={true}
+                  defaultCountry={this.props.country || ""}
                   value={ this.state.phone || ""}
                   onPhoneNumberChange={this.changePhone}
                 />
@@ -1019,6 +1019,8 @@ class Auction extends React.Component {
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
+            { this.state.auctionData && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
           </div>
@@ -1310,6 +1312,7 @@ const mapStateToProps = (state) => ({
   user: state.session.user,
   authenticated: state.session.authenticated,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));
