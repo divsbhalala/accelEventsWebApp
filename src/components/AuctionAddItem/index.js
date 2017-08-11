@@ -145,7 +145,7 @@ class AuctionAddItem extends React.Component {
 			"active": false,
 			"bidIncrement": 0,
 			"buyItNowPrice": 0,
-			"categories": this.state.categories,
+			"category": this.state.categories,
 			"code": "",
 			"description": "",
 			"images": [

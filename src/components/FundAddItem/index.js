@@ -3,7 +3,7 @@ import cx from 'classnames';
 import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
-import {getItemList, addItemList, updateItemList, updateItemListPosition} from './../../routes/admin/action';
+import {getItemList, addItemList, updateItemList, updateItemListPosition,	getItemCategories} from './../../routes/admin/action';
 
 
 class PlanetItem extends React.Component {
@@ -48,7 +48,7 @@ class FundNeedAddItem extends React.Component {
 	};
 
 	componentWillReceiveProps() {
-		setTimeout(() => {
+	  setTimeout(() => {
 			let message = "";
 			if (this.props.isItemAdded && this.props.isItemAdded.status === "success") {
 				if (this.props.isItemAdded && this.props.isItemAdded.type === "Updated") {
@@ -81,18 +81,25 @@ class FundNeedAddItem extends React.Component {
 		}, 4000)
 	};
 
-	getItemList = () => {
-		this.props.getItemList("fundANeed").then(resp => {
-			if (resp && resp.data && resp.data.items.length) {
-				this.setState({list: resp.data.items});
-			}
-			else {
-				this.addEmptyRow();
-			}
-		}).catch((error) => {
-			
-		});
-	};
+  getItemList = () => {
+    this.props.getItemList("fundANeed").then(resp => {
+      if (resp && resp.data && resp.data.items.length) {
+        this.setState({list: resp.data.items, categories: resp.data.items[0].categories});
+      }
+      else {
+        this.props.getItemCategories("fundANeed").then(resp => {
+          this.setState({
+            categories: resp.data.itemCategories.map((value) => {
+              return value.name
+            })
+          });
+          this.addEmptyRow()
+        });
+      }
+    }).catch((error) => {
+
+    });
+  };
 
 	componentWillMount() {
 		this.getItemList()
@@ -129,7 +136,7 @@ class FundNeedAddItem extends React.Component {
 		let data = {
       id:0,
 			"active": false,
-			"category": "",
+      "category": this.state.categories,
 			"code": "",
 			"description": "",
 			"images": [
@@ -188,6 +195,7 @@ const mapDispatchToProps = {
 	addItemList: (type, data) => addItemList(type, data),
 	updateItemList: (type, id, data) => updateItemList(type, id, data),
 	updateItemListPosition: (type, itemId, topItem, topBottom) => updateItemListPosition(type, itemId, topItem, topBottom),
+  getItemCategories: (type) => getItemCategories(type),
 };
 
 const mapStateToProps = (state) => ({
