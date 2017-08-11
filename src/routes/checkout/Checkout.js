@@ -347,22 +347,28 @@ class Checkout extends React.Component {
 					buyerInformationFields[index][item.name] = {};
 				}
 				if (item.mandatory && item.name && /address/i.test(item.name)) {
-					if(attendee[index][item.name + " 1"]){
-						attendee[index][item.name + " 1"]['error'] = !!attendee[index][item.name + " 1"];
+					if(!buyerInformationFields[index][item.name + " 1"]){
+            buyerInformationFields[index][item.name + " 1"] = {};
 					}
-					if(attendee[index][item.name + " 2"]){
-						attendee[index][item.name + " 2"]['error'] = !!attendee[index][item.name + " 2"];
+					if(!buyerInformationFields[index][item.name + " 2"]){
+            buyerInformationFields[index][item.name + " 2"] = {};
 					}
-					if(attendee[index][item.name + " City"]){
-						attendee[index][item.name + " City"]['error'] = !!attendee[index][item.name + " City"];
+					if(!buyerInformationFields[index][item.name + " City"]){
+            buyerInformationFields[index][item.name + " City"] = {};
 					}
-					if(attendee[index][item.name + " State"]){
-						attendee[index][item.name + " State"]['error'] = !!attendee[index][item.name + " State"];
+					if(!buyerInformationFields[index][item.name + " State"]){
+            buyerInformationFields[index][item.name + " State"] = {};
 					}
-					if(attendee[index][item.name + " Zip Code"]){
-						attendee[index][item.name + " Zip Code"]['error'] = !!attendee[index][item.name + " Zip Code"];
+					if(!buyerInformationFields[index][item.name + " Zip Code"]){
+            buyerInformationFields[index][item.name + " Zip Code"] = {};
 					}
-				}
+          buyerInformationFields[index][item.name + " 1"]['error'] = !!buyerInformationFields[index][item.name + " 1"];
+          buyerInformationFields[index][item.name + " 2"]['error'] = !!buyerInformationFields[index][item.name + " 2"];
+          buyerInformationFields[index][item.name + " City"]['error'] = !!buyerInformationFields[index][item.name + " City"];
+          buyerInformationFields[index][item.name + " State"]['error'] = !!buyerInformationFields[index][item.name + " State"];
+          buyerInformationFields[index][item.name + " Zip Code"]['error'] = !!buyerInformationFields[index][item.name + " Zip Code"];
+
+        }
 				else if (item.mandatory && !buyerInformationFields[index][item.name].value) {
 					buyerInformationFields[index][item.name]['error'] = true;
 				}
@@ -385,22 +391,27 @@ class Checkout extends React.Component {
 							attendee[index][key][field.name] = {};
 						}
 						if (field.mandatory && field.name && /address/i.test(field.name)) {
-							if(attendee[index][key][field.name + " 1"]){
-								attendee[index][key][field.name + " 1"]['error'] = !!attendee[index][key][field.name + " 1"];
+							if(!attendee[index][key][field.name + " 1"]){
+								attendee[index][key][field.name + " 1"]['error'] = {};
 							}
-							if(attendee[index][key][field.name + " 2"]){
-								attendee[index][key][field.name + " 2"]['error'] = !!attendee[index][key][field.name + " 2"];
+							if(!attendee[index][key][field.name + " 2"]){
+								attendee[index][key][field.name + " 2"]['error'] = {};
 							}
-							if(attendee[index][key][field.name + " City"]){
-								attendee[index][key][field.name + " City"]['error'] = !!attendee[index][key][field.name + " City"];
+							if(!attendee[index][key][field.name + " City"]){
+								attendee[index][key][field.name + " City"]['error'] = {};
 							}
-							if(attendee[index][key][field.name + " State"]){
-								attendee[index][key][field.name + " State"]['error'] = !!attendee[index][key][field.name + " State"];
+							if(!attendee[index][key][field.name + " State"]){
+								attendee[index][key][field.name + " State"]['error'] = {};
 							}
-							if(attendee[index][key][field.name + " Zip Code"]){
-								attendee[index][key][field.name + " Zip Code"]['error'] = !!attendee[index][key][field.name + " Zip Code"];
+							if(!attendee[index][key][field.name + " Zip Code"]){
+								attendee[index][key][field.name + " Zip Code"]['error'] = {};
 							}
-						}
+              attendee[index][key][field.name + " 1"]['error'] = !!attendee[index][key][field.name + " 1"];
+              attendee[index][key][field.name + " 2"]['error'] = !!attendee[index][key][field.name + " 2"];
+              attendee[index][key][field.name + " City"]['error'] = !!attendee[index][key][field.name + " City"];
+              attendee[index][key][field.name + " State"]['error'] = !!attendee[index][key][field.name + " State"];
+              attendee[index][key][field.name + " Zip Code"]['error'] = !!attendee[index][key][field.name + " Zip Code"];
+            }
 						else if (field.mandatory && !attendee[index][key][field.name].value) {
 							attendee[index][key][field.name]['error'] = true;
 						}
@@ -1232,8 +1243,12 @@ class Checkout extends React.Component {
 																							</div>
 																						</div> : ""}
 																						{ /address/i.test(item.name) ? <div className="col-md-6 text-left">
-																							<div className="address-field">
-																								<div className="mrg-b-xs">
+																							<div className={cx("address-field")}>
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 1"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 1"] && this.state.errorBuyer[key][item.name  + " 1"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 1"] && this.state.errorBuyer[key][item.name  + " 1"].value && 'has-success'
+                                                )}>
 																									<input data-attribute-type="text"
 																												 type="text"
 																												 className="form-control"
@@ -1252,8 +1267,18 @@ class Checkout extends React.Component {
 																												 required={ item.mandatory}
 																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " 1", key)}
 																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " 1 is invalid."}</small>
 																								</div>
-																								<div className="mrg-b-xs">
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 2"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 2"] && this.state.errorBuyer[key][item.name  + " 2"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " 2"] && this.state.errorBuyer[key][item.name  + " 2"].value && 'has-success'
+                                                )}>
 																									<input data-attribute-type="text"
 																												 type="text"
 																												 className="form-control"
@@ -1268,8 +1293,18 @@ class Checkout extends React.Component {
 																												 }
 																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " 2", key)}
 																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " 2 is invalid."}</small>
 																								</div>
-																								<div className="mrg-b-xs">
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " City"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " City"] && this.state.errorBuyer[key][item.name + " City"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " City"] && this.state.errorBuyer[key][item.name + " City"].value && 'has-success'
+                                                )}>
 																									<input data-attribute-type="text"
 																												 type="text"
 																												 className="form-control"
@@ -1285,10 +1320,22 @@ class Checkout extends React.Component {
 																												 required={ item.mandatory}
 																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " City", key)}
 																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " City is invalid."}</small>
 																								</div>
-																								<div className="mrg-b-xs">
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " State"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " State"] && this.state.errorBuyer[key][item.name  + " State"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " State"] && this.state.errorBuyer[key][item.name  + " State"].value && 'has-success'
+                                                )}>
 																									<select className="form-control" required={ item.mandatory}
-																													name={item.name + " State"}>
+																													name={item.name + " State"}
+																													onChange={this.setBuyerAddressValue.bind(this, item, item.name + " State", key)}
+																									>
 																										<option value="">State</option>
 																										<option value="AL">ALABAMA</option>
 																										<option value="AK">ALASKA</option>
@@ -1341,8 +1388,18 @@ class Checkout extends React.Component {
 																										<option value="WI">WISCONSIN</option>
 																										<option value="WY">WYOMING</option>
 																									</select>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " State is invalid."}</small>
 																								</div>
-																								<div className="mrg-b-xs">
+																								<div className={cx("mrg-b-xs form-group",
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name + " Zip Code"] && 'has-feedback',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " Zip Code"] && this.state.errorBuyer[key][item.name  + " Zip Code"].error && 'has-error',
+                                                  this.state.errorBuyer && this.state.errorBuyer[key] && this.state.errorBuyer[key][item.name  + " Zip Code"] && this.state.errorBuyer[key][item.name  + " Zip Code"].value && 'has-success'
+                                                )}>
 																									<input type="number"
 																												 className="form-control"
 																												 placeholder="Zip Code"
@@ -1357,6 +1414,12 @@ class Checkout extends React.Component {
 																												 required={ item.mandatory}
 																												 onChange={this.setBuyerAddressValue.bind(this, item, item.name + " Zip Code", key)}
 																									/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																									<i
+																										className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																									<small
+																										className="help-block">{ "The " + item.name + " Zip Code is invalid."}</small>
 																								</div>
 																							</div>
 																						</div> : ""}
@@ -1903,7 +1966,12 @@ class Checkout extends React.Component {
 																									</div> : ""}
 																									{ /address/i.test(attrib.name) ? <div className="col-md-6 text-left">
 																										<div className="address-field">
-																											<div className="mrg-b-xs">
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && (this.state.errorAttendee[itemKey][key][attrib.name + " 1"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " 1"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"] && this.state.errorAttendee[itemKey][key][attrib.name + " 1"].value && 'has-success',
+                                                        )}>
 																												<input data-attribute-type="text"
 																															 type="text"
 																															 className="form-control"
@@ -1919,8 +1987,19 @@ class Checkout extends React.Component {
 																															 required={ attrib.mandatory}
 																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " 1", itemKey, key)}
 																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " 1 is invalid."}</small>
 																											</div>
-																											<div className="mrg-b-xs">
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && (this.state.errorAttendee[itemKey][key][attrib.name + " 2"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " 2"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"] && this.state.errorAttendee[itemKey][key][attrib.name + " 2"].value && 'has-success',
+                                                        )}>
 																												<input data-attribute-type="text"
 																															 type="text"
 																															 className="form-control"
@@ -1935,8 +2014,19 @@ class Checkout extends React.Component {
 																															 }
 																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " 2", itemKey, key)}
 																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " 2 is invalid."}</small>
 																											</div>
-																											<div className="mrg-b-xs">
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"] && (this.state.errorAttendee[itemKey][key][attrib.name  + " City"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " City"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"] && this.state.errorAttendee[itemKey][key][attrib.name  + " City"].value && 'has-success',
+                                                        )}>
 																												<input data-attribute-type="text"
 																															 type="text"
 																															 className="form-control"
@@ -1952,8 +2042,19 @@ class Checkout extends React.Component {
 																															 required={ attrib.mandatory}
 																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " City", itemKey, key)}
 																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " City is invalid."}</small>
 																											</div>
-																											<div className="mrg-b-xs">
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"] && (this.state.errorAttendee[itemKey][key][attrib.name  + " State"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " State"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"] && this.state.errorAttendee[itemKey][key][attrib.name  + " State"].value && 'has-success',
+                                                        )}>
 																												<select className="form-control" required={ attrib.mandatory}
 																																name={attrib.name + " State"}>
 																													<option value="">State</option>
@@ -2008,8 +2109,19 @@ class Checkout extends React.Component {
 																													<option value="WI">WISCONSIN</option>
 																													<option value="WY">WYOMING</option>
 																												</select>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " State is invalid."}</small>
 																											</div>
-																											<div className="mrg-b-xs">
+																											<div
+																												className={cx("mrg-b-xs form-group",
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"] && (this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].key || this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].error) && 'has-feedback',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].error && 'has-error',
+                                                          this.state.errorAttendee && this.state.errorAttendee[itemKey] && this.state.errorAttendee[itemKey][key] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"] && this.state.errorAttendee[itemKey][key][attrib.name  + " Zip Code"].value && 'has-success',
+                                                        )}>
 																												<input type="number"
 																															 className="form-control"
 																															 placeholder="Zip Code"
@@ -2024,6 +2136,12 @@ class Checkout extends React.Component {
 																															 required={ attrib.mandatory}
 																															 onChange={this.setAttendeesAddressValue.bind(this, attrib, attrib.name + " Zip Code", itemKey, key)}
 																												/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																												<i
+																													className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																												<small
+																													className="help-block">{ "The " + attrib.name + " Zip Code is invalid."}</small>
 																											</div>
 																										</div>
 																									</div> : ""}
