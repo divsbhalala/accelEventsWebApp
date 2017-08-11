@@ -16,7 +16,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput/main';
 
 class Fund extends React.Component {
   static propTypes = {

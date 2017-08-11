@@ -11,7 +11,7 @@ import PopupModel from './../../../components/PopupModal/index';
 import ProgressIndicator from './../../../components/ProgressIndicator';
 import Moment from 'react-moment';
 import moment from 'moment';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput/main';
 import { doValidateMobileNumber, doGetEventData } from './../action/index';
 import { getCardToken } from './../../checkout/action/index';
 import NumericInput from 'react-numeric-input';
