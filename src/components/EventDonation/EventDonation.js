@@ -482,8 +482,8 @@ class EventDonation extends React.Component {
           <div className={cx('btn-group')} data-toggle="buttons">
             {
               this.props.donations ? this.props.donations.map(item =>
-                <label key={Math.random()} className={cx('btn', this.state.donationRate === item ? 'active' : '')}>
-                  <input
+                <label key={Math.random()} className={cx('btn', parseInt(this.state.donationRate) === item ? 'active' : '')}>
+               <input
                     type="radio" autoComplete="off" name="donate5" className={cx('default-amount')} defaultValue={item}
                     onChange={this.handleRadioChange}
                   />
@@ -520,18 +520,9 @@ class EventDonation extends React.Component {
           <div className="main-box-body clearfix">
             <div className="payment-area collapse in">
               <form
-                className="ajax-form validated fv-form fv-form-bootstrap" data-has-cc-info="true"
-                data-show-cc-confirm="true" data-confirm-message="getDonateConfirmMessage" id="donate-payment-form"
-                data-validate-function="validateDonateForm" data-onsuccess="handleDonateSuccess" method="post"
-                data-validation-fields="getDonateModalValidationFields" action="/AccelEventsWebApp/events/12/D"
-                noValidate="novalidate"
+                className="ajax-form validated fv-form fv-form-bootstrap"
                 onSubmit={this.submitDonatebid}
               >
-                <button type="submit" className="fv-hidden-submit" style={{ display: 'none', width: 0, height: 0 }} />
-                <div className="ajax-msg-box text-center mrg-b-lg" style={{ display: 'none' }}><span
-                  className="fa fa-spinner fa-pulse fa-fw"
-                /> <span className="resp-message" />
-                </div>
                 { !this.props.authenticated || (this.props.authenticated && this.props.user.firstName === null) ? <div
                   className={cx('form-group', this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}
                 >

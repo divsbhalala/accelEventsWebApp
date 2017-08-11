@@ -45,7 +45,7 @@ class Auction extends React.Component {
       passwordFeedBack: false,
       auctionData: null,
 
-      isValidBidData: false,
+      isValidBidData: true,
 
       firstName: null,
       lastName: null,
@@ -102,10 +102,17 @@ class Auction extends React.Component {
   }
   onBidFormClick = (e) => {
     this.setState({
-      loading:true
+      loading:true,
+      firstNameFeedBack: true,
+      lastNameFeedBack: true,
+      cardNumberFeedBack: true,
+      cardHolderFeedBack: true,
+      amountFeedBack: true,
+      cvvFeedBack: true,
+      phoneNumberFeedBack: true,
     });
     e.preventDefault();
-    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded){
+    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded && this.state.amount){
       this.setState({
         showPopup: true,
         loading:false,
@@ -113,7 +120,7 @@ class Auction extends React.Component {
         popupHeader:"Failed",
       })
     }else {
-      if( this.props.authenticated  &&   !this.props.eventData.ccRequiredForBidConfirm ) {
+      if( this.props.authenticated && !this.props.eventData.ccRequiredForBidConfirm && this.amount.value ) {
         this.setState({
           loading:false,
           showPopup: true,
@@ -480,7 +487,6 @@ class Auction extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
@@ -531,7 +537,6 @@ class Auction extends React.Component {
     this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
-
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
@@ -705,7 +710,8 @@ class Auction extends React.Component {
 
         </div>
         <Button className={cx("btn btn-primary text-uppercase")}
-                disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                disabled={!( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
                 loading={this.state.loading} type="submit"
                 data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
           SUBMIT
@@ -772,7 +778,7 @@ class Auction extends React.Component {
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
               <input type="number" className="form-control" name="itembid" id="itembid"
-                     placeholder="Amount" step required="required"
+                     placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
                      }}
@@ -1003,7 +1009,7 @@ class Auction extends React.Component {
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
               <input type="number" className="form-control" name="itembid" id="itembid"
-                     placeholder="Amount" step required="required"
+                     placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
                      }}

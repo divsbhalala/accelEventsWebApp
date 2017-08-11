@@ -312,20 +312,20 @@ class Volunteer extends React.Component {
    	if (this.itemCode.value && this.itemCode.value.trim().length === 3) {
      this.props.getItemStatusByCode(this.props.params && this.props.params.params, this.itemCode.value.trim(), this.state.modelType)
 				.then((resp) => {
-  if (resp && resp.data) {
-    this.setState({
-      itemData: resp.data,
-      itemStatusMsg: null,
-      itemCode: true,
-    });
-  }
-}).catch((error) => {
-  this.setState({
-    itemStatusMsg: 0,
-    itemCode: false,
-  });
-});
-   }
+          if (resp && resp.data) {
+            this.setState({
+              itemData: resp.data,
+              itemStatusMsg: null,
+              itemCode: true,
+            });
+          }
+        }).catch((error) => {
+          this.setState({
+            itemStatusMsg: 0,
+            itemCode: false,
+          });
+        });
+      }
   };
   getAttendeesList() {
     this.props.getAttendees(this.props.params && this.props.params.params)
@@ -565,7 +565,7 @@ class Volunteer extends React.Component {
 		if (value === '' || value === null) {
 			this.setState({
 				availTickets: false,
-				errorMsgAvailTickets: "Please enter tickets you want to submit.",
+				errorMsgAvailTickets: "",
 			});
 		}
 		else if(this.state.userData){
@@ -610,7 +610,7 @@ class Volunteer extends React.Component {
     if (value === '' || value === null) {
       this.setState({
         amount: false,
-        errorMsgAmount: "Submitted pledge Amount can't be empty",
+        errorMsgAmount: "",
       });
     } else if (bid > value) {
       this.setState({
@@ -1418,7 +1418,7 @@ class Volunteer extends React.Component {
                 { this.state.itemCodeFeedBack && !this.state.itemCode &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                 { this.state.itemCodeFeedBack && !this.state.itemCodeValue &&
-                <small className="text-danger" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
 							</div>
               <h5 id="infoMessage"
 							    className='text-danger'> { this.state.itemStatusMsg == 0 && 'Invalid Item Code' } </h5>
@@ -1656,7 +1656,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -1817,6 +1818,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.itemCodeFeedBack && !this.state.itemCode &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                { this.state.itemCodeFeedBack && !this.state.itemCodeValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
               </div>
               <h5
                 id="infoMessage"
@@ -1852,6 +1855,8 @@ class Volunteer extends React.Component {
 											{ this.state.amountFeedBack && !this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 										</div>
+                    { this.state.amountFeedBack && !this.state.amountValue &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">Submitted pledge Amount can not be empty</small>}
 										{ this.state.amountFeedBack && !this.state.amount &&
 										<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
 									</div>
@@ -2060,7 +2065,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2244,6 +2250,7 @@ class Volunteer extends React.Component {
                   className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs" ref={(ref) => {
                     this.raffleTicket = ref;
                   }} onChange={this.raffleTicketValidateHandler}
+
                 >
                   <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
                   <option value={847} data-ticket={1} data-price={5}>
@@ -2474,7 +2481,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2638,6 +2646,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.itemCodeFeedBack && !this.state.itemCode &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
+                { this.state.itemCodeFeedBack && !this.state.itemCodeValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Item code is required.</small>}
               </div>
               <h5
                 id="infoMessage"
@@ -2666,7 +2676,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                 { this.state.availTicketsFeedBack && !this.state.availTickets &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-
+                { this.state.availTicketsFeedBack && !this.state.amountValue &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">Please enter tickets you want to submit.</small>}
                 { this.state.availTicketsFeedBack && !this.state.availTickets &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAvailTickets}</small>}
 							</div>
@@ -2849,7 +2860,8 @@ class Volunteer extends React.Component {
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
-
+                { this.state.emailFeedBack && !this.state.emailValue &&
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -3030,6 +3042,8 @@ class Volunteer extends React.Component {
 											{ this.state.amountFeedBack && !this.state.amount &&
 											<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 										</div>
+                    { this.state.amountFeedBack && !this.state.amountValue &&
+                      <small className="help-block" data-fv-result="NOT_VALIDATED">Donation Amount can not be empty</small>}
 										{ this.state.amountFeedBack && !this.state.amount &&
 										<small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
 									</div>

@@ -470,6 +470,21 @@ export function doLogin(email, password,rememberme=false) {
       });
   }
 }
+export function whiteLabelURL(url) {
+  return (dispatch) => {
+   return axios({
+    method: 'get',
+    url: API_URL + 'whiteLabelURL/'+url,
+  }).then(resp=>{
+    if(resp && resp.data){
+      return resp.data;
+    }
+    return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
+  }
+}
 //********* Auction ************//
 export function doSignUp(eventUrl,userData) {
   return (dispatch) => {
