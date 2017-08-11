@@ -346,7 +346,24 @@ class Checkout extends React.Component {
 				if (!buyerInformationFields[index][item.name]) {
 					buyerInformationFields[index][item.name] = {};
 				}
-				if (item.mandatory && !buyerInformationFields[index][item.name].value) {
+				if (item.mandatory && item.name && /address/i.test(item.name)) {
+					if(attendee[index][item.name + " 1"]){
+						attendee[index][item.name + " 1"]['error'] = !!attendee[index][item.name + " 1"];
+					}
+					if(attendee[index][item.name + " 2"]){
+						attendee[index][item.name + " 2"]['error'] = !!attendee[index][item.name + " 2"];
+					}
+					if(attendee[index][item.name + " City"]){
+						attendee[index][item.name + " City"]['error'] = !!attendee[index][item.name + " City"];
+					}
+					if(attendee[index][item.name + " State"]){
+						attendee[index][item.name + " State"]['error'] = !!attendee[index][item.name + " State"];
+					}
+					if(attendee[index][item.name + " Zip Code"]){
+						attendee[index][item.name + " Zip Code"]['error'] = !!attendee[index][item.name + " Zip Code"];
+					}
+				}
+				else if (item.mandatory && !buyerInformationFields[index][item.name].value) {
 					buyerInformationFields[index][item.name]['error'] = true;
 				}
 			});
@@ -367,7 +384,24 @@ class Checkout extends React.Component {
 						if (!attendee[index][key][field.name]) {
 							attendee[index][key][field.name] = {};
 						}
-						if (field.mandatory && !attendee[index][key][field.name].value) {
+						if (field.mandatory && field.name && /address/i.test(field.name)) {
+							if(attendee[index][key][field.name + " 1"]){
+								attendee[index][key][field.name + " 1"]['error'] = !!attendee[index][key][field.name + " 1"];
+							}
+							if(attendee[index][key][field.name + " 2"]){
+								attendee[index][key][field.name + " 2"]['error'] = !!attendee[index][key][field.name + " 2"];
+							}
+							if(attendee[index][key][field.name + " City"]){
+								attendee[index][key][field.name + " City"]['error'] = !!attendee[index][key][field.name + " City"];
+							}
+							if(attendee[index][key][field.name + " State"]){
+								attendee[index][key][field.name + " State"]['error'] = !!attendee[index][key][field.name + " State"];
+							}
+							if(attendee[index][key][field.name + " Zip Code"]){
+								attendee[index][key][field.name + " Zip Code"]['error'] = !!attendee[index][key][field.name + " Zip Code"];
+							}
+						}
+						else if (field.mandatory && !attendee[index][key][field.name].value) {
 							attendee[index][key][field.name]['error'] = true;
 						}
 					})
@@ -580,7 +614,6 @@ class Checkout extends React.Component {
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
 	};
-
 	phoneNumberValidateHandler( isValid, value, name, countryData, number, ext, field, key, itemKey, event) {
 		let object = attendee || {};
 		if (!object[key]) {
@@ -625,7 +658,6 @@ class Checkout extends React.Component {
 		}
 		attendee = object;
 	};
-
 	buyerPhoneNumberValidateHandler( isValid, value, name, countryData, number, ext, field, key, event) {
 		let object = attendee || {};
 		if (!object[key]) {
@@ -667,7 +699,6 @@ class Checkout extends React.Component {
 		}
 		attendee = object;
 	};
-
 	setAttendeesAddressValue = (field, name, key, itemKey, event) => {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
@@ -892,7 +923,6 @@ class Checkout extends React.Component {
 		}
 		attendee = object;
 	};
-
 	hideFormError = () => {
 		this.setState({
 			showFormError: false
@@ -930,7 +960,6 @@ class Checkout extends React.Component {
 			}
 		})
 	};
-
 	showMapPopup = (e) => {
 		e.preventDefault();
 		this.setState({
@@ -1678,8 +1707,7 @@ class Checkout extends React.Component {
 																							<div className="input-group-addon">
 																								<i className="fa fa-map-o" aria-hidden="true"/></div>
 																							<select className="form-control" data-stripe="address_state"
-																											data-attribute-type="text" name="address_state">
-																								<option value={-1}>State</option>
+																										data-attribute-type="text" name="address_state">																	<option value={-1}>State</option>
 																								<option value="AL">ALABAMA</option>
 																								<option value="AK">ALASKA</option>
 																								<option value="AZ">ARIZONA</option>
