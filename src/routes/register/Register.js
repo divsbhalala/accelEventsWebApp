@@ -53,9 +53,10 @@ class Register extends React.Component {
         if (resp && resp.data) {
           this.setState({error: ""});
           setTimeout(()=>{
+              // history.push(resp.data.redirectUrl)
              history.push('/');
             // window.location.replace(resp.data.redirectUrl)
-          },2000)
+          },2500)
         }
         else {
           let errorMessage = resp && resp.errorMessage;
