@@ -4,10 +4,9 @@ import cx from 'classnames';
 import s from './FundSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {getHostSettings,resetHostSettings,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
+import CategoryManager from '../../../../components/CategoryManagement';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
-import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import {Modal ,Button, Alert} from 'react-bootstrap';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
 import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
@@ -32,8 +31,14 @@ class FundSetting extends React.Component {
       alertMessage:null,
       alertType:null,
       categoryAlertVisible:false,
-      startDate: moment()
+      startDate: moment(),
+      resetsetState:true,
     };
+  };
+  toggleCategory=()=>{
+    this.setState({
+      resetsetState:!this.state.resetsetState,
+    })
   };
 
   handleAlertDismiss = () => {
@@ -99,15 +104,7 @@ class FundSetting extends React.Component {
     }).catch((error) => {
     });
 
-    this.props.getHostCategories(this.state.moduleType).then(resp=> {
-      if(resp){
-        this.setState({itemCategories : resp.data.itemCategories});
-      }
-      else{
-      }
-    }).catch(error=>{
-    });
-  };
+    };
 
   handleEvent = (event, picker) => {
     let settings = this.state.settings;
@@ -230,7 +227,10 @@ class FundSetting extends React.Component {
                                             id="categoryEnabled"
                                             defaultValue={this.state.settings.categoryEnabled}
                                             className="success"
-                                            onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/> }
+                                            onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}
+                                            onClick={this.toggleCategory}
+                              />
+                              }
                             </div>
                           </div>
                           <div>
@@ -238,12 +238,9 @@ class FundSetting extends React.Component {
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
                         </div>
-                        <div className="row form-group category-settings">
-                          <div className="col-md-3 col-md-offset-1">
-                            Category Management
-                          </div>
-                          {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
-                        </div>
+                        {this.state.settings && this.state.settings.categoryEnabled  && <div className="row form-group category-settings" >
+                          <CategoryManager moduleType={this.state.moduleType} />
+                        </div>}
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-info mrg-t-lg" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
                         </div>
@@ -274,10 +271,6 @@ class FundSetting extends React.Component {
 const mapDispatchToProps = {
   updateHostSettings : (moduleType, settingsDTO)  => updateHostSettings(moduleType, settingsDTO),
   getHostSettings : (moduleType) => getHostSettings(moduleType),
-  getHostCategories : (moduleType) => getHostCategories(moduleType),
-  removeHostCategory : (moduleType, id) => removeHostCategory(moduleType, id),
-  addHostCategory : (moduleType, itemCategory) => addHostCategory (moduleType, itemCategory),
-  updateHostCategory : (moduleType, id, itemCategory) => updateHostCategory(moduleType, id, itemCategory),
   resetHostSettings : (moduleType) => resetHostSettings(moduleType)
 };
 
