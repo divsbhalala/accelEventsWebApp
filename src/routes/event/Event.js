@@ -110,9 +110,9 @@ class Event extends React.Component {
 		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=> {
 			this.setState({
 				activeEventTickets: this.props.eventData && this.props.eventData.ticketingEnabled,
-				activeAuction: this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeAuction: this.props.eventData && this.props.eventData.silentAuctionEnabled,
 				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
-				activeFund: true,
+				activeFund: this.props.eventData && this.props.eventData.causeAuctionEnabled,
 				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
 			});
 			if (this.state.activeEventTickets) {
@@ -929,8 +929,8 @@ class Event extends React.Component {
 										</div>
 									</Tab>
 									<Tab label="Donate" disabled={!this.state.activeDonation}>
-										<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
-										</div>
+										{this.state.activeDonation && <div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
+										</div> }
 									</Tab>
 								</Tabs>
 							</div>}
