@@ -977,7 +977,7 @@ class Event extends React.Component {
 												{item.ticketsPerTable && item.ticketsPerTable > 0 ?
 													<div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable} tickets</div> : ''}
 												{<div className="txt-sm gray type-desc">
-												 TODO: Item desctiption goes here
+												 {item.enableTicketDescription && item.ticketTypeDescription}
 												 </div>}
 											</div>
 										</div>
