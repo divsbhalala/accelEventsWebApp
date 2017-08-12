@@ -54,7 +54,9 @@ class ProfileField extends React.Component {
           <div className="col-md-8">
             <div  className="row">
               <div className="editable-input col-sm-5" style={{position: 'relative'}}>
-                <EditableTextField name='username' value={this.state.fieldValue} onUpdate={this.updateProfile} placeholder=''/>
+                {this.props.title == 'Email' || this.props.title == 'Phone'  ?
+                  <a className="editable editable-click">{this.state.fieldValue}</a>
+                :  <EditableTextField name='username' value={this.state.fieldValue} onUpdate={this.updateProfile} placeholder=''/>}
               </div>
             </div>
           </div>

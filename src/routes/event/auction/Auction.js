@@ -92,6 +92,8 @@ class Auction extends React.Component {
       errorMsgcvv: null,
       errorMsgEmail: null,
       errorMsgPhoneNumber: null,
+      errorMsgPassword: null,
+      showForgatePassword:false,
       showPopup: false,
       stripeToken:null,
       phone:null,
@@ -242,11 +244,18 @@ class Auction extends React.Component {
         }
         else{
           this.setState({
-            showPopup: true,
+           // showPopup: true,
             errorMsgCard: resp.errorMessage,
             popupHeader:"Failed",
             loading:false,
-          })
+          });
+          if(resp.errorMessage == 'Incorrect password'){
+            this.setState({
+              password:false,
+              errorMsgPassword:'',
+              showForgatePassword:true,
+            });
+          }
         }
       });
     }
@@ -281,7 +290,8 @@ class Auction extends React.Component {
     });
     if (this.password.value.trim() == '') {
       this.setState({
-        password: false
+        password: false,
+        errorMsgPassword: "Password can't be empty.",
       });
     } else {
       this.setState({
@@ -706,7 +716,8 @@ class Auction extends React.Component {
 
           </div>
           { this.state.passwordFeedBack && !this.state.password &&
-          <small className="help-block">Password can't be empty.</small>}
+          <small className="help-block">{this.state.errorMsgPassword}</small>}
+          {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
         </div>
         <Button className={cx("col-sm-6 btn btn-primary text-uppercase")}
