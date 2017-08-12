@@ -439,7 +439,7 @@ class Volunteer extends React.Component {
       this.setState({
         phoneEnable: true,
         email: false,
-        errorMsgEmail: 'Email is required.',
+        errorMsgEmail: 'Bidder email can\'t be empty.',
       });
     }		else {
       this.setState({
@@ -1259,7 +1259,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -1662,7 +1662,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2074,7 +2074,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2496,7 +2496,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2894,7 +2894,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Email is required.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
