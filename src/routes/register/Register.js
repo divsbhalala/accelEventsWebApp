@@ -53,6 +53,10 @@ class Register extends React.Component {
         let data = resp && resp.data;
         if (data) {
           this.setState({error: ""});
+          setTimeout(()=>{
+             history.push('/u/myprofile');
+            //window.location.replace(resp.data.redirectUrl)
+          },2000)
         }
         else {
           alert('invalid Data');

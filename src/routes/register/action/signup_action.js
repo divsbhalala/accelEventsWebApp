@@ -11,26 +11,35 @@ export function onFormSubmit(e) {
   return false;
 }
 
+const getUserDetails = (token) => {
+  return axios({
+    method: 'get',
+    url: API_URL + 'u/userdetail/event/jkazarian0',
+    headers: {Authorization: token}
+  })
+};
+
 export function doRegister(email, password) {
   return (dispatch) => {
     return axios({
       method: 'post',
       url: API_URL + 'u/signup/admin',
       data: {
-				signupDto : {
 				  email: email,
 					password: password
-				},
       }
     }).then(response => {
-      dispatch(storeLoginData(response.data));
-      localStorage.setItem('user', JSON.stringify(response.data));
+      dispatch(storeToken(response.data.access_token));
+      getUserDetails(response.data.access_token).then(resp => {
+
+        dispatch(storeLoginData(resp.data));
+        localStorage.setItem('user', JSON.stringify(resp.data));
+      }).catch(err => {
+      });
+      localStorage.setItem('token', response.data.access_token);
       return response;
 
     })
-      .catch(error => {
-        return error;
-      });
   }
 
 }
@@ -39,5 +48,12 @@ export function storeLoginData(data) {
   return {
     type: 'STORE_LOGIN_DATA',
     data
+  }
+}
+
+export function storeToken(data) {
+  return {
+    type: 'STORE_TOKEN',
+    token: data
   }
 }
