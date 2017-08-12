@@ -720,18 +720,13 @@ class Auction extends React.Component {
           {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
         </div>
-        <Button className={cx("col-sm-6 btn btn-primary text-uppercase")}
+        <Button className={cx("btn btn-primary text-uppercase")}
                 // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
                 disabled={!( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
                 loading={this.state.loading} type="submit"
                 data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
           SUBMIT
         </Button>
-        <div className="col-sm-6" style={{paddingLeft:5}}>
-          <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
-            Go back to All Items
-          </Link>
-        </div>
       </form>
     </div>;
     let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1035,7 +1030,7 @@ class Auction extends React.Component {
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
-            { this.state.auctionData && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            { this.state.auctionData && this.state.amountValue && this.state.auctionData.buyItNowPrice > 0 && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
             <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
@@ -1200,12 +1195,7 @@ class Auction extends React.Component {
       </div>
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
-      className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span>
-      <div className="text-center" style={{paddingTop:50}}>
-        <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
-          Go back to All Items
-        </Link>
-      </div></div>;
+      className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
 
     return (

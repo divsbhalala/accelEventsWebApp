@@ -971,7 +971,7 @@ class Event extends React.Component {
 												</div>
 												<div
 													className="sale-text txt-sm text-uppercase"> {moment(item.endDate).diff(moment()) > 0 ? "Available until " : "Sale Ended on "}
-													{item.endDate && <Moment format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{item.endDate}</Moment>}
+													{item.endDate && <Moment format="MMM D, YYYY" tz={this.props.eventData && this.props.eventData.timezoneId}>{item.endDate}</Moment>}
 
 														</div>
 												{item.ticketsPerTable && item.ticketsPerTable > 0 ?
