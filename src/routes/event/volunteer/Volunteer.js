@@ -15,6 +15,7 @@ import IntlTelInput from './../../../components/IntTelInput';
 import { doValidateMobileNumber, doGetEventData } from './../action/index';
 import { getCardToken } from './../../checkout/action/index';
 import NumericInput from 'react-numeric-input';
+import TicketCheckout from './../../../components/TicketCheckout';
 
 import {
   getItemStatusByCode,
@@ -136,7 +137,6 @@ class Volunteer extends React.Component {
 
    }
   }
-
   validateField = () => {
 	  this.setState({
     itemCodeFeedBack: true,
@@ -719,7 +719,6 @@ class Volunteer extends React.Component {
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
-
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.doGetEventData(this.props.params && this.props.params.params);
@@ -744,7 +743,6 @@ class Volunteer extends React.Component {
       this.setActiveView('select-action');
     }
   };
-
   submiteSilentAuctionBid = (e) => {
     e.preventDefault();
     this.validateField();
@@ -809,7 +807,6 @@ class Volunteer extends React.Component {
         }
       });
   };
-
   submitPledgeBid = (e) => {
     e.preventDefault();
     this.validateField();
@@ -881,7 +878,6 @@ class Volunteer extends React.Component {
         }
       });
   };
-
   sellTicketsBid = (e) => {
     e.preventDefault();
     this.validateField();
@@ -950,7 +946,6 @@ class Volunteer extends React.Component {
         }
       });
   };
-
   submitTicketsbid = (e) => {
     e.preventDefault();
     this.validateField();
@@ -984,7 +979,6 @@ class Volunteer extends React.Component {
             });
     } else { this.setState({ loading: false }); }
   };
-
   submitDonatebid = (e) => {
     e.preventDefault();
     this.validateField();
@@ -1053,7 +1047,6 @@ class Volunteer extends React.Component {
         }
       });
   };
-
   doOrderTicket() {
     const Data = {};
     Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
@@ -1070,8 +1063,14 @@ class Volunteer extends React.Component {
         if (resp && resp.data && resp.data.orderId) {
           // history.push('/u/checkout/'+eventUrl+'/tickets/order/'+resp.data.orderId);
           this.setState({
-						activeViews: "purchase-event-tickets-checkout",
 						orderId: resp.data.orderId,
+						eventUrl: eventUrl,
+          }, ()=>{
+            this.setState({
+							activeViews: "purchase-event-tickets-checkout",
+            });
+
+
           })
         } else {
           this.setState({
@@ -1109,7 +1108,6 @@ class Volunteer extends React.Component {
       totalTicketPrice: totalPrice,
     });
   }
-
   changePaymentType = (event) => {
     this.setState({
       paymentType: event.target.value,
@@ -2805,6 +2803,7 @@ class Volunteer extends React.Component {
             className={cx(this.state.activeViews === 'purchase-event-tickets-checkout' && s.active)}
           >
             <h4 className="text-center"><strong>Sell Event Tickets</strong></h4>
+            <TicketCheckout eventUrl={this.state.eventUrl} orderId={this.state.orderId} isVoluneer={true} />
             <div className="form-group text-center">
               <button
                 className="btn btn-default" onClick={() => {
