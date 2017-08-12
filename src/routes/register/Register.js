@@ -53,8 +53,8 @@ class Register extends React.Component {
         if (resp && resp.data) {
           this.setState({error: ""});
           setTimeout(()=>{
-             history.push('/u/myprofile');
-            //window.location.replace(resp.data.redirectUrl)
+             history.push('/');
+            // window.location.replace(resp.data.redirectUrl)
           },2000)
         }
         else {
