@@ -168,6 +168,7 @@ class Checkout extends React.Component {
 	};
 	cardHolderNameBlurValidateHandler = () => {
 		if (this.cardHolderName && this.cardHolderName.value) {
+			this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
 			let nameLen = this.cardHolderName.value.length;
 			if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
 				this.setState({
@@ -208,6 +209,7 @@ class Checkout extends React.Component {
 		}
 	};
 	cardNumberValidateHandler = (e) => {
+		this.cardNumber.value = this.cardNumber.value && this.cardNumber.value.trim();
 		this.cardNumber.value = this.cardNumber.value.substr(0, 16);
 		this.setState({
 			cardNumberFeedBack: true
@@ -271,6 +273,7 @@ class Checkout extends React.Component {
 
 	};
 	cardExpMonthValidateHandler = (e) => {
+		this.cardExpMonth.value = this.cardExpMonth.value && this.cardExpMonth.value.trim();
 		if (!this.cardExpMonth.value) {
 			this.setState({
 				cardExpMonth: false,
@@ -292,6 +295,7 @@ class Checkout extends React.Component {
 		}
 	};
 	cardExpYearValidateHandler = (e) => {
+		this.cardExpYear.value = this.cardExpYear.value && this.cardExpYear.value.trim();
 		if (!this.cardExpYear.value) {
 			this.setState({
 				cardExpYear: false,
@@ -313,7 +317,7 @@ class Checkout extends React.Component {
 		}
 	};
 	passwordValidateHandler = (e) => {
-
+		this.password.value = this.password.value && this.password.value.trim();
 		this.setState({
 			passwordFeedBack: true
 		});
