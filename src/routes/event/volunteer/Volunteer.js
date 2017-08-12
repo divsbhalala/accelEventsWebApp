@@ -1128,7 +1128,7 @@ class Volunteer extends React.Component {
         item.push(<option value={j} key={i + Math.random()}>{j}</option>);
       }
       return item;
-    };
+    };    
     return (
       <div>
         { this.state.isloaded && this.props.is_volunteer &&
@@ -1429,7 +1429,7 @@ class Volunteer extends React.Component {
 							<div className="form-group">
 								<div className="text-xs">Item Name : <span className="item-name"/> {this.state.itemData.itemName} </div>
 								<div className="text-xs">Current Bid: <span
-									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.currentBid}<span
+									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.currentBid ? this.state.itemData.currentBid : this.state.itemData.startingBid}<span
 									className="current-bid"/></div>
 								<div className="text-xs" style={{display: 'none'}}>Starting Bid: <span
 									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.itemName}<span className="starting-bid"/>
