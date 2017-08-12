@@ -1275,6 +1275,8 @@ class Volunteer extends React.Component {
                       css={['intl-tel-input', 'form-control intl-tel']}
                       utilsScript="./libphonenumber.js"
                       separateDialCode
+                      autoPlaceholder={false}
+                      placeholder={"Bidder Cell Number"}
                       value={this.state.phone || ''}
                       defaultCountry={this.props.country || ""}
                       onPhoneNumberChange={this.changePhone}
@@ -1676,6 +1678,8 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    autoPlaceholder={false}
+                    placeholder={"Bidder Cell Number"}
                     value={this.state.phone || ''}
                     defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
@@ -2085,6 +2089,8 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    autoPlaceholder={false}
+                    placeholder={"Bidder Cell Number"}
                     value={this.state.phone || ''}
                     defaultCountry={this.props.country || ""}
                     onPhoneNumberChange={this.changePhone}
@@ -2163,6 +2169,8 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    autoPlaceholder={false}
+                    placeholder={"Bidder Cell Number"}
                     defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
@@ -2503,6 +2511,8 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    autoPlaceholder={false}
+                    placeholder={"Bidder Cell Number"}
                     defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
@@ -2902,6 +2912,8 @@ class Volunteer extends React.Component {
                       css={['intl-tel-input', 'form-control intl-tel']}
                       utilsScript="./libphonenumber.js"
                       separateDialCode
+                      autoPlaceholder={false}
+                      placeholder={"Bidder Cell Number"}
                       defaultCountry={this.props.country || ""}
                       value={this.state.phone || ''}
                       onPhoneNumberChange={this.changePhone}
@@ -2973,6 +2985,8 @@ class Volunteer extends React.Component {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode
+                    autoPlaceholder={false}
+                    placeholder={"Bidder Cell Number"}
                     defaultCountry={this.props.country || ""}
                     value={this.state.phone || ''}
                     onPhoneNumberChange={this.changePhone}
