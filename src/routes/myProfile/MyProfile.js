@@ -90,6 +90,13 @@ class MyProfile extends React.Component {
                   <Tab label="Events">
                     <div className="row">
                       <div className="tab-content">
+                        <div>
+                          <form id="newEventForm" method="POST" action="/AccelEventsWebApp/u/create/newevent">
+                            <button style={{ "backgroundColor": "orange"}} type="submit" className="btn btn-default btn-block">
+                              Create New Event
+                            </button>
+                          </form>
+                        </div>
                         <table className="table table-striped table-hover table-bordered" cellSpacing={0} id="auctionevents">
                           <thead>
                             <tr>
@@ -105,13 +112,6 @@ class MyProfile extends React.Component {
                             }
                           </tbody>
                         </table>
-                        <div>
-                          <form id="newEventForm" method="POST" action="/AccelEventsWebApp/u/create/newevent">
-                            <button type="submit" className="btn btn-default btn-block">
-                              Create New Event
-                            </button>
-                          </form>
-                        </div>
                       </div>
                     </div>
                   </Tab>
