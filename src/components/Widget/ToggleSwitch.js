@@ -12,7 +12,7 @@ class ToggleSwitch extends React.Component {
 		return (
 			<div className={cx("onoffswitch", this.props.className ? "onoffswitch-" + this.props.className : "onoffswitch-success")}>
 				<input type="checkbox" name={this.props.name} className="onoffswitch-checkbox"
-							 id={this.props.id} defaultChecked={this.props.defaultValue} onChange={()=>{ if(this.props.onChange){this.props.onChange()}}}/>
+							 id={this.props.id} defaultChecked={this.props.defaultValue} onClick={this.props.onClick} onChange={()=>{ if(this.props.onChange){this.props.onChange()}}}/>
 				<label className="onoffswitch-label" htmlFor={this.props.id}>
 					<div className="onoffswitch-inner"/>
 					<div className="onoffswitch-switch"/>
