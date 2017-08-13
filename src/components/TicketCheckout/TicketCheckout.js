@@ -31,6 +31,7 @@ let questions = {};
 let buyerInformationFields = {};
 let eventUrl;
 let orderId;
+let validData = true;
 class TicketCheckout extends React.Component {
 	static propTypes = {
 		activeTab: PropTypes.string,
@@ -90,6 +91,7 @@ class TicketCheckout extends React.Component {
 			discount: null,
 			coupon: null,
 			showMapPopup: false,
+			validData: true,
 			popupAlertHeader: null,
 			errorMsg: null,
 		};
@@ -102,7 +104,7 @@ class TicketCheckout extends React.Component {
 		this.getDiscount = this.getDiscount.bind(this);
 		// this.phoneNumberValidateHandler = this.phoneNumberValidateHandler.bind(this);
 		this.setAttendeesAddressValue = this.setAttendeesAddressValue.bind(this);
-		// this.setBuyerAddressValue = this.setBuyerAddressValue.bind(this);
+		this.isValidFormData = this.isValidFormData.bind(this);
 	}
 
 	componentWillMount() {
@@ -123,13 +125,26 @@ class TicketCheckout extends React.Component {
 			if (resp && resp.errorCode) {
 				this.setState({
 					isTimeout: true
-				})
+				});
+				if(this.props.setOrderExpierd){
+					this.props.setOrderExpierd(true);
+				}
 			}
 			this.setState({
 				isLoaded: true
 			})
 		});
 	}
+	componentWillUpdate(){
+		//this.isValidFormData();
+	}
+
+	isValidFormData = ()=>{
+		validData = document.getElementsByClassName("has-error").length === 0;
+		this.setState({
+			validData: validData
+		});
+	};
 
 	emailValidateHandler = (e) => {
 
@@ -150,11 +165,13 @@ class TicketCheckout extends React.Component {
 				email: true
 			});
 		}
+		this.isValidFormData();
 	};
 	couponValidateHandler = (e) => {
 		this.setState({
 			coupon: this.coupon.value
 		});
+		this.isValidFormData();
 	};
 	addressZipValidateHandler = (e) => {
 		if ([69, 187, 188, 189, 190].includes(e.keyCode)) {
@@ -179,6 +196,7 @@ class TicketCheckout extends React.Component {
 				});
 			}
 		}
+		this.isValidFormData();
 	};
 	cardHolderNameValidateHandler = (e) => {
 	//	this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
@@ -212,6 +230,7 @@ class TicketCheckout extends React.Component {
 				// isValidCardData: this.cardHolderName.value&& this.cardNumber.value&& this.cardCVV.value&& this.cardExpMonth.value&& this.cardExpYear.value
 			});
 		}
+		this.isValidFormData();
 	};
 	cardNumberValidateHandler = (e) => {
 		this.cardNumber.value = this.cardNumber.value && this.cardNumber.value.trim();
@@ -244,6 +263,7 @@ class TicketCheckout extends React.Component {
 
 			});
 		}
+		this.isValidFormData();
 	};
 	cardCVVValidateHandler = (e) => {
 		this.cardCVV.value = this.cardCVV.value && this.cardCVV.value.trim();
@@ -275,6 +295,7 @@ class TicketCheckout extends React.Component {
 
 			});
 		}
+		this.isValidFormData();
 
 	};
 	cardExpMonthValidateHandler = (e) => {
@@ -298,6 +319,7 @@ class TicketCheckout extends React.Component {
 				});
 			}
 		}
+		this.isValidFormData();
 	};
 	cardExpYearValidateHandler = (e) => {
 		this.cardExpYear.value = this.cardExpYear.value && this.cardExpYear.value.trim();
@@ -320,6 +342,7 @@ class TicketCheckout extends React.Component {
 				});
 			}
 		}
+		this.isValidFormData();
 	};
 	passwordValidateHandler = (e) => {
 		this.password.value = this.password.value && this.password.value.trim();
@@ -337,11 +360,12 @@ class TicketCheckout extends React.Component {
 				password: true
 			});
 		}
+		this.isValidFormData();
 
 	};
 	ticketCheckout = (e) => {
 		e.preventDefault();
-		let validData = false;
+		validData = false;
 		this.setState({
 			isFormSubmited: true
 		});
@@ -452,7 +476,8 @@ class TicketCheckout extends React.Component {
 			let emailIndex = _.findIndex(this.props.orderData.ticketAttribute.buyerInformationFields, function (item) {
 				return item.type === 'email';
 			});
-			validData = document.getElementsByClassName("has-error").length === 0;
+			// validData = document.getElementsByClassName("has-error").length === 0;
+			this.isValidFormData();
 			if (validData) {
 				if (!this.props.authenticated) {
 					let requestData;
@@ -700,6 +725,7 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.remove('has-error');
 		}
 		attendee = object;
+		this.isValidFormData();
 	};
 
 	buyerPhoneNumberValidateHandler(isValid, value, name, countryData, number, ext, field, key, event) {
@@ -742,6 +768,7 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.remove('has-error');
 		}
 		attendee = object;
+		this.isValidFormData();
 	};
 
 	setAttendeesAddressValue = (field, name, key, itemKey, event) => {
@@ -790,6 +817,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		attendee = object;
+		this.isValidFormData();
 	};
 	setAttendeesValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
@@ -837,6 +865,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		attendee = object;
+		this.isValidFormData();
 	};
 	setQuestionsValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
@@ -884,6 +913,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		questions = object;
+		this.isValidFormData();
 	};
 	buyerInformationFieldsHandler = (field, key, event) => {
 		let object = buyerInformationFields || {};
@@ -923,6 +953,9 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.add('has-success');
 			event.target.parentElement.classList.remove('has-error');
 		}
+		buyerInformationFields = object;
+		this.isValidFormData();
+
 	};
 	setBuyerAddressValue = (field, name, key, event) => {
 		//If the input fields were directly within this
@@ -967,6 +1000,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		buyerInformationFields = object;
+		this.isValidFormData();
 	};
 	hideFormError = () => {
 		this.setState({
@@ -2256,10 +2290,12 @@ class TicketCheckout extends React.Component {
 														</div>)
 														: ''
 													}
-													<div className="mrg-t-lg text-center">
-														<button className="btn pay-now btn-success">
+													<div className="mrg-t-lg text-center">{this.state.validData}
+														{ this.state.validData ? <button className="btn pay-now btn-success">
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
-														</button>
+														</button>  : <button className="btn pay-now btn-success" disabled>
+															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
+														</button> }
 													</div>
 												</div>
 											</div>
