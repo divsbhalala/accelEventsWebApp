@@ -23,7 +23,7 @@ import PopupModel from './../../../components/PopupModal';
 import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 
 class Auction extends React.Component {
   static propTypes = {
@@ -36,7 +36,6 @@ class Auction extends React.Component {
       settings: null,
       showBookingTicketPopup: false,
       showMapPopup: true,
-
       isValidData: false,
       email: null,
       password: null,
@@ -45,7 +44,7 @@ class Auction extends React.Component {
       passwordFeedBack: false,
       auctionData: null,
 
-      isValidBidData: false,
+      isValidBidData: true,
 
       firstName: null,
       lastName: null,
@@ -102,10 +101,17 @@ class Auction extends React.Component {
   }
   onBidFormClick = (e) => {
     this.setState({
-      loading:true
+      loading:true,
+      firstNameFeedBack: true,
+      lastNameFeedBack: true,
+      cardNumberFeedBack: true,
+      cardHolderFeedBack: true,
+      amountFeedBack: true,
+      cvvFeedBack: true,
+      phoneNumberFeedBack: true,
     });
     e.preventDefault();
-    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded){
+    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded && this.state.amount){
       this.setState({
         showPopup: true,
         loading:false,
@@ -113,12 +119,12 @@ class Auction extends React.Component {
         popupHeader:"Failed",
       })
     }else {
-      if( this.props.authenticated  &&   !this.props.eventData.ccRequiredForBidConfirm ) {
+      if( this.props.authenticated && !this.props.eventData.ccRequiredForBidConfirm && this.amount.value ) {
         this.setState({
           loading:false,
           showPopup: true,
-          errorMsgCard: " You are placing a bid of $"+ this.state.amountValue  +" for " + this.state.auctionData.name ,
-          popupHeader:"Confirm",
+          errorMsgCard: " You are placing a bid of "+ this.props.currencySymbol+ this.state.amountValue  +" for " + this.state.auctionData.name ,
+          popupHeader: "Confirm",
         })
       } else {
         if (this.state.cardNumber && this.state.cardHolder && this.state.amount && this.state.cvv) {
@@ -140,7 +146,7 @@ class Auction extends React.Component {
               this.setState({
                 loading:false,
                 showPopup: true,
-                errorMsgCard: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
+                errorMsgCard: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
                 popupHeader:"Success",
                 stripeToken: response.id,})
             }
@@ -191,7 +197,7 @@ class Auction extends React.Component {
             loading:true,
             showPopup: true,
             errorMsgCard:resp.message,
-            popupHeader:"Successfully",
+            popupHeader:"Successful Bid",
           });
           this.props.changeUserData(this.props.user,user)
         }else{
@@ -350,9 +356,16 @@ class Auction extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
-      }, function afterStateChange() {
+      },function afterStateChange() {
         this.checkIsValidBidData()
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      },function afterStateChange() {
+      this.checkIsValidBidData()
+    });
     } else {
       this.setState({
         cardHolder: true
@@ -400,14 +413,14 @@ class Auction extends React.Component {
   amountValidateHandler = (e) => {
     let amount = true;
     let errorMsgAmount = "";
-    if (this.amount.value.trim() == '') {
-      errorMsgAmount = "Bid Amount can't be empty"
-      amount = false
+    if (this.amount.value && this.amount.value.trim() === '') {
+      errorMsgAmount = "Bid Amount can't be empty";
+      amount = false;
     } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value.trim()) {
-      errorMsgAmount = "Bids for this item must be placed in increments of at least $" + this.state.auctionData.bidIncrement + ". Please enter a value of at least " + (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement)
-      amount = false
+      errorMsgAmount = "Bids for this item must be placed in increments of at least "+ this.props.currencySymbol + this.state.auctionData.bidIncrement + ". Please enter a value of at least " + this.props.currencySymbol+ (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement);
+      amount = false;
     } else {
-      amount = true
+      amount = true;
     }
     this.setState({
       //isValidBidData: ( this.amount.value.trim() && amount),
@@ -428,7 +441,7 @@ class Auction extends React.Component {
       this.checkIsValidBidData()
     });
 
-    if (this.cvv.value.trim() == '') {
+    if (this.cvv.value && this.cvv.value.trim() === '') {
 
       this.setState({
         cvv: false,
@@ -464,7 +477,7 @@ class Auction extends React.Component {
     },function afterStateChange () {
       this.checkIsValidBidData()
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
@@ -473,7 +486,6 @@ class Auction extends React.Component {
       });
     }else{
       this.props.doValidateMobileNumber(number).then(resp => {
-
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
@@ -493,7 +505,7 @@ class Auction extends React.Component {
     },function afterStateChange () {
       this.checkIsValidBidData()
     });
-    if (this.expMonth.value.trim() == '') {
+    if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
@@ -512,7 +524,7 @@ class Auction extends React.Component {
       expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
     });
-    if (this.expYear.value.trim() == '') {
+    if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: "Expire Year is Require",
@@ -524,7 +536,6 @@ class Auction extends React.Component {
     this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
-
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
     this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
@@ -548,7 +559,6 @@ class Auction extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
       history.push('/404');
     });
   };
@@ -569,7 +579,6 @@ class Auction extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
     this.setState({
       amountFeedBack:false,
@@ -600,7 +609,7 @@ class Auction extends React.Component {
     let valid2=true;
     let flag=true;
     if(this.props.authenticated){
-      if( this.props.user.firstName == null ){
+      if( this.props.user && this.props.user.firstName == null ){
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
@@ -661,6 +670,7 @@ class Auction extends React.Component {
                   css={['intl-tel-input', 'form-control intl-tel']}
                   utilsScript="./libphonenumber.js"
                   separateDialCode={true}
+                  defaultCountry={this.props.country || ""}
                   value={ this.state.phone || ""}
                   onPhoneNumberChange={this.changePhone}
                 />
@@ -700,7 +710,8 @@ class Auction extends React.Component {
 
         </div>
         <Button className={cx("btn btn-primary text-uppercase")}
-                disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                disabled={!( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
                 loading={this.state.loading} type="submit"
                 data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
           SUBMIT
@@ -765,9 +776,9 @@ class Auction extends React.Component {
           <div className="col-md-6">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
-              <div className="input-group-addon">$</div>
+              <div className="input-group-addon">{this.props.currencySymbol}</div>
               <input type="number" className="form-control" name="itembid" id="itembid"
-                     placeholder="Amount" step required="required"
+                     placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
                      }}
@@ -933,9 +944,9 @@ class Auction extends React.Component {
         </Button>
         &nbsp;&nbsp;
       </div>
-      <div className="col-sm-6">
+      <div className="col-sm-6" style={{paddingLeft:5}}>
         <a role="button" className="btn btn-success btn-block"
-           href={this.props.params && "/event/" + this.props.params.params }>
+           href={this.props.params && "/events/" + this.props.params.params + '#Auction'}>
           Go back to All Items</a></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -996,9 +1007,9 @@ class Auction extends React.Component {
           <div className="col-md-12">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
-              <div className="input-group-addon">$</div>
+              <div className="input-group-addon">{this.props.currencySymbol}</div>
               <input type="number" className="form-control" name="itembid" id="itembid"
-                     placeholder="Amount" step required="required"
+                     placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
                      }}
@@ -1008,6 +1019,8 @@ class Auction extends React.Component {
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
+            { this.state.auctionData && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
           </div>
@@ -1164,13 +1177,13 @@ class Auction extends React.Component {
         </Button>
         &nbsp;&nbsp;
       </div>
-      <div className="col-sm-6">
-        <Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success btn-block" >
+      <div className="col-sm-6" style={{paddingLeft:5}}>
+        <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
           Go back to All Items
         </Link>
       </div>
     </form>;
-    let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for $<span
+    let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
       className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
 
@@ -1212,23 +1225,23 @@ class Auction extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16,paddingBottom:10}}>
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                        { this.state.errorMsgCard }</div>
+                      {this.state.errorMsgCard  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsgCard }</div> }
                       <div className="row">
                         <div className="col-sm-4">
-                          <div className="curr-bid-number">$<span
+                          <div className="curr-bid-number">{this.props.currencySymbol}<span
                             className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span>
                           </div>
                           <div className="curr-bid-text">Current Bid</div>
                         </div>
                         {this.state.auctionData && this.state.auctionData.buyItNowPrice > 0 &&
                         <div className="col-sm-4">
-                          <div className="curr-bid-number">$<span
+                          <div className="curr-bid-number">{this.props.currencySymbol}<span
                             className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
                           <div className="curr-bid-text">BUY NOW PRICE</div>
                         </div>}
                         {this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
-                          <div className="curr-bid-number">$<span
+                          <div className="curr-bid-number">{this.props.currencySymbol}<span
                             className="current-bid">{this.state.auctionData.marketValue}</span></div>
                           <div className="curr-bid-text">MARKET VALUE</div>
                         </div>}
@@ -1251,10 +1264,14 @@ class Auction extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsgCard }
             <div className="modal-footer">
-              {this.state.popupHeader == "Success" ? <Button className="btn btn-success" onClick={this.placeBid}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" onClick={this.placeBidByAmount}
-                                                             loading={this.state.loading}>Confirm</Button> : ""}
+              {this.state.popupHeader == 'Success' ? <Button
+                className="btn btn-success" onClick={this.placeBid}
+                loading={this.state.loading}
+              >Confirm</Button> : ''}
+              {this.state.popupHeader == 'Confirm' ? <Button
+                className="btn btn-success" onClick={this.placeBidByAmount}
+                loading={this.state.loading}
+              >Confirm</Button> : ''}
               <button className="btn btn-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
@@ -1293,7 +1310,9 @@ const mapStateToProps = (state) => ({
   eventTicketData: state.event && state.event.ticket_data,
   auction_data: state.event && state.event.auction_data,
   user: state.session.user,
-  authenticated: state.session.authenticated
+  authenticated: state.session.authenticated,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Auction));

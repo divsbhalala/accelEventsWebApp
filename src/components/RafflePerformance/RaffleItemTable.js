@@ -38,7 +38,7 @@ class RaffleItemTable extends React.Component {
   addAsyncProduct(row) {
     if(!row['bidList']){
     this.props.getPerformanceRaffleItemByItemCode(row.itemCode).then((resp) => {
-      row['bidList']=resp
+      row['bidList']=resp;
       this.setState({event:1})
     });}
 
@@ -48,7 +48,7 @@ class RaffleItemTable extends React.Component {
 			expandRowBgColor: 'rgb(221, 221, 221)'
 		};
   function formtPaid(cell,row){
-		  return (cell ? <i className="fa fa-check green" aria-hidden="true"></i> :<i className="fa fa-times red" aria-hidden="true"></i>)
+		  return (cell ? <i className="fa fa-check green" aria-hidden="true"/> :<i className="fa fa-times red" aria-hidden="true"/>)
     }
     const selectRow = {
       mode: 'checkbox',  // multi select
@@ -59,11 +59,10 @@ class RaffleItemTable extends React.Component {
       clickToSelect: true
     };
   return (
-	<div>
+	<div className="performance-table-wrap">
 		<div className="page-title">
 			<h1 className="page-header">Raffle Item Performance</h1>
 		</div>
-    <br/>
 		<BootstrapTable data={ this.props.items }
 			                options={ options }
 			                expandableRow={ this.isExpandableRow }

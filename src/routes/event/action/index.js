@@ -3,21 +3,38 @@ import axios from 'axios';
 import {sessionService, loadSession} from 'redux-react-session';
 
 import {apiUrl as API_URL} from './../../../clientConfig';
+// axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
+export function doGetIpInfo() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: 'http://ipinfo.io',
+      data: {},
+    }).then(response => {
+      dispatch(storeLocation(response.data));
+      return response;
+    })
+      .catch(error => {
+        return error;
+      });
+  }
+
+}
 export function doGetEventData(eventUrl) {
   return (dispatch) => {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeEventData(response.data));
-      localStorage.setItem('eventsData', JSON.stringify(response.data));
+			dispatch(storeCurrencySymbols(response.data && response.data.currencySymbol));
+			localStorage.setItem('eventsData', JSON.stringify(response.data));
       return response;
 
     })
       .catch(error => {
-        console.log(error);
+
         return error;
       });
   }
@@ -31,7 +48,6 @@ export function doGetEventTicketSetting(eventUrl) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/ticketing/settings',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeEventTicketData(response.data));
       return response;
@@ -48,7 +64,6 @@ export function doGetEventTicketByOrderId(eventUrl, OrderId) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/ticketing/order/' + OrderId + '/getformattributes',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
     })
@@ -64,7 +79,6 @@ export function doGetAuctionSetting(eventUrl) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/auction/settings',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
     })
@@ -79,7 +93,6 @@ export function doGetAuctionItemByCode(eventUrl, itemCode) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/auction/item/' + itemCode,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     });
   }
 
@@ -96,7 +109,6 @@ export function doGetAuctionItemByLimit(eventUrl, page, size, category,searchStr
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/auction/items/' + query,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       dispatch(storeAuctionData(response.data));
       return response;
@@ -116,7 +128,6 @@ export function doGetDonationSetting(eventUrl) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/donation/settings',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -135,7 +146,6 @@ export function doGetFundANeedSetting(eventUrl) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/fundaneed/settings',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(response => {
       return response;
 
@@ -152,7 +162,7 @@ export function doGetFundANeedItemByCode(eventUrl, itemCode) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/fundaneed/item/' + itemCode,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     })
   }
 
@@ -170,7 +180,7 @@ export function doGetFundANeedItemByLimit(eventUrl, page, size, category,searchS
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/fundaneed/items/' + query,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(response => {
       dispatch(storeEventFundANeedData(response.data));
       return response;
@@ -190,7 +200,7 @@ export function doGetRaffleSetting(eventUrl) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/raffle/settings',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(response => {
       return response;
 
@@ -201,6 +211,22 @@ export function doGetRaffleSetting(eventUrl) {
   }
 
 }
+export function getRaffleTickets() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/raffle/tickets',
+      data: {},
+
+    }).then(response => {
+      return response;
+
+    })
+      .catch(error => {
+        return error;
+      });
+  }
+}
 
 export function doGetRaffleItemByCode(eventUrl, itemCode) {
   return (dispatch) => {
@@ -208,7 +234,7 @@ export function doGetRaffleItemByCode(eventUrl, itemCode) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/raffle/item/' + itemCode,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
 
     })
   }
@@ -228,7 +254,7 @@ export function doGetRaffleItemByLimit(eventUrl, page, size, category,searchStri
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/raffle/items/' + query,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
 
     }).then(response => {
       return response;
@@ -248,7 +274,7 @@ export function doGetSettings(eventUrl, type) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/' + type + '/settings',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 
@@ -260,7 +286,7 @@ export function doGeItemByCode(eventUrl, itemCode, type) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/' + type + '/item/' + itemCode,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 
@@ -276,7 +302,7 @@ export function doGetItemByLimit(eventUrl, page, size, type, category) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/' + type + '/items/' + query,
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 
@@ -288,7 +314,7 @@ export function doOrderTicket(eventUrl, dto) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/ticketing/order',
       data: dto,
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 }
@@ -299,7 +325,7 @@ export function doGetOrderById(eventUrl, orderId) {
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/ticketing/order/'+orderId+'/formattributes',
       data: {},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         dispatch(storeOrderData(resp.data));
@@ -315,6 +341,12 @@ export function doGetOrderById(eventUrl, orderId) {
 export function storeEventData(data) {
   return {
     type: 'STORE_EVENT',
+    data,
+  }
+}
+export function storeCurrencySymbols(data) {
+  return {
+    type: 'STORE_EVENT_CURRENCY',
     data,
   }
 }
@@ -354,6 +386,12 @@ export function storeIsVolunteer(data) {
     data,
   }
 }
+export function storeLocation(data) {
+  return {
+    type: 'LOCATION',
+    data,
+  }
+}
 //*************  Volunteer   ****************//
 
 export function getItemStatusByCode(eventUrl, itemCode,module) {
@@ -362,7 +400,7 @@ export function getItemStatusByCode(eventUrl, itemCode,module) {
       method: 'get',
       //url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
       url: API_URL + 'events/' + eventUrl + '/volunteer/module/'+ module +'/prices/item/' + itemCode,
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 }
@@ -372,7 +410,7 @@ export function getUserByEmail(eventUrl, email,modeltype) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + encodeURI(email) +'/module/'+modeltype,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -388,7 +426,7 @@ export function getUserByMobile(eventUrl, mobile,countryCode,modelType) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/loaduser/' + mobile + '/'+ countryCode +'/module/'+modelType,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -404,7 +442,7 @@ export function getAuctionItemStatusByCode(eventUrl, itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/prices/item/' + itemCode,
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 }
@@ -413,7 +451,7 @@ export function getAttendees(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/allAttendees',
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 }
@@ -422,7 +460,7 @@ export function setAttendees(eventUrl,barcode,status) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/volunteer/checkin/barcode/' + barcode + "/checkin/" + status,
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 }
@@ -446,12 +484,27 @@ export function doLogin(email, password,rememberme=false) {
         updateUserData(resp.data);
       }).catch(err => {
         return err;
-      })
+      });
       return response;
     })
       .catch((error, code, status)=>{
         return error && error.response && error.response.data;
       });
+  }
+}
+export function whiteLabelURL(url) {
+  return (dispatch) => {
+   return axios({
+    method: 'get',
+    url: API_URL + 'whiteLabelURL/'+url,
+  }).then(resp=>{
+    if(resp && resp.data){
+      return resp.data;
+    }
+    return resp;
+    }).catch((error, code, status)=>{
+      return error && error.response && error.response.data;
+    });
   }
 }
 //********* Auction ************//
@@ -523,7 +576,7 @@ export function submitBids(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/submitBids' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -540,7 +593,7 @@ export function submitPledge(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/submitPledge' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -557,7 +610,7 @@ export function sellTickets(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/sellTickets' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -574,7 +627,7 @@ export function submitTickets(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/submitTickets' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -591,7 +644,7 @@ export function submitDonate(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/volunteer/donate' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -608,7 +661,7 @@ export function submitAuctionBid(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/auction/bid' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -638,7 +691,7 @@ export function submitRaffleTickets(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/raffle/submittickets' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -655,7 +708,7 @@ export function purchaseTickets(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/raffle/purchasetickets?uptodate=false' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -672,7 +725,7 @@ export function couponCode(eventurl, orderid, couponcode) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventurl + '/tickets/order/'+ orderid+'/coupon/'+couponcode,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -689,7 +742,7 @@ export function giveDonate(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/donation/donate' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -706,7 +759,7 @@ export function fundaNeed(eventUrl,userData) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl + '/fundaneed/pledge' ,
       data:userData,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -722,7 +775,7 @@ export function getGoalData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/goal' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -738,7 +791,7 @@ export function getScrollData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/scroll' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -754,7 +807,7 @@ export function getTableData(eventUrl,type) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl + '/'+type+'/table' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -771,7 +824,7 @@ export function isVolunteer(eventUrl) {
     return axios({
       method: 'get',
       url: API_URL + 'events/' + eventUrl +'/volunteer/isVolunteer' ,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp=>{
       dispatch(storeIsVolunteer(resp.data));
       return resp.data;
@@ -787,7 +840,7 @@ export function doContactSupport(eventUrl, contact) {
       method: 'post',
       url: API_URL + 'events/' + eventUrl +'/contact' ,
       data: contact,
-      headers: {Authorization: localStorage.getItem('token')}
+
     });
   }
 }

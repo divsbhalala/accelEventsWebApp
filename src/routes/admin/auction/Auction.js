@@ -1,10 +1,10 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Auction.css';
 import {apiUrl as API_URL} from './../../../clientConfig';
 import axios from 'axios';
+import fileDownload from 'react-file-download';
 
 class Auction extends React.Component {
   static propTypes = {
@@ -30,7 +30,7 @@ export function updateAuctionSettings(auctionDTO) {
       method: 'put',
       url: API_URL + 'host/auction/settings',
       data : auctionDTO,
-      headers: {Authorization: localStorage.getItem('token')}
+
     })
   }
 }
@@ -40,7 +40,7 @@ export function resetAuctionSettings() {
     return axios({
       method: 'put',
       url: API_URL + 'host/auction/reset',
-      headers: {Authorization: localStorage.getItem('token')}
+
     })
   }
 }
@@ -50,11 +50,11 @@ export function getAuctionSettings() {
     return axios({
       method: 'get',
       url: API_URL + 'host/auction/settings',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -64,11 +64,11 @@ export function getAuctionCategories() {
     return axios({
       method: 'get',
       url: API_URL + 'host/auction/itemCategories',
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -79,11 +79,11 @@ export function addAuctionCategory(itemCategory) {
       method: 'post',
       url: API_URL + 'host/auction/itemCategory',
       data : {itemCategoryDto:itemCategory},
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -93,11 +93,11 @@ export function removeAuctionCategory(id) {
     return axios({
       method: 'delete',
       url: API_URL + 'host/auction/itemCategory/'+ id,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -108,25 +108,25 @@ export function updateAuctionCategory(id, itemCategory) {
       method: 'put',
       url: API_URL + 'host/auction/itemCategory/'+ id,
       data : itemCategory,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
 
-export function getAuctionItems() {
+export function getAuctionItems(page, size) {
   return (dispatch) => {
     return axios({
       method: 'get',
-      url: API_URL + 'host/auction/items',
-      headers: {Authorization: localStorage.getItem('token')}
+      url: API_URL + 'host/auction/items?page='+ page +'&size='+ size,
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -137,11 +137,11 @@ export function addAuctionItem(auctionDTO) {
       method: 'post',
       url: API_URL + 'host/auction/item',
       data : auctionDTO,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
     })
   }
 }
@@ -152,11 +152,83 @@ export function updateAuctionItem(id, auctionDTO) {
       method: 'put',
       url: API_URL + 'host/auction/item/' + id,
       data : auctionDTO,
-      headers: {Authorization: localStorage.getItem('token')}
+
     }).then(resp => {
       return resp;
     }).catch(error => {
-      console.log(error);
+      
+    })
+  }
+}
+export function getGeneralSettings() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/settings/general',
+
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      
+    })
+  }
+}
+
+export function getItemCatalog() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/auction/export/itemCatalog/pdf',
+      responseType:'blob',
+
+    }).then(resp => {
+      fileDownload(resp.data, 'catalog.pdf');
+    }).catch(error => {
+      
+    })
+  }
+}
+
+export function getItemsPDF() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/auction/export/items/pdf',
+      responseType:'blob',
+
+    }).then(resp => {
+      fileDownload(resp.data, 'items.pdf');
+    }).catch(error => {
+      
+    })
+  }
+}
+
+export function getItemsCSV() {
+  return (dispatch) => {
+    return axios({
+      method: 'get',
+      url: API_URL + 'host/auction/download/item/CSV',
+      responseType:'blob',
+
+    }).then(resp => {
+      fileDownload(resp.data, 'items.csv');
+    }).catch(error => {
+      
+    })
+  }
+}
+
+export function removeItem(id) {
+  return (dispatch) => {
+    return axios({
+      method: 'delete',
+      url: API_URL + 'host/auction/item/'+ id,
+
+    }).then(resp => {
+      return resp;
+    }).catch(error => {
+      
     })
   }
 }

@@ -44,6 +44,17 @@ export function doTicketTypes(method, data) {
 	}
 }
 
+export function doDeleteTicketTypes(id) {
+	return (dispatch) => {
+		return axios({
+			method: "delete",
+			url: API_URL + "host/ticketing/ticketType/"+id,
+			data: {},
+			headers: {Authorization: localStorage.getItem("token")}
+		})
+	}
+}
+
 export function doCreateCouponCode(data, code) {
 	 code =  code ? "/" + code : "";
 	return (dispatch) => {

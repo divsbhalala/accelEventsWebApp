@@ -10,7 +10,7 @@ import { doValidateMobileNumber} from './../../event/action/index';
 
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
 
@@ -22,16 +22,13 @@ class FundANeed extends React.Component {
     super(props);
     this.state = {
       isVisibleConfirmBid : false,
-
       isValidData: false,
       email: null,
       password: null,
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
-
       isValidBidData: false,
-
       cardNumber: null,
       cardHolder: null,
       amount: null,
@@ -42,7 +39,6 @@ class FundANeed extends React.Component {
       expYear: null,
       phoneNumber: null,
       popupHeader:null,
-
       cardNumberValue: null,
       cardHolderValue: null,
       amountValue: null,
@@ -55,13 +51,11 @@ class FundANeed extends React.Component {
       passwordValue:null,
       phoneNumberValue:null,
       errorMsgCard:null,
-
       cardNumberFeedBack: false,
       cardHolderFeedBack: false,
       amountFeedBack: false,
       cvvFeedBack: false,
       phoneNumberFeedBack: false,
-
       errorMsgcardNumber: null,
       errorMsgcardHolder: null,
       errorMsgamount: null,
@@ -85,13 +79,14 @@ class FundANeed extends React.Component {
     }
   }
   emailValidateHandler = (e) => {
+		this.email.value = this.email.value && this.email.value.trim();
     this.setState({
       emailFeedBack: true,
       emailValue:this.email.value.trim(),
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -105,12 +100,13 @@ class FundANeed extends React.Component {
     }
   };
   cvvValidateHandler = (e) => {
+		this.cvv.value = this.cvv.value && this.cvv.value.trim();
     this.cvv.value=this.cvv.value.substr(0,4);
     this.setState({
       cvvFeedBack: true
     });
 
-    if (this.cvv.value.trim() == '') {
+    if (this.cvv.value.trim() === '') {
 
       this.setState({
         cvv: false,
@@ -129,12 +125,13 @@ class FundANeed extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   cardHolderValidateHandler = (e) => {
+		this.cardHolder.value = this.cardHolder.value && this.cardHolder.value.trim();
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue:this.cardHolder.value.trim(),
     });
 
-    if (this.cardHolder.value.trim() == '') {
+    if (this.cardHolder.value.trim() === '') {
 
       this.setState({
         cardHolder: false,
@@ -145,6 +142,11 @@ class FundANeed extends React.Component {
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      });
     } else {
       this.setState({
         cardHolder: true
@@ -154,12 +156,13 @@ class FundANeed extends React.Component {
 
   };
   cardNumberValidateHandler = (e) => {
+		this.cardNumber.value = this.cardNumber.value && this.cardNumber.value.trim();
     this.cardNumber.value=this.cardNumber.value.substr(0,16);
     this.setState({
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value.trim(),
     });
-    if (this.cardNumber.value.trim() == '') {
+    if (this.cardNumber.value.trim() === '') {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
@@ -184,7 +187,7 @@ class FundANeed extends React.Component {
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
@@ -202,11 +205,12 @@ class FundANeed extends React.Component {
     });
   };
   expMonthValidateHandler = (e) => {
+		this.expMonth.value = this.expMonth.value && this.expMonth.value.trim();
     this.setState({
       expMonthFeedBack: true,
       expMonthValue:this.expMonth.value.trim(),
     });
-    if (this.expMonth.value.trim() == '') {
+    if (this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
@@ -219,11 +223,12 @@ class FundANeed extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   expYearValidateHandler = (e) => {
+		this.expYear.value = this.expYear.value && this.expYear.value.trim();
     this.setState({
       expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
     });
-    if (this.expYear.value.trim() == '') {
+    if (this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: "Expire Year is Require",
@@ -243,8 +248,8 @@ class FundANeed extends React.Component {
   hidePopup = () => {
     this.setState({
       showPopup: false,
-    })
-    if(this.state.popupHeader == "Success"){
+    });
+    if(this.state.popupHeader === "Success"){
       window.location = "/event";
     }
    };
@@ -313,9 +318,8 @@ class FundANeed extends React.Component {
       "phoneNumber": this.state.phone,
       "pldegeIds": this.state.pldegeIds,
       "stripeToken": this.state.stripeToken
-    }
+    };
     this.props.confirmfundANeedCheckout(this.props.params &&  this.props.params.params ,donationPurchaseDto).then(resp => {
-      console.log("resp",resp);
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -338,8 +342,8 @@ class FundANeed extends React.Component {
     this.props.getfundANeedCheckout(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId).then(resp => {
       let total=0;
       let pldegeIds="";
-      resp.data.pledges.map((value)=>{total += value.amount })
-      pldegeIds = resp.data.pledges.map((value)=>{ return value.pledgeId })
+      resp.data.pledges.map((value)=>{total += value.amount });
+      pldegeIds = resp.data.pledges.map((value)=>{ return value.pledgeId });
       this.setState({
         settings:resp.data,
         phone:resp.data.userInfo.phonenumber,
@@ -348,9 +352,7 @@ class FundANeed extends React.Component {
         countryPhone: resp.data.userInfo.countryCode,
         pldegeIds: pldegeIds,
       })
-      console.log("resp",pldegeIds)
     }).catch((error) => {
-      console.log("resp",error)
     })
   };
 
@@ -422,7 +424,7 @@ class FundANeed extends React.Component {
                                          this.email = ref;
                                        }}
                                        value={this.state.settings.userInfo && this.state.settings.userInfo.email}
-                                       disabled={this.state.settings.userInfo && this.state.settings.userInfo.email ? true :false}
+                                       disabled={!!(this.state.settings.userInfo && this.state.settings.userInfo.email)}
                                        onKeyUp={this.emailValidateHandler} />
                                 { this.state.emailFeedBack && this.state.email &&
                                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -447,8 +449,9 @@ class FundANeed extends React.Component {
                                     separateDialCode={true}
                                     value={ this.state.phone || "" }
                                     maxLength={16} data-stripe="number"
+                                    defaultCountry={this.props.country || ""}
                                     onPhoneNumberChange={this.changePhone}
-                                    disabled={this.state.settings.userInfo && this.state.settings.userInfo.phonenumber ? true :false}
+                                    disabled={!!(this.state.settings.userInfo && this.state.settings.userInfo.phonenumber)}
                                   />
                                   { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -619,7 +622,7 @@ class FundANeed extends React.Component {
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.confirmfundANeedCheckout} >Confirm</Button> : ""}
+              {this.state.popupHeader === "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.confirmfundANeedCheckout} >Confirm</Button> : ""}
               <button className="btn btn-danger" onClick={this.hidePopup}>Close</button>
             </div>
           </div>
@@ -636,7 +639,9 @@ const mapDispatchToProps = {
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
   getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
+});
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(FundANeed));
 

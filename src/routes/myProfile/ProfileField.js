@@ -24,16 +24,18 @@ class ProfileField extends React.Component {
       fieldName:null,
       isEdit:false,
     };
+    this.updateProfile = this.updateProfile.bind(this);
  	}
   updateProfile = (name, value) =>{
     this.setState({
       fieldValue:value
-    })
-    if(value!= this.props.fieldValue ) {
-      this.props.updateProfile(this.state.fieldName, value).then(resp => {
+    });
+     if(value!= this.props.fieldValue ) {
+     this.props.updateProfile(this.state.fieldName, value).then(resp => {
       }).catch(error => {
         //history.push('/404');
       });
+      this.props.updatePProfile(this.state.fieldName, value);
     }
  }
   componentDidMount() {
@@ -44,7 +46,6 @@ class ProfileField extends React.Component {
  }
   componentWillUpdate(){}
   componentWillReceiveProps(){}
-
   render() {
     return (
       <li className="list-group-item">
@@ -54,9 +55,9 @@ class ProfileField extends React.Component {
             <div  className="row">
               <div className="editable-input col-sm-5" style={{position: 'relative'}}>
                 <EditableTextField name='username' value={this.state.fieldValue} onUpdate={this.updateProfile} placeholder=''/>
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </li>
     );

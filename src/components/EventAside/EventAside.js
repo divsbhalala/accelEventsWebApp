@@ -1,4 +1,4 @@
-
+import {connect} from 'react-redux';
 import React from 'react';
 import PropTypes   from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -10,8 +10,8 @@ import moment from 'moment';
 import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 
-var countDownInterval = null;
-var isEventEnd = false;
+let countDownInterval = null;
+let isEventEnd = false;
 
 class EventAside extends React.Component {
 	static propTypes = {
@@ -111,7 +111,33 @@ class EventAside extends React.Component {
 	};
 	componentDidMount(){
 		countDownInterval = setInterval(()=>{
-			this.setCountDown(countDownInterval);
+		//	this.setCountDown(countDownInterval);
+      if(this.props.settings && this.props.settings.endDate){
+        let eventTime=moment();
+        if(this.props.settings && this.props.settings.endDate){
+          eventTime = moment(this.props.settings.endDate);
+        }
+        let days =  moment(eventTime).diff(moment(), 'days');
+        let hours = moment(eventTime).add(-days, 'days').diff(moment(), 'hours');
+        let minute = moment(eventTime).add(-days, 'days').add(-hours, 'hours').diff(moment(), 'minutes');
+        let seconds = moment(eventTime).add(-days, 'days').add(-hours, 'hours').add(-minute, 'minutes').diff(moment(), 'seconds');
+
+        // let duration = moment.duration(duration - interval, 'milliseconds');
+        this.setState({
+          days: days <= 0 ? "00": days,
+          hours: hours <= 0 ? "00": hours <=9 ? ("0" +hours).slice(-2) : hours,
+          minute: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
+          seconds: seconds <= 0 ? "00": seconds <=9 ? ("0" +seconds).slice(-2) : seconds,
+        });
+
+        if( !days && !hours && !minute && !seconds && !isEventEnd){
+          this.props.onEnd();
+          isEventEnd = true;
+        }
+        else {
+          isEventEnd = false;
+        }
+      }
 		},1000)
 	}
 	componentWillUnmount(){
@@ -121,6 +147,7 @@ class EventAside extends React.Component {
 		return (
 			<div className="sidebar-wrap">
 				<BuyRaffleTicketsModal
+					ticketPackages={this.props.settings && this.props.settings.ticketPackages}
           showModal={this.state.isHowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
@@ -129,7 +156,11 @@ class EventAside extends React.Component {
 				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>
 					<header className={cx("main-box-header", "clearfix")}>
-						<h2>TODO: Add event name </h2>
+						
+							{ this.props.eventData && this.props.eventData.name &&
+								<h2>{this.props.eventData.name}</h2>
+							}
+						
 					</header>
 					<div className={cx("main-box-body", "clearfix")}>
 						{ this.props.eventData && this.props.eventData.eventDesignDetail && this.props.eventData.eventDesignDetail.logoEnabled &&
@@ -209,7 +240,7 @@ class EventAside extends React.Component {
 								</div>
 							</div>
 							<div className={cx("project-box-content")}>
-								<div className={cx("funds-raised")}>$<span
+								<div className={cx("funds-raised")}>{this.props.currencySymbol}<span
 									className={cx("total-funds-raised")}>{ this.props.settings && this.props.settings.totalFundRaised ? this.props.settings.totalFundRaised : "0"}</span>
 								</div>
 							</div>
@@ -247,12 +278,12 @@ class EventAside extends React.Component {
 									</a>
 								</li>
 								{
-									this.props.settings && this.props.settings.categories && this.props.settings.categories.map(item =>
-										<li className={cx(this.props.selectedCategory === item.name && "active")}
+									this.props.settings && this.props.settings.categories && this.props.settings.categories.map((item) =>
+										<li  className={cx(this.props.selectedCategory === item.name && "active")}
 												key={item.name + Math.random()} onClick={() => {
 											this.props.setFilterCategory(item.name)
 										}}>
-											<a className={cx("category-switcher pointer")} title={item.name}>
+											<a href="#" className={cx("category-switcher pointer")} title={item.name}>
 												<i className={cx("fa fa-ticket")} />
 												<span className={cx("cat-name")}>{item.name}</span>
 												{item.count &&
@@ -293,7 +324,7 @@ class EventAside extends React.Component {
 												this.props.setFilterCategory(item.name),
 												this.toggleMobileViewCat()
 											}}>
-												<a className={cx("category-switcher pointer")}>
+												<a href="#" className={cx("category-switcher pointer")}>
 													<i className={cx("fa fa-ticket")} />
 													<span className={cx("cat-name")}>{item.name}</span>
 													{item.count &&
@@ -336,7 +367,7 @@ class EventAside extends React.Component {
 												this.props.settings.ticketPackages.map(item =>
 													<option value={item.id} key={Math.random()} data-ticket={item.numOfTicket}
 																	data-price={item.price}>
-														{item.numOfTicket} Ticket For ${item.price}
+														{item.numOfTicket} Ticket For {this.props.currencySymbol}{item.price}
 													</option>
 												) : ''
 											}
@@ -363,5 +394,9 @@ class EventAside extends React.Component {
 		);
 	}
 }
+const mapDispatchToProps = {};
 
-export default withStyles(s)(EventAside);
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.event && state.event.currencySymbol) || "$"
+});
+export default connect(mapStateToProps, mapDispatchToProps)(EventAside);

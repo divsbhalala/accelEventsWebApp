@@ -8,7 +8,7 @@ import FundANeed from './fundANeed/fundANeed';
 
 const title = 'AccelEvents | Checkout Page';
 export default {
-  path: '/checkout/:params',
+  path: '/u/checkout/:params',
   children: [
     {
       path: '/tickets/order/:orderId',
@@ -20,7 +20,7 @@ export default {
       }
     },
     {
-      path: '/:userId/confirmbid/:ItemCode',
+      path: '/A/:userId/confirmbid/:ItemCode',
       async action(props) {
         return {
           title: "Confirm Bid",
@@ -32,7 +32,7 @@ export default {
       }
     },
     {
-      path: '/byRaffleTickets/:userId',
+      path: '/R/:userId',
       async action(props) {
         return {
           title: "Buy Raffle Tickets",
@@ -54,7 +54,7 @@ export default {
       }
     },
     {
-      path: '/fundANeed/:userId',
+      path: '/C/:userId',
       async action(props) {
         return {
           title: "Checkout Pledge Items",

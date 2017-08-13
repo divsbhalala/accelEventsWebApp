@@ -11,7 +11,7 @@ class StatWidget extends Component { // eslint-disable-line
     headerText: PropTypes.string,
     icon: PropTypes.string,
     footerText: PropTypes.string,
-  }
+  };
 
   render() {
     return (

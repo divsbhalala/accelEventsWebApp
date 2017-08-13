@@ -26,7 +26,7 @@ class RafflePerformance extends React.Component {
     }
   }
   getPerformanceRafflePurchasedTicketCSV = () => {
-    this.props.getPerformanceRafflePurchasedTicketCSV().then((resp) => {
+    this.props.getPerformanceRafflePurchasedTicketCSV('Purchased Raffle data.csv').then((resp) => {
     });
   };
   getPerformanceAuctionBidderCSV = () => {
@@ -34,22 +34,20 @@ class RafflePerformance extends React.Component {
     });
   };
   getPerformanceRaffleParticipantTicketCSV = () => {
-    this.props.getPerformanceRaffleParticipantTicketCSV().then((resp) => {
+    this.props.getPerformanceRaffleParticipantTicketCSV('All Participant data.csv').then((resp) => {
     });
   };
   getPerformanceRaffleWinnerCSV = () => {
-    this.props.getPerformanceRaffleWinnerCSV().then((resp) => {
+    this.props.getPerformanceRaffleWinnerCSV('Ticket Winner data.csv').then((resp) => {
       this.setState({items:resp})
     });
   };
   componentWillMount() {
     this.props.getPerformanceRaffleItem().then(resp => {
-      console.log("resp", resp);
       this.setState({
         items: resp,
       })
     }).catch(error => {
-      console.log('error', error)
     })
   }
   render() {
@@ -68,7 +66,7 @@ class RafflePerformance extends React.Component {
                   <div className="col-lg-12">
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
-                        <RaffleItemTable items={this.state.items} />
+                        { this.state.items? <RaffleItemTable items={this.state.items} />: <div id="app" className="loader" /> }
 
                         {/* Action Row */}
                         <div className="form-group operations-row">
@@ -99,9 +97,9 @@ class RafflePerformance extends React.Component {
 const mapDispatchToProps = {
   getPerformanceRaffleItem: () => getPerformanceRaffleItem(),
   getPerformanceRaffleItemByItemCode: (ItemCode) => getPerformanceRaffleItemByItemCode(ItemCode),
-  getPerformanceRafflePurchasedTicketCSV: () => getPerformanceRafflePurchasedTicketCSV(),
-  getPerformanceRaffleParticipantTicketCSV: () => getPerformanceRaffleParticipantTicketCSV(),
-  getPerformanceRaffleWinnerCSV: () => getPerformanceRaffleWinnerCSV(),
+  getPerformanceRafflePurchasedTicketCSV: (name) => getPerformanceRafflePurchasedTicketCSV(name),
+  getPerformanceRaffleParticipantTicketCSV: (name) => getPerformanceRaffleParticipantTicketCSV(name),
+  getPerformanceRaffleWinnerCSV: (name) => getPerformanceRaffleWinnerCSV(name),
 
 };
 

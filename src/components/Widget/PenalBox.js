@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import   PropTypes   from 'prop-types';
+import {connect} from 'react-redux';
 import {Panel} from 'react-bootstrap';
 import Link from '../Link';
 import cx from 'classnames';
@@ -43,9 +44,9 @@ class PenalBoxWidget extends Component { // eslint-disable-line
 
       // let duration = moment.duration(duration - interval, 'milliseconds');
       this.setState({
-        days: days <= 0 ? "00": days,
+        days: days <= 0 ? 0 : days <=9 ? ("0" +days).slice(-2) : days,
         hours: hours <= 0 ? "00": hours <=9 ? ("0" +hours).slice(-2) : hours,
-        minute: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
+        minutes: minute <= 0 ? "00":minute <=9 ? ("0" +minute).slice(-2) : minute,
         seconds: seconds <= 0 ? "00": seconds <=9 ? ("0" +seconds).slice(-2) : seconds,
       });
     }
@@ -63,8 +64,8 @@ class PenalBoxWidget extends Component { // eslint-disable-line
 
   render() {
     return (
-      <div className="auction-stat-box main-box clearfix project-box gray-box">
-        <div className="main-box-body clearfix">
+      <div className="auction-stat-box project-box">
+        <div className="main-box-body">
           <div className="project-box-header gray-bg">
             <div className="name">
               <div>{this.props.boxTitle}
@@ -77,34 +78,42 @@ class PenalBoxWidget extends Component { // eslint-disable-line
             <div className="flex-row">
               <div className="flex-col text-left lh-30">{this.props.firstTitle}:</div>
               <div className="flex-col">
-                <div className="ticker" data-end-date="2017-06-07T18:55:54">
+                <div className="ticker">
                   <div className="flex-row timer">
-                    <div className="flex-col">
+                    { this.state.days > 0 &&
+                    <div className="flex-col" >
                       <span className="days">{this.state.days}</span>
                     </div>
+                    }
                     <div className="flex-col">
                       <span className="hours">{this.state.hours}</span>
                     </div>
                     <div className="flex-col">
-                      <span className="minutes">{this.state.seconds}</span>
+                      <span className="minutes">{this.state.minutes}</span>
                     </div>
-                    <div className="flex-col" style={{display: "none"}}>
-                      <span className="seconds">{this.state.second}</span>
+                    { this.state.days <= 0 &&
+                    <div className="flex-col">
+                      <span className="seconds">{this.state.seconds}</span>
                     </div>
+                    }
                   </div>
-                  <div className="flex-row tiny text-center">
+                  <div className="flex-row tiny">
+                    { this.state.days > 0 &&
                     <div className="flex-col">
                       <span className="days">DAYS</span>
                     </div>
+                    }
                     <div className="flex-col">
                       <span className="hours">HOURS</span>
                     </div>
                     <div className="flex-col">
                       <span className="minutes">MINUTES</span>
                     </div>
-                    <div className="flex-col" style={{display: "none"}}>
+                    { this.state.days <= 0 &&
+                    <div className="flex-col">
                       <span className="seconds">SECONDS</span>
                     </div>
+                    }
                   </div>
                 </div>
               </div>
@@ -112,7 +121,7 @@ class PenalBoxWidget extends Component { // eslint-disable-line
             <div className="flex-row">
               <div className="flex-col text-left lh-30">{this.props.secondTitle}:</div>
               <div className="flex-col lh-30">
-                ${this.props.secondData.toFixed(2)}
+                {this.props.currencySymbol}{this.props.secondData.toFixed(2)}
               </div>
             </div>
             <div className="flex-row">
@@ -126,4 +135,11 @@ class PenalBoxWidget extends Component { // eslint-disable-line
   }
 }
 
-export default PenalBoxWidget;
+const mapDispatchToProps = {
+
+};
+
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
+export default connect(mapStateToProps, mapDispatchToProps)(PenalBoxWidget);

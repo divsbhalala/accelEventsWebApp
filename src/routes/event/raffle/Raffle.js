@@ -96,6 +96,7 @@ class Raffle extends React.Component {
       loading:false,
       countryPhone:null,
       phone:null,
+      isError:false,
   }
   }
   onFormClick = (e) => {
@@ -112,7 +113,7 @@ class Raffle extends React.Component {
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value && this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -134,7 +135,7 @@ class Raffle extends React.Component {
       passwordValue:this.password.value.trim(),
     });
 
-    if (this.password.value.trim() == '') {
+    if (this.password.value && this.password.value.trim() === '') {
 
       this.setState({
         password: false
@@ -152,7 +153,7 @@ class Raffle extends React.Component {
       firstNameFeedBack: true,
       firstNameValue:this.firstName.value.trim()
     });
-    if (this.firstName.value.trim() == '') {
+    if ( this.firstName.value.trim() === '') {
       this.setState({
         firstName: false
       });
@@ -170,7 +171,7 @@ class Raffle extends React.Component {
       lastNameValue: this.lastName.value.trim(),
     });
 
-    if (this.lastName.value.trim() == '') {
+    if (this.lastName.value.trim() === '') {
 
       this.setState({
         lastName: false
@@ -190,7 +191,7 @@ class Raffle extends React.Component {
       cardHolderValue:this.cardHolder.value,
     });
 
-    if (this.cardHolder.value.trim() == '') {
+    if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
 
       this.setState({
         cardHolder: false,
@@ -200,6 +201,11 @@ class Raffle extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
+      });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
       });
     } else {
       this.setState({
@@ -215,7 +221,7 @@ class Raffle extends React.Component {
       cardNumberFeedBack: true,
       cardNumberValue:this.cardNumber.value,
     });
-    if (this.cardNumber.value.trim() == '') {
+    if (this.cardNumber.value && this.cardNumber.value.trim() === '') {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
@@ -239,7 +245,7 @@ class Raffle extends React.Component {
       ccvValue:this.cvv.value.trim(),
     });
 
-    if (this.cvv.value.trim() == '') {
+    if (this.cvv.value && this.cvv.value.trim() === '') {
 
       this.setState({
         cvv: false,
@@ -248,7 +254,7 @@ class Raffle extends React.Component {
     } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
       this.setState({
         cvv: false,
-        errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+        errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
       });
     } else {
       this.setState({
@@ -266,7 +272,7 @@ class Raffle extends React.Component {
     },function afterChange () {
       this.checkIsValidBidData()
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
@@ -286,13 +292,13 @@ class Raffle extends React.Component {
     this.setState({
       phone: value,
     });
-  }
+  };
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
       expMonthValue:this.expMonth.value.trim(),
     });
-    if (this.expMonth.value.trim() == '') {
+    if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
@@ -309,7 +315,7 @@ class Raffle extends React.Component {
       expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
     });
-    if (this.expYear.value.trim() == '') {
+    if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: "Expire Year is Require",
@@ -325,11 +331,11 @@ class Raffle extends React.Component {
 
     let tickets=true;
     let errorMsgTickets="";
-    if (this.tickets.value.trim() == '') {
+    if (this.tickets.value && this.tickets.value.trim() === '') {
       errorMsgTickets= "Number Of Tickets can't be empty";
       tickets=false;
     }else if ( this.state.raffleData.availableTickets  < this.tickets.value.trim() || this.tickets.value.trim() <= 0) {
-      errorMsgTickets= "Tickets should br more than 0 and less then "+this.state.raffleData.availableTickets;
+      errorMsgTickets= "Tickets should be more than 0 and less then "+this.state.raffleData.availableTickets;
       tickets=false
     } else {
       tickets=true
@@ -347,7 +353,7 @@ class Raffle extends React.Component {
       raffleTicketFeedBack: true,
       raffleTicketValue: this.raffleTicket.value.trim(),
     });
-    if (this.raffleTicket.value.trim() == '') {
+    if (this.raffleTicket.value && this.raffleTicket.value.trim() === '') {
       this.setState({
         raffleTicket: false,
         errorMsgRaffleTicket: "Raffle Ticket required and can't be empty",
@@ -367,6 +373,7 @@ class Raffle extends React.Component {
         this.setState({
           errorMsg:"Please activate this module to start accepting pledges.",
           popupHeader :'Failed',
+          isError:true,
         });
       }
       this.setState({
@@ -383,19 +390,10 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
       history.push('/404');
     });
   };
   componentReRender() {
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
     this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
       .then(resp => {
         if (resp && resp.data) {
@@ -404,9 +402,9 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
   };
+
   buyRaffleTicket = (e) => {
     e.preventDefault();
   };
@@ -426,12 +424,14 @@ class Raffle extends React.Component {
             this.setState({
               //showAlertPopup: true,
               errorMsg: resp.message,
+              isError: false,
               popupHeader:"Success. ",
               raffleData: updateraffleData,
            })
           }else{
             this.setState({
             //  showAlertPopup: true,
+              isError: true,
               errorMsg: resp.errorMessage,
               popupHeader:"Failed"
             });
@@ -484,7 +484,7 @@ class Raffle extends React.Component {
     let valid2=true;
     let flag=true;
     if(this.props.authenticated){
-      if( this.props.user.firstName == null ){
+      if( this.props.user && this.props.user.firstName === null ){
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
@@ -529,14 +529,6 @@ class Raffle extends React.Component {
     })
   };
   successTasks = ()=> {
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
     this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
       .then(resp => {
         if (resp && resp.data) {
@@ -545,14 +537,14 @@ class Raffle extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error);
+
       history.push('/404');
     });
   };
   render() {
     let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post" onSubmit={this.submiteBuyTicket}>
 
-      { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName === null ) ?  <div
         className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
         <label className="control-label">First Name</label>
         <div className="input-group">
@@ -572,7 +564,7 @@ class Raffle extends React.Component {
         { this.state.firstNameFeedBack && !this.state.firstName &&
         <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
       </div> : ""}
-      { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
+      { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName === null ) ?  <div
         className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
         <label className="control-label">Last Name</label>
         <div className="input-group">
@@ -597,7 +589,7 @@ class Raffle extends React.Component {
         <label className="control-label"> You have <span className="available-tickets">{this.state.raffleData && this.state.raffleData.availableTickets}</span> tickets
           remaining.</label>
         <div className="row">
-          <div className="col-md-5 col-lg-5">
+          <div className="col-md-10 col-lg-10">
             <div
               className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? '' : 'disabled')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
@@ -622,12 +614,12 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button  className={cx("btn btn-primary text-uppercase",  s.btnFull)} disabled={!this.state.isValidData } role="button"
-                   type="submit"  loading={this.state.loading}> Submit Ticket</Button>
+          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled={!this.state.isValidData } role="button"
+                   type="submit"  loading={this.state.loading}> Submit Ticket </Button>
 
         </div>
         <div className="col-md-6 col-lg-5">
-          <Link to={this.props.params && "/event/" + this.props.params.params } role="button" className="btn btn-success btn-block" >
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } role="button" className="btn btn-success btn-block" >
               Go back to All Items
           </Link>
         </div>
@@ -644,7 +636,7 @@ class Raffle extends React.Component {
       <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
-         to={this.props.params && "/event/" + this.props.params.params } >Go back to All Items</Link>
+         to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } >Go back to All Items</Link>
     </div>;
     return (
       <div className="row">
@@ -686,8 +678,8 @@ class Raffle extends React.Component {
                       </div>
                     </div>
                     <div className="col-md-6">
-                      <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                        { this.state.errorMsg }</div>
+                      {this.state.errorMsg  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError  ? 'text-success':'text-danger')} >
+                        { this.state.errorMsg }</div> }
                       { this.props.authenticated ? form_login : form_normal  }
                     </div>
                   </div>
@@ -706,7 +698,7 @@ class Raffle extends React.Component {
             { this.state.errorMsg }
             <div className="modal-footer">
               {/*{this.state.popupAlertHeader == "Success" ? <button className="btn btn-success" onClick={this.buyTicket} >Confirm</button> : ""}*/}
-              {this.state.popupHeader == "Confirm" ? <Button loading={this.state.loading} className="btn btn-success" onClick={this.purchaseTicket} >Confirm</Button> : ""}
+              {this.state.popupHeader === "Confirm" ? <Button loading={this.state.loading} className="btn btn-success" onClick={this.purchaseTicket} >Confirm</Button> : ""}
               <button className="btn btn-danger" onClick={this.hideAlertPopup}>Close</button>
             </div>
           </div>
@@ -718,6 +710,7 @@ class Raffle extends React.Component {
           modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
         />
         <BuyRaffleTicketsModal
+          ticketPackages={this.state.settings && this.state.settings.ticketPackages}
           showModal={this.state.isshowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
@@ -759,6 +752,7 @@ const mapStateToProps = (state) => ({
   eventTicketData: state.event && state.event.ticket_data,
   user: state.session.user,
   authenticated: state.session.authenticated,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Raffle));

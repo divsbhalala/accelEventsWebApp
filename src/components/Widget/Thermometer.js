@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import   PropTypes   from 'prop-types';
+import  PropTypes   from 'prop-types';
+import {connect} from 'react-redux';
 import cx from 'classnames';
 import moment from 'moment';
 class Thermometer extends Component { // eslint-disable-line
@@ -9,7 +10,7 @@ class Thermometer extends Component { // eslint-disable-line
 		settings: PropTypes.object,
 		goalData: PropTypes.object,
 		goalPer: PropTypes.number,
-	}
+	};
 
 	render() {
 		return (
@@ -21,7 +22,7 @@ class Thermometer extends Component { // eslint-disable-line
 
 						<div className="glass">
 							<div id="tooltip" style={{left: this.props.goalPer+'%'}}>
-								<span>${this.props.settings && this.props.settings.totalRised}</span>
+								<span>{this.props.currencySymbol}{this.props.settings && this.props.settings.totalRised}</span>
 							</div>
 							<div className="liquid"/>
 							<svg className="ruler">
@@ -29,7 +30,7 @@ class Thermometer extends Component { // eslint-disable-line
 								<rect x="20%" y={0} width="20%" height="100%" fill="url(#ticks--low)" rx={2}/>
 								<rect x="40%" y={0} width="20%" height="100%" fill="url(#ticks--moderate)" rx={2}/>
 								<rect x="60%" y={0} width="20%" height="100%" fill="url(#ticks--high)" rx={2}/>
-								<rect x="80%" y={0} width="20%" height="10k%" fill="url(#ticks--very-high)" rx={2}/>
+								<rect x="80%" y={0} width="20%" height="100%" fill="url(#ticks--very-high)" rx={2}/>
 								<defs>
 									<pattern id="ticks--very-low" className="ticks--very-low" width="60px" height="100%"
 									         patternUnits="userSpaceOnUse" x={0}>
@@ -74,15 +75,15 @@ class Thermometer extends Component { // eslint-disable-line
 								</defs>
 							</svg>
 							<svg className="markers">
-								<text x="8px" y="15px" style={{writingMode: 'tb'}} fill="#249AA7">$0</text>
+								<text x="8px" y="15px" style={{writingMode: 'tb'}} fill="#249AA7">{this.props.currencySymbol}0</text>
 								<text x="108px" y="15px" style={{writingMode: 'tb'}} fill="#B8E1F2">
-									${ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal / 4)}</text>
+									{this.props.currencySymbol}{ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal / 4)}</text>
 								<text x="228px" y="15px" style={{writingMode: 'tb'}} fill="#ABD25E">
-									${ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal / 2)}</text>
+									{this.props.currencySymbol}{ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal / 2)}</text>
 								<text x="348px" y="15px" style={{writingMode: 'tb'}} fill="#F8C830">
-									${ this.props.goalData && Math.round((this.props.goalData.fundRaisingGoal / 4) * 3)}</text>
+									{this.props.currencySymbol}{ this.props.goalData && Math.round((this.props.goalData.fundRaisingGoal / 4) * 3)}</text>
 								<text x="468px" y="15px" style={{writingMode: 'tb'}} fill="#F1594A">
-									${ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal)} </text>
+									{this.props.currencySymbol}{ this.props.goalData && Math.round(this.props.goalData.fundRaisingGoal)} </text>
 							</svg>
 						</div>
 					</div>}
@@ -91,4 +92,11 @@ class Thermometer extends Component { // eslint-disable-line
 	}
 }
 
-export default Thermometer;
+const mapDispatchToProps = {};
+const mapStateToProps = (state) => ({
+	user: state.session.user,
+	authenticated: state.session.authenticated,
+	currencySymbol : (state.event && state.event.currencySymbol) || "$",
+});
+
+export default  connect(mapStateToProps, mapDispatchToProps)(Thermometer);

@@ -13,7 +13,8 @@ import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
 import {browserHistory} from 'react-router';
 import Link from "../../../components/Link/Link";
-import EditEvent from "./editEvent";
+import _ from 'lodash';
+import  history from './../../../history';
 
 class EventList extends React.Component {
   static propTypes = {
@@ -33,26 +34,56 @@ class EventList extends React.Component {
       whiteLabelUrl:false,
       whiteLabelUrlList:null,
       isEdit:false,
+
+      items: [],
+      totalSize: 0,
+      page: 1,
+      sizePerPage: 10,
+      search:"",
     }
+    this.fetchData = this.fetchData.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleSizePerPageChange = this.handleSizePerPageChange.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
   }
+
+  fetchData(page = this.state.page, size = this.state.sizePerPage,search=this.state.search) {
+    this.props.eventsList((page-1)*size,((page-1)*size) + size,search).then((resp) => {
+      this.setState({
+        items: _.slice(resp.data, (page-1)*size, ((page-1)*size) + size),
+        totalSize: resp.recordsTotal ,
+        page,
+        sizePerPage:size,
+        search
+      })
+    })
+  }
+  handlePageChange(page, sizePerPage) {
+    this.fetchData(page, sizePerPage);
+  }
+  onSearchChange(search,row,isSerach) {
+    this.fetchData(1,this.state.sizePerPage ,search);
+  }
+  handleSizePerPageChange(sizePerPage) {
+    this.fetchData(1, sizePerPage);
+  }
+  onSortChange(sizePerPage) {
+    //this.fetchData(1, sizePerPage);
+  }
+
   getEventsList = () => {
-    this.props.eventsList("search").then((resp) => {
+    this.props.eventsList(0,10,"search").then((resp) => {
       this.setState({
         event:resp.data
       })
-
     });
   }
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
-
-      window.location = "/admin";
-       // this.props.router.push('/some/location');
-      {/*<Link to="/admin" >*/}
-      {/*</Link>*/}
-     //this.context.router.push('/admin');
-     // browserHistory.push('/login');
-
+      setTimeout(()=>{
+        //history.push("/host/dashboard/home")
+        window.location.replace('/host/dashboard/home');
+      },2000)
     });
   }
   getWhiteLabelUrl = () => {
@@ -63,7 +94,8 @@ class EventList extends React.Component {
     });
   }
   componentDidMount(){
-    this.getEventsList();
+  //  this.getEventsList();
+    this.fetchData();
     this.getWhiteLabelUrl();
   }
   whiteLabelUrlValidateHandler = (e) => {
@@ -119,23 +151,22 @@ class EventList extends React.Component {
       message:null,
     });
   };
-  editMode =(row) =>{
-    this.setState({isEdit:true})
-  }
   render() {
     var self = this;
     const options = {
-      page: 1,  // which page you want to show as default
       sizePerPageList: [ {
         text: '5', value: 5
       }, {
         text: '10', value: 10
       }, {
         text: 'All', value: this.event && this.event.recordsTotal
-      } ], // you can change the dropdown list for size per page
-      sizePerPage: 10,  // which size per page you want to locate as default
-      pageStartIndex: 0, // where to start counting the pages
-      paginationSize: 5,  // the pagination bar size.
+      } ],
+      onPageChange: this.handlePageChange,
+      onSizePerPageList: this.handleSizePerPageChange,
+      onSearchChange: this.onSearchChange,
+      onSortChange: this.onSortChange,
+      page: this.state.page,
+      sizePerPage: this.state.sizePerPage,
       prePage: 'Prev', // Previous page button text
       nextPage: 'Next', // Next page button text
       // firstPage: 'First', // First page button text
@@ -148,8 +179,8 @@ class EventList extends React.Component {
     };
     function buttonFormatter(cell, row){
       return (<ul className="readonly-actions list-inline">
-        <li><Link to={"edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
-        <li><Link ><i className="fa fa-trash red" ></i></Link></li>
+        <li><Link to={"superadmin/edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
+        <li><Link to="" ><i className="fa fa-trash red" ></i></Link></li>
       </ul>);
     }
     function dateFormatter(cell, row){
@@ -177,7 +208,7 @@ class EventList extends React.Component {
             </div>
             <div className="col-md-2" role="group">
               <DropdownButton title="Access White Label" pullRight id="split-button-pull-right">
-                {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.map((value,index)=>
+                {this.state.whiteLabelUrlList && this.state.whiteLabelUrlList.length > 0 &&  this.state.whiteLabelUrlList.map((value,index)=>
                   <WhiteLabelUrlList key={index} item={value} />
                 )}
               </DropdownButton>
@@ -185,8 +216,16 @@ class EventList extends React.Component {
           </div>
           <div className="row">
             <div className="col-md-12">
-              {this.state.event &&
-              <BootstrapTable data={this.state.event} striped hover search  pagination={ true }  options={ options }>
+              {this.state.items ?
+              <BootstrapTable   data={this.state.items}
+                                options={options}
+                                fetchInfo={{dataTotalSize: this.state.totalSize}}
+                                remote
+                                pagination
+                                striped
+                                hover
+                                condensed
+                                search={ true }>
                 <TableHeaderColumn dataSort isKey dataField='eventName' dataFormat={indexN}>No</TableHeaderColumn>
                 <TableHeaderColumn dataSort  dataField='eventName'>EVENT NAME</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='eventEndDate' width="15%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
@@ -196,7 +235,7 @@ class EventList extends React.Component {
                 <TableHeaderColumn dataSort dataField='price'># Particaipants</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Last Login</TableHeaderColumn>
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
-             </BootstrapTable> }
+             </BootstrapTable>: <div id="app" className="loader" />  }
             </div>
           </div>
           <PopupModel
@@ -207,8 +246,8 @@ class EventList extends React.Component {
             onCloseFunc={this.hidePopup}>
             <div className="ticket-type-container">
               <form id="contactform">
-                <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                  { this.state.message }</div>
+                { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                  { this.state.message }</div> }
                 <div    className={cx("form-group", this.state.whiteLabelUrlFeedBack && 'has-feedback', this.state.whiteLabelUrlFeedBack && this.state.whiteLabelUrl && 'has-success', this.state.whiteLabelUrlFeedBack && (!this.state.whiteLabelUrl) && 'has-error')}>
                   <label className="control-label">Enter White Label Url</label><br />
                   <label id="alert-modal-whitelabelurl" className="modal-title alert-danger" />
@@ -242,14 +281,17 @@ class EventList extends React.Component {
   }
 }
 class WhiteLabelUrlList extends React.Component {
+  onClickRedirection =(url) =>{
+    history.push(url);
+  }
   render() {
     return (
-      <MenuItem eventKey={this.props.key}><Link to={"u/"+this.props.item+"/home"} >{this.props.item}</Link></MenuItem>
+      <MenuItem eventKey={this.props.key} onClick={()=>this.onClickRedirection("/u/wl/"+this.props.item+"/home")}>{this.props.item}</MenuItem>
     );
   }
 }
 const mapDispatchToProps = {
-  eventsList: (search) => eventsList(search),
+  eventsList: (offset,limit,search) => eventsList(offset,limit,search),
   setEvents: (eventId) => setEvents(eventId),
   whiteLabelUrl: () => whiteLabelUrl(),
   createWhiteLabelUrl: (label) => createWhiteLabelUrl(label)

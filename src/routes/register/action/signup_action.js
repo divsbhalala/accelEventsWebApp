@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import {apiUrl as API_URL} from './../../../clientConfig';
 
-let API_URL = 'http://35.161.147.220:3333/api/';
 export const STORE_LOGIN_DATA = 'STORE_LOGIN_DATA';
 export function onFormSubmit(e) {
   alert('hello');
@@ -15,10 +15,10 @@ export function doRegister(email, password) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'users',
+      url: API_URL + 'u/signup/admin',
       data: {
-        email: email,
-        password: password
+				  email: email,
+					password: password
       }
     }).then(response => {
       dispatch(storeLoginData(response.data));
@@ -27,8 +27,7 @@ export function doRegister(email, password) {
 
     })
       .catch(error => {
-        console.log(error);
-        return error;
+        return error && error.response && error.response.data;
       });
   }
 

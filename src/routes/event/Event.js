@@ -10,11 +10,13 @@ import history from './../../history';
 import Moment from 'react-moment';
 import moment from 'moment';
 
+import {serverUrl } from './../../clientConfig';
 import EventAside from './../../components/EventAside/EventAside';
 import EventAuctionBox from './../../components/EventAuctionBox/EventAuctionBox';
 import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabCommonBox';
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
+import GoogleMap from "../../components/GoogleMaps";
 
 import {
 	doGetEventData,
@@ -131,10 +133,20 @@ class Event extends React.Component {
 				})
 			} else {
 				this.setState({
-					tab: 'donation'
+					tab: 'Donate'
 				})
 			}
-			this.setActiveTabState(this.state.tab)
+			this.setActiveTabState(this.state.tab);
+			if(window.location.hash){
+				let query = window.location.hash.split('#');
+				if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+					this.setState({
+						tab: query[1]
+					},function changeAfter(){
+						this.setActiveTabState(query[1])
+					})
+				}
+			}
 		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
 		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
@@ -145,6 +157,16 @@ class Event extends React.Component {
 			history.push('/404');
 		});
 		this.props.isVolunteer(this.props.params && this.props.params.params);
+		if(window.location.hash){
+			let query = window.location.hash.split('#');
+			if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+				this.setState({
+					tab: query[1]
+				},function changeAfter(){
+					this.setActiveTabState(query[1])
+				})
+			}
+		}
 	}
 
 	componentDidMount() {
@@ -180,7 +202,7 @@ class Event extends React.Component {
 			firstNameFeedBack: true,
 			firstNameValue: this.firstName.value.trim(),
 		});
-		if (this.firstName.value.trim() == '') {
+		if (this.firstName.value && this.firstName.value.trim() === '') {
 
 			this.setState({
 				firstName: false
@@ -196,7 +218,7 @@ class Event extends React.Component {
 			lastNameFeedBack: true,
 			lastNameValue: this.lastName.value.trim(),
 		});
-		if (this.lastName.value.trim() == '') {
+		if (this.lastName.value && this.lastName.value.trim() === '') {
 			this.setState({
 				lastName: false
 			});
@@ -212,7 +234,7 @@ class Event extends React.Component {
 			cardHolderFeedBack: true
 		});
 
-		if (this.cardHolder.value.trim() == '') {
+		if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
 
 			this.setState({
 				cardHolder: false,
@@ -236,7 +258,7 @@ class Event extends React.Component {
 		this.setState({
 			cardNumberFeedBack: true
 		});
-		if (this.cardNumber.value.trim() == '') {
+		if (this.cardNumber.value && this.cardNumber.value.trim() === '') {
 			this.setState({
 				cardNumber: false,
 				errorMsgcardNumber: "Enter Card Number ",
@@ -260,7 +282,7 @@ class Event extends React.Component {
 		let bid = 0;
 		bid = this.state.itemData && this.state.itemData.currentBid + 20;
 
-		if (this.amount.value.trim() == '') {
+		if (this.amount.value && this.amount.value.trim() === '') {
 			this.setState({
 				amount: false,
 				errorMsgAmount: "Bid Amount can't be empty",
@@ -268,7 +290,7 @@ class Event extends React.Component {
 		} else if (bid > this.amount.value.trim()) {
 			this.setState({
 				amount: false,
-				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in $" + bid + " increments. " + "   Bids for this item must be placed in increments of at least $20",
+				errorMsgAmount: "This bid is below the minimum bid amount. Bids must be placed in " + this.props.currencySymbol + bid + " increments. " + "   Bids for this item must be placed in increments of at least " + this.props.currencySymbol + "20",
 			});
 		} else {
 			this.setState({
@@ -282,7 +304,7 @@ class Event extends React.Component {
 			cvvFeedBack: true
 		});
 
-		if (this.cvv.value.trim() == '') {
+		if (this.cvv.value && this.cvv.value.trim() === '') {
 
 			this.setState({
 				cvv: false,
@@ -291,7 +313,7 @@ class Event extends React.Component {
 		} else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
 			this.setState({
 				cvv: false,
-				errorMsgcvv: "The CVV must be more than 4 and less than 3 characters long",
+				errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
 			});
 		} else {
 			this.setState({
@@ -357,22 +379,22 @@ class Event extends React.Component {
 	setActiveTabState = (label) => {
 		this.props.storeActiveTabData({tab: label, lastScrollPos: this.state.lastScrollPos});
 
-		if (label && (label == 'Auction' || label == 'Raffle' || label == 'Fund a Need' || label == 'The Event' || label == 'Donate' )) {
-			if (label == 'Auction') {
+		if (label && (label === 'Auction' || label === 'Raffle' || label === 'Fund a Need' || label === 'The Event' || label === 'Donate' )) {
+			if (label === 'Auction') {
 				label = 'auction';
 				this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'Raffle') {
+			} else if (label === 'Raffle') {
 				label = 'raffle';
 				this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'Fund a Need') {
+			} else if (label === 'Fund a Need') {
 				label = 'fundaneed';
 				this.doGetFundANeedItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'The Event') {
+			} else if (label === 'The Event') {
 				label = 'ticketing';
-			} else if (label == 'Donate') {
+			} else if (label === 'Donate') {
 				label = 'donation';
 			}
 			this.setState({tab: label});
@@ -488,7 +510,18 @@ class Event extends React.Component {
 				}
 				this.setState({
 					rafflePageItems: resp.data.items,
-				})
+				},function changeAfter(){
+		          let seenNames = {};
+		          let array = this.state.rafflePageItems.filter(function(currentObject) {
+		            if (currentObject.id in seenNames) {
+		              return false;
+		            } else {
+		              seenNames[currentObject.id] = true;
+		              return true;
+		            }
+		          });
+		          this.setState({rafflePageItems:array})
+		        })
 			}
 			else {
 				this.setState({
@@ -569,12 +602,14 @@ class Event extends React.Component {
 			tickettypeid: e.target.name
 		};
 		let totalPrice = 0;
+		let totalNoTickets = 0;
 		totalTickets.map(item => {
 			totalPrice += item.price * item.numberofticket;
+			totalNoTickets += (item.numberofticket ? parseInt(item.numberofticket) : 0);
 		});
 		this.setState({
 			totalTickets: totalTickets,
-			totalTicketQty: 0 + parseInt(e.target.value.trim()) + this.state.totalTicketQty,
+			totalTicketQty: totalNoTickets,
 			totalTicketPrice: totalPrice,
 		});
 	}
@@ -583,8 +618,8 @@ class Event extends React.Component {
 			let label = this.props.active_tab_data && this.props.active_tab_data.tab;
 			this.setState({
 				selectedCategory: category
-			})
-			if (label == 'Auction') {
+			});
+			if (label === 'Auction') {
 				this.setState({
 					auctionPageCategory: category,
 					auctionPageLoading: true,
@@ -595,16 +630,16 @@ class Event extends React.Component {
 					this.doGetAuctionItemByLimit(this.props.params && this.props.params.params);
 				}, 500);
 
-			} else if (label == 'Raffle') {
+			} else if (label === 'Raffle') {
 				this.setState({
 					rafflePageCategory: category,
 					rafflePageLoading: true,
 					rafflePageCount: 0,
 					rafflePageItems: [],
-				})
+				});
     		this.doGetRaffleItemByLimit(this.props.params && this.props.params.params);
 
-			} else if (label == 'Fund a Need') {
+			} else if (label === 'Fund a Need') {
 				this.setState({
 					fundANeedPageCategory: category,
 					fundANeedPageCount: 0,
@@ -622,7 +657,7 @@ class Event extends React.Component {
 			this.setState({
 				selectedSearchString: searchString
 			});
-			if (label == 'Auction') {
+			if (label === 'Auction') {
 				this.setState({
 					auctionPageSearchString: searchString,
 				});
@@ -630,14 +665,14 @@ class Event extends React.Component {
 					this.doGetAuctionItemBySearch(this.props.params && this.props.params.params);
 				}, 500);
 
-			} else if (label == 'Raffle') {
+			} else if (label === 'Raffle') {
 				this.setState({
 					rafflePageSearchString: searchString,
 				});
 				setTimeout(() => {
 					this.doGetRaffleItemBySearch(this.props.params && this.props.params.params);
 				}, 500);
-			} else if (label == 'Fund a Need') {
+			} else if (label === 'Fund a Need') {
 				this.setState({
 					fundANeedPageSearchString: searchString,
 				});
@@ -664,7 +699,7 @@ class Event extends React.Component {
 		Data.clientDate = moment().format('DD/MM/YYYY hh:mm:ss');
 		let ticketings = this.state.totalTickets;
 		ticketings = ticketings.filter(function (n) {
-			return n != null
+			return n !== null
 		});
 		ticketings = ticketings.map(function (obj) {
 			return {"numberOfTicket": parseInt(obj.numberofticket), "ticketTypeId": parseInt(obj.tickettypeid)};
@@ -677,7 +712,7 @@ class Event extends React.Component {
 		this.props.doOrderTicket(eventUrl, Data)
 			.then(resp => {
 				if (resp && resp.data && resp.data.orderId) {
-					history.push('/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
+					history.push('/u/checkout/' + eventUrl + '/tickets/order/' + resp.data.orderId);
 				}
 				else {
 					this.setState({
@@ -713,7 +748,7 @@ class Event extends React.Component {
 				});
 			})
 				.catch(error => {
-					console.log(error);
+
 					// history.push('/404');
 				});
 		}
@@ -756,6 +791,7 @@ class Event extends React.Component {
 						<div className="col-lg-9 col-md-8 col-sm-8 ">
 							{ this.state.tab && this.state.isLoaded && <div className="main-box">
 								<Tabs onSelect={ (index, label) => {
+									window.location.hash = '#'+label;
                   this.setActiveTabState(label)
                 } } selected={this.props.active_tab_data && this.props.active_tab_data.tab} className="tabs-wrapper">
 
@@ -788,7 +824,7 @@ class Event extends React.Component {
 												{
 													this.state.auctionPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="auction"
+														                   type="A"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -796,7 +832,7 @@ class Event extends React.Component {
                                                  [
                                                    {
                                                      title: item.currentBid != 0 ? "CURRENT BID" : "Starting Bid",
-                                                     value: item.currentBid != 0 ? '$' + item.currentBid : '$' + item.startingBid
+                                                     value: item.currentBid != 0 ? this.props.currencySymbol + item.currentBid : this.props.currencySymbol + item.startingBid
                                                    }
                                                  ]
                                                }
@@ -806,10 +842,10 @@ class Event extends React.Component {
 														                   actionTitle={item.purchased ? null : (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "Bidding Closed" : "Bid"}
 														                   actionClassName={ item.purchased || (this.state.settings && moment(this.state.settings.endDate).diff(moment()) <= 0) ? "btn btn-primary disabled" : "btn btn-success"}
 														                   auctionPurchaseFor={ item.purchased}
-														                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now $" + item.buyItNowPrice : null}
-														                   auctionBuyNowTitle={ (item.purchased ? "Purchased for $" + item.currentBid : null)}
+														                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now " + this.props.currencySymbol + item.buyItNowPrice : null}
+														                   auctionBuyNowTitle={ (item.purchased ? "Purchased for "+ this.props.currencySymbol + item.currentBid : null)}
 														                   auctionBuyNowClassName="item-link btn btn-success actionlinks"
-														                   marketValue={item.marketValue > 0 ? '$' + item.marketValue : null}
+														                   marketValue={item.marketValue > 0 ? this.props.currencySymbol + item.marketValue : null}
 														                   marketValueLabel={item.marketValue > 0 ? 'Market Value' : null}
 														/>
 													)
@@ -831,7 +867,7 @@ class Event extends React.Component {
 												{
 													this.state.rafflePageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="raffle"
+														                   type="R"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -864,11 +900,11 @@ class Event extends React.Component {
 												next={this.doGetLoadMoreFundANeedItem}
 												hasMore={this.state.fundANeedPageLoading}
 												loader={<div className="text-center"><span
-                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"></span></div>}>
+                          className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>}>
 												{
 													this.state.fundANeedPageItems.map((item) =>
 														<EventTabCommonBox key={item.id + Math.random().toString()}
-														                   type="fund"
+														                   type="C"
 														                   headerText={item.name}
 														                   itemCode={item.code}
 														                   isSharable={this.state.settings && this.state.settings.socialSharingEnabled}
@@ -917,11 +953,11 @@ class Event extends React.Component {
 									<div className="sale-card" key={item.typeId.toString()}>
 										<div className="flex-row">
 											<div className="flex-col">
-												<div className="type-name"><strong>{item.name}</strong>
-													(<span className="type-cost txt-sm gray">${item.price}</span>)
+												<div className="type-name"><strong style={{"fontWeight":700}}>{item.name} </strong>
+													( <span className="type-cost txt-sm gray"> {this.props.currencySymbol}{item.price.toFixed(2)} </span>)
 													<div className="pull-right">
 														{ item.remaniningTickets && item.remaniningTickets > 0 ?
-															<select className="form-control" name={item.typeId} data-price={item.price}
+															<select className="form-control all-select-values" name={item.typeId} data-price={item.price}
 															        disabled={moment(item.endDate).diff(moment()) <= 0}
 															        onChange={this.selectHandle}
 															        value={this.state.totalTickets && this.state.totalTickets[item.typeId] && this.state.totalTickets[item.typeId].numberofticket ? this.state.totalTickets[item.typeId].numberofticket : 0}>
@@ -929,7 +965,7 @@ class Event extends React.Component {
 															</select>
 															: ''}
 														{
-															!item.remaniningTickets && <span class="sold-out-text"> SOLD OUT </span>
+															(!item.remaniningTickets || item.remaniningTickets <= 0) && <span className="sold-out-text"> SOLD OUT </span>
 														}
 													</div>
 												</div>
@@ -938,9 +974,9 @@ class Event extends React.Component {
 													<Moment format="MMMM D YYYY">{item.endDate}</Moment></div>
 												{item.ticketsPerTable && item.ticketsPerTable > 0 ?
 													<div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable} tickets</div> : ''}
-												{/*<div className="txt-sm gray type-desc">
-												 sadfw
-												 </div>*/}
+												{<div className="txt-sm gray type-desc">
+												 TODO: Item desctiption goes here
+												 </div>}
 											</div>
 										</div>
 									</div>
@@ -965,7 +1001,7 @@ class Event extends React.Component {
 								<div className="pull-left">
 									<span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
                   <span
-	                  className="total-price">{this.state.totalTicketPrice ? '$' + this.state.totalTicketPrice : 'FREE'}</span>
+	                  className="total-price">{this.state.totalTicketPrice ? this.props.currencySymbol + this.state.totalTicketPrice : 'FREE'}</span>
 								</div>
 								<div className="pull-right">
 									<button type="button" className="btn btn-success" id="checkout-tickets" onClick={this.doOrderTicket}>
@@ -983,8 +1019,13 @@ class Event extends React.Component {
 					headerText={<p>Event Location</p>}
 					onCloseFunc={this.hideMapPopup}
 				>
-					<div><h1>Location</h1></div>
-				</PopupModel>
+					<div className="row">
+						<div className="col-md-12"> <b>Location</b> : {this.state.settings && this.state.settings.address}</div>
+						<div className="col-md-12"> {this.state.settings &&
+								<GoogleMap height={500} eventAddress={this.state.settings.address}/>
+							}</div>
+					</div>
+					</PopupModel>
 				{ this.state.showFormError &&
 				<PopupModel
 					id="mapPopup"
@@ -1024,6 +1065,7 @@ const mapDispatchToProps = {
 };
 const mapStateToProps = (state) => ({
 	eventData: state.event && state.event.data,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
 	eventTicketData: state.event && state.event.ticket_data,
 	eventRaffleData: state.event && state.event.raffle_data,
 	eventFundData: state.event && state.event.fund_data,
@@ -1065,7 +1107,6 @@ class GMap extends React.Component {
 		this.map = this.createMap();
 		this.marker = this.createMarker();
 		this.infoWindow = this.createInfoWindow();
-		this.initMap();
 
 		// have to define google maps event listeners here too
 		// because we can't add listeners on the map until its created
@@ -1121,7 +1162,7 @@ class GMap extends React.Component {
 			'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
 			'    </div>' +
 			'    <div class="form-group">' +
-			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick="getDirections()">' +
+			'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onClick="getDirections()">' +
 			'    </div>' +
 			'    <div class="form-group">' +
 			'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +
@@ -1184,56 +1225,6 @@ class GMap extends React.Component {
 		infowindow.setContent(from_htmls);
 		infowindow.open(map, markers);
 	}
-
-	initMap() {
-		let geocoder = new google.maps.Geocoder;
-		geocoder.geocode({'address': '67-65 Main St, Flushing, NY 11367, USA'}, function (results, status) {
-			if (status == google.maps.GeocoderStatus.OK) {
-				let uluru = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
-				map = new google.maps.Map(document.getElementById('location-map'), {
-					zoom: 17,
-					center: uluru
-				});
-				marker = new google.maps.Marker({
-					position: uluru,
-					map: map,
-					animation: google.maps.Animation.DROP,
-					title: 'Event Location'
-				});
-				directionsDisplay.setMap(map);
-				directionsDisplay.setPanel(document.getElementById("directionsPanel"));
-				google.maps.event.addListener(map, 'click', function () {
-					infowindow.close();
-				});
-
-				let html = '<div class="directions-container">' +
-					'  <form action="javascript:getDirections()">' +
-					'    <h4>Directions:</h4>' +
-					'    <div class="form-group">' +
-					'       <label>Start address:</label>' +
-					'      <input class="form-control" type="text" name="saddr" id="saddr" value="">' +
-					'    </div>' +
-					'    <div class="form-group">' +
-					'      <input class="btn btn-block btn-blue" value="Get Directions" type="button" onclick={()=>{this.getDirections()}}>' +
-					'    </div>' +
-					'    <div class="form-group">' +
-					'      <input type="checkbox" name="walk" id="walk"> <label for="walk"> Walk</label>' +
-					'      <input type="checkbox" name="highways" id="highways"> <label for="highways">Avoid Highways</label>' +
-					'    </div>' +
-					'    <input type="hidden" id="daddr" value="' + uluru.lat + ',' + uluru.lng + '">' +
-					'  </form>' +
-					'</div>';
-				let contentString = html;
-				google.maps.event.addListener(marker, 'click', function () {
-					map.setZoom(15);
-					map.setCenter(marker.getPosition());
-					infowindow.setContent(contentString);
-					infowindow.open(map, marker);
-				});
-			}
-		});
-	}
-
 }
 
 let initialCenter = {lng: -90.1056957, lat: 29.9717272};

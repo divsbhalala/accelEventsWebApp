@@ -988,7 +988,7 @@ babel-runtime@6.x, babel-runtime@^6.11.6, babel-runtime@^6.18.0, babel-runtime@^
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-runtime@^5.8.38:
+babel-runtime@^5.1.10, babel-runtime@^5.6.18, babel-runtime@^5.8.38:
   version "5.8.38"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-5.8.38.tgz#1c0b02eb63312f5f087ff20450827b425c9d4c19"
   dependencies:
@@ -1144,6 +1144,10 @@ bootstrap-daterangepicker@^2.1.25:
   dependencies:
     jquery ">=1.10"
     moment "^2.9.0"
+
+bootstrap@^3.3.7:
+  version "3.3.7"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
 
 bowser@^1.0.0:
   version "1.6.1"
@@ -1483,7 +1487,7 @@ clap@^1.0.9:
   dependencies:
     chalk "^1.1.3"
 
-classnames@2.x, classnames@^2.1.2, classnames@^2.2.3, classnames@^2.2.5:
+classnames@2.x, classnames@^2.0.0, classnames@^2.1.2, classnames@^2.2.3, classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -1558,6 +1562,10 @@ coa@~1.0.1:
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
+
+codemirror@^5.26.0:
+  version "5.28.0"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.28.0.tgz#2978d9280d671351a4f5737d06bbd681a0fd6f83"
 
 color-convert@^1.3.0:
   version "1.9.0"
@@ -2268,11 +2276,15 @@ domutils@1.5.1, domutils@^1.5.1:
     dom-serializer "0"
     domelementtype "1"
 
+dotenv@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+
 dottie@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/dottie/-/dottie-1.1.1.tgz#45c2a3f48bd6528eeed267a69a848eaaca6faa6a"
 
-drag-helper@^1.3.3:
+drag-helper@^1.3.3, drag-helper@^1.3.6:
   version "1.3.6"
   resolved "https://registry.yarnpkg.com/drag-helper/-/drag-helper-1.3.6.tgz#6694fbc07fc8cdd9f6ca7136e20ea0c496be8858"
   dependencies:
@@ -2615,9 +2627,9 @@ eslint-module-utils@^2.0.0:
     debug "2.2.0"
     pkg-dir "^1.0.0"
 
-eslint-plugin-css-modules@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-css-modules/-/eslint-plugin-css-modules-2.7.1.tgz#d8dc77b59aa3762ff7992ec57372468a7e8c6722"
+eslint-plugin-css-modules@^2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-css-modules/-/eslint-plugin-css-modules-2.7.3.tgz#a3a831f943706b9cce2f2f46e4fc415d9cf07a73"
   dependencies:
     gonzales-pe "^4.0.3"
     lodash "^4.17.2"
@@ -2915,14 +2927,6 @@ fastclick@^1.0.6:
 fastparse@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
-
-fbjs@0.1.0-alpha.10:
-  version "0.1.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.1.0-alpha.10.tgz#46e457c09cbefb51fc752a3e030e7b67fcc384c8"
-  dependencies:
-    core-js "^1.0.0"
-    promise "^7.0.3"
-    whatwg-fetch "^0.9.0"
 
 fbjs@^0.8.0, fbjs@^0.8.1, fbjs@^0.8.4, fbjs@^0.8.5, fbjs@^0.8.7, fbjs@^0.8.9:
   version "0.8.12"
@@ -3404,7 +3408,7 @@ hash.js@^1.0.0, hash.js@^1.0.3:
   dependencies:
     inherits "^2.0.1"
 
-hasown@~1.x.x:
+hasown@^1.0.1, hasown@~1.x.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hasown/-/hasown-1.0.1.tgz#b64ff1570673ba06cc5d0183c0a4f0b5b1bd6459"
 
@@ -3554,6 +3558,12 @@ ignore@^3.2.0:
 immediate@~3.0.5:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+
+immutability-helper@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/immutability-helper/-/immutability-helper-2.3.0.tgz#e897741c1da29541a861ea16bdbf909265e2eb55"
+  dependencies:
+    invariant "^2.2.0"
 
 immutable@3.8.1, immutable@^3.7.6:
   version "3.8.1"
@@ -3935,6 +3945,10 @@ joi@^6.10.1:
 jquery@>=1.10, jquery@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+
+jquery@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
 
 js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.1.9"
@@ -4523,7 +4537,7 @@ lodash@^3.10.1:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.1.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.14.1, lodash@^4.16.1, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.5.1, lodash@^4.6.1:
+lodash@^4.0.0, lodash@^4.1.0, lodash@^4.12.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.14.1, lodash@^4.16.1, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.5.1, lodash@^4.6.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -4780,7 +4794,7 @@ moment-timezone@^0.5.13, moment-timezone@^0.5.4:
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x.x, "moment@>= 2.9.0", moment@^2.11.2, moment@^2.13.0, moment@^2.18.1, moment@^2.9.0:
+moment@2.x.x, "moment@>= 2.9.0", moment@^2.11.2, moment@^2.13.0, moment@^2.18.1, moment@^2.8.2, moment@^2.9.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
@@ -5887,7 +5901,7 @@ promise-each@^2.2.0:
   dependencies:
     any-promise "^0.1.0"
 
-promise@^7.0.3, promise@^7.1.1:
+promise@^7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/promise/-/promise-7.1.1.tgz#489654c692616b8aa55b0724fa809bb7db49c5bf"
   dependencies:
@@ -5994,7 +6008,7 @@ querystring@0.2.0, querystring@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
 
-raf@3.2.0:
+raf@3.2.0, raf@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.2.0.tgz#2aba9a09bb70f8c2e9094dc60ace7c374fadec7e"
   dependencies:
@@ -6096,6 +6110,14 @@ react-bootstrap-button-loader@^1.0.8:
     prop-types "^15.5.10"
     react-loader "^2.4.0"
 
+react-bootstrap-datetimepicker@^0.0.22:
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-datetimepicker/-/react-bootstrap-datetimepicker-0.0.22.tgz#07e448d993157d049ad0876d0f9a3c9c5029d9c5"
+  dependencies:
+    babel-runtime "^5.6.18"
+    classnames "^2.1.2"
+    moment "^2.8.2"
+
 react-bootstrap-datetimerangepicker@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/react-bootstrap-datetimerangepicker/-/react-bootstrap-datetimerangepicker-2.0.4.tgz#ef167d66178ba75a2640bfa189526229f046aef3"
@@ -6124,11 +6146,20 @@ react-bootstrap-tabs@^1.0.0:
     babel-runtime "^6.23.0"
     classnames "^2.2.5"
 
+react-bootstrap-validation@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/react-bootstrap-validation/-/react-bootstrap-validation-0.1.11.tgz#24b7bab16bbba74801d59d0c1bf15beed99acf5d"
+  dependencies:
+    babel-runtime "^5.1.10"
+    classnames "^2.0.0"
+    react-bootstrap ">=0.23.0"
+    validator "^3.41.3"
+
 react-bootstrap-xeditable@^0.2.10:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/react-bootstrap-xeditable/-/react-bootstrap-xeditable-0.2.10.tgz#36388045837794bcd0692351b469395cfb3957f7"
 
-react-bootstrap@^0.31.1:
+react-bootstrap@>=0.23.0, react-bootstrap@^0.31.1:
   version "0.31.1"
   resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-0.31.1.tgz#679c9f73ae77ff207867d536496207291f3a3ed7"
   dependencies:
@@ -6192,6 +6223,10 @@ react-date-picker@^5.3.28:
     react-notify-resize "1.0.3"
     react-style-normalizer "1.2.8"
 
+react-deep-force-update@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
+
 react-deep-force-update@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.0.1.tgz#4f7f6c12c3e7de42f345992a3c518236fa1ecad3"
@@ -6238,6 +6273,10 @@ react-field@2.0.2:
   dependencies:
     object-assign "^4.1.0"
 
+react-file-download@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/react-file-download/-/react-file-download-0.3.4.tgz#4e1cfc7a47df6eeb299dfd845b99676cdedab5d2"
+
 react-flex@2.2.7:
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/react-flex/-/react-flex-2.2.7.tgz#5c84e6c3affcbdc366edde4088f8d07303318fa8"
@@ -6273,14 +6312,6 @@ react-inline-block@2.0.0:
   dependencies:
     object-assign "^4.0.1"
 
-react-intl-tel-input@^4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/react-intl-tel-input/-/react-intl-tel-input-4.1.3.tgz#bf191f2222e9c18dee295d1c04feffc1d545057f"
-  dependencies:
-    classnames "^2.2.5"
-    react-style-proptype "^3.0.0"
-    underscore.deferred "^0.4.0"
-
 react-loader@^2.4.0:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/react-loader/-/react-loader-2.4.2.tgz#14e2b9139fc5693da5cdbdc928032d5b1aeb94c2"
@@ -6314,6 +6345,14 @@ react-modal@^1.4.0:
 react-moment@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/react-moment/-/react-moment-0.2.2.tgz#349e284ad0483ab6ec109a244586e401ce9d6b50"
+
+react-motion@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/react-motion/-/react-motion-0.5.0.tgz#1708fc2aee552900d21c1e6bed28346863e017b6"
+  dependencies:
+    performance-now "^0.2.0"
+    prop-types "^15.5.8"
+    raf "^3.1.0"
 
 react-notify-resize@1.0.3:
   version "1.0.3"
@@ -6369,17 +6408,18 @@ react-prop-types@^0.4.0:
   dependencies:
     warning "^3.0.0"
 
+react-proxy@^1.1.7:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-1.1.8.tgz#9dbfd9d927528c3aa9f444e4558c37830ab8c26a"
+  dependencies:
+    lodash "^4.6.1"
+    react-deep-force-update "^1.0.0"
+
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-3.0.0-alpha.1.tgz#4400426bcfa80caa6724c7755695315209fa4b07"
   dependencies:
     lodash "^4.6.1"
-
-react-redirect@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-redirect/-/react-redirect-1.0.0.tgz#4679a3d4d3babbf9ae051794e2579cd71964cb3c"
-  dependencies:
-    react-side-effect "~0.3.0"
 
 react-redux-loading-bar@^2.9.2:
   version "2.9.2"
@@ -6428,11 +6468,11 @@ react-router@^4.1.1:
     prop-types "^15.5.4"
     warning "^3.0.0"
 
-react-side-effect@~0.3.0:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-0.3.2.tgz#0daff9af35a3ec98db2036dc1683d63fbe147710"
+react-save-refs@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-save-refs/-/react-save-refs-1.0.2.tgz#ac35c671d06cdc88c57d97e39932618ac401be9a"
   dependencies:
-    fbjs "0.1.0-alpha.10"
+    lodash "^4.3.0"
 
 react-sidenav@^2.1.1:
   version "2.1.1"
@@ -6441,15 +6481,18 @@ react-sidenav@^2.1.1:
     prop-types "^15.5.8"
     styled-components "*"
 
+react-sortable-hoc@^0.6.5:
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-0.6.5.tgz#e6b5d414476d51a0b621931298855d4fd608c227"
+  dependencies:
+    babel-runtime "^6.11.6"
+    invariant "^2.2.1"
+    lodash "^4.12.0"
+    prop-types "^15.5.7"
+
 react-style-normalizer@1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/react-style-normalizer/-/react-style-normalizer-1.2.8.tgz#7e84b3d25cea6225545c5af68963b225885344a2"
-
-react-style-proptype@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-style-proptype/-/react-style-proptype-3.0.0.tgz#89e0b646f266c656abb0f0dd8202dbd5036c31e6"
-  dependencies:
-    prop-types "^15.5.4"
 
 react-styling@^1.6.1:
   version "1.6.2"
@@ -6457,6 +6500,14 @@ react-styling@^1.6.1:
   dependencies:
     babel-runtime "^6.6.1"
     style-builder "^1.0.13"
+
+react-summernote@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-summernote/-/react-summernote-2.0.0.tgz#075bf882fcc6b77b9ab9d50099addbcbb229ab7a"
+  dependencies:
+    codemirror "^5.26.0"
+    prop-types "^15.5.10"
+    summernote "^0.8.3"
 
 react-telephone-input@^4.0.1:
   version "4.0.1"
@@ -6466,6 +6517,13 @@ react-telephone-input@^4.0.1:
     country-telephone-data "0.4.2"
     lodash "^4.17.4"
     react-onclickoutside "5.3.1"
+
+react-transform-hmr@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-transform-hmr/-/react-transform-hmr-1.0.4.tgz#e1a40bd0aaefc72e8dfd7a7cda09af85066397bb"
+  dependencies:
+    global "^4.3.0"
+    react-proxy "^1.1.7"
 
 react@15.5.0, react@^15.3.0, react@^15.4.2:
   version "15.5.0"
@@ -7533,6 +7591,13 @@ sugarss@^0.2.0:
   dependencies:
     postcss "^5.2.4"
 
+summernote@^0.8.3:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/summernote/-/summernote-0.8.6.tgz#e40ddb3ef85eb5c75672b24fc3a68c76c474c0bb"
+  dependencies:
+    bootstrap "^3.3.7"
+    jquery "^2.2.4"
+
 superagent@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/superagent/-/superagent-3.5.2.tgz#3361a3971567504c351063abeaae0faa23dbf3f8"
@@ -7815,10 +7880,6 @@ uncontrollable@^4.1.0:
   dependencies:
     invariant "^2.1.0"
 
-underscore.deferred@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/underscore.deferred/-/underscore.deferred-0.4.0.tgz#2753de633b9ff7db601a2f3fa2af92b3dd290e6c"
-
 underscore.string@~2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-2.4.0.tgz#8cdd8fbac4e2d2ea1e7e2e8097c42f442280f85b"
@@ -7933,6 +7994,10 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
+
+validator@^3.41.3:
+  version "3.43.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-3.43.0.tgz#96464b992d4196833d97a194bf40b19ff54bae05"
 
 validator@^5.2.0:
   version "5.7.0"
@@ -8057,10 +8122,6 @@ weinre@^2.0.0-pre-I0Z7U9OV:
 whatwg-fetch@>=0.10.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
-
-whatwg-fetch@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-0.9.0.tgz#0e3684c6cb9995b43efc9df03e4c365d95fd9cc0"
 
 when@^3.0.1, when@^3.1.0:
   version "3.7.8"

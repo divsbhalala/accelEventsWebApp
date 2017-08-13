@@ -1,21 +1,33 @@
 
 import React from 'react';
 import MyProfile from './MyProfile';
+import MyActivity from './MyActivity';
 import Layout from '../../components/Layout';
 
 const title = 'MyProfile';
 
 export default {
 
-  path: '/',
+  path: '/u',
   children: [
     {
-      path: '/my-profile',
+      path: '/myprofile',
   action() {
     return {
       title,
-      component: <Layout class="eventPage" title={title} class="my-profile"><MyProfile title={title}/></Layout>,
+      component: <Layout class="display myprofile" title={title} ><MyProfile title={title}/></Layout>,
     };
-  }}]
+  }
+    },
+    {
+      path: '/my-activity',
+      action() {
+        return {
+          title : "My Activity",
+          component: <Layout class="display my-activity" title={title}><MyActivity title={title}/></Layout>,
+        };
+      }
+    }
+  ]
 
 };

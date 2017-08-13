@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import FileDownload from 'react-file-download';
 import {apiUrl as API_URL} from './../../../../../clientConfig';
 
 export function getPerformancefundANeedItem() {
@@ -7,7 +8,6 @@ export function getPerformancefundANeedItem() {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/items' ,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -18,14 +18,15 @@ export function getPerformancefundANeedItem() {
     });
   }
 }
-export function getPerformancefundANeedItemCSV() {
+export function getPerformancefundANeedItemCSV(name) {
   return (dispatch) => {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/donor/CSV' ,
-      headers: {Authorization: localStorage.getItem('token')}
+      responseType: 'blob',
     }).then(resp=>{
       if(resp && resp.data){
+        FileDownload(resp.data, name);
         return resp.data;
       }
       return resp;
@@ -39,7 +40,6 @@ export function getPerformancefundANeedItemByItemCode(itemCode) {
     return axios({
       method: 'get',
       url: API_URL + 'host/performance/fundANeed/pledges/itemCode/'+itemCode ,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -56,7 +56,6 @@ export function deletePledge(pledgeId) {
     return axios({
       method: 'DELETE',
       url: API_URL + 'host/performance/fundANeed/pledge/'+ pledgeId ,
-      headers: {Authorization: localStorage.getItem('token')}
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -71,8 +70,7 @@ export function markAsPaidPledge(pledgeId) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'host/performance/fundANeed/manuallyPay/pledge/'+ pledgeId ,
-      headers: {Authorization: localStorage.getItem('token')}
+      url: API_URL + 'host/performance/fundANeed/manuallyPay/pledge/'+ pledgeId,
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;
@@ -87,8 +85,7 @@ export function requestPaymentPledge(pledgeId) {
   return (dispatch) => {
     return axios({
       method: 'post',
-      url: API_URL + 'host/performance/fundANeed/notify/checkout/pledge/'+ pledgeId ,
-      headers: {Authorization: localStorage.getItem('token')}
+      url: API_URL + 'host/performance/fundANeed/notify/checkout/pledge/'+ pledgeId,
     }).then(resp=>{
       if(resp && resp.data){
         return resp.data;

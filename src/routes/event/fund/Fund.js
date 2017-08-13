@@ -16,7 +16,7 @@ import  EventAside from './../../../components/EventAside/EventAside';
 import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../../components/IntTelInput';
 
 class Fund extends React.Component {
   static propTypes = {
@@ -106,13 +106,13 @@ class Fund extends React.Component {
       if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }else{
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
           popupHeader:"Confirm",
         })
       }
@@ -365,6 +365,13 @@ class Fund extends React.Component {
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      },function afterStateChange() {
+        this.checkIsValidBidData()
+      });
     } else {
       this.setState({
         cardHolder: true
@@ -412,7 +419,7 @@ class Fund extends React.Component {
     let amount=true;
     let errorMsgAmount="";
     if (this.amount.value.trim() == '') {
-      errorMsgAmount= "Bid Amount can't be empty";
+      errorMsgAmount= "Pledge Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
       errorMsgAmount= "Submitted pledge amount should be greater than or equal to the stated pledge amount.";
@@ -602,7 +609,6 @@ class Fund extends React.Component {
           })
         }
       }).catch(error => {
-      console.log(error)
     });
   };
   reRender = ()=>{
@@ -676,12 +682,12 @@ class Fund extends React.Component {
                     </div>
                     <div className="col-md-6" style={{paddingRight: 16}}>
                       <div className="row">
-                        <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
-                          { this.state.errorMsg }</div>
+                        {this.state.errorMsgCard  && <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                          { this.state.errorMsg }</div> }
                         <div className="col-sm-6 col-md-6">
                           <h3 className="item-label ">Pledge Amount</h3>
                           <h4 className="item-bid-price">
-                            $ <span
+                            {this.props.currencySymbol} <span
                             className="item-bid-price"> {this.state.fundData && this.state.fundData.pledgePrice} </span>
                           </h4>
                         </div>
@@ -776,6 +782,7 @@ class Fund extends React.Component {
                                 <IntlTelInput
                                   css={['intl-tel-input', 'form-control intl-tel']}
                                   utilsScript="./libphonenumber.js"
+                                  defaultCountry={this.props.country || ""}
                                   separateDialCode={true}
                                   value={ this.state.phone || "" }
                                   maxLength={16} data-stripe="number"
@@ -961,7 +968,7 @@ class Fund extends React.Component {
                           <div className="row">
                             <div className="col-md-6">
                               <div className="input-group has-feedback">
-                                <div className="input-group-addon">$</div>
+                                <div className="input-group-addon">{this.props.currencySymbol}</div>
                                 <input type="number" className="form-control" name="itembid" id="itembid"
                                        placeholder="Pledge Amount" step required="required"
                                        data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
@@ -987,14 +994,14 @@ class Fund extends React.Component {
                             htmlFor="uptodate">Stay up to date with Accelevents</label>
                           </div>
                         </div> }
-                        <div className="row btn-row" >
-                          <div className="col-sm-3">
-                            <Button className={cx("btn btn-primary text-uppercase")}  disabled={!this.state.isValidBidData }
+                        <div className="row btn-row mrg-b-lg" >
+                          <div className="col-sm-5">
+                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={!this.state.isValidBidData }
                                                              role="button" type="submit"
                                                              loading={this.state.loading} >
                             Submit Pledge
                           </Button></div>
-                          <div className="col-sm-5"><Link to={this.props.params && "/event/" + this.props.params.params } className="btn btn-success">
+                          <div className="col-sm-5"><Link to={this.props.params && "/events/" + this.props.params.params + '#Fund a Need'} className="btn btn-success">
                             Go back to All Items
                           </Link></div>
                         </div>
@@ -1017,12 +1024,18 @@ class Fund extends React.Component {
             { this.state && this.state.errorMsg }
             <div className="modal-footer">
               {/*{this.state.popupHeader == "Success" ? <button className="btn btn-success" onClick={this.submiteFundForm} >Confirm</button> : ""}*/}
-              {this.state.popupHeader == "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.submiteFundForm} >Confirm</Button> : ""}
+              {this.state.popupHeader === "Confirm" ? <Button className="btn btn-success" loading={this.state.loading} onClick={this.submiteFundForm} >Confirm</Button> : ""}
               <button className="btn btn-danger" onClick={this.hidePopup}> Close </button>
             </div>
           </div>
         </PopupModel>
-        <LoginModal showModal={this.state.isShowLoginModal}  	onCloseFunc={this.hideLoginModal}   params={this.props.params && this.props.params.params}/>
+
+        <LoginModal
+             showModal={this.state.isShowLoginModal}
+             onCloseFunc={this.hideLoginModal}
+              params={this.props.params }
+             modelFooter={<button type="button" className="btn btn-info center-block" data-dismiss="modal" onClick={()=>{this.hideLoginModal()}}> Close </button>}
+          />
       </div>
     );
   }
@@ -1056,6 +1069,8 @@ const mapStateToProps = (state) => ({
   fundData: state.event && state.event.auction_data,
   user: state.session.user,
   authenticated: state.session.authenticated,
+	currencySymbol: state.event && state.event.currencySymbol || "$",
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Fund));

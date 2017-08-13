@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -7,7 +6,7 @@ import cx from 'classnames';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
 import {getPerformanceDonation,getPerformanceDonationCSV} from './action';
 import {connect} from 'react-redux';
-
+let selfInst;
 class DonationPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -22,10 +21,11 @@ class DonationPerformance extends React.Component {
     }
   }
   getPerformanceDonationCSV = () => {
-    this.props.getPerformanceDonationCSV().then((resp) => {
+    this.props.getPerformanceDonationCSV('All Donation Performance Data.csv').then((resp) => {
     });
-  }
+  };
   componentWillMount() {
+		selfInst = this;
     this.props.getPerformanceDonation().then(resp => {
       console.log("resp", resp);
       this.setState({
@@ -53,11 +53,10 @@ class DonationPerformance extends React.Component {
     function dateFormatter(cell, row){
       return new Date(1*cell).toUTCString();
     }
-    function priceFormate(cell, row){
-      return  "$"+ cell;//.toFixed(2);
+    function priceFormat(cell, row){
+      return  selfInst.props.currencySymbol + cell;//.toFixed(2);
     }
-
-    return (
+   return (
       <div id="content-wrapper" className="admin-content-wrapper">
         <div className="row">
           <div className="col-sm-12">
@@ -70,23 +69,23 @@ class DonationPerformance extends React.Component {
                 <div className="col-lg-12">
                   <div className="main-box no-header">
                     <div className="main-box-body clearfix">
-                      <div className="page-title">
-                        <h1 className="page-header">Donation Performance</h1>
+                      <div className="performance-table-wrap">
+                        <div className="page-title">
+                          <h1 className="page-header">Donation Performance</h1>
+                        </div>
+                        <div id="DataTables_Table_1_wrapper" >
+                          {this.state.donation ?
+                          <BootstrapTable data={this.state.donation} striped hover search  pagination={ true }   options={ options }>
+                            <TableHeaderColumn  isKey={true} dataField='firstName'>First Name</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='email' >Email Address</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormat}>Donation Amount</TableHeaderColumn>
+                          </BootstrapTable>: <div id="app" className="loader" />
+                          }
+                        </div>
                       </div>
-                      <br />
-                      <div id="DataTables_Table_1_wrapper" >
-                        {this.state.donation &&
-                        <BootstrapTable data={this.state.donation} striped hover search  pagination={ true }   options={ options }>
-                          <TableHeaderColumn  isKey={true} dataField='firstName'>First Name</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='email' >Email Address</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
-                          <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormate}>Donation Amount</TableHeaderColumn>
-                        </BootstrapTable>
-                        }
-                      </div>
-
                       <div className="form-group operations-row">
                         <div className="row">
                           <div className="col-md-4" role="group">
@@ -109,8 +108,10 @@ class DonationPerformance extends React.Component {
 
 const mapDispatchToProps = {
   getPerformanceDonation: () => getPerformanceDonation(),
-  getPerformanceDonationCSV: () => getPerformanceDonationCSV(),
+  getPerformanceDonationCSV: (name) => getPerformanceDonationCSV(name),
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(DonationPerformance));

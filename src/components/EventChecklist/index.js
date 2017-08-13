@@ -5,7 +5,7 @@ import Link from '../Link';
 import cx from 'classnames';
 import PopupModel from './../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
-import IntlTelInput from 'react-intl-tel-input';
+import IntlTelInput from './../../components/IntTelInput';
 import {connect} from 'react-redux';
 import  { doValidateMobileNumber} from './../../routes/event/action/index';
 import {
@@ -67,6 +67,7 @@ phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
   };
 componentWillMount() {
   this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+  this.setState({phone:this.props.phone.replace( /[^0-9]/g, '')})
 }
 submiteForm = (e) => {
   e.preventDefault();
@@ -84,7 +85,7 @@ submiteForm = (e) => {
   }
 }
 dashboardSubmitBid = () => {
-  this.props.dashboardSubmitBid(this.state.countryPhone, this.state.phone)
+  this.props.dashboardSubmitBid(this.state.countryPhone, this.state.phone.replace( /[^0-9]/g, ''))
     .then(resp => {
       if (resp && resp.message) {
         this.setState({
@@ -105,7 +106,7 @@ dashboardSubmitBid = () => {
     });
 };
 dashboardSubmitPledge = () => {
-  this.props.dashboardSubmitPledge(this.state.countryPhone, this.state.phone)
+  this.props.dashboardSubmitPledge(this.state.countryPhone, this.state.phone.replace( /[^0-9]/g, ''))
     .then(resp => {
       if (resp && resp.message) {
         this.setState({
@@ -126,7 +127,7 @@ dashboardSubmitPledge = () => {
     });
 };
 dashboardRafflePurchaseTicket = () => {
-  this.props.dashboardRafflePurchaseTicket(this.state.countryPhone, this.state.phone)
+  this.props.dashboardRafflePurchaseTicket(this.state.countryPhone, this.state.phone.replace( /[^0-9]/g, ''))
     .then(resp => {
       if (resp && resp.message) {
         this.setState({
@@ -178,8 +179,8 @@ dashboardRafflePurchaseTicket = () => {
               <div
                 className={cx("form-group", this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
                 {/*<label className="control-label">Cell Number</label>*/}
-                <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
-                  { this.state.message }</div>
+                { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
+                  { this.state.message } </div> }
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true"/>
@@ -188,6 +189,7 @@ dashboardRafflePurchaseTicket = () => {
                     css={['intl-tel-input', 'form-control intl-tel']}
                     utilsScript="./libphonenumber.js"
                     separateDialCode={true}
+                    defaultCountry={this.props.country || ""}
                     value={ this.state.phone || ""}
                     onPhoneNumberChange={this.changePhone}
                   />
@@ -218,7 +220,7 @@ const mapDispatchToProps = {
   dashboardSubmitBid: (countryCode,phoneNumber) => dashboardSubmitBid(countryCode,phoneNumber),
 };
 const mapStateToProps = (state) => ({
-
+	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)((EventChecklist));
