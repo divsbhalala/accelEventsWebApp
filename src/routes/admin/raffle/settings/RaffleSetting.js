@@ -329,7 +329,7 @@ class RaffleSetting extends React.Component {
                               <button className="btn btn-default add-item" onClick={this.addRow}>Add Ticket Price</button>
                             </div>
                           </div>
-                        </div> : <div id="app" className="loader"></div> }
+                        </div> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
                         {this.state.settings && this.state.settings.categoryEnabled  && <div className="row form-group category-settings" >
                           <CategoryManager moduleType={this.state.moduleType} />
                         </div>}
