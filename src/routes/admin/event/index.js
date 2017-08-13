@@ -179,7 +179,7 @@ class EventList extends React.Component {
     };
     function buttonFormatter(cell, row){
       return (<ul className="readonly-actions list-inline">
-        <li><Link to={"superadmin/edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
+        <li><Link to={"edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
         <li><Link to="" ><i className="fa fa-trash red" ></i></Link></li>
       </ul>);
     }

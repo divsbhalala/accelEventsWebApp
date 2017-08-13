@@ -94,6 +94,8 @@ class EventDonation extends React.Component {
       stripeToken: null,
       countryPhone: null,
       phone: '',
+      errorMsgPassword: null,
+      showForgatePassword:false,
     };
     this.showDonationPopup = this.showDonationPopup.bind(this);
     this.hideDonationPopup = this.hideDonationPopup.bind(this);
@@ -261,6 +263,7 @@ class EventDonation extends React.Component {
     if (this.password.value === '') {
       this.setState({
         password: false,
+        errorMsgPassword: "Password can't be empty."
       });
     } else {
       this.setState({
@@ -382,11 +385,20 @@ class EventDonation extends React.Component {
           phoneNumber: this.state.phone,
         };
         this.props.doSignUp(this.props.eventUrl, userData).then((resp) => {
-          this.hideDonationPopup();
+         //this.hideDonationPopup();
           if (!resp.errorMessage) {
             this.doGetStripeToken();
           } else {
             this.setState({ error: 'Invalid Email or password', isError: true, errorMsg: resp.errorMessage });
+            if(resp.errorMessage == 'Incorrect password'){
+              this.setState({
+                password:false,
+                errorMsgPassword:'',
+                showForgatePassword:true,
+                isError:true,
+                errorMsg:resp.errorMessage,
+              });
+            }
           }
         });
       }
@@ -523,6 +535,8 @@ class EventDonation extends React.Component {
           onCloseFunc={this.hideDonationPopup}
         >
           <div className="main-box-body clearfix">
+            { this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-danger">{this.state.errorMsg}</p> }
+            { !this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-success">{this.state.errorMsg}</p> }
             <div className="payment-area collapse in">
               <form
                 className="ajax-form validated fv-form fv-form-bootstrap"
@@ -656,7 +670,8 @@ class EventDonation extends React.Component {
 
                   </div>
                   { this.state.passwordFeedBack && !this.state.password &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
+                  <small className="help-block">{this.state.errorMsgPassword}</small>}
+                  {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
                 </div> }
 

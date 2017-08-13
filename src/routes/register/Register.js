@@ -52,6 +52,11 @@ class Register extends React.Component {
       this.props.doRegister(this.email.value.trim(), this.password.value.trim()).then((resp) => {
         if (resp && resp.data) {
           this.setState({error: ""});
+          setTimeout(()=>{
+              // history.push(resp.data.redirectUrl)
+             history.push('/');
+            // window.location.replace(resp.data.redirectUrl)
+          },2500)
         }
         else {
           let errorMessage = resp && resp.errorMessage;

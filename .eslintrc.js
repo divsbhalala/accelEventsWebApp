@@ -14,7 +14,12 @@ module.exports = {
     ],
 
     globals: {
-      __DEV__: true,
+			__DEV__ : false,
+			__TEST__     : false,
+			__PROD__     : true,
+			__COVERAGE__ : false,
+			__API_BASE__ : "",
+			__API_KEY__  : "",
     },
 
     env: {

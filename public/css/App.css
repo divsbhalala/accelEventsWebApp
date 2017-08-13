@@ -50,48 +50,48 @@
 }
 
 .time-left {
-  cursor: pointer;
-  position: fixed;
-  bottom: 22px;
-  right: 30px;
-  border: 4px solid #797979;
-  border-radius: 5px;
-  padding: 5px 28px 15px;
-  background: #FFF;
-  z-index: 1000;
-  text-align: center;
-  font-weight: bold;
+    cursor: pointer;
+    position: fixed;
+    bottom: 22px;
+    right: 30px;
+    border: 4px solid #797979;
+    border-radius: 5px;
+    padding: 5px 28px 15px;
+    background: #FFF;
+    z-index: 1000;
+    text-align: center;
+    font-weight: bold;
 }
 .time-left:before {
-  content: 'Time Remaining';
-  margin-bottom: 10px;
-  display: block;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+    content: 'Time Remaining';
+    margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 @media (max-width: 992px) {
-  .main-box {
-    margin-bottom: 55px;
-  }
-  .time-left {
-    bottom: 0px;
-    right: 0px;
-    border: 0;
-    border-top: 1px solid #eee;
-    border-radius: 0;
-    padding: 1px 20px;
-    width: 100%;
-  }
-  .time-left .ticker{
-    display: inline-block;
-  }
-  .time-left:before {
-    margin-bottom: 1px;
-  }
+    .main-box {
+        margin-bottom: 55px;
+    }
+    .time-left {
+        bottom: 0px;
+        right: 0px;
+        border: 0;
+        border-top: 1px solid #eee;
+        border-radius: 0;
+        padding: 1px 20px;
+        width: 100%;
+    }
+    .time-left .ticker{
+        display: inline-block;
+    }
+    .time-left:before {
+        margin-bottom: 1px;
+    }
 }
 .volunteer .project-box .project-box-content{
-  background: transparent !important;
+    background: transparent !important;
 }
 #content-wrapper-front {
   background: #e7ebee;

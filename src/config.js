@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 /* eslint-disable max-len */
 
 if (process.env.BROWSER) {
@@ -14,7 +14,7 @@ module.exports = {
     // API URL to be used in the client-side code
     clientUrl: process.env.API_CLIENT_URL || '',
     // API URL to be used in the server-side code
-    serverUrl: process.env.API_SERVER_URL || `http://localhost:${process.env.PORT || 3000}`,
+    serverUrl: process.env.UI_URL || `http://localhost:${process.env.PORT || 3000}`,
   },
 
   // Database
