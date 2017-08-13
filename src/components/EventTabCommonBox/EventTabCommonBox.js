@@ -89,21 +89,21 @@ class EventTabCommonBox extends React.Component {
                 <a
                   href={"https://www.facebook.com/sharer/sharer.php?u=" + location.href}
                   title="Facebook" target="_blank">
-                  <i className={cx("fa fa-facebook")}></i>
+                  <i className={cx("fa fa-facebook")}/>
                 </a>
               </li>
               <li>
                 <a
                   href={"http://twitter.com/home?status=" + location.href}
                   title="Twitter" target="_blank">
-                  <i className={cx("fa fa-twitter")}></i>
+                  <i className={cx("fa fa-twitter")}/>
                 </a>
               </li>
             </ul>}
 
           </div>
           <div className={cx("card-content item-description")}
-               dangerouslySetInnerHTML={{__html: this.props.descText}}></div>
+	dangerouslySetInnerHTML={{__html: this.props.descText}}/>
           <div className={cx("action-wrap")}>
             <div className={cx("card-action")}>
               <div className={cx("flex-row")}>
@@ -134,14 +134,14 @@ class EventTabCommonBox extends React.Component {
             <div
               className={cx("text-center", "action-btns")}>
               { this.props.actionTitle &&
-              <Link role="button" to={location.pathname.replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
+              <Link role="button" to={location.pathname.replace(new RegExp('//','g'), "/").replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.actionClassName)}
                     >{this.props.actionTitle}</Link>}
               { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor &&
-              <Link role="button" to={location.pathname.replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
+              <Link role="button" to={location.pathname.replace(new RegExp('//','g'), "/").replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.auctionBuyNowTitle}</Link>}
               { this.props.buyItNowPrice && !this.props.auctionPurchaseFor &&
-              <Link role="button" to={location.pathname.replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
+              <Link role="button" to={location.pathname.replace(new RegExp('//','g'), "/").replace(/\/$/, "") + '/' + this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.buyItNowPrice}</Link>}
               { this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
                 <div className={cx("alert alert-success mrg-b-0 alert-height")}> {this.props.auctionBuyNowTitle}</div>

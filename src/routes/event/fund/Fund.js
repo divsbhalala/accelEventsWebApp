@@ -91,6 +91,8 @@ class Fund extends React.Component {
       loading:false,
       countryPhone:null,
       phone:null,
+      errorMsgPassword: null,
+      showForgatePassword:false,
     }
 
   };
@@ -132,7 +134,7 @@ class Fund extends React.Component {
         "phoneNumber": this.state.phone
       };
       this.props.doSignUp(this.props.params && this.props.params.params,userData ).then((resp)=>{
-        if(!resp.error){
+        if(!resp.error  && !resp.errorMessage){
           const card = {
             number: this.cardNumber.value.trim(),
             cvc: this.cvv.value.trim(),
@@ -157,7 +159,18 @@ class Fund extends React.Component {
             }
           });
         } else{
-          this.setState({error:"Invalid Email or password"});
+          this.setState({error:"Invalid Email or password",});
+          if(resp.errorMessage == 'Incorrect password'){
+            this.setState({
+              password:false,
+              errorMsgPassword:'',
+              showForgatePassword:true,
+              loading:false,
+              showMapPopup: true,
+              errorMsg: resp.errorMessage ,
+              popupHeader:"Failed",
+            });
+          }
         }
       });
     }
@@ -282,7 +295,8 @@ class Fund extends React.Component {
     if (this.password.value.trim() == '') {
 
       this.setState({
-        password: false
+        password: false,
+        errorMsgPassword: "Password can't be empty.",
       },function afterTitleChange () {
         this.checkIsValidBidData()
       });
@@ -822,7 +836,8 @@ class Fund extends React.Component {
 
                           </div>
                           { this.state.passwordFeedBack && !this.state.password &&
-                          <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
+                          <small className="help-block">{this.state.errorMsgPassword}</small>}
+                          {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
                         </div> }
                         { !this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) ) ?

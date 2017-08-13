@@ -92,7 +92,7 @@ class Auction extends React.Component {
             </div>
           </div>
         </div>
-        : <div id="app" className="loader" /> }
+        : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
 
       </div>
     );
