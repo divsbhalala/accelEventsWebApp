@@ -38,3 +38,11 @@ export function makePyment(data) {
     });
   }
 }
+export function disconnectStripeAccount() {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + 'host/settings/disconnect/stripe',
+		})
+	}
+}

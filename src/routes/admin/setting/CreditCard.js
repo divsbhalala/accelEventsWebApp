@@ -8,7 +8,7 @@ import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 import PopupModel from '../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
-import {doGetHostSettings, putGetHostSettings} from './action';
+import {doGetHostSettings, putGetHostSettings, disconnectStripeAccount} from './action';
 
 
 class CreditCard extends React.Component {
@@ -55,6 +55,17 @@ class CreditCard extends React.Component {
 		});
 		console.log(e, e.target, this.state.settings)
 	};
+
+	disconnectStripe = (e) => {
+		e.preventDefault();
+    this.setState({loading:true})
+		this.props.disconnectStripeAccount().then(resp =>{
+      this.setState({loading:false,message:resp.data.message,isError:false})
+		}).catch(error=>{
+      this.setState({loading:false,message:"Something wrong",isError:true})
+		});
+	};
+
 
 	toggleItemTransactionsPopup = () => {
 		if (!this.state.showItemTransactions) {
@@ -142,11 +153,19 @@ class CreditCard extends React.Component {
 														</div>
 														<div className="col-md-8">
 															<div className="row stripe-button-group">
-																<div className="col-sm-4">
+																{!this.state.settings.stripeConnected &&
+																	<div className="col-sm-4">
 																	<div className="stripeconnect stripe-connect btn btn-danger btn-sm">
 																		<span>Connect with Stripe</span>
 																	</div>
-																</div>
+																</div>}
+																{this.state.settings.stripeConnected &&
+																	<div className="col-sm-4">
+																			<button type="button" className="btn btn-green connectedstripeaccount btn-sm">
+    	                                  <span>Stripe Account Connected</span>
+    	                                </button>
+																		<a className="mrg-t-sm disconnectedstripeaccount" onClick={this.disconnectStripe}>Disconnect Stripe Account</a>
+																</div> }
 																<div className="col-sm-8">
 																	<a className="add-info"
 																		 href="http://support.accelevents.com/event-setup/credit-card-processing-with-stripe"
@@ -166,7 +185,9 @@ class CreditCard extends React.Component {
 																						defaultValue={this.state.settings && this.state.settings.creditCardEnabled}
 																						className="success" onChange={() => {
 																this.state.settings.creditCardEnabled = !this.state.settings.creditCardEnabled
-															}}/>
+															}}
+															disabled={!this.state.settings.stripeConnected}
+															/>
 														</div>
 													</div>
 													<div className="form-group row">
@@ -275,7 +296,8 @@ class CreditCard extends React.Component {
 }
 const mapDispatchToProps = {
 	doGetHostSettings: (type) => doGetHostSettings(type),
-	putGetHostSettings: (type, settings) => putGetHostSettings(type, settings)
+	putGetHostSettings: (type, settings) => putGetHostSettings(type, settings),
+	disconnectStripeAccount : () => disconnectStripeAccount()
 };
 
 const mapStateToProps = (state) => ({});
