@@ -1019,7 +1019,7 @@ class Auction extends React.Component {
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
-              <input type="number" className="form-control" name="itembid" id="itembid"
+              <input type="number" className="form-control" name="itembid" id="itembid" style={{"width":"45%"}} 
                      placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
@@ -1181,14 +1181,14 @@ class Auction extends React.Component {
           </div>
         </div> : "" }
 
-      <div className="col-sm-3">
+      <div className="col-sm-3" style={{paddingLeft:0}}>
         <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                  type="submit" >
           Submit bid
         </Button>
         &nbsp;&nbsp;
       </div>
-      <div className="col-sm-6" style={{paddingLeft:5}}>
+      <div className="col-sm-5" style={{paddingLeft:0,marginLeft:-14,"width":"40%"}}>
         <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
           Go back to All Items
         </Link>
