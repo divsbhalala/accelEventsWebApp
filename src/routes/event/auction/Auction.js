@@ -92,6 +92,8 @@ class Auction extends React.Component {
       errorMsgcvv: null,
       errorMsgEmail: null,
       errorMsgPhoneNumber: null,
+      errorMsgPassword: null,
+      showForgatePassword:false,
       showPopup: false,
       stripeToken:null,
       phone:null,
@@ -242,11 +244,18 @@ class Auction extends React.Component {
         }
         else{
           this.setState({
-            showPopup: true,
+           // showPopup: true,
             errorMsgCard: resp.errorMessage,
             popupHeader:"Failed",
             loading:false,
-          })
+          });
+          if(resp.errorMessage == 'Incorrect password'){
+            this.setState({
+              password:false,
+              errorMsgPassword:'',
+              showForgatePassword:true,
+            });
+          }
         }
       });
     }
@@ -281,7 +290,8 @@ class Auction extends React.Component {
     });
     if (this.password.value.trim() == '') {
       this.setState({
-        password: false
+        password: false,
+        errorMsgPassword: "Password can't be empty.",
       });
     } else {
       this.setState({
@@ -706,7 +716,8 @@ class Auction extends React.Component {
 
           </div>
           { this.state.passwordFeedBack && !this.state.password &&
-          <small className="help-block">Password can't be empty.</small>}
+          <small className="help-block">{this.state.errorMsgPassword}</small>}
+          {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
         </div>
         <Button className={cx("btn btn-primary text-uppercase")}
@@ -1008,7 +1019,7 @@ class Auction extends React.Component {
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
-              <input type="number" className="form-control" name="itembid" id="itembid"
+              <input type="number" className="form-control" name="itembid" id="itembid" style={{"width":"45%"}} 
                      placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
@@ -1019,7 +1030,7 @@ class Auction extends React.Component {
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
-            { this.state.auctionData && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            { this.state.auctionData && this.state.amountValue && this.state.auctionData.buyItNowPrice > 0 && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
             <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
@@ -1170,14 +1181,14 @@ class Auction extends React.Component {
           </div>
         </div> : "" }
 
-      <div className="col-sm-3">
+      <div className="col-sm-3" style={{paddingLeft:0}}>
         <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                  type="submit" >
           Submit bid
         </Button>
         &nbsp;&nbsp;
       </div>
-      <div className="col-sm-6" style={{paddingLeft:5}}>
+      <div className="col-sm-5" style={{paddingLeft:0,marginLeft:-14,"width":"40%"}}>
         <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
           Go back to All Items
         </Link>

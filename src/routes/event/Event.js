@@ -110,9 +110,9 @@ class Event extends React.Component {
 		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=> {
 			this.setState({
 				activeEventTickets: this.props.eventData && this.props.eventData.ticketingEnabled,
-				activeAuction: this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeAuction: this.props.eventData && this.props.eventData.silentAuctionEnabled,
 				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
-				activeFund: true,
+				activeFund: this.props.eventData && this.props.eventData.causeAuctionEnabled,
 				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
 			});
 			if (this.state.activeEventTickets) {
@@ -929,8 +929,8 @@ class Event extends React.Component {
 										</div>
 									</Tab>
 									<Tab label="Donate" disabled={!this.state.activeDonation}>
-										<div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
-										</div>
+										{this.state.activeDonation && <div className="row"><EventDonation eventUrl={this.props.params && this.props.params.params} donations={ this.state.settings && this.state.settings.donationAmounts} defaultSelectAmount={ this.state.settings && this.state.settings.defaultSelectAmount}/>
+										</div> }
 									</Tab>
 								</Tabs>
 							</div>}
@@ -971,13 +971,13 @@ class Event extends React.Component {
 												</div>
 												<div
 													className="sale-text txt-sm text-uppercase"> {moment(item.endDate).diff(moment()) > 0 ? "Available until " : "Sale Ended on "}
-													{item.endDate && <Moment format="ddd MMMM D YYYY, h:mm A" tz={this.props.eventData && this.props.eventData.timezoneId}>{item.endDate}</Moment>}
+													{item.endDate && <Moment format="MMM D, YYYY" tz={this.props.eventData && this.props.eventData.timezoneId}>{item.endDate}</Moment>}
 
 														</div>
 												{item.ticketsPerTable && item.ticketsPerTable > 0 ?
 													<div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable} tickets</div> : ''}
 												{<div className="txt-sm gray type-desc">
-												 TODO: Item desctiption goes here
+												 {item.enableTicketDescription && item.ticketTypeDescription}
 												 </div>}
 											</div>
 										</div>

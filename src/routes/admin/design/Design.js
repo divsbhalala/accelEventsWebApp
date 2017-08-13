@@ -302,7 +302,7 @@ class Design extends React.Component {
               </div>
             </div>
 
-          </div> :<div id="app" className="loader" />}
+          </div> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>}
         <UploadImageModel showPopup={this.state.showPopup}  popupHeader="Upload Event Logo" imageUploaded = { this.imageUploaded } hidePopup={this.hidePopup}  />
         <UploadImageModel showPopup={this.state.showBannerPopup}  popupHeader="Upload Event Banner" imageUploaded = { this.bannerUploaded } hidePopup={this.hideBannerPopup}  />
       </div>

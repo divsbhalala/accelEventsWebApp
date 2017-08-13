@@ -77,7 +77,7 @@ class AdminLayout extends React.Component {
     });*/
   }
   componentDidMount() {
-    this._handleDropdowns();
+    // this._handleDropdowns();
     //this._handleSmallNav();
     //this._handleScrollbar();
   }

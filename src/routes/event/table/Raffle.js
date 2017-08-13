@@ -46,7 +46,7 @@ class Raffle extends React.Component {
                           eventTicketData={this.props.eventTicketData} isBidInstructionHidden={true}
                           showMapPopup={this.showMapPopup} activeCategory={false}/>
             </div>
-            : <div id="app" className="loader" /> }
+            : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>}
             <div className="col-lg-9 col-md-8 col-sm-8">
               <div className="main-box no-header clearfix">
                 { this.state.settings ?
@@ -76,7 +76,7 @@ class Raffle extends React.Component {
                     </div>
                   </div>
                 </div>
-                : <div id="app" className="loader" /> }
+                : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
               </div>
             </div>
           </div>

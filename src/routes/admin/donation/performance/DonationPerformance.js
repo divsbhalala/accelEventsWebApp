@@ -82,7 +82,7 @@ class DonationPerformance extends React.Component {
                             <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
                             <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
                             <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormat}>Donation Amount</TableHeaderColumn>
-                          </BootstrapTable>: <div id="app" className="loader" />
+                          </BootstrapTable> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>
                           }
                         </div>
                       </div>

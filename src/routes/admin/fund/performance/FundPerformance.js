@@ -49,7 +49,7 @@ class FundPerformance extends React.Component {
                   <div className="main-box no-header">
                     <div className="main-box-body clearfix">
                       <div id="alertmessage" />
-                      {this.state.items ? <FundItemTable items={this.state.items} /> : <div id="app" className="loader" /> }
+                      {this.state.items ? <FundItemTable items={this.state.items} /> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
 
                       <div className="form-group operations-row">
                         <div className="row">

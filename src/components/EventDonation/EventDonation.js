@@ -94,6 +94,8 @@ class EventDonation extends React.Component {
       stripeToken: null,
       countryPhone: null,
       phone: '',
+      errorMsgPassword: null,
+      showForgatePassword:false,
     };
     this.showDonationPopup = this.showDonationPopup.bind(this);
     this.hideDonationPopup = this.hideDonationPopup.bind(this);
@@ -157,7 +159,7 @@ class EventDonation extends React.Component {
     }
   };
   cardHolderValidateHandler = (e) => {
-		this.cardHolder.value = this.cardHolder.value && this.cardHolder.value.trim();
+		//this.cardHolder.value = this.cardHolder.value && this.cardHolder.value.trim();
 		this.setState({
       cardHolderFeedBack: true,
     });
@@ -171,6 +173,11 @@ class EventDonation extends React.Component {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: 'The card holder name must be more than 6 and less than 70 characters long ',
+      });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
       });
     } else {
       this.setState({
@@ -256,6 +263,7 @@ class EventDonation extends React.Component {
     if (this.password.value === '') {
       this.setState({
         password: false,
+        errorMsgPassword: "Password can't be empty."
       });
     } else {
       this.setState({
@@ -377,11 +385,20 @@ class EventDonation extends React.Component {
           phoneNumber: this.state.phone,
         };
         this.props.doSignUp(this.props.eventUrl, userData).then((resp) => {
-          this.hideDonationPopup();
+         //this.hideDonationPopup();
           if (!resp.errorMessage) {
             this.doGetStripeToken();
           } else {
             this.setState({ error: 'Invalid Email or password', isError: true, errorMsg: resp.errorMessage });
+            if(resp.errorMessage == 'Incorrect password'){
+              this.setState({
+                password:false,
+                errorMsgPassword:'',
+                showForgatePassword:true,
+                isError:true,
+                errorMsg:resp.errorMessage,
+              });
+            }
           }
         });
       }
@@ -518,6 +535,8 @@ class EventDonation extends React.Component {
           onCloseFunc={this.hideDonationPopup}
         >
           <div className="main-box-body clearfix">
+            { this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-danger">{this.state.errorMsg}</p> }
+            { !this.state.isError && this.state.errorMsg && <p className="alert alert-dismissable fade in alert-success">{this.state.errorMsg}</p> }
             <div className="payment-area collapse in">
               <form
                 className="ajax-form validated fv-form fv-form-bootstrap"
@@ -651,7 +670,8 @@ class EventDonation extends React.Component {
 
                   </div>
                   { this.state.passwordFeedBack && !this.state.password &&
-                  <small className="help-block" data-fv-result="NOT_VALIDATED">Password can't be empty.</small>}
+                  <small className="help-block">{this.state.errorMsgPassword}</small>}
+                  {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
                 </div> }
 

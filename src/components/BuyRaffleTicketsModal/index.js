@@ -94,6 +94,8 @@ class BuyRaffleTicketsModal extends React.Component {
       isError: false,
       settings:null,
       hideTicketsPopup:true,
+      errorMsgPassword: null,
+      showForgatePassword:false,
     };
     //  this.purchaseTicket=this.purchaseTicket.bind(this);
   }
@@ -151,7 +153,8 @@ class BuyRaffleTicketsModal extends React.Component {
     if (this.password.value.trim() === '') {
 
       this.setState({
-        password: false
+        password: false,
+        errorMsgPassword: "Password can't be empty.",
       });
     } else {
       this.setState({
@@ -473,6 +476,13 @@ class BuyRaffleTicketsModal extends React.Component {
             isError: true,
             popupHeader: "Failed",
           });
+          if(resp.errorMessage == 'Incorrect password'){
+            this.setState({
+              password:false,
+              errorMsgPassword:'',
+              showForgatePassword:true,
+            });
+          }
         }
         this.setState({
           loading: false,
@@ -910,7 +920,8 @@ class BuyRaffleTicketsModal extends React.Component {
 
                     </div>
                     { this.state.passwordFeedBack && !this.state.password &&
-                    <small className="help-block" data-fv-result="NOT_VALIDATED">Password can&#39;t be empty.</small>}
+                    <small className="help-block">{this.state.errorMsgPassword}</small>}
+                    {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
                   </div>}
                   <div className="form-group has-feedback">

@@ -100,7 +100,7 @@ class TicketPerformance extends React.Component {
                         <TableHeaderColumn  dataField='ticketSold' dataFormat={soldFormate}>SOLD</TableHeaderColumn>
                         <TableHeaderColumn  dataField='status'>STATUS</TableHeaderColumn>
                         <TableHeaderColumn  dataField='endDate'  dataFormat={dateFormatter}>SALES END DATE</TableHeaderColumn>
-                      </BootstrapTable> : <div id="app" className="loader" /> }
+                      </BootstrapTable> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
                     </div>
                   </section>
                   <section className="recent-orders">
@@ -117,7 +117,7 @@ class TicketPerformance extends React.Component {
                         <TableHeaderColumn  dataField='refundedAmount' dataFormat={priceFormate}>REFUNDED</TableHeaderColumn>
                         <TableHeaderColumn  dataField='orderDate' width="20%" dataFormat={dateFormatter}>DATE</TableHeaderColumn>
                         <TableHeaderColumn  dataField='paymentMode'>PAYMENT</TableHeaderColumn>
-                      </BootstrapTable>: <div id="app" className="loader" /> }
+                      </BootstrapTable>: <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
                     </div>
                   </section>
                   <div className="form-group operations-row mrg-t-lg">
