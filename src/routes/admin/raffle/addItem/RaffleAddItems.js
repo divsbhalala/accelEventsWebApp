@@ -15,16 +15,16 @@ class RaffleAddItems extends React.Component {
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf(this.props.eventName+'-raffle-items.pdf').then((resp) => {
     });
-  }
+  };
   getItemCatalogPdf= () => {
     this.props.getItemCatalogPdf(this.props.eventName+'-raffle-catalog.pdf').then((resp) => {
 
     });
-  }
+  };
   getItemListCsv=() => {
     this.props.getItemListCsv('All Items.csv').then((resp) => {
     });
-  }
+  };
 
   render() {
     return (

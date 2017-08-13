@@ -106,7 +106,7 @@ class WhiteLabelEventList extends React.Component {
                 <TableHeaderColumn  isKey={true} dataField='eventName'>EVENT NAME</TableHeaderColumn>
                 <TableHeaderColumn  dataField='eventEndDate' width="20%" dataFormat={dateFormatter}>END DATE</TableHeaderColumn>
                 <TableHeaderColumn columnClassName='theme-turquoise' dataFormat={urlFormate}  dataField='eventURL' >URL</TableHeaderColumn>
-               </BootstrapTable> :<div id="app" className="loader" />
+               </BootstrapTable> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>
               }
             </div>
           </div>

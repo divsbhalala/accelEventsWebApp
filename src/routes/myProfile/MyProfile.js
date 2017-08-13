@@ -14,7 +14,7 @@ import Footer from '../../components/Footer';
 import history from './../../history';
 import { Button, FormGroup, ControlLabel, Alert, Radio, HelpBlock, Form, FormControl } from 'react-bootstrap';
 import InlineEdit from 'react-edit-inline';
-
+import {setEventsByUrl} from './../../routes/admin/event/action/index';
 class MyProfile extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -63,12 +63,17 @@ class MyProfile extends React.Component {
       }
     }
   };
-
+  setEventsByUrl = (eventUrl) => {
+    this.props.setEventsByUrl(eventUrl).then((resp) => {
+      if(resp.message){
+        window.location.replace('/host/dashboard/home');
+      }
+    });
+  };
   render() {
     return (
       <div className="my-profile-wrap">
-        {this.state.user ?
-        <div id="content-wrapper">
+         <div id="content-wrapper-front">
           <div className="row">
             <div className="col-lg-3 col-md-4 col-sm-4">
               <ProfileAside setActiveTabState={this.setActiveTabState} user={this.state.user && this.state.user} />
@@ -84,6 +89,13 @@ class MyProfile extends React.Component {
                   <Tab label="Events">
                     <div className="row">
                       <div className="tab-content">
+                        <div>
+                          <form id="newEventForm" method="POST" action="/AccelEventsWebApp/u/create/newevent">
+                            <button style={{ "backgroundColor": "orange"}} type="submit" className="btn btn-default btn-block">
+                              Create New Event
+                            </button>
+                          </form>
+                        </div>
                         <table className="table table-striped table-hover table-bordered" cellSpacing={0} id="auctionevents">
                           <thead>
                             <tr>
@@ -94,18 +106,11 @@ class MyProfile extends React.Component {
                           <tbody>
                             {
                               this.state.user && this.state.user.userEventInfo && this.state.user.userEventInfo.map((item, index) =>
-                                <EventList key={index} item={item} />,
+                                <EventList key={index} item={item} setEventsByUrl={this.setEventsByUrl}/>,
                               )
                             }
                           </tbody>
                         </table>
-                        <div>
-                          <form id="newEventForm" method="POST" action="/AccelEventsWebApp/u/create/newevent">
-                            <button type="submit" className="btn btn-default btn-block">
-                              Create New Event
-                            </button>
-                          </form>
-                        </div>
                       </div>
                     </div>
                   </Tab>
@@ -141,27 +146,29 @@ class MyProfile extends React.Component {
             </div>
           </div>
         </div>
-        : <div id="app" className="loader" /> }
+
       </div>
     );
   }
 }
 class EventList extends React.Component {
+
   render() {
     return (
         <tr>
-        <td>
-          <a href={`/AccelEventsWebApp/u/display/hostevent/${this.props.item.eventURL}`}><font><font>{this.props.item.name}</font></font></a>
-        </td>
-        <td>
-          {new Date(1 * this.props.item.eventEndDate).toUTCString()}
-        </td>
+          <td>
+            <a onClick={()=>this.props.setEventsByUrl(this.props.item.eventURL)}>{this.props.item.name}</a>
+          </td>
+          <td>
+            {new Date(1 * this.props.item.eventEndDate).toUTCString()}
+          </td>
       </tr>
   );
   }
 }
 const mapDispatchToProps = {
   getProfileData: () => getProfileData(),
+  setEventsByUrl: (eventUrl) => setEventsByUrl(eventUrl),
 };
 
 const mapStateToProps = state => ({

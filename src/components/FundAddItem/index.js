@@ -4,7 +4,7 @@ import DraggableList from './../draggableList';
 import {connect} from 'react-redux';
 import RowItemList from './rowItemList';
 import {getItemList, addItemList, updateItemList, updateItemListPosition,	getItemCategories} from './../../routes/admin/action';
-
+import {getHostSettings} from '../HostSettings/action/RestActions';
 
 class PlanetItem extends React.Component {
 	state: Object = {
@@ -12,6 +12,7 @@ class PlanetItem extends React.Component {
 		toggle: false,
 		message: "",
 		status: "",
+    settings:'',
 	};
 
 	getDragHeight() {
@@ -48,7 +49,7 @@ class FundNeedAddItem extends React.Component {
 	};
 
 	componentWillReceiveProps() {
-	  setTimeout(() => {
+		setTimeout(() => {
 			let message = "";
 			if (this.props.isItemAdded && this.props.isItemAdded.status === "success") {
 				if (this.props.isItemAdded && this.props.isItemAdded.type === "Updated") {
@@ -102,6 +103,10 @@ class FundNeedAddItem extends React.Component {
   };
 
 	componentWillMount() {
+    this.props.getHostSettings('fundANeed').then(resp => {
+      this.setState({settings:resp.data});
+    }).catch((error) => {
+    });
 		this.getItemList()
 	};
 
@@ -191,6 +196,7 @@ class FundNeedAddItem extends React.Component {
 };
 
 const mapDispatchToProps = {
+  getHostSettings : (moduleType) => getHostSettings(moduleType),
 	getItemList: (type) => getItemList(type),
 	addItemList: (type, data) => addItemList(type, data),
 	updateItemList: (type, id, data) => updateItemList(type, id, data),

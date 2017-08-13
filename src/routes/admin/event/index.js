@@ -77,7 +77,7 @@ class EventList extends React.Component {
         event:resp.data
       })
     });
-  }
+  };
   setActiveEvents = (row) => {
     this.props.setEvents(row.eventId).then((resp) => {
       setTimeout(()=>{
@@ -85,19 +85,19 @@ class EventList extends React.Component {
         window.location.replace('/host/dashboard/home');
       },2000)
     });
-  }
+  };
   getWhiteLabelUrl = () => {
     this.props.whiteLabelUrl().then((resp) => {
       this.setState({
         whiteLabelUrlList:resp
       })
     });
-  }
+  };
   componentDidMount(){
   //  this.getEventsList();
     this.fetchData();
     this.getWhiteLabelUrl();
-  }
+  };
   whiteLabelUrlValidateHandler = (e) => {
     this.setState({
       whiteLabelUrlFeedBack: true,
@@ -179,7 +179,7 @@ class EventList extends React.Component {
     };
     function buttonFormatter(cell, row){
       return (<ul className="readonly-actions list-inline">
-        <li><Link to={"superadmin/edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
+        <li><Link to={"edit/"+row.eventId}><i className="fa fa-cog blue" ></i></Link></li>
         <li><Link to="" ><i className="fa fa-trash red" ></i></Link></li>
       </ul>);
     }
@@ -235,7 +235,7 @@ class EventList extends React.Component {
                 <TableHeaderColumn dataSort dataField='price'># Particaipants</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Last Login</TableHeaderColumn>
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
-             </BootstrapTable>: <div id="app" className="loader" />  }
+             </BootstrapTable>: <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
             </div>
           </div>
           <PopupModel

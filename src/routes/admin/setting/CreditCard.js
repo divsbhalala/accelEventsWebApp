@@ -221,7 +221,7 @@ class CreditCard extends React.Component {
 											</div>
 										</div>
 									</div>
-								</div> :  <div id="app" className="loader" /> }
+								</div> :  <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
 							</div>
 						</div>
 					</div>

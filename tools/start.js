@@ -1,4 +1,5 @@
-
+require('dotenv').config();
+import fs from 'fs';
 import browserSync from 'browser-sync';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -55,7 +56,7 @@ async function start() {
       // https://webpack.github.io/docs/webpack-dev-middleware
     });
     const hotMiddleware = webpackHotMiddleware(bundler.compilers[0]);
-
+		fs.writeFile('src/clientConfig.js', "module.exports = {	apiUrl: \"" + process.env.API_URL +"\",serverUrl: \"" + process.env.UI_URL + "\"};", function(err) {console.log("erererrererere---", err);});
     let handleBundleComplete = async () => {
       handleBundleComplete = stats => !stats.stats[1].compilation.errors.length && runServer();
 
