@@ -2857,7 +2857,7 @@ class Volunteer extends React.Component {
   />,
 								) : 'Loading  ....'
 							}
-            </ul> : <div id="app" className="loader" /> }
+            </ul> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
             <div className="form-group text-center">
               <button
                 className="btn btn-default" onClick={() => {
