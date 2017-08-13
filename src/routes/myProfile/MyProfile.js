@@ -73,8 +73,7 @@ class MyProfile extends React.Component {
   render() {
     return (
       <div className="my-profile-wrap">
-        {this.state.user ?
-        <div id="content-wrapper">
+         <div id="content-wrapper-front">
           <div className="row">
             <div className="col-lg-3 col-md-4 col-sm-4">
               <ProfileAside setActiveTabState={this.setActiveTabState} user={this.state.user && this.state.user} />
@@ -147,7 +146,7 @@ class MyProfile extends React.Component {
             </div>
           </div>
         </div>
-        : <div id="app" className="loader" /> }
+
       </div>
     );
   }

@@ -66,7 +66,7 @@ class RafflePerformance extends React.Component {
                   <div className="col-lg-12">
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
-                        { this.state.items? <RaffleItemTable items={this.state.items} />: <div id="app" className="loader" /> }
+                        { this.state.items? <RaffleItemTable items={this.state.items} />: <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>}
 
                         {/* Action Row */}
                         <div className="form-group operations-row">

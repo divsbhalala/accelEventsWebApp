@@ -235,7 +235,7 @@ class EventList extends React.Component {
                 <TableHeaderColumn dataSort dataField='price'># Particaipants</TableHeaderColumn>
                 <TableHeaderColumn dataSort dataField='price'>Last Login</TableHeaderColumn>
                 <TableHeaderColumn dataField='price' dataFormat={buttonFormatter}>Action</TableHeaderColumn>
-             </BootstrapTable>: <div id="app" className="loader" />  }
+             </BootstrapTable>: <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
             </div>
           </div>
           <PopupModel
