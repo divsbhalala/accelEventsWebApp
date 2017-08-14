@@ -8,7 +8,17 @@ import cx from 'classnames';
 import { getItemSheetPdf, getItemCatalogPdf, getItemListCsv } from './action';
 import { connect } from 'react-redux';
 import RaffleAddItem from './../../../../components/RaffleAddItem'
+import PopupModel from './../../../../components/PopupModal';
+
 class RaffleAddItems extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showsavePop: false,
+    };
+  }
+
   static propTypes = {
     title: PropTypes.string,
   };
@@ -26,6 +36,16 @@ class RaffleAddItems extends React.Component {
     });
   };
 
+  hidesave = () => {
+      this.setState({
+        showsavePop : false
+    });
+  };
+  savePop = () => {
+    this.setState({
+        showsavePop : true
+    });
+  }
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -40,7 +60,7 @@ class RaffleAddItems extends React.Component {
                         <h1>Add Raffle Items
                               {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>*/}
                           <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              <button onClick={this.savePop} className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                         </h1>
                       </div>
@@ -80,7 +100,17 @@ class RaffleAddItems extends React.Component {
           </div>
 
         </div>
+        <PopupModel
+          id="savePopup"
+          showModal={this.state.showsavePop}
+          headerText={<p>Saved Successfully</p>}
+          onCloseFunc={this.hidesave}
+          modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hidesave()}}>Close</button>}
+        >
+            <center>{ "Changes saved Successfully."}</center>
+        </PopupModel>
       </div>
+      
     );
   }
 }
