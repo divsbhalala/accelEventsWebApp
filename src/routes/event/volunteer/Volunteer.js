@@ -1437,10 +1437,10 @@ class Volunteer extends React.Component {
 									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.itemName}<span className="starting-bid"/>
 								</div>
 								<div className="text-xs">Bid Increment: <span
-									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.bidIncrement}<span
+									className="currency-symbol">{this.state.itemData.bidIncrement ? this.props.currencySymbol : ""}</span> {this.state.itemData.bidIncrement ? this.state.itemData.bidIncrement : "N/A"}<span
 									className="bid-increment"/></div>
 								<div className="text-xs">Buy It Now Price: <span
-									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
+									className="currency-symbol">{this.state.itemData.buyItNow ? this.props.currencySymbol : ""}</span> {this.state.itemData.buyItNow ? this.state.itemData.buyItNow : "N/A"}<span
 									className="buy-it-now"/></div>
 							</div> }
 							<div
