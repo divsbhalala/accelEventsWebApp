@@ -37,7 +37,7 @@ const LinkWithTooltip = React.createClass({
       <OverlayTrigger
         overlay={tooltip} placement="bottom"
         delayShow={300} delayHide={150}>
-        <a href={this.props.href}>{this.props.children}</a>
+        <a href={this.props.href} target="_blank">{this.props.children}</a>
       </OverlayTrigger>
     );
   }
