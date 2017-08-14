@@ -1072,7 +1072,7 @@ class Auction extends React.Component {
                   <input type="number" className="form-control field-card_number" id="cardnumber"
                          placeholder="8888-8888-8888-8888" maxLength={16} data-stripe="number"
                          required="required" data-fv-field="cardnumber"
-                         ref={ref => {
+                           ref={ref => {
                            this.cardNumber = ref;
                          }}
                          onKeyUp={this.cardNumberValidateHandler}/>

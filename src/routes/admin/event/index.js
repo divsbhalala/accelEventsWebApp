@@ -276,14 +276,14 @@ class EventList extends React.Component {
           </PopupModel>
 
         </div>
-      </div>
+      </div>  
     );
   }
 }
 class WhiteLabelUrlList extends React.Component {
   onClickRedirection =(url) =>{
     history.push(url);
-  }
+  };
   render() {
     return (
       <MenuItem eventKey={this.props.key} onClick={()=>this.onClickRedirection("/u/wl/"+this.props.item+"/home")}>{this.props.item}</MenuItem>

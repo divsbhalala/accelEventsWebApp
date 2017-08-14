@@ -39,7 +39,6 @@ import {connect} from 'react-redux';
               <div className="dz-filename">
                 <span data-dz-name>{item.imageUrl}</span>
               </div>
-             <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>
               <img data-dz-thumbnail alt={item.imageUrl} src={"http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/"+item.imageUrl} />
             </div>
              <div className="dz-progress"><span className="dz-upload"  /></div>

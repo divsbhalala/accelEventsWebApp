@@ -77,7 +77,7 @@ class FundItemTable extends React.Component {
         >
           <TableHeaderColumn dataField="itemName" dataSort={true}>Item Name</TableHeaderColumn>
           <TableHeaderColumn dataField="itemCode" isKey dataSort={true}>Item Code</TableHeaderColumn>
-          <TableHeaderColumn dataField="bid" dataSort={true}>Highest Bidder</TableHeaderColumn>
+          <TableHeaderColumn dataField="bid" dataSort={true}>Winning Bidder</TableHeaderColumn>
           <TableHeaderColumn dataField="bidder" dataSort={true}>Current Bid</TableHeaderColumn>
           <TableHeaderColumn dataField="paid" dataFormat={formtPaid}>Paid ?</TableHeaderColumn>
 

@@ -53,7 +53,7 @@ class Login extends React.Component {
     }
     if(this.state.isValidData) {
       this.props.doLogin(this.email.value.trim(), this.password.value.trim()).then((resp) => {
-        if (!resp.errorMessage) {
+        if (resp.data) {
           this.setState({error: "Log In SuccessFully...",loading:false});
           setTimeout(()=>{
             // history.push(resp.data.redirectUrl) /u/superadmin/events
