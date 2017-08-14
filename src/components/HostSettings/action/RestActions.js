@@ -27,8 +27,19 @@ export function getHostSettings(moduleType) {
     return axios({
       method: 'get',
       url: API_URL + 'host/'+moduleType+'/settings',
-
     })
+  }
+}
+export function setaddItemSetting(data) {
+  return (dispatch) => {
+    dispatch(addItemSetting(data));
+  }
+}
+
+export function addItemSetting(data) {
+  return {
+    type: 'ITEMADD_SETTING',
+    data,
   }
 }
 

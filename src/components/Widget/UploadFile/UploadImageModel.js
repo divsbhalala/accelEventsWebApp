@@ -56,7 +56,6 @@ import PopupModel from '../../../components/PopupModal'
    };
   render() {
     return (
-
       <div >
         <PopupModel
           id="mapPopup"
@@ -76,7 +75,6 @@ import PopupModel from '../../../components/PopupModal'
               <div className="dz-filename">
                 <span data-dz-name>{item.preview}</span>
               </div>
-             <div className="dz-size" data-dz-size><strong>NaN</strong> b</div>
               <img data-dz-thumbnail alt={item.preview} src={item.preview} />
             </div>
              <div className="dz-progress"><span className="dz-upload"  /></div>

@@ -10,7 +10,7 @@ import {
 	updateItemListPosition,
 	getItemCategories
 } from './../../routes/admin/action';
-import {getHostSettings} from '../HostSettings/action/RestActions';
+import {getHostSettings,setaddItemSetting} from '../HostSettings/action/RestActions';
 
 class PlanetItem extends React.Component {
 	state: Object = {
@@ -111,6 +111,8 @@ class AuctionAddItem extends React.Component {
 	componentWillMount() {
     this.props.getHostSettings('auction').then(resp => {
       this.setState({settings:resp.data});
+      this.props.setaddItemSetting(resp.data);
+
     }).catch((error) => {
     });
 		this.getItemList()
@@ -215,6 +217,7 @@ const mapDispatchToProps = {
 	updateItemListPosition: (type, itemId, topItem, topBottom) => updateItemListPosition(type, itemId, topItem, topBottom),
 	getItemCategories: (type) => getItemCategories(type),
   getHostSettings : (moduleType) => getHostSettings(moduleType),
+  setaddItemSetting : (data) => setaddItemSetting(data),
 };
 
 const mapStateToProps = (state) => ({
