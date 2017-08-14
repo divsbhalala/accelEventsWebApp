@@ -8,7 +8,7 @@ import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
 import PopupModel from '../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import cx from 'classnames';
-import {doGetHostSettings, putGetHostSettings, disconnectStripeAccount} from './action';
+import {doGetHostSettings, putGetHostSettings, disconnectStripeAccount, connectStripe} from './action';
 
 
 class CreditCard extends React.Component {
@@ -66,6 +66,23 @@ class CreditCard extends React.Component {
 		});
 	};
 
+	connectStripe = (e) => {
+		e.preventDefault();
+		this.props.connectStripe().then(resp =>{
+			if(resp.data.redirecttostripe==="true"){
+				this.connectWithStripe(resp.data.stripeConnectUrl);
+			}else{
+				//window.location.reload();
+			}
+		}).catch(error=>{
+      this.setState({loading:false,message:"Something wrong",isError:true})
+		});
+	}
+
+	connectWithStripe = (url) => {
+		 let newwindow = window.open(url, 'Connect With Stripe', 'height=600, width=600');
+	   if (window.focus && newwindow) { newwindow.focus(); }
+	}
 
 	toggleItemTransactionsPopup = () => {
 		if (!this.state.showItemTransactions) {
@@ -155,9 +172,9 @@ class CreditCard extends React.Component {
 															<div className="row stripe-button-group">
 																{!this.state.settings.stripeConnected &&
 																	<div className="col-sm-4">
-																	<div className="stripeconnect stripe-connect btn btn-danger btn-sm">
-																		<span>Connect with Stripe</span>
-																	</div>
+																	<button type="button" className="btn btn-danger btn-sm" onClick={this.connectStripe}>
+																		Connect with Stripe
+																	</button>
 																</div>}
 																{this.state.settings.stripeConnected &&
 																	<div className="col-sm-4">
@@ -297,7 +314,8 @@ class CreditCard extends React.Component {
 const mapDispatchToProps = {
 	doGetHostSettings: (type) => doGetHostSettings(type),
 	putGetHostSettings: (type, settings) => putGetHostSettings(type, settings),
-	disconnectStripeAccount : () => disconnectStripeAccount()
+	disconnectStripeAccount : () => disconnectStripeAccount(),
+	connectStripe : () => connectStripe()
 };
 
 const mapStateToProps = (state) => ({});

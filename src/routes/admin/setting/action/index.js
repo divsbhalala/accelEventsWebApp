@@ -46,3 +46,11 @@ export function disconnectStripeAccount() {
 		})
 	}
 }
+export function connectStripe() {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + 'host/settings/stripeConnect',
+		})
+	}
+}
