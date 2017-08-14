@@ -51,7 +51,7 @@ class DonationPerformance extends React.Component {
       paginationPosition: 'bottom'  // default is bottom, top and both is all available
     };
     function dateFormatter(cell, row){
-      return new Date(1*cell).toUTCString();
+      return new Date(cell).toISOString().split('T')[0];
     }
     function priceFormat(cell, row){
       return  selfInst.props.currencySymbol + cell;//.toFixed(2);
@@ -80,7 +80,7 @@ class DonationPerformance extends React.Component {
                             <TableHeaderColumn  dataField='lastName' >Last Name</TableHeaderColumn>
                             <TableHeaderColumn  dataField='email' >Email Address</TableHeaderColumn>
                             <TableHeaderColumn  dataField='phoneNumber'>Phone Number</TableHeaderColumn>
-                            <TableHeaderColumn  dataField='donationDate' width="20%">Donation Date</TableHeaderColumn>
+                            <TableHeaderColumn  dataField='donationDate' width="20%" dataFormat={dateFormatter}>Donation Date</TableHeaderColumn>
                             <TableHeaderColumn  dataField='donationAmount'  dataFormat={priceFormat}>Donation Amount</TableHeaderColumn>
                           </BootstrapTable> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>
                           }

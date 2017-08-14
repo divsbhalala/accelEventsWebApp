@@ -4,12 +4,11 @@ import cx from 'classnames';
 import s from './RaffleSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {connect} from 'react-redux';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings, getHostTickets} from '../../../../components/HostSettings/action/RestActions';
+import {getHostSettings,resetHostSettings,updateHostSettings, getHostTickets} from '../../../../components/HostSettings/action/RestActions';
 import TicketList from '../../../../components/HostSettings/TicketList';
+import CategoryManager from '../../../../components/CategoryManagement';
 import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
-import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
 import {Modal ,Button, Alert} from 'react-bootstrap';
 import moment from 'moment';
@@ -18,7 +17,6 @@ class RaffleSetting extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -34,11 +32,15 @@ class RaffleSetting extends React.Component {
       alertType:null,
       loading: false,
       tickets : [],
-      startDate: moment()
-
+      startDate: moment(),
+      resetsetState:true,
     };
   };
-
+  toggleCategory=()=>{
+    this.setState({
+      resetsetState:!this.state.resetsetState,
+    })
+  };
   handleAlertDismiss = () => {
     this.setState({alertVisible: false, categoryAlertVisible:false});
   };
@@ -66,14 +68,6 @@ class RaffleSetting extends React.Component {
     }).catch((error) => {
     });
 
-    this.props.getHostCategories(this.state.moduleType).then(resp=> {
-      if(resp){
-        this.setState({itemCategories : resp.data.itemCategories});
-      }
-      else{
-      }
-    }).catch(error=>{
-    });
   };
 
   updateTimezone = (e) =>{
@@ -139,7 +133,6 @@ class RaffleSetting extends React.Component {
       this.handleAlertShow('Something went wrong.','danger');
     });
   };
-
   addRow =() =>{
     let tickets = this.state.tickets;
     let newRow = {numberOfTickets:1,price:0,id:0,complementary:false};
@@ -272,7 +265,8 @@ class RaffleSetting extends React.Component {
                             <div className="col-md-3">{this.state.settings &&
                               <ToggleSwitch name="categoryEnabled" id="categoryEnabled"
                                   defaultValue={this.state.settings.categoryEnabled} className="success"
-                                  onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/> }
+                                  onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}
+                                  onClick={this.toggleCategory}/> }
                             </div>
                           </div>
                           <div className="row form-group">
@@ -336,14 +330,9 @@ class RaffleSetting extends React.Component {
                             </div>
                           </div>
                         </div> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
-
-
-                        <div className="row form-group category-settings" style={{display : 'block'}}>
-                          <div className="col-md-3 col-md-offset-1">
-                            Category Management
-                          </div>
-                          {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
-                        </div>
+                        {this.state.settings && this.state.settings.categoryEnabled  && <div className="row form-group category-settings" >
+                          <CategoryManager moduleType={this.state.moduleType} />
+                        </div>}
                         <div className="form-group operations-row text-center">
                           <button className={cx("btn btn-info save-settings", ( (this.state.emailFeedBack && !this.state.email) || (this.state.passwordFeedBack && !this.state.password)) && 'disabled')}
                             role="button" onClick={this.onSaveSetting}>
@@ -377,10 +366,6 @@ class RaffleSetting extends React.Component {
 const mapDispatchToProps = {
   updateHostSettings : (moduleType, settingsDTO)  => updateHostSettings(moduleType, settingsDTO),
   getHostSettings : (moduleType) => getHostSettings(moduleType),
-  getHostCategories : (moduleType) => getHostCategories(moduleType),
-  removeHostCategory : (moduleType, id) => removeHostCategory(moduleType, id),
-  addHostCategory : (moduleType, itemCategory) => addHostCategory (moduleType, itemCategory),
-  updateHostCategory : (moduleType, id, itemCategory) => updateHostCategory(moduleType, id, itemCategory),
   resetHostSettings : (moduleType) => resetHostSettings(moduleType),
   getHostTickets : (moduleType) => getHostTickets(moduleType)
 };

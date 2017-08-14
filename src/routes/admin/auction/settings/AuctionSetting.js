@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import s from './AuctionSetting.css';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import {EditableTextField} from 'react-bootstrap-xeditable';
-import {updateAuctionSettings, getAuctionSettings, getAuctionCategories, removeAuctionCategory, addAuctionCategory, updateAuctionCategory, resetAuctionSettings} from './../Auction';
-import {getHostCategories,addHostCategory,getHostSettings,removeHostCategory,resetHostSettings,updateHostCategory,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
+import CategoryManager from '../../../../components/CategoryManagement';
+import {getHostSettings,resetHostSettings,updateHostSettings} from '../../../../components/HostSettings/action/RestActions';
 import {connect} from 'react-redux';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import {Modal ,Button, Alert} from 'react-bootstrap';
-import CategoryTable from '../../../../components/HostSettings/CategoryTable';
 import TimeZoneSelector from '../../../../components/HostSettings/TimeZoneSelector';
 import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
 import moment from 'moment';
@@ -32,8 +29,14 @@ class AuctionSetting extends React.Component {
       alertMessage:null,
       alertType:null,
       settings:{},
-      startDate: moment()
+      startDate: moment(),
+      resetsetState:true,
     };
+  };
+  toggleCategory=()=>{
+    this.setState({
+      resetsetState:!this.state.resetsetState,
+    })
   };
 
   handleAlertDismiss = () => {
@@ -65,24 +68,12 @@ class AuctionSetting extends React.Component {
 
     });
   };
-
   componentWillMount(){
     this.props.getHostSettings(this.state.moduleType).then(resp => {
       this.setState({settings:resp.data});
     }).catch((error) => {
 
     });
-
-    this.props.getHostCategories(this.state.moduleType).then(resp=> {
-      if(resp){
-        this.setState({itemCategories : resp.data.itemCategories});
-      }
-      else{
-      }
-    }).catch(error=>{
-
-    });
-
   };
 
   bidHandler = (e) => {
@@ -146,6 +137,7 @@ class AuctionSetting extends React.Component {
       this.handleAlertShow('Something went wrong.','danger');
     });
   };
+
 
   render() {
     let locale = {
@@ -266,7 +258,8 @@ class AuctionSetting extends React.Component {
                             <div className="col-md-3">
                               <ToggleSwitch name="categoryEnabled" id="categoryEnabled"
                                     defaultValue={this.state.settings.categoryEnabled} className="success"
-                                    onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}/>
+                                    onChange={()=>{ this.state.settings.categoryEnabled = !this.state.settings.categoryEnabled}}
+                                            onClick={this.toggleCategory}/>
                             </div>
                           </div>
                           <div className="row form-group">
@@ -304,16 +297,9 @@ class AuctionSetting extends React.Component {
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-default reset" onClick={this.openResetModal}>Reset</button>
                         </div>
-
-                        <div className="row form-group category-settings" style={{display : 'block'}}>
-                        <div className="row form-group category-settings">
-                          <div className="col-md-3 col-md-offset-1">
-                            Category Management
-                          </div>
-                          {this.state.itemCategories && <CategoryTable data={this.state.itemCategories} sizePerPage={ 5 } { ...this.state } {...this.props}/>}
-                        </div>
-
-                        </div>
+                       {this.state.settings && this.state.settings.categoryEnabled  && <div className="row form-group category-settings" >
+                          <CategoryManager moduleType={this.state.moduleType} />
+                        </div>}
                         <div className="form-group operations-row text-center">
                           <button className="btn btn-info mrg-b-lg save-settings" type="submit" onClick={this.onSaveSetting} data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
                         </div>
@@ -342,10 +328,6 @@ class AuctionSetting extends React.Component {
 const mapDispatchToProps = {
   updateHostSettings : (moduleType, settingsDTO)  => updateHostSettings(moduleType, settingsDTO),
   getHostSettings : (moduleType) => getHostSettings(moduleType),
-  getHostCategories : (moduleType) => getHostCategories(moduleType),
-  removeHostCategory : (moduleType, id) => removeHostCategory(moduleType, id),
-  addHostCategory : (moduleType, itemCategory) => addHostCategory (moduleType, itemCategory),
-  updateHostCategory : (moduleType, id, itemCategory) => updateHostCategory(moduleType, id, itemCategory),
   resetHostSettings : (moduleType) => resetHostSettings(moduleType)
 };
 
