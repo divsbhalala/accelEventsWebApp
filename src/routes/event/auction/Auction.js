@@ -476,7 +476,9 @@ class Auction extends React.Component {
     this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
-
+  goBack = () =>{
+    window.history.go(-1);
+  }
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
 
     this.setState({
@@ -956,8 +958,8 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6" style={{paddingLeft:5}}>
-        <a role="button" className="btn btn-success btn-block"
-           href={this.props.params && "/events/" + this.props.params.params + '#Auction'}>
+        <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
+           >
           Go back to All Items</a></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1189,9 +1191,9 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-5" style={{paddingLeft:0,marginLeft:-14,"width":"40%"}}>
-        <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+        <a onClick={this.goBack} className="btn btn-success btn-block" >
           Go back to All Items
-        </Link>
+        </a>
       </div>
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
