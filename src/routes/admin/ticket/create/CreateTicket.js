@@ -45,7 +45,9 @@ class CreateTicket extends React.Component {
 			hasInvalidDate: false,
 			hasError: false,
 			isToggleTimeZone: false,
-			isInvalidDate: []
+			isInvalidDate: [],
+			isLoading: false,
+			isSuccess: false
 		};
 		this.doTicketTypes = this.doTicketTypes.bind(this);
 		this.addNewTicket = this.addNewTicket.bind(this);
@@ -62,6 +64,8 @@ class CreateTicket extends React.Component {
 		this.setEventTitle = this.setEventTitle.bind(this);
 		this.setEventAddress = this.setEventAddress.bind(this);
 		this.setTimeZone = this.setTimeZone.bind(this);
+		this.showLoading = this.showLoading.bind(this);
+		this.showSuccessMessage = this.showSuccessMessage.bind(this);
 	}
 	componentWillMount() {
 		this.doTicketTypes();
@@ -159,8 +163,30 @@ class CreateTicket extends React.Component {
 			this.toggleDialog();
 		}, 10);
 	};
+
+	showLoading = ()=>{
+		this.setState({
+			isLoading: true
+		});
+	};
+	showSuccessMessage = ()=>{
+		debugger;
+		this.setState({
+			isLoading: false,
+			isSuccess: true
+		}, ()=>{
+			setTimeout(()=>{
+				this.setState({
+					isSuccess: false
+				})
+			}, 4000)
+		});
+	};
 	onError = (error) => {
 		let resendMailError = error && error.response && error.response.data;
+		this.setState({
+			isLoading: false
+		});
 		this.throwError("Error", resendMailError && resendMailError.errorMessage);
 	};
 	addNewTicket = ()=>{
@@ -200,9 +226,11 @@ class CreateTicket extends React.Component {
 				let eventData = selfInst.state.eventData;
 				delete eventData.availableTimeZone;
 				delete eventData.ticketingFee;
+				selfInst.showLoading();
 				eventData.eventAddress = eventData.eventAddress ? eventData.eventAddress : "" ;
 				selfInst.props.doTicketTypes("post", eventData).then(resp => {
-					selfInst.throwError("Success", "Event Data save successfully");
+					//selfInst.throwError("Success", "Event Data save successfully");
+					selfInst.showSuccessMessage();
 				}).catch(error => {
 					let eventDataError = error && error.response && error.response.data;
 					selfInst.onError(error);
@@ -267,7 +295,8 @@ class CreateTicket extends React.Component {
 					eventData.ticketTypes.splice (key, 1);
 					this.setState({
 						eventData: eventData,
-						deleteTicketKey: undefined
+						deleteTicketKey: undefined,
+						isLoading: false
 					});
 				}).catch(error=>{
 					this.onError(error);
@@ -320,7 +349,7 @@ class CreateTicket extends React.Component {
 							<h1>
 								Create Event Registration
 								<div className="pull-right">
-									<button className="btn btn-info btn-block saveSetting" type="submit"
+									<button className="btn btn-info btn-block saveSetting" type="submit" onClick={this.updateEventData}
 													data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">
 										Save Settings
 									</button>
@@ -329,11 +358,22 @@ class CreateTicket extends React.Component {
 						</div>
 						<div className="main-box no-header">
 							<div className="main-box-body clearfix">
-								<div className={("ajax-wrap", this.state.hasInvalidDate && "hide")}>
-									<div className="ajax-msg-box text-center text-danger" style={{}}>
+								<div className={("ajax-wrap")}>
+									<div className={("ajax-msg-box text-center text-danger", this.state.hasInvalidDate && "hide")}>
 										<span className="fa fa-spinner fa-pulse fa-fw" style={{display: "none"}} />
 										<span className="resp-message">Please correct the errors below</span>
 									</div>
+									{ this.state.isLoading ?
+										<div className="ajax-msg-box text-center">
+											<span className="fa fa-spinner fa-pulse fa-fw"/>
+											<span className="resp-message">Please wait...</span>
+										</div> : ""
+									}
+									{ this.state.isSuccess ?
+										<div className="ajax-msg-box text-center text-success">
+											<span className="resp-message">Setting saved...</span>
+										</div> : ""
+									}
 								</div>
 								<p>
 									Use this page to create your event. Here, you can set

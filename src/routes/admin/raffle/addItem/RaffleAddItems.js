@@ -11,17 +11,39 @@ import RaffleAddItem from './../../../../components/RaffleAddItem'
 import PopupModel from './../../../../components/PopupModal';
 
 class RaffleAddItems extends React.Component {
-
+	static propTypes = {
+		title: PropTypes.string,
+	};
   constructor(props) {
     super(props);
     this.state = {
       showsavePop: false,
+			isLoading: false,
+			isSuccess: false
     };
+		this.showLoading = this.showLoading.bind(this);
+		this.showSuccessMessage = this.showSuccessMessage.bind(this);
   }
 
-  static propTypes = {
-    title: PropTypes.string,
-  };
+	showLoading = ()=>{
+		this.setState({
+			isLoading: true
+		});
+	};
+	showSuccessMessage = ()=>{
+		debugger;
+		this.setState({
+			isLoading: false,
+			isSuccess: true
+		}, ()=>{
+			setTimeout(()=>{
+				this.setState({
+					isSuccess: false
+				})
+			}, 4000)
+		});
+	};
+
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf(this.props.eventName+'-raffle-items.pdf').then((resp) => {
     });
@@ -45,7 +67,7 @@ class RaffleAddItems extends React.Component {
     this.setState({
         showsavePop : true
     });
-  }
+  };
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -72,7 +94,7 @@ class RaffleAddItems extends React.Component {
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
                          <p>Add items for your raffle! There is no limit on the number of items that you can add. Attendees can submit their ‘tickets’ online or by texting your event text message number (see dashboard), with the 3 letter item code followed by the number of tickets they would like to submit.</p>
-                        <RaffleAddItem />
+                        <RaffleAddItem  showSuccessMessage={this.showSuccessMessage}/>
                         <div className="table prizes-table">
                           <div className="form-group operations-row">
                               <div className="row">
