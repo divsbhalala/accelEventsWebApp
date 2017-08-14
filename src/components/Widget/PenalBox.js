@@ -76,7 +76,7 @@ class PenalBoxWidget extends Component { // eslint-disable-line
           </div>
           <div className="project-box-content">
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">{this.props.firstTitle}:</div>
+              <div className="flex-col text-left lh-xlg-30 lh-sm-15">{this.props.firstTitle}:</div>
               <div className="flex-col">
                 <div className="ticker">
                   <div className="flex-row timer">
@@ -119,14 +119,14 @@ class PenalBoxWidget extends Component { // eslint-disable-line
               </div>
             </div>
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">{this.props.secondTitle}:</div>
-              <div className="flex-col lh-30">
+              <div className="flex-col text-left lh-xlg-30 lh-sm-15">{this.props.secondTitle}:</div>
+              <div className="flex-col lh-xlg-30 lh-sm-15">
                 {this.props.currencySymbol}{this.props.secondData.toFixed(2)}
               </div>
             </div>
             <div className="flex-row">
-              <div className="flex-col text-left lh-30">{this.props.thirdTitle}:</div>
-              <div className="flex-col lh-30">{this.props.thirdData}</div>
+              <div className="flex-col text-left lh-xlg-30 lh-sm-15">{this.props.thirdTitle}:</div>
+              <div className="flex-col lh-xlg-30 lh-sm-15">{this.props.thirdData}</div>
             </div>
           </div>
         </div>
