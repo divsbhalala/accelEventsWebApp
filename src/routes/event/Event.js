@@ -815,7 +815,6 @@ class Event extends React.Component {
 											<div className="no-items-container text-center">
 												<span style={{fontSize: '2em'}}>No items were found</span><br /><br />
 											</div>}
-
 											<InfiniteScroll
 												next={this.doGetLoadMoreAuctionItem}
 												hasMore={this.state.auctionPageLoading}
@@ -845,6 +844,7 @@ class Event extends React.Component {
 														                   buyItNowPrice={ item.buyItNowPrice > 0 && (this.state.settings && moment(this.state.settings.endDate).diff(moment()) > 0) ? "Buy now " + this.props.currencySymbol + item.buyItNowPrice : null}
 														                   auctionBuyNowTitle={ (item.purchased ? "Purchased for "+ this.props.currencySymbol + item.currentBid : null)}
 														                   auctionBuyNowClassName="item-link btn btn-success actionlinks"
+																							 isMarketValueVisible={this.state.settings && this.state.settings.marketValueEnabled}
 														                   marketValue={item.marketValue > 0 ? this.props.currencySymbol + item.marketValue : null}
 														                   marketValueLabel={item.marketValue > 0 ? 'Market Value' : null}
 														/>
