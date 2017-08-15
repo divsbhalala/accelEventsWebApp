@@ -194,7 +194,7 @@ class Login extends React.Component {
               </div>
               <div className="mrg-t-sm ">
                 <div className="form-group">
-                  <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox"/>
+                  <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox" style={{marginRight:8}} />
                   <label htmlFor="remember-me" className="text-small">Remember me</label>
                   <Link className="pull-right small" to="/u/password-reset">Forgot password?</Link>
                 </div>
