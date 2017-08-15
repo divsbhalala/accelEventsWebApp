@@ -69,7 +69,8 @@ class TicketPerformance extends React.Component {
       paginationPosition: 'bottom'  // default is bottom, top and both is all available
        };
     function dateFormatter(cell, row){
-      return new Date(1*cell).toISOString().split('T')[0];
+      // return new Date(1*cell).toISOString().split('T')[0];
+        return (new Date(1*cell).toISOString().split('T')[0]+ ' ' + new Date(1*cell).toISOString().split('T')[1].substring(0,5))
     }
     function priceFormate(cell, row){
       return  self_TicketPerformance.props.currencySymbol + cell.toFixed(2);
