@@ -34,6 +34,11 @@ class Auction extends React.Component {
 
       });
     });
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+           this.setState({
+        auctionSettings: resp && resp.data
+      });
+    });
   }
   render() {
     return (
@@ -61,8 +66,8 @@ class Auction extends React.Component {
                       <th className="item-name">Item</th>
                       <th className="item-code">Item Code</th>
                       <th className="item-startingBid">{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
-                      { this.state.settings && !this.state.settings.highestBidderHidden &&
-  										!this.state.settings.moduleEnded ?<th className="total-pledge">Highest Bidder</th> : <th className="total-pledge">WINNING BIDDER</th>}
+                      { this.state.auctionSettings && !this.state.auctionSettings.highestBidderHidden &&
+  										!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
                     </tr>
                   </thead>
                 </table>
@@ -101,6 +106,7 @@ class Auction extends React.Component {
 const mapDispatchToProps = {
   getScrollData: (eventUrl, type) => getScrollData(eventUrl, type),
   doGetAuctionItemByLimit: (eventUrl, page, size, type) => doGetAuctionItemByLimit(eventUrl, page, size, type),
+  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 };
 const mapStateToProps = (state) => ({
 	currencySymbol: state.event && state.event.currencySymbol || "$",
