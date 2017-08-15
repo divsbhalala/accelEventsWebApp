@@ -51,7 +51,8 @@ class DonationPerformance extends React.Component {
       paginationPosition: 'bottom'  // default is bottom, top and both is all available
     };
     function dateFormatter(cell, row){
-      return new Date(cell).toISOString().split('T')[0];
+      // return new Date(cell).toISOString().split('T')[0];
+      return (new Date(cell).toISOString().split('T')[0]+ ' ' + new Date(cell).toISOString().split('T')[1].substring(0,5))
     }
     function priceFormat(cell, row){
       return  selfInst.props.currencySymbol + cell;//.toFixed(2);
