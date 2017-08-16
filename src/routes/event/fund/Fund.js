@@ -356,6 +356,9 @@ class Fund extends React.Component {
     }
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
+  goBack = () =>{
+    window.history.go(-1);
+  };
   cardHolderValidateHandler = (e) => {
     this.setState({
       cardHolderFeedBack: true,
@@ -1016,9 +1019,9 @@ class Fund extends React.Component {
                                                              loading={this.state.loading} >
                             Submit Pledge
                           </Button></div>
-                          <div className="col-sm-5"><Link to={this.props.params && "/events/" + this.props.params.params + '#Fund a Need'} className="btn btn-success">
+                          <div className="col-sm-5"><a onClick={this.goBack} className="btn btn-success">
                             Go back to All Items
-                          </Link></div>
+                          </a></div>
                         </div>
                       </form>
                     </div>

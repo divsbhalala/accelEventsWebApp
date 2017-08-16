@@ -96,15 +96,21 @@ class RowItemList extends React.Component {
 			if (this.state.item.name && this.state.item.code && this.state.isDataUpdate) {
 				if (this.state.item.id) {
 					this.props.updateItemList('raffle', this.state.item.id, this.state.item).then(resp => {
+						if(this.props.showSuccessMessage){
+							this.props.showSuccessMessage();
+						}
 					})
 				} else {
 					this.props.addItemList('raffle', this.state.item).then(resp => {
+						if(this.props.showSuccessMessage){
+							this.props.showSuccessMessage();
+						}
 					})
 				}
 				this.setState({isDataUpdate: false})
 			}
 		}, 100)
-	}
+	};
 	deleteAction = () => {
 		this.setState({
 			showPopup: true,
@@ -214,7 +220,7 @@ class RowItemList extends React.Component {
                   <div className="row">
                     <div className="form-group">
                       <span>Category</span>
-                      <select className="form-control" name="itemCategory" defaultValue={this.props.item.category == "Uncategorized" ? 0 : this.props.item.category}
+                      <select className="form-control" name="itemCategory" defaultValue={this.props.item.category === "Uncategorized" ? 0 : this.props.item.category}
                               ref={ref=> {this.category=ref;}} onChange={this.categoryHandlerChange} onBlur={this.autoAddData}>
                         <option value={0} disabled >-- Select Category --</option>
                         {this.props.item.categories && this.props.item.categories.map((value,index)=>

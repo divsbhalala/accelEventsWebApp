@@ -8,10 +8,42 @@ import cx from 'classnames';
 import { getItemSheetPdf, getItemCatalogPdf, getItemListCsv } from './action';
 import { connect } from 'react-redux';
 import RaffleAddItem from './../../../../components/RaffleAddItem'
+import PopupModel from './../../../../components/PopupModal';
+
 class RaffleAddItems extends React.Component {
-  static propTypes = {
-    title: PropTypes.string,
-  };
+	static propTypes = {
+		title: PropTypes.string,
+	};
+  constructor(props) {
+    super(props);
+    this.state = {
+      showsavePop: false,
+			isLoading: false,
+			isSuccess: false
+    };
+		this.showLoading = this.showLoading.bind(this);
+		this.showSuccessMessage = this.showSuccessMessage.bind(this);
+  }
+
+	showLoading = ()=>{
+		this.setState({
+			isLoading: true
+		});
+	};
+	showSuccessMessage = ()=>{
+		debugger;
+		this.setState({
+			isLoading: false,
+			isSuccess: true
+		}, ()=>{
+			setTimeout(()=>{
+				this.setState({
+					isSuccess: false
+				})
+			}, 4000)
+		});
+	};
+
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf(this.props.eventName+'-raffle-items.pdf').then((resp) => {
     });
@@ -26,6 +58,16 @@ class RaffleAddItems extends React.Component {
     });
   };
 
+  hidesave = () => {
+      this.setState({
+        showsavePop : false
+    });
+  };
+  savePop = () => {
+    this.setState({
+        showsavePop : true
+    });
+  };
   render() {
     return (
       <div id="content-wrapper" className="admin-content-wrapper">
@@ -40,7 +82,7 @@ class RaffleAddItems extends React.Component {
                         <h1>Add Raffle Items
                               {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>*/}
                           <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              <button onClick={this.savePop} className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                         </h1>
                       </div>
@@ -52,7 +94,7 @@ class RaffleAddItems extends React.Component {
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
                          <p>Add items for your raffle! There is no limit on the number of items that you can add. Attendees can submit their ‘tickets’ online or by texting your event text message number (see dashboard), with the 3 letter item code followed by the number of tickets they would like to submit.</p>
-                        <RaffleAddItem />
+                        <RaffleAddItem  showSuccessMessage={this.showSuccessMessage}/>
                         <div className="table prizes-table">
                           <div className="form-group operations-row">
                               <div className="row">
@@ -80,7 +122,17 @@ class RaffleAddItems extends React.Component {
           </div>
 
         </div>
+        <PopupModel
+          id="savePopup"
+          showModal={this.state.showsavePop}
+          headerText={<p>Saved Successfully</p>}
+          onCloseFunc={this.hidesave}
+          modelFooter={<button className="btn btn-green" data-dismiss="modal" onClick={()=>{this.hidesave()}}>Close</button>}
+        >
+            <center>{ "Changes saved Successfully."}</center>
+        </PopupModel>
       </div>
+      
     );
   }
 }

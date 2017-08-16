@@ -18,9 +18,9 @@ class Login extends React.Component {
     title: PropTypes.string.isRequired,
   };
   componentWillMount(){
-    if(this.props.loginType == "whiteLabel") {
+    if(this.props.loginType === "whiteLabel") {
       this.props.whiteLabelURL(this.props.params && this.props.params.params).then((resp) => {
-        if(resp.errorCode=="4040201"){
+        if(resp.errorCode==="4040201"){
           window.location.replace('/notFound');
         }
       });
@@ -53,12 +53,12 @@ class Login extends React.Component {
     }
     if(this.state.isValidData) {
       this.props.doLogin(this.email.value.trim(), this.password.value.trim()).then((resp) => {
-        if (!resp.errorMessage) {
+        if (resp.data) {
           this.setState({error: "Log In SuccessFully...",loading:false});
           setTimeout(()=>{
             // history.push(resp.data.redirectUrl) /u/superadmin/events
             console.log(this.props.loginType);
-            if(this.props.loginType == "whiteLabel") {
+            if(this.props.loginType === "whiteLabel") {
               window.location.replace('/u/wl/'+this.props.params.params+'/home');
             }else{
               window.location.replace(resp.data.redirectUrl);
@@ -194,7 +194,7 @@ class Login extends React.Component {
               </div>
               <div className="mrg-t-sm ">
                 <div className="form-group">
-                  <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox"/>
+                  <input id="remember-me" name="remember-me" defaultChecked="checked" type="checkbox" style={{marginRight:8}} />
                   <label htmlFor="remember-me" className="text-small">Remember me</label>
                   <Link className="pull-right small" to="/u/password-reset">Forgot password?</Link>
                 </div>

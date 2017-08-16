@@ -1,7 +1,8 @@
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-let API_URL = 'http://35.161.147.220:3333/api/';
+import {apiUrl as API_URL} from './../../../clientConfig';
+
 export function onFormSubmit(e) {
   alert('hello');
   let test = ReactDOM.findDOMNode(ref);

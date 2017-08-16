@@ -83,7 +83,7 @@ class AdminLayout extends React.Component {
   }
   render() {
     return (
-      <div className={cx("fixed-header", (this.props.class))}>
+      <div className={cx("fixed-header nav-small-class", (this.props.class))}>
         <HeaderNew admin={true}/>
         <AdminSidebar />
         {this.props.children}

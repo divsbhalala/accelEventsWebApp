@@ -1128,7 +1128,7 @@ class Volunteer extends React.Component {
         item.push(<option value={j} key={i + Math.random()}>{j}</option>);
       }
       return item;
-    };    
+    };
     return (
       <div>
         { this.state.isloaded && this.props.is_volunteer &&
@@ -1437,10 +1437,10 @@ class Volunteer extends React.Component {
 									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.itemName}<span className="starting-bid"/>
 								</div>
 								<div className="text-xs">Bid Increment: <span
-									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.bidIncrement}<span
+									className="currency-symbol">{this.state.itemData.bidIncrement ? this.props.currencySymbol : ""}</span> {this.state.itemData.bidIncrement ? this.state.itemData.bidIncrement : "N/A"}<span
 									className="bid-increment"/></div>
 								<div className="text-xs">Buy It Now Price: <span
-									className="currency-symbol">{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
+									className="currency-symbol">{this.state.itemData.buyItNow ? this.props.currencySymbol : ""}</span> {this.state.itemData.buyItNow ? this.state.itemData.buyItNow : "N/A"}<span
 									className="buy-it-now"/></div>
 							</div> }
 							<div
@@ -2675,7 +2675,7 @@ class Volunteer extends React.Component {
                 <div className="text-xs">Item Name : <span className="item-name" /> {this.state.itemData.itemName} </div>
                 <div className="text-xs"># Of Tickets Submitted: <span
                   className="currency-symbol"
-                >{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
+                >{this.props.currencySymbol}</span> {this.state.itemData.totalTicketsSubmitted}<span
                   className="buy-it-now"
                 /></div>
               </div> }
@@ -2754,31 +2754,14 @@ class Volunteer extends React.Component {
                             {item.ticketsPerTable && item.ticketsPerTable > 0 ?
                               <div className="sale-text txt-sm text-uppercase">Each table has {item.ticketsPerTable}
                                 tickets</div> : ''}
-                            {<div className="txt-sm gray type-desc">
-                             TODO: Item desctiption goes here
+                            {item.enableTicketDescription && <div className="txt-sm gray type-desc">
+                              {item.ticketTypeDescription}
                              </div>}
                           </div>
                         </div>
                       </div>,
                     )
                   }
-
-
-                  {/* <div className="sale-card">
-                   <div className="flex-row">
-                   <div className="flex-col">
-                   <div className="type-name">
-                   <strong>First ticket type</strong>
-                   (<span className="type-cost txt-sm gray"> {this.props.currencySymbol}100.00 </span>)
-                   <div className="pull-right">
-                   <div className="col-md-7">No Of Tickets</div>
-                   <div className="col-md-5"> SOLD OUT </div>
-                   </div>
-                   </div>
-                   <div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
-                   </div>
-                   </div>
-                   </div>*/}
                   <div className="status-bar clearfix mrg-t-lg">
                     <div className="pull-left">
                       <span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>

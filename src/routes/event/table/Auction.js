@@ -64,7 +64,7 @@ class Auction extends React.Component {
                           <th>Item</th>
                           <th>Item Code</th>
                           <th>{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
-													{ this.state.settings && !this.state.settings.highestBidderHidden &&
+													{ this.state.eventSettings && !this.state.eventSettings.highestBidderHidden &&
 													!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
                         </tr>
                         </thead>

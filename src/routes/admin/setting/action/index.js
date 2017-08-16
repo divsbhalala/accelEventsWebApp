@@ -24,8 +24,8 @@ export function putGetHostSettings(type, data) {
 export function makePyment(data) {
   return (dispatch) => {
     return axios({
-      method: 'post',
-      url: API_URL + 'settings/billing' ,
+      method: 'put',
+      url: API_URL + 'host/settings/billing' ,
       data:data,
 
     }).then(resp=>{
@@ -37,4 +37,20 @@ export function makePyment(data) {
       return error && error.response && error.response.data;
     });
   }
+}
+export function disconnectStripeAccount() {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + 'host/settings/disconnect/stripe',
+		})
+	}
+}
+export function connectStripe() {
+	return (dispatch) => {
+		return axios({
+			method: 'post',
+			url: API_URL + 'host/settings/stripeConnect',
+		})
+	}
 }

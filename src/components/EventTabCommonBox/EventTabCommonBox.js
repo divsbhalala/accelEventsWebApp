@@ -32,6 +32,7 @@ class EventTabCommonBox extends React.Component {
     linkText: PropTypes.string,
     linkTarget: PropTypes.string,
     isSharable: PropTypes.bool,
+    isMarketValueVisible: PropTypes.bool,
     actionTitle: PropTypes.string,
     actionClassName: PropTypes.string,
     imageUrl: PropTypes.string,
@@ -123,7 +124,7 @@ class EventTabCommonBox extends React.Component {
                     </div>
                   </div>)
               }
-              { this.props.marketValue && this.props.marketValueLabel && <div className={cx("flex-row")}>
+              { this.props.isMarketValueVisible && this.props.marketValue && this.props.marketValueLabel && <div className={cx("flex-row")}>
                 <div className={cx("flex-col")}><strong> {this.props.marketValueLabel}: </strong></div>
                 <div className={cx("flex-col")}>
                   <span className={cx("item-tickets-submitted")}>{this.props.marketValue}</span>

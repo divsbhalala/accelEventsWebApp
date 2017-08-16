@@ -114,7 +114,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 					</div> : "" }
 				</div>
 				<div className="order-panel-body">
-					{this.props.order.purchaser ? <p> Purchased by {this.props.order.purchaser.firstName}&nbsp;{this.props.order.purchaser.lastName}  ({this.props.order.purchaser.email}) on {moment().format('MMM Do YYYY [at] hh:mm A')} {this.props.order.purchaser.timezoneId}</p>  : ""}
+					{this.props.order.purchaser ? <p> Purchased by {this.props.order.purchaser.firstName}&nbsp;{this.props.order.purchaser.lastName}  ({this.props.order.purchaser.email}) on {moment(this.props.order.purchaseDate).format('MMM Do YYYY [at] hh:mm A')} {this.props.order.purchaser.timezoneId}</p>  : ""}
 					{ this.props.order.orderType && this.props.order.orderType === 'CARD' && this.props.order.lastFour && this.props.order.cardType ? <div className="small"> {this.props.order.cardType} <span className="text-uppercase">Visa</span> - XXXX XXXX
 						XXXX
 						{this.props.order.lastFour}

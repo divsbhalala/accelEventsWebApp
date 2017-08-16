@@ -29,16 +29,21 @@ class RowItemList extends React.Component {
     startingBid:false,
     buyItNowPriceFeedBack:false,
     buyItNowPrice:true,
+    itemSetting:'',
   };
 componentWillReceiveProps() {
     this.setState({
-      item: this.props.item
-    })
+      item: this.props.item,
+      itemSetting:this.props.itemSetting,
+    });
+  console.log('-->',this.props.itemSetting)
   };
 componentWillMount(){
   this.setState({
-    item:this.props.item
-  })
+    item:this.props.item,
+    itemSetting:this.props.itemSetting,
+  });
+  console.log('---<<<<',this.props.itemSetting)
 };
 showPopup = () => {
   this.setState({
@@ -89,7 +94,7 @@ hidePopup = () => {
   buyItNowPriceHandlerChange = (e) =>{
 
     this.setState({ buyItNowPriceFeedBack: true,});
-    if (this.buyItNowPrice.value.trim() == '' || this.buyItNowPrice.value >= this.state.item.startingBid) {
+    if (this.buyItNowPrice.value.trim() === '' || this.buyItNowPrice.value >= this.state.item.startingBid) {
       this.setState({ buyItNowPrice: true });
     }else {
       this.setState({buyItNowPrice: false});
@@ -257,7 +262,8 @@ render() {
                       )}
                     </select>
                   </div>
-                <div className="form-group">
+                  {console.log(this.props.itemSetting)}
+                  {this.state.itemSetting  && this.state.itemSetting.enableMarketValue && <div className="form-group">
                   <label htmlFor="marketValue">Market Value</label>
                   <div className="input-group">
                     <span className="input-group-addon">{this.props.currencySymbol}</span>
@@ -265,7 +271,7 @@ render() {
                            defaultValue={this.props.item.marketValue}
                            ref={ref=> {this.marketValue=ref;}} onKeyUp={this.marketValueHandlerChange} onBlur={this.autoAddData}/>
                   </div>
-                </div>
+                </div> }
               </div>
               <br />
               <div className="row">
@@ -315,7 +321,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   isItemAdded:state.isItemAdded && state.isItemAdded.isItemAdded,
-	currencySymbol : (state.host && state.host.currencySymbol) || "$"
+	currencySymbol : (state.host && state.host.currencySymbol) || "$",
+  itemSetting: state.isItemAdded && state.isItemAdded.itemAddSetting,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RowItemList);
