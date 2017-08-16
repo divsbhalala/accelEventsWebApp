@@ -261,7 +261,7 @@ class Account extends React.Component {
             if (resp && resp.message) {
               this.setState({ loading: false, message: resp.data.message, isError: false });
             } else {
-              this.setState({ loading: false, message: 'Something wrong', isError: true });
+              this.setState({ loading: false, message: resp.data.errorMessage, isError: true });
             }
           });
         }
@@ -308,7 +308,8 @@ class Account extends React.Component {
 
     return (
       <div>
-        {this.state.settings?<div id="content-wrapper" className="admin-content-wrapper">
+        {this.state.settings ?
+          <div id="content-wrapper" className="admin-content-wrapper">
           <style
             dangerouslySetInnerHTML={{ __html: '.btn span.glyphicon {opacity: 0;}.btn.active span.glyphicon {opacity: 1;}.packages-check .btn-danger {background-color: #DE564B;}.packages-check .btn-success {background-color: #699e08;}.packages-check .btn-danger.active {background-color: #e44730;}.form-group .glyphicon-ok, .form-group .glyphicon-remove{display:inline-block}' }}
           />
@@ -597,7 +598,8 @@ class Account extends React.Component {
               </div>
             </div>
           </PopupModel>
-        </div>:<div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
+        </div>
+          :''}
       </div>
 
     );

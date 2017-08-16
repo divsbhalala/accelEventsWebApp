@@ -2675,7 +2675,7 @@ class Volunteer extends React.Component {
                 <div className="text-xs">Item Name : <span className="item-name" /> {this.state.itemData.itemName} </div>
                 <div className="text-xs"># Of Tickets Submitted: <span
                   className="currency-symbol"
-                >{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
+                >{this.props.currencySymbol}</span> {this.state.itemData.totalTicketsSubmitted}<span
                   className="buy-it-now"
                 /></div>
               </div> }
