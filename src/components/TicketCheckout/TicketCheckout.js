@@ -1676,7 +1676,7 @@ class TicketCheckout extends React.Component {
 																						<option value={6}>Jun (06)</option>
 																						<option value={7}>Jul (07)</option>
 																						<option value={8}>Aug (08)</option>
-																						<option value={9}>Sep (09)</option>
+																						<option value={9}>Sep (09)</option>F
 																						<option value={10}>Oct (10)</option>
 																						<option value={11}>Nov (11)</option>
 																						<option value={12}>Dec (12)</option>
@@ -1911,7 +1911,7 @@ class TicketCheckout extends React.Component {
 																				<div className="input-group-addon">
 																					<i className="fa fa-map-marker" aria-hidden="true"/>
 																				</div>
-																				<input type="number" className="form-control" size={6}
+																				<input  className="form-control" size={6}
 																							 data-stripe="address_zip" name="address_zip"
 																							 data-fv-field="address_zip" ref={ref => {
 																					this.address_zip = ref;
@@ -2308,7 +2308,7 @@ class TicketCheckout extends React.Component {
 														: ''
 													}
 													<div className="mrg-t-lg text-center">{this.state.validData}
-														{ this.state.validData ? <Button type='submite' className="btn pay-now btn-success" loading={this.state.loading}>
+														{ this.state.validData ? <Button type='submit' className="btn pay-now btn-success" loading={this.state.loading}>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
 														</Button>  : <Button className="btn pay-now btn-success" disabled>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;

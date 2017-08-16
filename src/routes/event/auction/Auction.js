@@ -149,7 +149,7 @@ class Auction extends React.Component {
                 loading:false,
                 showPopup: true,
                 errorMsgCard: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
-                popupHeader:"Success",
+                popupHeader:"Failed",
                 stripeToken: response.id,})
             }
           });
@@ -608,7 +608,13 @@ class Auction extends React.Component {
     this.setState({
       showPopup: false
     });
-    if(this.state.popupHeader !== "Failed"){
+    if(this.state.popupHeader === 'Confirm' ){
+      this.setState({
+        errorMsgCard: "Confirmation Failed." ,
+        popupHeader:"Failed",
+      });
+    }
+    if(this.state.popupHeader !== "Failed" ){
       this.componentReRender();
     }
   };
@@ -1192,7 +1198,6 @@ class Auction extends React.Component {
             </div>
           </div>
         </div> : "" }
-
       <div className="col-sm-3" style={{paddingLeft:0}}>
         <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                  type="submit" >
@@ -1209,7 +1214,6 @@ class Auction extends React.Component {
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
       className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
-
     return (
       <div className="row">
         <div className="col-lg-12">
