@@ -782,7 +782,12 @@ class BuyRaffleTicketsModal extends React.Component {
   open() {
     this.setState({showModal: true});
   };
-
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   render() {
     let event = this.props.params && this.props.params.params;
     return (
@@ -980,6 +985,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                      ref={ref => {
                                        this.cardNumber = ref;
                                      }}
+                                     onKeyPress={(e) => this.numberOnly(e)}
                                      onKeyDown={this.cardNumberDownValidateHandler}
                                      onKeyUp={this.cardNumberValidateHandler}/>
                               { this.state.cardNumberFeedBack && this.state.cardNumber &&
@@ -1069,6 +1075,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                          ref={ref => {
                                            this.cvv = ref;
                                          }}
+                                         onKeyPress={(e) => this.numberOnly(e)}
                                          onKeyDown={this.cvvDownValidateHandler}
                                          onKeyUp={this.cvvValidateHandler}/>
                                   { this.state.cvvFeedBack && this.state.cvv &&

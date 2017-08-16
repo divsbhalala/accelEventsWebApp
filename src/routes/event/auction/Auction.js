@@ -149,7 +149,7 @@ class Auction extends React.Component {
                 loading:false,
                 showPopup: true,
                 errorMsgCard: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
-                popupHeader:"Success",
+                popupHeader:"Failed",
                 stripeToken: response.id,})
             }
           });
@@ -608,7 +608,13 @@ class Auction extends React.Component {
     this.setState({
       showPopup: false
     });
-    if(this.state.popupHeader !== "Failed"){
+    if(this.state.popupHeader === 'Confirm' ){
+      this.setState({
+        errorMsgCard: "Confirmation Failed." ,
+        popupHeader:"Failed",
+      });
+    }
+    if(this.state.popupHeader !== "Failed" ){
       this.componentReRender();
     }
   };
@@ -638,6 +644,12 @@ class Auction extends React.Component {
     }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
   render() {
     let form_login = <div>
@@ -844,6 +856,7 @@ class Auction extends React.Component {
                          ref={ref => {
                            this.cardNumber = ref;
                          }}
+                         onKeyPress={(e) => this.numberOnly(e)}
                          onKeyUp={this.cardNumberValidateHandler}/>
                   { this.state.cardNumberFeedBack && this.state.cardNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -929,6 +942,7 @@ class Auction extends React.Component {
                              ref={ref => {
                                this.cvv = ref;
                              }}
+                             onKeyPress={(e) => this.numberOnly(e)}
                              onKeyUp={this.cvvValidateHandler} />
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1077,6 +1091,7 @@ class Auction extends React.Component {
                            ref={ref => {
                            this.cardNumber = ref;
                          }}
+                         onKeyPress={(e) => this.numberOnly(e)}
                          onKeyUp={this.cardNumberValidateHandler}/>
                   { this.state.cardNumberFeedBack && this.state.cardNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1161,6 +1176,7 @@ class Auction extends React.Component {
                              ref={ref => {
                                this.cvv = ref;
                              }}
+                             onKeyPress={(e) => this.numberOnly(e)}
                              onKeyUp={this.cvvValidateHandler}/>
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1182,7 +1198,6 @@ class Auction extends React.Component {
             </div>
           </div>
         </div> : "" }
-
       <div className="col-sm-3" style={{paddingLeft:0}}>
         <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                  type="submit" >
@@ -1199,7 +1214,6 @@ class Auction extends React.Component {
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
       className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
-
     return (
       <div className="row">
         <div className="col-lg-12">

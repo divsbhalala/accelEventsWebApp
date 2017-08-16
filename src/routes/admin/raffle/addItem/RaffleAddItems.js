@@ -31,17 +31,22 @@ class RaffleAddItems extends React.Component {
 		});
 	};
 	showSuccessMessage = ()=>{
-		debugger;
-		this.setState({
-			isLoading: false,
-			isSuccess: true
-		}, ()=>{
-			setTimeout(()=>{
-				this.setState({
-					isSuccess: false
-				})
-			}, 4000)
-		});
+	  this.setState({
+      isLoading: true,
+    },()=>{
+	    setTimeout(()=>{
+        this.setState({
+          isLoading: false,
+          isSuccess: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              isSuccess: false
+            })
+          }, 4000)
+        });
+      },3000)
+    });
 	};
 
   getItemSheetPdf = () => {
@@ -82,7 +87,7 @@ class RaffleAddItems extends React.Component {
                         <h1>Add Raffle Items
                               {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">1</span>)</span>*/}
                           <div className="pull-right">
-                              <button onClick={this.savePop} className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              <button onClick={this.showSuccessMessage} className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                         </h1>
                       </div>
@@ -94,7 +99,7 @@ class RaffleAddItems extends React.Component {
                     <div className="main-box no-header">
                       <div className="main-box-body clearfix">
                          <p>Add items for your raffle! There is no limit on the number of items that you can add. Attendees can submit their ‘tickets’ online or by texting your event text message number (see dashboard), with the 3 letter item code followed by the number of tickets they would like to submit.</p>
-                        <RaffleAddItem  showSuccessMessage={this.showSuccessMessage}/>
+                        <RaffleAddItem  showSuccessMessage={this.showSuccessMessage}  isLoading={this.state.isLoading}  isSuccess={this.state.isSuccess}/>
                         <div className="table prizes-table">
                           <div className="form-group operations-row">
                               <div className="row">

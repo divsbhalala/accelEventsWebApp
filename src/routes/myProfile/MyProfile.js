@@ -51,7 +51,6 @@ class MyProfile extends React.Component {
 			activeTab: label,
     });
 	}};
-
   updateAllProfile = (fieldName,value) => {
     if(this.state && this.state.user && this.state.user[fieldName] && value){
       if(this.state.user[fieldName] !== value){
@@ -83,9 +82,7 @@ class MyProfile extends React.Component {
                 <Tabs
                   onSelect={(index, label) => {
                     this.setActiveTabState(label);
-                  }} selected={this.state.activeTab || 'Events'} className="tabs-wrapper"
-                >
-
+                  }} selected={this.state.activeTab || 'Events'} className="tabs-wrapper" >
                   <Tab label="Events">
                     <div className="row">
                       <div className="tab-content">
@@ -130,7 +127,7 @@ class MyProfile extends React.Component {
                           <ProfileField title="Firstname" fieldName="firstName" fieldValue={this.state.user && this.state.user.firstName ? this.state.user.firstName : 'Empty' } updatePProfile={this.updateAllProfile}/>
                           <ProfileField title="LastName" fieldName="lastName" fieldValue={this.state.user && this.state.user.lastName ? this.state.user.lastName : 'Empty' } updatePProfile={this.updateAllProfile}/>
                           <ProfileField title="Email" fieldName="email" fieldValue={this.state.user && this.state.user.email ? this.state.user.email : 'Empty' } updatePProfile={this.updateAllProfile}/>
-                          <ProfileField title="Phone" fieldName="phoneNumber" fieldValue={this.state.user && this.state.user.phoneNumber ? this.state.user.phoneNumber : 'Empty' } updatePProfile={this.updateAllProfile}/>
+                          <ProfileField title="Phone" fieldName="phoneNumber" fieldValue={this.state.user && this.state.user.phoneNumber ? this.state.user.phoneNumber : 'Empty' }fieldName1="countryCode" contry={this.state.user && this.state.user.countryCode ? this.state.user.countryCode : 'Empty' } updatePProfile={this.updateAllProfile}/>
                           <ProfileField title="Address Line 1" fieldName="address1" fieldValue={this.state.user && this.state.user.address1 ? this.state.user.address1 : 'Empty' } updatePProfile={this.updateAllProfile}/>
                           <ProfileField title="Address Line 2" fieldName="address2" fieldValue={this.state.user && this.state.user.address2 ? this.state.user.address2 : 'Empty' } updatePProfile={this.updateAllProfile}/>
                           <ProfileField title="State" fieldName="state" fieldValue={this.state.user && this.state.user.state ? this.state.user.state : 'Empty' } updatePProfile={this.updateAllProfile}/>

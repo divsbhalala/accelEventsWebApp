@@ -544,6 +544,12 @@ class Raffle extends React.Component {
       history.push('/404');
     });
   };
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   render() {
     let form_login = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post" onSubmit={this.submiteBuyTicket}>
 

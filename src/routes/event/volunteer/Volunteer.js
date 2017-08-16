@@ -1120,6 +1120,13 @@ class Volunteer extends React.Component {
       expYearFeedBack: false,
     });
   };
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
+
   render() {
     const makeItem = function (i) {
       const item = [];
@@ -1510,6 +1517,7 @@ class Volunteer extends React.Component {
                           ref={(ref) => {
                             this.cardNumber = ref;
                           }}
+                          onKeyPress={(e) => this.numberOnly(e)}
                           onKeyUp={this.cardNumberValidateHandler}
                         />
                         { this.state.cardNumberFeedBack && this.state.cardNumber &&
@@ -1614,6 +1622,7 @@ class Volunteer extends React.Component {
                               ref={(ref) => {
                                 this.cvv = ref;
                               }}
+                              onKeyPress={(e) => this.numberOnly(e)}
                               onKeyUp={this.cvvValidateHandler}
                             />
                             { this.state.cvvFeedBack && this.state.cvv &&
@@ -1931,6 +1940,7 @@ class Volunteer extends React.Component {
                           ref={(ref) => {
                             this.cardNumber = ref;
                           }}
+                          onKeyPress={(e) => this.numberOnly(e)}
                           onKeyUp={this.cardNumberValidateHandler}
                         />
                         { this.state.cardNumberFeedBack && this.state.cardNumber &&
@@ -2035,6 +2045,7 @@ class Volunteer extends React.Component {
                               ref={(ref) => {
                                 this.cvv = ref;
                               }}
+                              onKeyPress={(e) => this.numberOnly(e)}
                               onKeyUp={this.cvvValidateHandler}
                             />
                             { this.state.cvvFeedBack && this.state.cvv &&
@@ -2368,6 +2379,7 @@ class Volunteer extends React.Component {
                           ref={(ref) => {
                             this.cardNumber = ref;
                           }}
+                          onKeyPress={(e) => this.numberOnly(e)}
                           onKeyUp={this.cardNumberValidateHandler}
                         />
                         { this.state.cardNumberFeedBack && this.state.cardNumber &&
@@ -2472,6 +2484,7 @@ class Volunteer extends React.Component {
                               ref={(ref) => {
                                 this.cvv = ref;
                               }}
+                              onKeyPress={(e) => this.numberOnly(e)}
                               onKeyUp={this.cvvValidateHandler}
                             />
                             { this.state.cvvFeedBack && this.state.cvv &&
@@ -2713,7 +2726,7 @@ class Volunteer extends React.Component {
                 <div className="text-xs">Item Name : <span className="item-name" /> {this.state.itemData.itemName} </div>
                 <div className="text-xs"># Of Tickets Submitted: <span
                   className="currency-symbol"
-                >{this.props.currencySymbol}</span> {this.state.itemData.buyItNow}<span
+                >{this.props.currencySymbol}</span> {this.state.itemData.totalTicketsSubmitted}<span
                   className="buy-it-now"
                 /></div>
               </div> }
@@ -3155,6 +3168,7 @@ class Volunteer extends React.Component {
                                  ref={ref => {
                                    this.cardNumber = ref;
                                  }}
+                                 onKeyPress={(e) => this.numberOnly(e)}
                                  onKeyUp={this.cardNumberValidateHandler}/>
                           { this.state.cardNumberFeedBack && this.state.cardNumber &&
                           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -3247,6 +3261,7 @@ class Volunteer extends React.Component {
                                      ref={ref => {
                                        this.cvv = ref;
                                      }}
+                                     onKeyPress={(e) => this.numberOnly(e)}
                                      onKeyUp={this.cvvValidateHandler}/>
                               { this.state.cvvFeedBack && this.state.cvv &&
                               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}

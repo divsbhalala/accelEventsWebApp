@@ -18,9 +18,9 @@ class Login extends React.Component {
     title: PropTypes.string.isRequired,
   };
   componentWillMount(){
-    if(this.props.loginType == "whiteLabel") {
+    if(this.props.loginType === "whiteLabel") {
       this.props.whiteLabelURL(this.props.params && this.props.params.params).then((resp) => {
-        if(resp.errorCode=="4040201"){
+        if(resp.errorCode==="4040201"){
           window.location.replace('/notFound');
         }
       });
@@ -58,7 +58,7 @@ class Login extends React.Component {
           setTimeout(()=>{
             // history.push(resp.data.redirectUrl) /u/superadmin/events
             console.log(this.props.loginType);
-            if(this.props.loginType == "whiteLabel") {
+            if(this.props.loginType === "whiteLabel") {
               window.location.replace('/u/wl/'+this.props.params.params+'/home');
             }else{
               window.location.replace(resp.data.redirectUrl);

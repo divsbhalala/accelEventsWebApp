@@ -6,6 +6,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
+import Button from 'react-bootstrap-button-loader';
 import {doGetTicketingSettings,
 	doPostTicketingSettings,
 	doGetTicketingCouponCodes,
@@ -55,6 +56,9 @@ class TicketSetting extends React.Component {
 			dialogMessage: "",
 			dialogTitle: "",
 			showDialog: false,
+			isLoading: false,
+			isSuccess: false,
+			successMessage: "",
 		};
 		this.setActiveScreen = this.setActiveScreen.bind(this);
 		this.setActiveTab = this.setActiveTab.bind(this);
@@ -73,6 +77,43 @@ class TicketSetting extends React.Component {
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.throwError = this.throwError.bind(this);
 		this.onError = this.onError.bind(this);
+		this.showLoading = this.showLoading.bind(this);
+		this.showSuccessMessage = this.showSuccessMessage.bind(this);
+		this.showErrorMessage = this.showErrorMessage.bind(this);
+	};
+
+	showLoading = ()=>{
+		this.setState({
+			isLoading: true
+		});
+	};
+	showSuccessMessage = (text)=>{
+		this.setState({
+			isLoading: false,
+			isSuccess: true,
+			successMessage: text
+		}, ()=>{
+			setTimeout((text)=>{
+				this.setState({
+					isSuccess: false,
+					successMessage: ''
+				})
+			}, 4000)
+		});
+	};
+	showErrorMessage = (text)=>{
+		this.setState({
+			isLoading: false,
+			isSuccess: true,
+			successMessage: text
+		}, ()=>{
+			setTimeout(()=>{
+				this.setState({
+					isSuccess: false,
+					successMessage: ""
+				})
+			}, 4000)
+		});
 	};
 	toggleDialog = () => {
 		this.setState({
@@ -90,7 +131,7 @@ class TicketSetting extends React.Component {
 	};
 	onError = (error) => {
 		let resendMailError = error && error.response && error.response.data;
-		this.throwError("Error", resendMailError && resendMailError.errorMessage);
+		this.showErrorMessage(resendMailError && resendMailError.errorMessage || "Error while processing your request");
 	};
 	toggleCouponCodePopup = (e) => {
 		if(!this.state.isShowCouponModel){
@@ -131,12 +172,13 @@ class TicketSetting extends React.Component {
 				"eventTicketTypeId": this.state.selectedTicketTypes.join(",") || 0,
 				"uses": this.state.couponUses || 0
 			};
+			this.showLoading();
 			this.props.doCreateCouponCode(data, this.state.isCouponEdit ? this.state.editingRow.code : null).then(resp=>{
 			  this.setState({errorMessage:"",isError:false}); // resp.data.message
 				this.resetCouponForm();
 				this.toggleCouponCodePopup();
 				this.getCouponCodes();
-				this.throwError("Success", this.state.isCouponEdit ? "Coupon updated successfully" : "Coupon created successfully");
+				this.showSuccessMessage( this.state.isCouponEdit ? "Coupon updated successfully" : "Coupon created successfully");
 			}).catch(error=>{
 				this.onError(error);
 			})
@@ -174,8 +216,9 @@ class TicketSetting extends React.Component {
 	};
 	saveSettings = (e)=>{
 		e.preventDefault();
+		this.showLoading();
 		this.props.doPostTicketingSettings('settings', this.state.settings).then(resp=>{
-			this.throwError("Success", "Setting save successfully");
+			this.showSuccessMessage("Setting save successfully");
 		}).catch(error=>{
 			this.onError(error);
 		})
@@ -357,12 +400,13 @@ class TicketSetting extends React.Component {
 		this.toggleCouponCodePopup();
 	};
 	doDeleteCouponCode = (code) => {
+		this.showLoading();
 		this.props.doDeleteCouponCode(code).then(resp =>{
-			alert('Record Deleted');
+			this.showSuccessMessage('Record Deleted');
 			this.getCouponCodes();
 			this.toggleDeleteConfirmationPopup();
 		}).catch(error=>{
-			alert("Error while deleting Record")
+			this.onError(error);
 		})
 
 	};
@@ -434,7 +478,7 @@ class TicketSetting extends React.Component {
 		function formatActionButtons(cell, row ){
 			return (<div className="dropdown discount-codes-dropdown">
 				<button className="btn btn-wire dropdown-toggle" onClick={toggleDropDown}
-								type="button" data-toggle="dropdown" aria-expanded="false">    Select Action    <span className="caret"></span>  </button>
+								type="button" data-toggle="dropdown" aria-expanded="false">    Select Action    <span className="caret"/>  </button>
 				<ul className="dropdown-menu">
 					<li><a className="edit-item" onClick={()=>{ticketInst.doOpenEditPopup(row)}}>Edit</a></li>
 					<li><a className="delete-item" onClick={()=>{ticketInst.confirmDeleteCode(row.code)}}>Delete</a></li>
@@ -451,7 +495,7 @@ class TicketSetting extends React.Component {
 		}
 		return (
 			<div id="content-wrapper" className="admin-content-wrapper  volunteer">
-				<style dangerouslySetInnerHTML={{__html: ".fa-ellipsis-v+.fa-ellipsis-v{margin-left:2px}.flex-col.dots-sign-column{max-width:12px}.flex-col.ticket-quantity-column{max-width:122px;text-align:center}.flex-col.ticket-price-column{max-width:130px;text-align:center}.flex-col.ticket-actions-column{max-width:100px}.data-wrap{margin-left:-5px;z-index:9;margin-right:-5px}.ticket-actions-column ul.list-inline{margin:0;display:inline-block;border-top:2px solid;border-left:2px solid;border-right:2px solid;border-top-left-radius:4px;border-top-right-radius:4px;border-color:#e7eaf0;background-color:#F8F8FA;padding:5px 5px 27px;z-index:10;position:absolute}.data{background-color:#f8f8f8;padding:10px 16px;border-top:2px solid;border-bottom:2px solid;border-color:#e7eaf0;z-index:1}.tiny{font-size:11px}span.blue{color:#04c}.table.tickets-table{border:2px solid #e7eaf0;padding:5px;border-radius:4px}.table.tickets-table .table-header{background-color:#eff2f5;margin:-5px -5px 5px;padding:5px}hr{margin-top:5px;border-width:2px}.fa-ellipsis-v{margin-top:12px;display:inline-block}.ticket-row .flex-row{padding-top:12px}.ticket-row .data-wrap{height:2px;overflow:hidden;transition:.3s all ease-in}.ticket-row ul.list-inline{cursor:pointer;border-width:0;background-color:transparent}.ticket-row.open .data-wrap{height:auto;overflow:hidden}.ticket-row.open ul.list-inline{border-width:2px;background-color:#f8f8f8}.info-fields-table{background-color:#f8f8f8;padding:5px;max-width:640px;margin:auto}.attendee-information-container{padding:0 40px}.attendee-information-container .form-group{padding-left:20px;position:relative}.form-control{border-width:1px}.all-orders{padding:0 30px}.all-orders .order-panel .order-panel-header{font-size:2em;color:#1abc9c;margin-bottom:5px}.all-orders .order-panel .order-panel-header .order-number{float:left}.all-orders .order-panel .order-panel-header .order-actions{float:right}.all-orders .order-panel .order-panel-header:after,.all-orders .order-panel .order-panel-header:before{content:\" \";display:table;clear:both}.order-ticket-details{margin-top:20px}.order-ticket-details thead{background:#777;color:#FFF}.order-ticket-details thead tr th{padding-top:15px;padding-bottom:15px}.ajax-msg-box{padding:10px;font-size:1.3em}.ajax-msg-box.text-success{background:#b7f2b8}.ajax-msg-box.text-danger{background:#f2b7b8}.form.create-event h5,.form.create-event label{font-weight:700;text-transform:uppercase}.order-panel-body .dropdown{min-width:200px;display:inline-block}.order-actions .dropdown .btn.dropdown-toggle,.order-panel-body .dropdown .btn.dropdown-toggle{background:#FFF;border:1px solid #BFBFBF;color:#000;border-radius:0}.discount-codes-table-container td:last-child{overflow:inherit}.embed-event-code{border:1px solid #eee;padding:20px 30px;position:relative;word-wrap:break-word}.embed-event-code+button{position:absolute;top:0;right:0;margin:0;font-size:10px;width:50px;word-wrap:break-word;white-space:normal;background-color:#ececec;color:#000;border:0;border-radius:0;transition:.3s all ease-in}.embed-event-code+button:hover{background-color:#555;color:#FFF}"}}/>
+				<style dangerouslySetInnerHTML={{__html: ".fa-ellipsis-v+.fa-ellipsis-v{margin-left:2px}.flex-col.dots-sign-column{max-width:12px}.flex-col.ticket-quantity-column{max-width:122px;text-align:center}.flex-col.ticket-price-column{max-width:130px;text-align:center}.flex-col.ticket-actions-column{max-width:100px}.data-wrap{margin-left:-5px;z-index:9;margin-right:-5px}.ticket-actions-column ul.list-inline{margin:0;display:inline-block;border-top:2px solid;border-left:2px solid;border-right:2px solid;border-top-left-radius:4px;border-top-right-radius:4px;border-color:#e7eaf0;background-color:#F8F8FA;padding:5px 5px 27px;z-index:10;position:absolute}.data{background-color:#f8f8f8;padding:10px 16px;border-top:2px solid;border-bottom:2px solid;border-color:#e7eaf0;z-index:1}.tiny{font-size:11px}span.blue{color:#04c}.table.tickets-table{border:2px solid #e7eaf0;padding:5px;border-radius:4px}.table.tickets-table .table-header{background-color:#eff2f5;margin:-5px -5px 5px;padding:5px}hr{margin-top:5px;border-width:2px}.fa-ellipsis-v{margin-top:12px;display:inline-block}.ticket-row .flex-row{padding-top:12px}.ticket-row .data-wrap{height:2px;overflow:hidden;transition:.3s all ease-in}.ticket-row ul.list-inline{cursor:pointer;border-width:0;background-color:transparent}.ticket-row.open .data-wrap{height:auto;overflow:hidden}.ticket-row.open ul.list-inline{border-width:2px;background-color:#f8f8f8}.info-fields-table{background-color:#f8f8f8;padding:5px;max-width:640px;margin:auto}.attendee-information-container{padding:0 40px}.attendee-information-container .form-group{padding-left:20px;position:relative}.form-control{border-width:1px}.all-orders{padding:0 30px}.all-orders .order-panel .order-panel-header{font-size:2em;color:#1abc9c;margin-bottom:5px}.all-orders .order-panel .order-panel-header .order-number{float:left}.all-orders .order-panel .order-panel-header .order-actions{float:right}.all-orders .order-panel .order-panel-header:after,.all-orders .order-panel .order-panel-header:before{content:\" \";display:table;clear:both}.order-ticket-details{margin-top:20px}.order-ticket-details thead{background:#777;color:#FFF}.order-ticket-details thead tr th{padding-top:15px;padding-bottom:15px}.ajax-msg-box{padding:10px;font-size:1.3em}.ajax-msg-box.text-success{background:#b7f2b8}.ajax-msg-box.text-danger{background:#f2b7b8}.form.create-event h5,.form.create-event label{font-weight:700;text-transform:uppercase}.order-panel-body .dropdown{min-width:200px;display:inline-block}.order-actions .dropdown .btn.dropdown-toggle,.order-panel-body .dropdown .btn.dropdown-toggle{background:#FFF;border:1px solid #BFBFBF;color:#000;border-radius:0}.discount-codes-table-container td{height:140px;}.discount-codes-table-container td:last-child{padding-bottom: 50px;}.embed-event-code{border:1px solid #eee;padding:20px 30px;position:relative;word-wrap:break-word}.embed-event-code+button{position:absolute;top:0;right:0;margin:0;font-size:10px;width:50px;word-wrap:break-word;white-space:normal;background-color:#ececec;color:#000;border:0;border-radius:0;transition:.3s all ease-in}.embed-event-code+button:hover{background-color:#555;color:#FFF}"}}/>
 				<div className="row">
 					<div className="col-sm-12">
 						<div className="row" style={{opacity: 1}}>
@@ -462,10 +506,7 @@ class TicketSetting extends React.Component {
 											<h1>
 												Event Registration Settings
 												<div className="pull-right">
-													<button className="btn btn-info btn-block saveSettings" type="submit"
-																	data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save
-														Settings
-													</button>
+													<Button loading={this.state.isLoading}  className="btn btn-info btn-block saveSettings" onClick={this.saveSettings}>Save Settings</Button>
 												</div>
 											</h1>
 										</div>
@@ -475,9 +516,23 @@ class TicketSetting extends React.Component {
 									<div className="col-xs-12">
 										<div className="main-box no-header">
 											<div className="ajax-wrap">
-												<div className="ajax-msg-box text-center" style={{display: 'none'}}>
-													<span className="fa fa-spinner fa-pulse fa-fw"/>
-													<span className="resp-message"/>
+												<div className="ajax-msg-box text-center">
+													{ this.state.isLoading ?
+														<div className="ajax-msg-box text-center">
+															<span className="fa fa-spinner fa-pulse fa-fw"/>
+															<span className="resp-message">Please wait...</span>
+														</div> : ""
+													}
+													{ this.state.isSuccess ?
+														<div className="ajax-msg-box text-center text-success">
+															<span className="resp-message">{this.state.successMessage}</span>
+														</div> : ""
+													}
+													{ this.state.isError ?
+														<div className="ajax-msg-box text-center text-danger">
+															<span className="resp-message">{this.state.successMessage}</span>
+														</div> : ""
+													}
 												</div>
 											</div>
 											<div className="tabs-wrapper profile-tabs">
@@ -641,11 +696,7 @@ class TicketSetting extends React.Component {
 																	</div>
 																</div>
 																<div className="form-group operations-row text-center">
-																	<button className="btn btn-info mrg-t-lg saveSettings" onClick={this.saveSettings}
-																					data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">
-																		Save
-																		Settings
-																	</button>
+																	<Button loading={this.state.isLoading}  className="btn btn-info  mrg-t-lg saveSettings" onClick={this.saveSettings}>Save Settings</Button>
 																</div>
 															</div>
 														</div>
@@ -690,7 +741,7 @@ class TicketSetting extends React.Component {
 					showModal={this.state.isShowCouponModel}
 					headerText={
 						<p>
-							<a href="javascript:void(0)" onClick={()=>{this.setActiveScreen( this.state.isCouponEdit ? this.state.couponEventTicketTypeId ? 2 : 3 : 1)}} className={cx("screen-changer back-btn", this.state.activeScreen === 1 && "hide")} style={{display: 'block'}} data-screen="init">
+							<a onClick={()=>{this.setActiveScreen( this.state.isCouponEdit ? this.state.couponEventTicketTypeId ? 2 : 3 : 1)}} className={cx("screen-changer back-btn", this.state.activeScreen === 1 && "hide")} style={{display: 'block'}} data-screen="init">
 								<i className="fa fa-angle-left" />
 							</a>
 							Discount & Access Code

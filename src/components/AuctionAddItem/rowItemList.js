@@ -36,14 +36,12 @@ componentWillReceiveProps() {
       item: this.props.item,
       itemSetting:this.props.itemSetting,
     });
-  console.log('-->',this.props.itemSetting)
   };
 componentWillMount(){
   this.setState({
     item:this.props.item,
     itemSetting:this.props.itemSetting,
   });
-  console.log('---<<<<',this.props.itemSetting)
 };
 showPopup = () => {
   this.setState({
@@ -156,8 +154,11 @@ deleteItemList =() => {
       this.props.deleteItemList('auction', this.state.item.id).then(resp => {
         this.setState({loading: false})
       })
-    }else {
-      this.setState({loading: false})
+    }else{
+      this.setState({
+        loading: false,
+        showPopup: false,
+      });
     }
 };
   deleteAction = () => {

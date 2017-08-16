@@ -14,6 +14,7 @@ import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 import Timer from './../Timer';
 import TimeOut from './../TimeOut';
+import Button from 'react-bootstrap-button-loader';
 
 import {
 	doGetEventData,
@@ -40,6 +41,7 @@ class TicketCheckout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+      loading: false,
 			attendee: [],
 			questions: [],
 			buyerInformationFields: [],
@@ -187,7 +189,7 @@ class TicketCheckout extends React.Component {
 	};
 	cardHolderNameBlurValidateHandler = () => {
 		if (this.cardHolderName && this.cardHolderName.value) {
-			this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
+			// this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
 			let nameLen = this.cardHolderName.value.length;
 			if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
 				this.setState({
@@ -220,12 +222,12 @@ class TicketCheckout extends React.Component {
 			});
     } else if(this.cardHolderName.value.charAt(0) === ' ' || this.cardHolderName.value.charAt(this.cardHolderName.value.length-1) === ' '){
       this.setState({
-        cardHolder: false,
-        errorMsgcardHolder: "The card holder name can not start or end with white space",
+        cardHolderName: false,
+        cardHolderNameFeedBackMsg: "The card holder name can not start or end with white space",
       });
     } else {
 			this.setState({
-				cardHolderName: true,
+        cardHolderName: true,
 				cardHolderNameFeedBackMsg: null,
 				// isValidCardData: this.cardHolderName.value&& this.cardNumber.value&& this.cardCVV.value&& this.cardExpMonth.value&& this.cardExpYear.value
 			});
@@ -367,7 +369,8 @@ class TicketCheckout extends React.Component {
 		e.preventDefault();
 		validData = false;
 		this.setState({
-			isFormSubmited: true
+			isFormSubmited: true,
+      loading: true,
 		});
 		let eventUrl = this.props.eventUrl;
 		let orderData = this.props.orderData;
@@ -409,7 +412,7 @@ class TicketCheckout extends React.Component {
 				}
 			});
 			this.setState({
-				errorBuyer: buyerInformationFields
+				errorBuyer: buyerInformationFields,
 			});
 		}
 		if (ticketAttribute && ticketAttribute.attendees) {
@@ -468,7 +471,7 @@ class TicketCheckout extends React.Component {
 
 			});
 			this.setState({
-				errorAttendee: attendee
+				errorAttendee: attendee,
 			});
 		}
 
@@ -494,7 +497,8 @@ class TicketCheckout extends React.Component {
 							else {
 								this.setState({
 									showFormError: true,
-									formError: resp.errorMessage
+									formError: resp.errorMessage,
+                  loading: false,
 								});
 							}
 						}).catch(error => {
@@ -523,6 +527,7 @@ class TicketCheckout extends React.Component {
 					showFormError: true,
 					formError: "Invalid Data"
 				});*/
+				this.setState({loading: false,});
 			}
 
 		}, 100);
@@ -1042,17 +1047,20 @@ class TicketCheckout extends React.Component {
 	showMapPopup = (e) => {
 		e.preventDefault();
 		this.setState({
-			showMapPopup: true
+			showMapPopup: true,
+      loading: false,
 		})
 	};
 	hideMapPopup = () => {
 		this.setState({
-			showMapPopup: false
+			showMapPopup: false,
+      loading: false,
 		})
 	};
 	hideSuccessAlertPopup = () => {
 		this.setState({
-			ticketPurchaseSuccessPopup: false
+			ticketPurchaseSuccessPopup: false,
+      loading: false,
 		});
 		if(this.props.isVoluneer){
 			history.push('/events/' + eventUrl + '/volunteer');
@@ -1078,9 +1086,16 @@ class TicketCheckout extends React.Component {
 	};
 	hideFormErrorPopup = () => {
 		this.setState({
-			showFormError: false
+			showFormError: false,
+      loading: false,
 		});
 	};
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
 	render() {
 		return (
@@ -1611,6 +1626,7 @@ class TicketCheckout extends React.Component {
 																								 ref={ref => {
 																									 this.cardNumber = ref;
 																								 }}
+                                                 onKeyPress={(e) => this.numberOnly(e)}
 																								 onKeyUp={this.cardNumberValidateHandler}
 																								 onChange={this.cardNumberValidateHandler}
 																								 required="required" data-fv-field="cardnumber"/>
@@ -1660,7 +1676,7 @@ class TicketCheckout extends React.Component {
 																						<option value={6}>Jun (06)</option>
 																						<option value={7}>Jul (07)</option>
 																						<option value={8}>Aug (08)</option>
-																						<option value={9}>Sep (09)</option>
+																						<option value={9}>Sep (09)</option>F
 																						<option value={10}>Oct (10)</option>
 																						<option value={11}>Nov (11)</option>
 																						<option value={12}>Dec (12)</option>
@@ -1752,7 +1768,8 @@ class TicketCheckout extends React.Component {
 																								 ref={ref => {
 																									 this.cardCVV = ref;
 																								 }}
-																								 onChange={this.cardCVVValidateHandler}
+                                                 onKeyPress={(e) => this.numberOnly(e)}
+                                                 onChange={this.cardCVVValidateHandler}
 																								 id="cvv" placeholder="CVC/CVV"/>
 																				</div>
 																				<i className="form-control-feedback fv-bootstrap-icon-input-group"
@@ -1894,12 +1911,11 @@ class TicketCheckout extends React.Component {
 																				<div className="input-group-addon">
 																					<i className="fa fa-map-marker" aria-hidden="true"/>
 																				</div>
-																				<input type="number" className="form-control" size={6}
+																				<input  className="form-control" size={6}
 																							 data-stripe="address_zip" name="address_zip"
 																							 data-fv-field="address_zip" ref={ref => {
 																					this.address_zip = ref;
-																				}}
-																							 onKeyDown={this.addressZipValidateHandler}/>
+																				}}  onKeyDown={this.addressZipValidateHandler}/>
 																			</div>
 																			<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																				 data-fv-icon-for="address_zip"/>
@@ -2292,11 +2308,11 @@ class TicketCheckout extends React.Component {
 														: ''
 													}
 													<div className="mrg-t-lg text-center">{this.state.validData}
-														{ this.state.validData ? <button className="btn pay-now btn-success">
+														{ this.state.validData ? <Button type='submit' className="btn pay-now btn-success" loading={this.state.loading}>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
-														</button>  : <button className="btn pay-now btn-success" disabled>
+														</Button>  : <Button className="btn pay-now btn-success" disabled>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
-														</button> }
+														</Button> }
 													</div>
 												</div>
 											</div>
