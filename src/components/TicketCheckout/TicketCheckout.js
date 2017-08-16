@@ -188,17 +188,17 @@ class TicketCheckout extends React.Component {
 		}
 	};
 	cardHolderNameBlurValidateHandler = () => {
-		if (this.cardHolderName && this.cardHolderName.value) {
-			this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
-			let nameLen = this.cardHolderName.value.length;
-			if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
-				this.setState({
-					cardHolderName: false,
-					cardHolderNameFeedBackMsg: "The card holder name can't end with a space"
-				});
-			}
-		}
-		this.isValidFormData();
+		// if (this.cardHolderName && this.cardHolderName.value) {
+		// 	this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
+		// 	let nameLen = this.cardHolderName.value.length;
+		// 	if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
+		// 		this.setState({
+		// 			cardHolderName: false,
+		// 			cardHolderNameFeedBackMsg: "The card holder name can't end with a space"
+		// 		});
+		// 	}
+		// }
+		// this.isValidFormData();
 	};
 	cardHolderNameValidateHandler = (e) => {
 	//	this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
@@ -1090,6 +1090,12 @@ class TicketCheckout extends React.Component {
       loading: false,
 		});
 	};
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
 	render() {
 		return (
@@ -1620,6 +1626,7 @@ class TicketCheckout extends React.Component {
 																								 ref={ref => {
 																									 this.cardNumber = ref;
 																								 }}
+                                                 onKeyPress={(e) => this.numberOnly(e)}
 																								 onKeyUp={this.cardNumberValidateHandler}
 																								 onChange={this.cardNumberValidateHandler}
 																								 required="required" data-fv-field="cardnumber"/>
@@ -1761,7 +1768,8 @@ class TicketCheckout extends React.Component {
 																								 ref={ref => {
 																									 this.cardCVV = ref;
 																								 }}
-																								 onChange={this.cardCVVValidateHandler}
+                                                 onKeyPress={(e) => this.numberOnly(e)}
+                                                 onChange={this.cardCVVValidateHandler}
 																								 id="cvv" placeholder="CVC/CVV"/>
 																				</div>
 																				<i className="form-control-feedback fv-bootstrap-icon-input-group"
@@ -1907,8 +1915,7 @@ class TicketCheckout extends React.Component {
 																							 data-stripe="address_zip" name="address_zip"
 																							 data-fv-field="address_zip" ref={ref => {
 																					this.address_zip = ref;
-																				}}
-																							 onKeyDown={this.addressZipValidateHandler}/>
+																				}}  onKeyDown={this.addressZipValidateHandler}/>
 																			</div>
 																			<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																				 data-fv-icon-for="address_zip"/>

@@ -638,6 +638,12 @@ class Auction extends React.Component {
     }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
   render() {
     let form_login = <div>
@@ -844,6 +850,7 @@ class Auction extends React.Component {
                          ref={ref => {
                            this.cardNumber = ref;
                          }}
+                         onKeyPress={(e) => this.numberOnly(e)}
                          onKeyUp={this.cardNumberValidateHandler}/>
                   { this.state.cardNumberFeedBack && this.state.cardNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -929,6 +936,7 @@ class Auction extends React.Component {
                              ref={ref => {
                                this.cvv = ref;
                              }}
+                             onKeyPress={(e) => this.numberOnly(e)}
                              onKeyUp={this.cvvValidateHandler} />
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1077,6 +1085,7 @@ class Auction extends React.Component {
                            ref={ref => {
                            this.cardNumber = ref;
                          }}
+                         onKeyPress={(e) => this.numberOnly(e)}
                          onKeyUp={this.cardNumberValidateHandler}/>
                   { this.state.cardNumberFeedBack && this.state.cardNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1161,6 +1170,7 @@ class Auction extends React.Component {
                              ref={ref => {
                                this.cvv = ref;
                              }}
+                             onKeyPress={(e) => this.numberOnly(e)}
                              onKeyUp={this.cvvValidateHandler}/>
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}

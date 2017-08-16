@@ -185,7 +185,7 @@ class RaffleAddItem extends React.Component {
 					<div className="" ref={el => this._container = el}>
 						<DraggableList
 							itemKey="id"
-							template={<PlanetItem showSuccessMessage={this.props.showSuccessMessage} />}
+							template={PlanetItem}
 							list={this.state.list}
 							onMoveEnd={(newList, movedItem, oldIndex, newIndex) => this.onListChange(newList, movedItem, oldIndex, newIndex)}
 							container={() => useContainer ? this._container : document.body}

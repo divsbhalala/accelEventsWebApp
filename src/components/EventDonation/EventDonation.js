@@ -490,6 +490,12 @@ class EventDonation extends React.Component {
       errorMsgCard: false,
     });
   };
+  numberOnly(e) {
+    const re = /[/.0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   render() {
     return (
       <div id="donationfrom" className={cx('col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10')}>
@@ -745,6 +751,7 @@ class EventDonation extends React.Component {
                                 this.cardNumber = ref;
                               }}
                               onKeyUp={this.cardNumberValidateHandler}
+                              onKeyPress={(e) => this.numberOnly(e)}
                             />
                             { this.state.cardNumberFeedBack && this.state.cardNumber &&
                             <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
@@ -839,6 +846,7 @@ class EventDonation extends React.Component {
                                   ref={(ref) => {
                                     this.cvv = ref;
                                   }}
+                                  onKeyPress={(e) => this.numberOnly(e)}
                                   onKeyUp={this.cvvValidateHandler}
                                 />
                                 { this.state.cvvFeedBack && this.state.cvv &&
@@ -848,7 +856,6 @@ class EventDonation extends React.Component {
                               </div>
                               { this.state.cvvFeedBack && !this.state.cvv &&
                               <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv }</small>}
-
                             </div>
                           </div>
                         </div>
@@ -861,7 +868,6 @@ class EventDonation extends React.Component {
                         >Stay up to date with Accelevents</label>
                       </div>
                     </div></div> : '' }
-
                 <button type="submit" className="btn btn-green">Pay Now</button>
               </form>
             </div>
