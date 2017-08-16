@@ -6,6 +6,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import ToggleSwitch from '../../../../components/Widget/ToggleSwitch';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {Tabs, Tab} from 'react-bootstrap-tabs';
+import Button from 'react-bootstrap-button-loader';
 import {doGetTicketingSettings,
 	doPostTicketingSettings,
 	doGetTicketingCouponCodes,
@@ -55,6 +56,9 @@ class TicketSetting extends React.Component {
 			dialogMessage: "",
 			dialogTitle: "",
 			showDialog: false,
+			isLoading: false,
+			isSuccess: false,
+			successMessage: "",
 		};
 		this.setActiveScreen = this.setActiveScreen.bind(this);
 		this.setActiveTab = this.setActiveTab.bind(this);
@@ -73,6 +77,43 @@ class TicketSetting extends React.Component {
 		this.toggleDialog = this.toggleDialog.bind(this);
 		this.throwError = this.throwError.bind(this);
 		this.onError = this.onError.bind(this);
+		this.showLoading = this.showLoading.bind(this);
+		this.showSuccessMessage = this.showSuccessMessage.bind(this);
+		this.showErrorMessage = this.showErrorMessage.bind(this);
+	};
+
+	showLoading = ()=>{
+		this.setState({
+			isLoading: true
+		});
+	};
+	showSuccessMessage = (text)=>{
+		this.setState({
+			isLoading: false,
+			isSuccess: true,
+			successMessage: text
+		}, ()=>{
+			setTimeout((text)=>{
+				this.setState({
+					isSuccess: false,
+					successMessage: ''
+				})
+			}, 4000)
+		});
+	};
+	showErrorMessage = (text)=>{
+		this.setState({
+			isLoading: false,
+			isSuccess: true,
+			successMessage: text
+		}, ()=>{
+			setTimeout(()=>{
+				this.setState({
+					isSuccess: false,
+					successMessage: ""
+				})
+			}, 4000)
+		});
 	};
 	toggleDialog = () => {
 		this.setState({
@@ -90,7 +131,7 @@ class TicketSetting extends React.Component {
 	};
 	onError = (error) => {
 		let resendMailError = error && error.response && error.response.data;
-		this.throwError("Error", resendMailError && resendMailError.errorMessage);
+		this.showErrorMessage(resendMailError && resendMailError.errorMessage || "Error while processing your request");
 	};
 	toggleCouponCodePopup = (e) => {
 		if(!this.state.isShowCouponModel){
@@ -131,12 +172,13 @@ class TicketSetting extends React.Component {
 				"eventTicketTypeId": this.state.selectedTicketTypes.join(",") || 0,
 				"uses": this.state.couponUses || 0
 			};
+			this.showLoading();
 			this.props.doCreateCouponCode(data, this.state.isCouponEdit ? this.state.editingRow.code : null).then(resp=>{
 			  this.setState({errorMessage:"",isError:false}); // resp.data.message
 				this.resetCouponForm();
 				this.toggleCouponCodePopup();
 				this.getCouponCodes();
-				this.throwError("Success", this.state.isCouponEdit ? "Coupon updated successfully" : "Coupon created successfully");
+				this.showSuccessMessage( this.state.isCouponEdit ? "Coupon updated successfully" : "Coupon created successfully");
 			}).catch(error=>{
 				this.onError(error);
 			})
@@ -174,8 +216,9 @@ class TicketSetting extends React.Component {
 	};
 	saveSettings = (e)=>{
 		e.preventDefault();
+		this.showLoading();
 		this.props.doPostTicketingSettings('settings', this.state.settings).then(resp=>{
-			this.throwError("Success", "Setting save successfully");
+			this.showSuccessMessage("Setting save successfully");
 		}).catch(error=>{
 			this.onError(error);
 		})
@@ -357,12 +400,13 @@ class TicketSetting extends React.Component {
 		this.toggleCouponCodePopup();
 	};
 	doDeleteCouponCode = (code) => {
+		this.showLoading();
 		this.props.doDeleteCouponCode(code).then(resp =>{
-			alert('Record Deleted');
+			this.showSuccessMessage('Record Deleted');
 			this.getCouponCodes();
 			this.toggleDeleteConfirmationPopup();
 		}).catch(error=>{
-			alert("Error while deleting Record")
+			this.onError(error);
 		})
 
 	};
@@ -434,7 +478,7 @@ class TicketSetting extends React.Component {
 		function formatActionButtons(cell, row ){
 			return (<div className="dropdown discount-codes-dropdown">
 				<button className="btn btn-wire dropdown-toggle" onClick={toggleDropDown}
-								type="button" data-toggle="dropdown" aria-expanded="false">    Select Action    <span className="caret"></span>  </button>
+								type="button" data-toggle="dropdown" aria-expanded="false">    Select Action    <span className="caret"/>  </button>
 				<ul className="dropdown-menu">
 					<li><a className="edit-item" onClick={()=>{ticketInst.doOpenEditPopup(row)}}>Edit</a></li>
 					<li><a className="delete-item" onClick={()=>{ticketInst.confirmDeleteCode(row.code)}}>Delete</a></li>
@@ -462,10 +506,7 @@ class TicketSetting extends React.Component {
 											<h1>
 												Event Registration Settings
 												<div className="pull-right">
-													<button className="btn btn-info btn-block saveSettings" type="submit"
-																	data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save
-														Settings
-													</button>
+													<Button loading={this.state.isLoading}  className="btn btn-info btn-block saveSettings" onClick={this.saveSettings}>Save Settings</Button>
 												</div>
 											</h1>
 										</div>
@@ -475,9 +516,23 @@ class TicketSetting extends React.Component {
 									<div className="col-xs-12">
 										<div className="main-box no-header">
 											<div className="ajax-wrap">
-												<div className="ajax-msg-box text-center" style={{display: 'none'}}>
-													<span className="fa fa-spinner fa-pulse fa-fw"/>
-													<span className="resp-message"/>
+												<div className="ajax-msg-box text-center">
+													{ this.state.isLoading ?
+														<div className="ajax-msg-box text-center">
+															<span className="fa fa-spinner fa-pulse fa-fw"/>
+															<span className="resp-message">Please wait...</span>
+														</div> : ""
+													}
+													{ this.state.isSuccess ?
+														<div className="ajax-msg-box text-center text-success">
+															<span className="resp-message">{this.state.successMessage}</span>
+														</div> : ""
+													}
+													{ this.state.isError ?
+														<div className="ajax-msg-box text-center text-danger">
+															<span className="resp-message">{this.state.successMessage}</span>
+														</div> : ""
+													}
 												</div>
 											</div>
 											<div className="tabs-wrapper profile-tabs">
@@ -641,11 +696,7 @@ class TicketSetting extends React.Component {
 																	</div>
 																</div>
 																<div className="form-group operations-row text-center">
-																	<button className="btn btn-info mrg-t-lg saveSettings" onClick={this.saveSettings}
-																					data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">
-																		Save
-																		Settings
-																	</button>
+																	<Button loading={this.state.isLoading}  className="btn btn-info  mrg-t-lg saveSettings" onClick={this.saveSettings}>Save Settings</Button>
 																</div>
 															</div>
 														</div>
@@ -690,7 +741,7 @@ class TicketSetting extends React.Component {
 					showModal={this.state.isShowCouponModel}
 					headerText={
 						<p>
-							<a href="javascript:void(0)" onClick={()=>{this.setActiveScreen( this.state.isCouponEdit ? this.state.couponEventTicketTypeId ? 2 : 3 : 1)}} className={cx("screen-changer back-btn", this.state.activeScreen === 1 && "hide")} style={{display: 'block'}} data-screen="init">
+							<a onClick={()=>{this.setActiveScreen( this.state.isCouponEdit ? this.state.couponEventTicketTypeId ? 2 : 3 : 1)}} className={cx("screen-changer back-btn", this.state.activeScreen === 1 && "hide")} style={{display: 'block'}} data-screen="init">
 								<i className="fa fa-angle-left" />
 							</a>
 							Discount & Access Code
