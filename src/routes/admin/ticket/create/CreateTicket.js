@@ -1,14 +1,8 @@
-/**
- * @Author: Dharmesh Rajodiya <dev1>
- * @Date:   2017-07-25 06:46:02
- * @Last modified by:   dev1
- * @Last modified time: 2017-07-25 09:10:43
- */
-
 import React from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import moment from "moment";
+import Button from 'react-bootstrap-button-loader';
 import {connect} from "react-redux";
 import DatetimeRangePicker from "react-bootstrap-datetimerangepicker";
 import PopupModel from "../../../../components/PopupModal";
@@ -170,7 +164,6 @@ class CreateTicket extends React.Component {
 		});
 	};
 	showSuccessMessage = ()=>{
-		debugger;
 		this.setState({
 			isLoading: false,
 			isSuccess: true
