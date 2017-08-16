@@ -513,13 +513,12 @@ class Volunteer extends React.Component {
   cardHolderValidateHandler = (e) => {
     this.setState({
       cardHolderFeedBack: true,
+      cardHolderValue: this.cardHolder.value.trim(),
     });
-
-		if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
-
+    if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
 			this.setState({
 				cardHolder: false,
-				errorMsgcardHolder: "The card holder name is required and can't be empty",
+				errorMsgcardHolder: "",
 			});
 		} else if (!( this.cardHolder.value && this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
 			this.setState({
@@ -531,13 +530,13 @@ class Volunteer extends React.Component {
 				cardHolder: true
 			});
 		}
-
-
+    this.setState({ isValidData: !!(this.cardHolder.value.trim()) });
 	};
 	cardNumberValidateHandler = (e) => {
     this.cardNumber.value=this.cardNumber.value.substr(0,16);
 		this.setState({
-			cardNumberFeedBack: true
+			cardNumberFeedBack: true,
+      cardNumberValue : this.cardNumber.value.trim()
 		});
 		if (this.cardNumber.value && this.cardNumber.value.trim() === '') {
 			this.setState({
@@ -1259,7 +1258,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{"Bidder email can't be empty."}</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -1288,6 +1287,8 @@ class Volunteer extends React.Component {
                     { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                   </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <small
                     className="help-block"
@@ -1487,6 +1488,9 @@ class Volunteer extends React.Component {
 												{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
 												<i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
 											</div>
+                      { this.state.cardHolderFeedBack && !this.state.cardHolderValue &&
+											<small className="help-block"
+											       data-fv-result="NOT_VALIDATED"> {"The card holder name is required and can't be empty."}</small>}
 											{ this.state.cardHolderFeedBack && !this.state.cardHolder &&
 											<small className="help-block"
 											       data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
@@ -1513,6 +1517,11 @@ class Volunteer extends React.Component {
                         { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                       </div>
+                      { this.state.cardNumberFeedBack && !this.state.cardNumberValue &&
+                      <small
+                        className="help-block"
+                        data-fv-result="NOT_VALIDATED"
+                      >Enter Card Number</small> }
                       { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                       <small
                         className="help-block"
@@ -1662,7 +1671,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{ "Bidder email can't be empty."}</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -1691,6 +1700,8 @@ class Volunteer extends React.Component {
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                 <small
                   className="help-block"
@@ -1896,6 +1907,9 @@ class Volunteer extends React.Component {
                         { this.state.cardHolderFeedBack && !this.state.cardHolder &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                       </div>
+                      { this.state.cardHolderFeedBack && !this.state.cardHolderValue &&
+											<small className="help-block"
+											       data-fv-result="NOT_VALIDATED"> {"The card holder name is required and can't be empty."}</small>}
                       { this.state.cardHolderFeedBack && !this.state.cardHolder &&
                       <small
                         className="help-block"
@@ -1924,6 +1938,11 @@ class Volunteer extends React.Component {
                         { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                       </div>
+                      { this.state.cardNumberFeedBack && !this.state.cardNumberValue &&
+                      <small
+                        className="help-block"
+                        data-fv-result="NOT_VALIDATED"
+                      >Enter Card Number</small> }
                       { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                       <small
                         className="help-block"
@@ -2074,7 +2093,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{ "Bidder email can't be empty."}</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2102,6 +2121,8 @@ class Volunteer extends React.Component {
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                 <small
                   className="help-block"
@@ -2181,6 +2202,8 @@ class Volunteer extends React.Component {
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                 <small
                   className="help-block"
                   data-fv-result="NOT_VALIDATED"
@@ -2258,35 +2281,40 @@ class Volunteer extends React.Component {
                 Credit Card &nbsp; &nbsp; &nbsp; &nbsp;
                 <input type="radio" name="paymenttype" autoComplete="off" defaultValue="cash" /> Cash
               </div>
-              <div className="form-group has-feedback">
+
+              <div
+                className={cx('form-group', this.state.raffleTicketFeedBack && 'has-feedback', this.state.raffleTicketFeedBack && this.state.raffleTicket && 'has-success', this.state.raffleTicketFeedBack && (!this.state.raffleTicket) && 'has-error')}
+              >
                 <label className="control-label">Number of tickets</label>
                 <select
-                  className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs" ref={(ref) => {
-                    this.raffleTicket = ref;
-                  }} onChange={this.raffleTicketValidateHandler}
-
-                >
-                  <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
-                  <option value={847} data-ticket={1} data-price={5}>
-										1 Ticket For {this.props.currencySymbol} 5
-									</option>
-                  <option value={848} data-ticket={2} data-price={10}>
-										2 Ticket For {this.props.currencySymbol} 10
-									</option>
-                  <option value={849} data-ticket={6} data-price={20}>
-										6 Ticket For {this.props.currencySymbol} 20
-									</option>
-                  <option value={850} data-ticket={15} data-price={40}>
-										15 Ticket For {this.props.currencySymbol} 40
-									</option>
-                  <option value={851} data-ticket={20} data-price={50}>
-										20 Ticket For {this.props.currencySymbol} 50
-									</option>
-                  <option value={852} data-ticket={50} data-price={100}>
-										50 Ticket For {this.props.currencySymbol} 100
-									</option>
-                </select>
-
+                    className="form-control" name="pkg" id="ticketpkgs" data-fv-field="ticketpkgs" ref={(ref) => {
+                      this.raffleTicket = ref;
+                    }} onChange={this.raffleTicketValidateHandler}
+                  >
+                    <option value data-ticket={0} data-price={0}> -- Select Tickets --</option>
+                    <option value={847} data-ticket={1} data-price={5}>
+  										1 Ticket For {this.props.currencySymbol} 5
+  									</option>
+                    <option value={848} data-ticket={2} data-price={10}>
+  										2 Ticket For {this.props.currencySymbol} 10
+  									</option>
+                    <option value={849} data-ticket={6} data-price={20}>
+  										6 Ticket For {this.props.currencySymbol} 20
+  									</option>
+                    <option value={850} data-ticket={15} data-price={40}>
+  										15 Ticket For {this.props.currencySymbol} 40
+  									</option>
+                    <option value={851} data-ticket={20} data-price={50}>
+  										20 Ticket For {this.props.currencySymbol} 50
+  									</option>
+                    <option value={852} data-ticket={50} data-price={100}>
+  										50 Ticket For {this.props.currencySymbol} 100
+  									</option>
+                  </select>
+                  { this.state.raffleTicketFeedBack && this.state.raffleTicket &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok" />}
+                  { this.state.raffleTicketFeedBack && !this.state.raffleTicket &&
+                  <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.raffleTicketFeedBack && !this.state.raffleTicket &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED"> Raffle Ticket required.</small>}
               </div>
@@ -2316,6 +2344,9 @@ class Volunteer extends React.Component {
                         { this.state.cardHolderFeedBack && !this.state.cardHolder &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                       </div>
+                      { this.state.cardHolderFeedBack && !this.state.cardHolderValue &&
+											<small className="help-block"
+											       data-fv-result="NOT_VALIDATED"> {"The card holder name is required and can't be empty."}</small>}
                       { this.state.cardHolderFeedBack && !this.state.cardHolder &&
                       <small
                         className="help-block"
@@ -2344,6 +2375,11 @@ class Volunteer extends React.Component {
                         { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                       </div>
+                      { this.state.cardNumberFeedBack && !this.state.cardNumberValue &&
+                      <small
+                        className="help-block"
+                        data-fv-result="NOT_VALIDATED"
+                      >Enter Card Number</small> }
                       { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                       <small
                         className="help-block"
@@ -2496,7 +2532,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{"Bidder email can't be empty."}</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2524,6 +2560,8 @@ class Volunteer extends React.Component {
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                 <small
                   className="help-block"
@@ -2877,7 +2915,7 @@ class Volunteer extends React.Component {
                 { this.state.emailFeedBack && !this.state.email &&
                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 { this.state.emailFeedBack && !this.state.emailValue &&
-                <small className="help-block" data-fv-result="NOT_VALIDATED">Bidder email can't be empty.</small>}
+                <small className="help-block" data-fv-result="NOT_VALIDATED">{"Bidder email can't be empty."}</small>}
                 { this.state.emailFeedBack && !this.state.email &&
                 <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgEmail}</small>}
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
@@ -2906,6 +2944,8 @@ class Volunteer extends React.Component {
                     { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                   </div>
+                  { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                    <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <small
                     className="help-block"
@@ -2979,6 +3019,8 @@ class Volunteer extends React.Component {
                   { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove" />}
                 </div>
+                { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
+                  <small className="help-block" data-fv-result="NOT_VALIDATED">{"Cell number can't be empty"}</small> }
                 { this.state.phoneNumberFeedBack && !this.state.phoneNumber &&
                 <small
                   className="help-block"
@@ -3093,6 +3135,9 @@ class Volunteer extends React.Component {
                           { this.state.cardHolderFeedBack && !this.state.cardHolder &&
                           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                         </div>
+                        { this.state.cardHolderFeedBack && !this.state.cardHolderValue &&
+  											<small className="help-block"
+  											       data-fv-result="NOT_VALIDATED"> {"The card holder name is required and can't be empty."}</small>}
                         { this.state.cardHolderFeedBack && !this.state.cardHolder &&
                         <small className="help-block"
                                data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardHolder}</small>}
@@ -3116,6 +3161,11 @@ class Volunteer extends React.Component {
                           { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                           <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
                         </div>
+                        { this.state.cardNumberFeedBack && !this.state.cardNumberValue &&
+                        <small
+                          className="help-block"
+                          data-fv-result="NOT_VALIDATED"
+                        >Enter Card Number</small> }
                         { this.state.cardNumberFeedBack && !this.state.cardNumber &&
                         <small className="help-block"
                                data-fv-result="NOT_VALIDATED">{this.state.errorMsgcardNumber}.</small>}
