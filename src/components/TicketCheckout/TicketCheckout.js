@@ -14,6 +14,7 @@ import PopupModel from './../PopupModal';
 import BuyRaffleTicketsModal from './../../components/BuyRaffleTicketsModal'
 import Timer from './../Timer';
 import TimeOut from './../TimeOut';
+import Button from 'react-bootstrap-button-loader';
 
 import {
 	doGetEventData,
@@ -40,6 +41,7 @@ class TicketCheckout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+      loading: false,
 			attendee: [],
 			questions: [],
 			buyerInformationFields: [],
@@ -367,7 +369,8 @@ class TicketCheckout extends React.Component {
 		e.preventDefault();
 		validData = false;
 		this.setState({
-			isFormSubmited: true
+			isFormSubmited: true,
+      loading: true,
 		});
 		let eventUrl = this.props.eventUrl;
 		let orderData = this.props.orderData;
@@ -409,7 +412,7 @@ class TicketCheckout extends React.Component {
 				}
 			});
 			this.setState({
-				errorBuyer: buyerInformationFields
+				errorBuyer: buyerInformationFields,
 			});
 		}
 		if (ticketAttribute && ticketAttribute.attendees) {
@@ -468,7 +471,7 @@ class TicketCheckout extends React.Component {
 
 			});
 			this.setState({
-				errorAttendee: attendee
+				errorAttendee: attendee,
 			});
 		}
 
@@ -494,7 +497,8 @@ class TicketCheckout extends React.Component {
 							else {
 								this.setState({
 									showFormError: true,
-									formError: resp.errorMessage
+									formError: resp.errorMessage,
+                  loading: false,
 								});
 							}
 						}).catch(error => {
@@ -523,6 +527,7 @@ class TicketCheckout extends React.Component {
 					showFormError: true,
 					formError: "Invalid Data"
 				});*/
+				this.setState({loading: false,});
 			}
 
 		}, 100);
@@ -1042,17 +1047,20 @@ class TicketCheckout extends React.Component {
 	showMapPopup = (e) => {
 		e.preventDefault();
 		this.setState({
-			showMapPopup: true
+			showMapPopup: true,
+      loading: false,
 		})
 	};
 	hideMapPopup = () => {
 		this.setState({
-			showMapPopup: false
+			showMapPopup: false,
+      loading: false,
 		})
 	};
 	hideSuccessAlertPopup = () => {
 		this.setState({
-			ticketPurchaseSuccessPopup: false
+			ticketPurchaseSuccessPopup: false,
+      loading: false,
 		});
 		if(this.props.isVoluneer){
 			history.push('/events/' + eventUrl + '/volunteer');
@@ -1078,7 +1086,8 @@ class TicketCheckout extends React.Component {
 	};
 	hideFormErrorPopup = () => {
 		this.setState({
-			showFormError: false
+			showFormError: false,
+      loading: false,
 		});
 	};
 
@@ -2292,11 +2301,11 @@ class TicketCheckout extends React.Component {
 														: ''
 													}
 													<div className="mrg-t-lg text-center">{this.state.validData}
-														{ this.state.validData ? <button className="btn pay-now btn-success">
+														{ this.state.validData ? <Button type='submite' className="btn pay-now btn-success" loading={this.state.loading}>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
-														</button>  : <button className="btn pay-now btn-success" disabled>
+														</Button>  : <Button className="btn pay-now btn-success" disabled>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
-														</button> }
+														</Button> }
 													</div>
 												</div>
 											</div>
