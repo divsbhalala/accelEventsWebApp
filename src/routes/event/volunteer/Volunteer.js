@@ -1277,7 +1277,7 @@ class Volunteer extends React.Component {
               </div>
               {  // this.state.userData && !this.state.userData.phonenumber &&
                 <div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                  <label className="control-label">Cell Number</label>
+                  {/*<label className="control-label">Cell Number</label>*/}
                   <div className="input-group">
                     <div className="input-group-addon">
                       <i className="fa fa-phone" aria-hidden="true" />
@@ -1692,7 +1692,7 @@ class Volunteer extends React.Component {
               </div>
 
               <div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
+                {/*<label className="control-label">Cell Number</label>*/}
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true" />
@@ -2115,7 +2115,7 @@ class Volunteer extends React.Component {
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
               </div>
               {<div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
+                {/*<label className="control-label">Cell Number</label>*/}
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true" />
@@ -2197,7 +2197,7 @@ class Volunteer extends React.Component {
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
               <div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
+                {/*<label className="control-label">Cell Number</label>*/}
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true" />
@@ -2556,7 +2556,7 @@ class Volunteer extends React.Component {
                 <small className="message text-success">{this.state.errorMsgEmailCheck}</small>
               </div>
               <div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
+                {/*<label className="control-label">Cell Number</label>*/}
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true" />
@@ -2942,7 +2942,7 @@ class Volunteer extends React.Component {
               { !this.state.userData &&
               <div>
                 <div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                  <label className="control-label">Cell Number</label>
+                  {/*<label className="control-label">Cell Number</label>*/}
                   <div className="input-group">
                     <div className="input-group-addon">
                       <i className="fa fa-phone" aria-hidden="true" />
@@ -3017,7 +3017,7 @@ class Volunteer extends React.Component {
               </div> }
               { this.state.userData && !this.state.userData.phonenumber &&
               <div className={cx('form-group', this.state.phoneNumberFeedBack && 'has-feedback', this.state.phoneNumberFeedBack && this.state.phoneNumber && 'has-success', this.state.phoneNumberFeedBack && (!this.state.phoneNumber) && 'has-error')}>
-                <label className="control-label">Cell Number</label>
+                {/*<label className="control-label">Cell Number</label>*/}
                 <div className="input-group">
                   <div className="input-group-addon">
                     <i className="fa fa-phone" aria-hidden="true" />
