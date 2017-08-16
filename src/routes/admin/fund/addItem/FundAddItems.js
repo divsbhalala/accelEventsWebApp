@@ -12,6 +12,33 @@ class FundAddItems extends React.Component {
   static propTypes = {
     title: PropTypes.string,
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      isSuccess: false
+    };
+    this.showLoading = this.showLoading.bind(this);
+    this.showSuccessMessage = this.showSuccessMessage.bind(this);
+  }
+  showSuccessMessage = ()=>{
+    this.setState({
+      isLoading: true,
+    },()=>{
+      setTimeout(()=>{
+        this.setState({
+          isLoading: false,
+          isSuccess: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              isSuccess: false
+            })
+          }, 4000)
+        });
+      },3000)
+    });
+  };
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf(this.props.eventName+'-causeauction-items.pdf').then((resp) => {
     });
@@ -41,7 +68,7 @@ class FundAddItems extends React.Component {
                           <h1>Add Fund a Need Items
 									              <span className="item-count-wrap xpull-right"> </span >
                             <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              <button onClick={this.showSuccessMessage} className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                           </h1>
                         </div>
@@ -57,7 +84,7 @@ class FundAddItems extends React.Component {
                             <div className="table prizes-table">
 
                               <div className="table-body prize-items ui-sortable">
-                                <FundNeedAddItem />
+                                <FundNeedAddItem isLoading={this.state.isLoading}  isSuccess={this.state.isSuccess}/>
                               </div>
                               <div className="form-group operations-row">
                                 <div className="row">

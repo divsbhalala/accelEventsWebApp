@@ -35,9 +35,7 @@ import WhiteLabelUserManagement from './event/WhiteLabelUserManagement';
 
 const title = 'Admin Page';
 const isAdmin = true;
-
 export default {
-
   path: '/host',
   children: [
     {

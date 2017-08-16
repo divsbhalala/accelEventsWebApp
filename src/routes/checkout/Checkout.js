@@ -41,8 +41,6 @@ class Checkout extends React.Component {
 			settings : undefined,
 			isTimeOut: false
 		};
-
-
 	}
 	componentWillMount() {
 		eventUrl = this.props.params && this.props.params.params;

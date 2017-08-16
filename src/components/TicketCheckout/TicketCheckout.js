@@ -188,17 +188,17 @@ class TicketCheckout extends React.Component {
 		}
 	};
 	cardHolderNameBlurValidateHandler = () => {
-		// if (this.cardHolderName && this.cardHolderName.value) {
-		// 	this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
-		// 	let nameLen = this.cardHolderName.value.length;
-		// 	if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
-		// 		this.setState({
-		// 			cardHolderName: false,
-		// 			cardHolderNameFeedBackMsg: "The card holder name can't end with a space"
-		// 		});
-		// 	}
-		// }
-		// this.isValidFormData();
+		if (this.cardHolderName && this.cardHolderName.value) {
+			// this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
+			let nameLen = this.cardHolderName.value.length;
+			if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
+				this.setState({
+					cardHolderName: false,
+					cardHolderNameFeedBackMsg: "The card holder name can't end with a space"
+				});
+			}
+		}
+		this.isValidFormData();
 	};
 	cardHolderNameValidateHandler = (e) => {
 	//	this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
@@ -222,12 +222,12 @@ class TicketCheckout extends React.Component {
 			});
     } else if(this.cardHolderName.value.charAt(0) === ' ' || this.cardHolderName.value.charAt(this.cardHolderName.value.length-1) === ' '){
       this.setState({
-        cardHolder: false,
-        errorMsgcardHolder: "The card holder name can not start or end with white space",
+        cardHolderName: false,
+        cardHolderNameFeedBackMsg: "The card holder name can not start or end with white space",
       });
     } else {
 			this.setState({
-				cardHolderName: true,
+        cardHolderName: true,
 				cardHolderNameFeedBackMsg: null,
 				// isValidCardData: this.cardHolderName.value&& this.cardNumber.value&& this.cardCVV.value&& this.cardExpMonth.value&& this.cardExpYear.value
 			});
