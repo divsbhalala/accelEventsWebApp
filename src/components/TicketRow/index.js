@@ -138,8 +138,8 @@ class TicketRow extends React.Component { // eslint-disable-line
 		ticket.startDate = picker.startDate;
 		ticket.endDate = picker.endDate;
 		this.setState({
-			// startDate: moment(picker.startDate).format('YYYY-MM-DD HH:mm:ss'),
-			// endDate: moment(picker.endDate).format('YYYY-MM-DD HH:mm:ss'),
+			// startDate: moment(picker.startDate).format('MM/DD/YYYY hh:mm a'),
+			// endDate: moment(picker.endDate).format('MM/DD/YYYY hh:mm a'),
 			startDate: picker.startDate,
 			endDate: picker.endDate,
 			ticket: ticket
@@ -210,15 +210,15 @@ class TicketRow extends React.Component { // eslint-disable-line
 	}
 
 	render() {
-		let start = moment(this.state.startDate).format('YYYY-MM-DD HH:mm:ss');
-		let end = moment(this.state.endDate).format('YYYY-MM-DD HH:mm:ss');
+		let start = moment(this.state.startDate).format('MM/DD/YYYY hh:mm a');
+		let end = moment(this.state.endDate).format('MM/DD/YYYY hh:mm a');
 		let label = start + ' - ' + end;
 		if (start === end) {
 			label = start;
 		}
 
 		let locale = {
-			format: 'YYYY-MM-DD HH:mm:ss',
+			format: 'MM/DD/YYYY hh:mm a',
 			separator: ' - ',
 			applyLabel: 'Apply',
 			cancelLabel: 'Cancel',
