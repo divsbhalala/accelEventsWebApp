@@ -8,6 +8,7 @@ import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-tab
 import {getPerformanceSale,getPerformanceBuyer,
   getPerformanceBuyerCSV,getPerformanceHolderCSV} from './action';
 import {connect} from 'react-redux';
+import moment from 'moment';
 
 let self_TicketPerformance;
 class TicketPerformance extends React.Component {
@@ -70,7 +71,9 @@ class TicketPerformance extends React.Component {
        };
     function dateFormatter(cell, row){
       // return new Date(1*cell).toISOString().split('T')[0];
-        return (new Date(1*cell).toISOString().split('T')[0]+ ' ' + new Date(1*cell).toISOString().split('T')[1].substring(0,5))
+      let d = new Date(1*cell);
+      return moment(d).format('YYYY-MM-DD h:mm a');
+      // return (new Date(1*cell).toISOString().split('T')[0]+ ' ' + new Date(1*cell).toISOString().split('T')[1].substring(0,5))
     }
     function priceFormate(cell, row){
       return  self_TicketPerformance.props.currencySymbol + cell.toFixed(2);
