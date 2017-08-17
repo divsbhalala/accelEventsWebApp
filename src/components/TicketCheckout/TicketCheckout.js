@@ -286,7 +286,7 @@ class TicketCheckout extends React.Component {
 				cardCVVFeedBackMsg: "The CVV is required and can't be empty",
 			});
 		}
-		else if (this.cardCVV.value && !(this.cardCVV.value.length >= 3 && this.cardCVV.value.length <= 4)) {
+		else if (this.cardCVV.value && (this.cardCVV.value.length < 3 || this.cardCVV.value.length > 4)) {
 			this.setState({
 				cardCVV: false,
 				cardCVVFeedBackMsg: "The CVV must be more than 4 and less than 3 characters long",
@@ -856,7 +856,7 @@ class TicketCheckout extends React.Component {
 		this.isValidFormData();
 	};
 	buyerQuestionsPhoneNumberValidateHandler(isValid, value, name, countryData, number, ext, field, key, event) {
-		let object = buyerInformationFields || {};
+		let object = buyerQuestions || {};
 		if (!object[key]) {
 			object[key] = [];
 		}
@@ -903,8 +903,8 @@ class TicketCheckout extends React.Component {
 			 { event.parentElement.classList.remove('has-error');
          event.parentElement.classList.add('has-success');
 			 }
-    })
-		attendee = buyerQuestions;
+    });
+    buyerQuestions = object;
 		this.isValidFormData();
 	};
 
