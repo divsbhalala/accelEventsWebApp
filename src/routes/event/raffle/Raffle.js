@@ -113,7 +113,6 @@ class Raffle extends React.Component {
     if (this.state.isValidData) {
     }
   };
-
   emailValidateHandler = (e) => {
 
     this.setState({

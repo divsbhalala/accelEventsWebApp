@@ -32,15 +32,7 @@ class Fund extends React.Component {
     this.getScrollData(this.props.params && this.props.params.params, 'fundaneed');
   }
   doGetSettings = (eventUrl, slug)=>{
-    this.props.doGetSettings(eventUrl, slug).then(resp => {
-      this.setState({
-        eventSettings: resp && resp.data
-      });
-      setTimeout(()=>{
-        fundInst.doGetSettings(eventUrl, slug)
-      },5000)
 
-    });
   };
   getScrollData = (eventUrl, slug)=>{
     this.props.getScrollData(eventUrl, slug).then(resp => {

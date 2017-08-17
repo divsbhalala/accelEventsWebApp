@@ -24,7 +24,7 @@ class FundGoal extends React.Component {
       goalData:null,
       goalPer:0,
     };
-    this.getGoalData = this.getScrollData.bind(this);
+    this.getGoalData = this.getGoalData.bind(this);
   }
 
   componentWillMount() {
@@ -39,9 +39,9 @@ class FundGoal extends React.Component {
         goalPer:totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
         settings:resp
       });
-      setTimeout(()=>{
-        fundInst.getGoalData(eventUrl, slug)
-      },5000)
+      // setTimeout(()=>{
+      //   fundInst.getGoalData(eventUrl, slug)
+      // },5000)
 
     });
   };
@@ -88,8 +88,7 @@ class FundGoal extends React.Component {
 }
 
 const mapDispatchToProps = {
-  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
-  getGoalData: (eventUrl,type) => getGoalData(eventUrl,type),
+   getGoalData: (eventUrl,type) => getGoalData(eventUrl,type),
 };
 const mapStateToProps = (state) => ({
 	currencySymbol: state.event && state.event.currencySymbol || "$",
