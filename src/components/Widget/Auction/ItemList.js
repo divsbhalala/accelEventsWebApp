@@ -7,7 +7,9 @@ class ItemList extends React.Component {
 				<td className="item-name">{this.props.item.itemName}</td>
 				<td className="item-code">{this.props.item.itemCode}</td>
 				<td className="item-startingBid">{(this.props.item.winningBid && (this.props.currencySymbol + this.props.item.winningBid)) || "-"}</td>
-				{<td className="total-pledge">{this.props.item.highestBidderName || "-"}</td>}
+
+				{!this.props.highestBidderHidden && !this.props.moduleEnded ?<td className="total-pledge">{this.props.item.highestBidderName || "-"}</td> : ""}
+				{!this.props.moduleEnded ?"" : <td className="total-pledge">{this.props.item.highestBidderName || "-"}</td>}
 			</tr>
 		);
 	}
