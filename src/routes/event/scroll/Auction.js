@@ -12,7 +12,7 @@ import TotalProceeds from '../../../components/Widget/TotalProceeds';
 import ItemList from '../../../components/Widget/Auction/ItemList';
 import $ from 'jquery'
 // import  history from './../../../history';
-
+let auctionInst = undefined;
 class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -24,21 +24,36 @@ class Auction extends React.Component {
       isLogin: false,
       settings: null,
       auctionData:null,
-    }
+    };
+    this.doGetSettings = this.doGetSettings.bind(this);
+    this.getScrollData = this.getScrollData.bind(this);
   }
+  doGetSettings = (eventUrl, slug)=>{
+    this.props.doGetSettings(eventUrl, slug).then(resp => {
+      this.setState({
+        eventSettings: resp && resp.data
+      });
+      setTimeout(()=>{
+        auctionInst.doGetSettings(eventUrl, slug)
+      },5000)
+
+    });
+  };
+  getScrollData = (eventUrl, slug)=>{
+    this.props.getScrollData(eventUrl, slug).then(resp => {
+      this.setState({
+        settings: resp
+      });
+      setTimeout(()=>{
+        auctionInst.getScrollData(eventUrl, slug);
+      },5000)
+    });
+  };
   componentWillMount() {
     let totalFundRaised=0;
-    this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
-           this.setState({
-        settings: resp
-
-      });
-    });
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-           this.setState({
-        auctionSettings: resp && resp.data
-      });
-    });
+    auctionInst = this;
+    this.doGetSettings(this.props.params && this.props.params.params, 'auction');
+    this.getScrollData(this.props.params && this.props.params.params, 'auction');
   }
   render() {
     return (
