@@ -35,6 +35,8 @@ let buyerQuestions = {};
 let eventUrl;
 let orderId;
 let validData = true;
+let dataTimeout = null;
+let ticketInst = null;
 class TicketCheckout extends React.Component {
 	static propTypes = {
 		activeTab: PropTypes.string,
@@ -110,6 +112,7 @@ class TicketCheckout extends React.Component {
 		// this.phoneNumberValidateHandler = this.phoneNumberValidateHandler.bind(this);
 		this.setAttendeesAddressValue = this.setAttendeesAddressValue.bind(this);
 		this.isValidFormData = this.isValidFormData.bind(this);
+    ticketInst = this;
 	}
 
 	componentWillMount() {
@@ -140,15 +143,26 @@ class TicketCheckout extends React.Component {
 			})
 		});
 	}
-	componentWillUpdate(){
+	componentDidMount(){
 		//this.isValidFormData();
+		this.isValidFormData();
+	}
+  componentWillUnmount(){
+    if(dataTimeout){
+      clearTimeout(dataTimeout);
+      dataTimeout = null;
+    }
 	}
 
 	isValidFormData = ()=>{
-		validData = document.getElementsByClassName("has-error").length === 0;
+    ticketInst = this;
+    validData = document.getElementsByClassName("has-error").length === 0;
 		this.setState({
 			validData: validData
 		});
+    dataTimeout = setTimeout(()=>{
+      ticketInst.isValidFormData();
+		}, 1000);
 	};
 
 	emailValidateHandler = (e) => {
@@ -170,13 +184,13 @@ class TicketCheckout extends React.Component {
 				email: true
 			});
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	couponValidateHandler = (e) => {
 		this.setState({
 			coupon: this.coupon.value
 		});
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	addressZipValidateHandler = (e) => {
 		if ([69, 187, 188, 189, 190].includes(e.keyCode)) {
@@ -201,7 +215,7 @@ class TicketCheckout extends React.Component {
 				});
 			}
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	cardHolderNameValidateHandler = (e) => {
 	//	this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
@@ -235,7 +249,7 @@ class TicketCheckout extends React.Component {
 				// isValidCardData: this.cardHolderName.value&& this.cardNumber.value&& this.cardCVV.value&& this.cardExpMonth.value&& this.cardExpYear.value
 			});
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	cardNumberValidateHandler = (e) => {
 		this.cardNumber.value = this.cardNumber.value && this.cardNumber.value.trim();
@@ -268,7 +282,7 @@ class TicketCheckout extends React.Component {
 
 			});
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	cardCVVValidateHandler = (e) => {
 		this.cardCVV.value = this.cardCVV.value && this.cardCVV.value.trim();
@@ -300,7 +314,7 @@ class TicketCheckout extends React.Component {
 
 			});
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 
 	};
 	cardExpMonthValidateHandler = (e) => {
@@ -324,7 +338,7 @@ class TicketCheckout extends React.Component {
 				});
 			}
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	cardExpYearValidateHandler = (e) => {
 		this.cardExpYear.value = this.cardExpYear.value && this.cardExpYear.value.trim();
@@ -347,7 +361,7 @@ class TicketCheckout extends React.Component {
 				});
 			}
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	passwordValidateHandler = (e) => {
 		this.password.value = this.password.value && this.password.value.trim();
@@ -365,7 +379,7 @@ class TicketCheckout extends React.Component {
 				password: true
 			});
 		}
-		this.isValidFormData();
+		// this.isValidFormData();
 
 	};
 	ticketCheckout = (e) => {
@@ -799,8 +813,18 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.add('has-success');
 			event.parentElement.classList.remove('has-error');
 		}
+    this.props.doValidateMobileNumber(name.dialCode+''+value).then(resp => {
+      if(resp)
+      {object[key][field.name]['error'] = true;
+        event.parentElement.classList.add('has-error');
+        event.parentElement.classList.remove('has-success');
+      }else
+      { event.parentElement.classList.remove('has-error');
+        event.parentElement.classList.add('has-success');
+      }
+    });
 		attendee = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 
 	buyerPhoneNumberValidateHandler(isValid, value, name, countryData, number, ext, field, key, event) {
@@ -842,9 +866,9 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.add('has-success');
 			event.parentElement.classList.remove('has-error');
 		}
-    this.props.doValidateMobileNumber(countryData).then(resp => {
+    this.props.doValidateMobileNumber(name.dialCode+''+value).then(resp => {
 			if(resp)
-			 {object[key][field.name]['error'] = true
+			 {object[key][field.name]['error'] = true;
          event.parentElement.classList.add('has-error');
          event.parentElement.classList.remove('has-success');
 			 }else
@@ -853,7 +877,7 @@ class TicketCheckout extends React.Component {
 			 }
     });
 		buyerInformationFields = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	buyerQuestionsPhoneNumberValidateHandler(isValid, value, name, countryData, number, ext, field, key, event) {
 		let object = buyerQuestions || {};
@@ -894,9 +918,9 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.add('has-success');
 			event.parentElement.classList.remove('has-error');
 		}
-    this.props.doValidateMobileNumber(countryData).then(resp => {
+    this.props.doValidateMobileNumber(name.dialCode+''+value).then(resp => {
 			if(resp)
-			 {object[key][field.name]['error'] = true
+			 {object[key][field.name]['error'] = true;
          event.parentElement.classList.add('has-error');
          event.parentElement.classList.remove('has-success');
 			 }else
@@ -905,7 +929,7 @@ class TicketCheckout extends React.Component {
 			 }
     });
     buyerQuestions = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 
 	setAttendeesAddressValue = (field, name, key, itemKey, event) => {
@@ -954,7 +978,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		attendee = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	setAttendeesValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
@@ -1002,7 +1026,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		attendee = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	setQuestionsValue = (field, key, itemKey, event) => {
 		//If the input fields were directly within this
@@ -1050,7 +1074,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		questions = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	buyerInformationFieldsHandler = (field, key, event) => {
 		let object = buyerInformationFields || {};
@@ -1091,7 +1115,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		buyerInformationFields = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 
 	};
 	buyerQuestionsInformationFieldsHandler = (field, key, event) => {
@@ -1133,7 +1157,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		buyerQuestions = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 
 	};
 	setBuyerAddressValue = (field, name, key, event) => {
@@ -1179,7 +1203,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		buyerInformationFields = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	setBuyerQuestionAddressValue = (field, name, key, event) => {
 		//If the input fields were directly within this
@@ -1224,7 +1248,7 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		buyerQuestions = object;
-		this.isValidFormData();
+		// this.isValidFormData();
 	};
 	hideFormError = () => {
 		this.setState({
