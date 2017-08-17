@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
   constructor(props) {
       super(props);
     this.state = {
+      imageFiles: undefined
     }
 
   };
@@ -17,8 +18,14 @@ import {connect} from 'react-redux';
     })
   }
   onImageDrop(files) {
+    this.setState({
+      imageFiles: files,
+    });
     for (let file in files) {
       this.props.uploadImage(files[file]).then(resp => {
+        this.setState({
+          imageFiles: '',
+        });
         if (resp && resp.data && resp.status===200) {
           this.props.imageUploaded(resp.data.message);
         } else {
@@ -33,8 +40,8 @@ import {connect} from 'react-redux';
         <div className="dz-default dz-message">
           <span>Drop files here to upload</span>
         </div>
-        { this.props.item && this.props.item.images.map((item,index)=>
-          <div key={index} className="dz-preview dz-image-preview" onClick={e => e.stopPropagation()} >
+        { this.props.item && this.props.item.images.length > 0 &&  this.props.item.images.map((item,index)=>
+      <span>  {item.imageUrl && <div key={index} className="dz-preview dz-image-preview" onClick={e => e.stopPropagation()} >
             <div className="dz-details" >
               <div className="dz-filename">
                 <span data-dz-name>{item.imageUrl}</span>
@@ -45,6 +52,20 @@ import {connect} from 'react-redux';
              <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>
              <div className="dz-error-message"><span data-dz-errormessage /></div>
             <a className="dz-remove"  onClick={()=>this.props.imageRemove(index)} >Remove file</a>
+      </div> }</span>
+        )}
+        { this.state.imageFiles && this.state.imageFiles.length && this.state.imageFiles.map((item,index)=>
+          <div key={index} className="dz-preview dz-processing dz-image-preview" onClick={e => e.stopPropagation()} >
+            <div className="dz-details" >
+              <div className="dz-filename">
+                <span data-dz-name>{item.preview}</span>
+              </div>
+              <img data-dz-thumbnail alt={item.preview} src={item.preview} />
+            </div>
+            <div className="dz-progress"><span className="dz-upload"  /></div>
+            <div className="dz-success-mark"><span>âœ”</span></div>  <div className="dz-error-mark"><span>âœ˜</span></div>
+            <div className="dz-error-message"><span data-dz-errormessage /></div>
+            <a className="dz-remove"  onClick={this.imageRemove} >Remove file</a>
           </div>
         )}
       </Dropzone>

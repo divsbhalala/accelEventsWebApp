@@ -24,7 +24,10 @@ import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
 import IntlTelInput from './../../../components/IntTelInput';
-
+let settingTimeout = undefined;
+let DataTimeout = undefined;
+let eventInst = undefined;
+let itemTimeout = undefined;
 class Auction extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -100,6 +103,10 @@ class Auction extends React.Component {
       countryPhone:null,
       loading:false,
     };
+		this.doGetEventData = this.doGetEventData.bind(this);
+		this.doGetSettings = this.doGetSettings.bind(this);
+		this.doGetItemByCode = this.doGetItemByCode.bind(this);
+		eventInst = this;
   }
   onBidFormClick = (e) => {
     this.setState({
@@ -113,11 +120,11 @@ class Auction extends React.Component {
       phoneNumberFeedBack: true,
     });
     e.preventDefault();
-    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded && this.state.amount){
+    if ((!this.state.settings.moduleActivated || this.state.settings.moduleEnded) && this.state.amount){
       this.setState({
         showPopup: true,
         loading:false,
-        errorMsgCard: " Pledges are no longer being accepted for this auction." ,
+        errorMsgCard: "Bid are no longer being accepted for this auction." ,
         popupHeader:"Failed",
       })
     }else {
@@ -149,7 +156,7 @@ class Auction extends React.Component {
                 loading:false,
                 showPopup: true,
                 errorMsgCard: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.auctionData.name ,
-                popupHeader:"Success",
+                popupHeader:"Failed",
                 stripeToken: response.id,})
             }
           });
@@ -201,6 +208,15 @@ class Auction extends React.Component {
             errorMsgCard:resp.message,
             popupHeader:"Successful Bid",
           });
+
+          setTimeout(() => {
+              this.setState({
+                loading:false,
+                showPopup: false,
+                errorMsgCard:"",
+                popupHeader:"",
+              });
+          },3000)
           this.props.changeUserData(this.props.user,user)
         }else{
           this.setState({
@@ -209,6 +225,16 @@ class Auction extends React.Component {
             errorMsgCard: resp.errorMessage,
             popupHeader:"Failed"
           });
+
+          setTimeout(() => {
+              this.setState({
+                loading:false,
+                showPopup: false,
+                errorMsgCard:"",
+                popupHeader:"",
+              });
+          },3000)
+
         }
         this.setState({
           loading:false,
@@ -249,7 +275,7 @@ class Auction extends React.Component {
             popupHeader:"Failed",
             loading:false,
           });
-          if(resp.errorMessage == 'Incorrect password'){
+          if(resp.errorMessage === 'Incorrect password'){
             this.setState({
               password:false,
               errorMsgPassword:'',
@@ -268,7 +294,7 @@ class Auction extends React.Component {
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -288,7 +314,7 @@ class Auction extends React.Component {
       passwordFeedBack: true,
       passwordValue: this.password.value.trim(),
     });
-    if (this.password.value.trim() == '') {
+    if (this.password.value.trim() === '') {
       this.setState({
         password: false,
         errorMsgPassword: "Password can't be empty.",
@@ -307,7 +333,7 @@ class Auction extends React.Component {
     }, function afterStateChange() {
       this.checkIsValidBidData()
     });
-    if (this.firstName.value.trim() == '') {
+    if (this.firstName.value.trim() === '') {
       this.setState({
         firstName: false
       }, function afterStateChange() {
@@ -329,7 +355,7 @@ class Auction extends React.Component {
     }, function afterStateChange() {
       this.checkIsValidBidData()
     });
-    if (this.lastName.value.trim() == '') {
+    if (this.lastName.value.trim() === '') {
 
       this.setState({
         lastName: false
@@ -354,7 +380,7 @@ class Auction extends React.Component {
       this.checkIsValidBidData()
     });
 
-    if (this.cardHolder.value.trim() == '') {
+    if (this.cardHolder.value.trim() === '') {
 
       this.setState({
         cardHolder: false,
@@ -396,7 +422,7 @@ class Auction extends React.Component {
     });
 
 
-    if (this.cardNumber.value.trim() == '') {
+    if (this.cardNumber.value.trim() === '') {
 
       this.setState({
         cardNumber: false,
@@ -478,7 +504,7 @@ class Auction extends React.Component {
   };
   goBack = () =>{
     window.history.go(-1);
-  }
+  };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
 
     this.setState({
@@ -549,49 +575,15 @@ class Auction extends React.Component {
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   componentWillMount() {
-    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-      if(!resp.data.moduleActivated || resp.data.moduleEnded){
-        this.setState({
-          errorMsgCard:"Please activate this module to start accepting pledges.",
-          popupHeader :'Failed',
-        })
-      }
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
-    this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            auctionData: resp.data
-          })
-        }
-      }).catch(error => {
-      history.push('/404');
-    });
+    this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
+    this.doGetEventData();
+    this.doGetSettings(this.props.params && this.props.params.params, 'auction');
+    this.doGetItemByCode();
   };
   componentReRender = () => {
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
-    this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            auctionData: resp.data
-          })
-        }
-      }).catch(error => {
-    });
+    this.doGetEventData();
+    this.doGetSettings(this.props.params && this.props.params.params, 'auction');
+    this.doGetItemByCode();
     this.setState({
       amountFeedBack:false,
     });
@@ -599,6 +591,70 @@ class Auction extends React.Component {
       this.amount.value="";
     }
   };
+	componentWillUnmount(){
+		if(settingTimeout){
+			clearTimeout(settingTimeout);
+			settingTimeout = null;
+		}
+		if(DataTimeout){
+			clearTimeout(DataTimeout);
+			DataTimeout = null;
+		}
+		if(itemTimeout){
+			clearTimeout(itemTimeout);
+			itemTimeout = null;
+		}
+	}
+	doGetItemByCode = ()=>{
+		eventInst = this;
+		this.props.doGetAuctionItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+			.then(resp => {
+				if (resp && resp.data) {
+					this.setState({
+						auctionData: resp.data
+					}, ()=>{
+						itemTimeout = setTimeout(()=>{
+							eventInst.doGetItemByCode();
+						}, 30000);
+					});
+				}
+			}).catch(error => {
+			if(itemTimeout){
+				clearTimeout(itemTimeout);
+				itemTimeout = null;
+			}
+		});
+	};
+	doGetEventData = ()=>{
+		this.props.doGetEventData(this.props.params && this.props.params.params);
+		DataTimeout = setTimeout(()=>{
+			eventInst.doGetEventData();
+		}, 30000);
+	};
+
+	doGetSettings = (eventUrl, tab)=>{
+		eventInst = this;
+		this.props.doGetSettings(eventUrl, tab).then(resp => {
+			if(!resp.data.moduleActivated){
+				this.setState({
+					errorMsgCard:"Please activate this module to start accepting pledges.",
+					popupHeader :'Failed',
+				})
+			}
+			this.setState({
+				settings: resp && resp.data
+			}, ()=>{
+				settingTimeout = setTimeout(()=>{
+					eventInst.doGetSettings(eventUrl, tab);
+				}, 30000);
+			});
+		}).catch(error => {
+			if(settingTimeout){
+				clearTimeout(settingTimeout);
+				settingTimeout = null;
+			}
+		});
+	};
   showPopup = () => {
     this.setState({
       showPopup: true
@@ -608,7 +664,13 @@ class Auction extends React.Component {
     this.setState({
       showPopup: false
     });
-    if(this.state.popupHeader !== "Failed"){
+    if(this.state.popupHeader === 'Confirm' ){
+      this.setState({
+        errorMsgCard: "Confirmation Failed." ,
+        popupHeader:"Failed",
+      });
+    }
+    if(this.state.popupHeader !== "Failed" ){
       this.componentReRender();
     }
   };
@@ -621,7 +683,7 @@ class Auction extends React.Component {
     let valid2=true;
     let flag=true;
     if(this.props.authenticated){
-      if( this.props.user && this.props.user.firstName == null ){
+      if( this.props.user && this.props.user.firstName === null ){
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
@@ -638,6 +700,12 @@ class Auction extends React.Component {
     }
     this.setState({isValidBidData: (valid1 && valid2)});
   };
+  numberOnly(e) {
+    const re = /[/0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
   render() {
     let form_login = <div>
@@ -786,7 +854,7 @@ class Auction extends React.Component {
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-10">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
@@ -844,6 +912,7 @@ class Auction extends React.Component {
                          ref={ref => {
                            this.cardNumber = ref;
                          }}
+                         onKeyPress={(e) => this.numberOnly(e)}
                          onKeyUp={this.cardNumberValidateHandler}/>
                   { this.state.cardNumberFeedBack && this.state.cardNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -929,6 +998,7 @@ class Auction extends React.Component {
                              ref={ref => {
                                this.cvv = ref;
                              }}
+                             onKeyPress={(e) => this.numberOnly(e)}
                              onKeyUp={this.cvvValidateHandler} />
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1077,6 +1147,7 @@ class Auction extends React.Component {
                            ref={ref => {
                            this.cardNumber = ref;
                          }}
+                         onKeyPress={(e) => this.numberOnly(e)}
                          onKeyUp={this.cardNumberValidateHandler}/>
                   { this.state.cardNumberFeedBack && this.state.cardNumber &&
                   <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1161,6 +1232,7 @@ class Auction extends React.Component {
                              ref={ref => {
                                this.cvv = ref;
                              }}
+                             onKeyPress={(e) => this.numberOnly(e)}
                              onKeyUp={this.cvvValidateHandler}/>
                       { this.state.cvvFeedBack && this.state.cvv &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1183,23 +1255,23 @@ class Auction extends React.Component {
           </div>
         </div> : "" }
 
-      <div className="col-sm-3" style={{paddingLeft:0}}>
-        <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+        <div className="row btn-row mrg-b-lg" style={{paddingLeft:0}}>
+          <div className="col-sm-3" style={{    minWidth: "110px",maxWidth:"120px",paddingRight:"5px"}}>
+            <Button style={{width:"100%"}} loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                  type="submit" >
           Submit bid
-        </Button>
-        &nbsp;&nbsp;
-      </div>
-      <div className="col-sm-5" style={{paddingLeft:0,marginLeft:-14,"width":"40%"}}>
-        <a onClick={this.goBack} className="btn btn-success btn-block" >
+        </Button></div>
+          <div className="col-sm-5" style={{paddingLeft:0,width:"180px"}}>
+          <a onClick={this.goBack} className="btn btn-success btn-block" >
           Go back to All Items
-        </a>
-      </div>
+        </a></div>
+        </div>
+
+
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
       className="current-bid">400</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
-
     return (
       <div className="row">
         <div className="col-lg-12">

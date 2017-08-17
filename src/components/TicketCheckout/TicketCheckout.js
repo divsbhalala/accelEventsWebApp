@@ -21,7 +21,8 @@ import {
 	doGetOrderById,
 	doGetSettings,
 	doSignUp,
-	couponCode
+	couponCode,
+  doValidateMobileNumber
 } from './../../routes/event/action/index';
 import {createCardToken, orderTicket} from './../../routes/checkout/action/index';
 let countDownInterval = null;
@@ -189,7 +190,7 @@ class TicketCheckout extends React.Component {
 	};
 	cardHolderNameBlurValidateHandler = () => {
 		if (this.cardHolderName && this.cardHolderName.value) {
-			this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
+			// this.cardHolderName.value = this.cardHolderName.value && this.cardHolderName.value.trim();
 			let nameLen = this.cardHolderName.value.length;
 			if (this.cardHolderName.value && this.cardHolderName.value[nameLen - 1] === ' ') {
 				this.setState({
@@ -222,12 +223,12 @@ class TicketCheckout extends React.Component {
 			});
     } else if(this.cardHolderName.value.charAt(0) === ' ' || this.cardHolderName.value.charAt(this.cardHolderName.value.length-1) === ' '){
       this.setState({
-        cardHolder: false,
-        errorMsgcardHolder: "The card holder name can not start or end with white space",
+        cardHolderName: false,
+        cardHolderNameFeedBackMsg: "The card holder name can not start or end with white space",
       });
     } else {
 			this.setState({
-				cardHolderName: true,
+        cardHolderName: true,
 				cardHolderNameFeedBackMsg: null,
 				// isValidCardData: this.cardHolderName.value&& this.cardNumber.value&& this.cardCVV.value&& this.cardExpMonth.value&& this.cardExpYear.value
 			});
@@ -753,7 +754,7 @@ class TicketCheckout extends React.Component {
 				event.parentElement.classList.remove('has-success');
 			}
 			else {
-				object[key][itemKey][field.name]['error'] = false;
+				object[key][field.name]['error'] = false;
 			}
 		}
 		event.parentElement.classList.add('has-feedback');
@@ -772,6 +773,16 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.add('has-success');
 			event.parentElement.classList.remove('has-error');
 		}
+    this.props.doValidateMobileNumber(countryData).then(resp => {
+			if(resp)
+			 {object[key][field.name]['error'] = true
+         event.parentElement.classList.add('has-error');
+         event.parentElement.classList.remove('has-success');
+			 }else
+			 { event.parentElement.classList.remove('has-error');
+         event.parentElement.classList.add('has-success');
+			 }
+    })
 		attendee = object;
 		this.isValidFormData();
 	};
@@ -1090,6 +1101,12 @@ class TicketCheckout extends React.Component {
       loading: false,
 		});
 	};
+  numberOnly(e) {
+    const re = /[/0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
 
 	render() {
 		return (
@@ -1106,9 +1123,13 @@ class TicketCheckout extends React.Component {
 											onSubmit={this.ticketCheckout}>
 									<div className="row">
 										<div className={( this.props.isVoluneer ? "col-md-12" : "col-md-10 col-md-offset-1")}>
-											<h3
-												className="type-name">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData[0].ticketTypeName}</h3>
-												<div className="type-desc">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData[0].ticketTypeDescription}</div>
+										{
+											this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData.map((ticket) =>
+											<div><h3 className="type-name">{ticket.ticketTypeName}</h3>
+											<div className="type-desc">{ticket.ticketTypeDescription}</div></div>
+										)
+									}
+
 											{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData &&
 											<div className="project-box gray-box card">
 												<div className="project-box-header gray-bg">
@@ -1295,9 +1316,9 @@ class TicketCheckout extends React.Component {
 																						onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
 																							this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
 																						}}
-																						onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
-																							this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
-																						}}
+																						// onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																						// 	this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																						// }}
 																					/>
 
 																					<i
@@ -1620,6 +1641,7 @@ class TicketCheckout extends React.Component {
 																								 ref={ref => {
 																									 this.cardNumber = ref;
 																								 }}
+                                                 onKeyPress={(e) => this.numberOnly(e)}
 																								 onKeyUp={this.cardNumberValidateHandler}
 																								 onChange={this.cardNumberValidateHandler}
 																								 required="required" data-fv-field="cardnumber"/>
@@ -1669,7 +1691,7 @@ class TicketCheckout extends React.Component {
 																						<option value={6}>Jun (06)</option>
 																						<option value={7}>Jul (07)</option>
 																						<option value={8}>Aug (08)</option>
-																						<option value={9}>Sep (09)</option>
+																						<option value={9}>Sep (09)</option>F
 																						<option value={10}>Oct (10)</option>
 																						<option value={11}>Nov (11)</option>
 																						<option value={12}>Dec (12)</option>
@@ -1761,7 +1783,8 @@ class TicketCheckout extends React.Component {
 																								 ref={ref => {
 																									 this.cardCVV = ref;
 																								 }}
-																								 onChange={this.cardCVVValidateHandler}
+                                                 onKeyPress={(e) => this.numberOnly(e)}
+                                                 onChange={this.cardCVVValidateHandler}
 																								 id="cvv" placeholder="CVC/CVV"/>
 																				</div>
 																				<i className="form-control-feedback fv-bootstrap-icon-input-group"
@@ -1903,12 +1926,11 @@ class TicketCheckout extends React.Component {
 																				<div className="input-group-addon">
 																					<i className="fa fa-map-marker" aria-hidden="true"/>
 																				</div>
-																				<input type="number" className="form-control" size={6}
+																				<input  className="form-control" size={6}
 																							 data-stripe="address_zip" name="address_zip"
 																							 data-fv-field="address_zip" ref={ref => {
 																					this.address_zip = ref;
-																				}}
-																							 onKeyDown={this.addressZipValidateHandler}/>
+																				}}  onKeyDown={this.addressZipValidateHandler}/>
 																			</div>
 																			<i className="form-control-feedback fv-bootstrap-icon-input-group"
 																				 data-fv-icon-for="address_zip"/>
@@ -2301,7 +2323,7 @@ class TicketCheckout extends React.Component {
 														: ''
 													}
 													<div className="mrg-t-lg text-center">{this.state.validData}
-														{ this.state.validData ? <Button type='submite' className="btn pay-now btn-success" loading={this.state.loading}>
+														{ this.state.validData ? <Button type='submit' className="btn pay-now btn-success" loading={this.state.loading}>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
 														</Button>  : <Button className="btn pay-now btn-success" disabled>
 															&nbsp; &nbsp; &nbsp; &nbsp; Pay Now &nbsp; &nbsp; &nbsp; &nbsp;
@@ -2369,6 +2391,7 @@ const mapDispatchToProps = {
 	orderTicket: (eventurl, orderid, ticketBookingDto) => orderTicket(eventurl, orderid, ticketBookingDto),
 	couponCode: (eventurl, orderid, couponcode) => couponCode(eventurl, orderid, couponcode),
 	doSignUp: (eventurl, userData) => doSignUp(eventurl, userData),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 
 const mapStateToProps = (state) => ({

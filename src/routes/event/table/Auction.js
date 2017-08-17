@@ -7,7 +7,7 @@ import {doGetSettings, getScrollData} from './../action/index';
 import s from './table.css';
 import ItemList from '../../../components/Widget/Auction/ItemList';
 // import  history from './../../../history';
-
+let auctionInst = undefined;
 import  EventAside from './../../../components/EventAside/EventAside';
 class Auction extends React.Component {
   static propTypes = {
@@ -20,20 +20,35 @@ class Auction extends React.Component {
       settings: null,
       eventSettings: null,
       itemList: null,
-    }
+    };
+    this.doGetSettings = this.doGetSettings.bind(this);
+    this.getScrollData = this.getScrollData.bind(this);
   }
-  componentWillMount() {
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
+  doGetSettings = (eventUrl, slug)=>{
+    this.props.doGetSettings(eventUrl, slug).then(resp => {
       this.setState({
-				eventSettings: resp && resp.data
+        eventSettings: resp && resp.data
       });
-    });
-		this.props.getScrollData(this.props.params && this.props.params.params, 'auction').then(resp => {
-			this.setState({
-				settings: resp
+      setTimeout(()=>{
+        auctionInst.doGetSettings(eventUrl, slug)
+      },5000)
 
-			});
-		});
+    });
+  };
+  getScrollData = (eventUrl, slug)=>{
+    this.props.getScrollData(eventUrl, slug).then(resp => {
+      this.setState({
+        settings: resp
+      });
+      setTimeout(()=>{
+        auctionInst.getScrollData(eventUrl, slug);
+      },5000)
+    });
+  };
+  componentWillMount() {
+    auctionInst = this;
+    this.doGetSettings(this.props.params && this.props.params.params, 'auction');
+    this.getScrollData(this.props.params && this.props.params.params, 'auction');
   }
   render() {
     return (
@@ -64,14 +79,15 @@ class Auction extends React.Component {
                           <th>Item</th>
                           <th>Item Code</th>
                           <th>{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
-													{ this.state.eventSettings && !this.state.eventSettings.highestBidderHidden &&
-													!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
+                          { this.state.eventSettings && !this.state.eventSettings.highestBidderHidden &&
+      										!this.state.settings.moduleEnded ? <th>Highest Bidder</th> : ""}
+                          { this.state.settings && !this.state.settings.moduleEnded ?"" : <th>WINNING BIDDER</th>}
                         </tr>
                         </thead>
                         <tbody>
 												{this.state.settings && this.state.settings.items &&
 												this.state.settings.items.map((item, index) =>
-                          <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+                          <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded} highestBidderHidden={this.state.eventSettings && this.state.eventSettings.highestBidderHidden}/>
 												)
 												}
                         </tbody>

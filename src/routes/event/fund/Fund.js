@@ -17,7 +17,10 @@ import  {Carousel} from 'react-responsive-carousel';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
 import IntlTelInput from './../../../components/IntTelInput';
-
+let settingTimeout = undefined;
+let DataTimeout = undefined;
+let itemTimeout = undefined;
+let eventInst = undefined;
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -39,6 +42,7 @@ class Fund extends React.Component {
       auctionData: null,
 
       isValidBidData: false,
+      isValidBidDataFeedBack: true,
 
       firstName: null,
       lastName: null,
@@ -93,30 +97,44 @@ class Fund extends React.Component {
       phone:null,
       errorMsgPassword: null,
       showForgatePassword:false,
-    }
+    };
+		this.doGetEventData = this.doGetEventData.bind(this);
+		this.doGetSettings = this.doGetSettings.bind(this);
+		this.doGetItemByCode = this.doGetItemByCode.bind(this);
+		eventInst = this;
 
   };
   onFormClick = (e) => {
+    this.setState({
+      amountFeedBack:true,
+      cardHolderFeedBack:true,
+      cardNumberFeedBack:true,
+      expMonthFeedBack:true,
+      cvvFeedBack:true,
+      isValidBidDataFeedBack: false,
+    });
     e.preventDefault();
-    if ( !this.state.settings.moduleActivated){
-      this.setState({
-        showMapPopup: true,
-        errorMsg: " Pledges are no longer being accepted for this Need." ,
-        popupHeader:"Failed",
-      })
-    }else{
-      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
+    if(this.state.isValidBidData){
+      if ( !this.state.settings.moduleActivated){
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
-          popupHeader:"Confirm",
+          errorMsg: " Pledges are no longer being accepted for this Need." ,
+          popupHeader:"Failed",
         })
       }else{
-        this.setState({
-          showMapPopup: true,
-          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
-          popupHeader:"Confirm",
-        })
+        if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
+          this.setState({
+            showMapPopup: true,
+            errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+            popupHeader:"Confirm",
+          })
+        }else{
+          this.setState({
+            showMapPopup: true,
+            errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+            popupHeader:"Confirm",
+          })
+        }
       }
     }
   };
@@ -264,7 +282,7 @@ class Fund extends React.Component {
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (this.email.value.trim() == '') {
+    if (this.email.value.trim() === '') {
       this.setState({
         email: false,
         errorMsgEmail: "Email is required.",
@@ -292,7 +310,7 @@ class Fund extends React.Component {
       this.checkIsValidBidData()
     });
 
-    if (this.password.value.trim() == '') {
+    if (this.password.value.trim() === '') {
 
       this.setState({
         password: false,
@@ -318,7 +336,7 @@ class Fund extends React.Component {
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.firstName.value.trim() == '') {
+    if (this.firstName.value.trim() === '') {
       this.setState({
         firstName: false
       },function afterTitleChange () {
@@ -340,7 +358,7 @@ class Fund extends React.Component {
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.lastName.value.trim() == '') {
+    if (this.lastName.value.trim() === '') {
 
       this.setState({
         lastName: false
@@ -367,7 +385,7 @@ class Fund extends React.Component {
       this.checkIsValidBidData()
     });
 
-    if (this.cardHolder.value.trim() == '') {
+    if (this.cardHolder.value.trim() === '') {
 
       this.setState({
         cardHolder: false,
@@ -409,7 +427,7 @@ class Fund extends React.Component {
     });
 
 
-    if (this.cardNumber.value.trim() == '') {
+    if (this.cardNumber.value.trim() === '') {
 
       this.setState({
         cardNumber: false,
@@ -435,7 +453,7 @@ class Fund extends React.Component {
   amountValidateHandler = (e) => {
     let amount=true;
     let errorMsgAmount="";
-    if (this.amount.value.trim() == '') {
+    if (this.amount.value.trim() === '') {
       errorMsgAmount= "Pledge Amount can't be empty";
       amount=false
     }else if (this.state.fundData.pledgePrice  > this.amount.value.trim()) {
@@ -463,7 +481,7 @@ class Fund extends React.Component {
       this.checkIsValidBidData()
     });
 
-    if (this.cvv.value.trim() == '') {
+    if (this.cvv.value.trim() === '') {
 
       this.setState({
         cvv: false,
@@ -497,7 +515,7 @@ class Fund extends React.Component {
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
@@ -525,7 +543,7 @@ class Fund extends React.Component {
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-    if (this.expMonth.value.trim() == '') {
+    if (this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
         errorMsgExpMonth: "Expire Month is Require",
@@ -544,7 +562,7 @@ class Fund extends React.Component {
       expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
     });
-    if (this.expYear.value.trim() == '') {
+    if (this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
         errorMsgexpYear: "Expire Year is Require",
@@ -562,7 +580,7 @@ class Fund extends React.Component {
     let valid2=true;
     let flag=true;
     if(this.props.authenticated){
-      if( this.props.user.firstName == null ){
+      if( this.props.user.firstName === null ){
         valid1=!!(this.state.firstName && this.state.lastName && this.state.amount );
         flag=false;
       }
@@ -583,51 +601,74 @@ class Fund extends React.Component {
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
-      if(!resp.data.moduleActivated){
-        this.setState({
-          errorMsg:"Please activate this module to start accepting pledges.",
-          popupHeader :'Failed',
-        })
-      }
-      this.setState({
-        settings: resp && resp.data,
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
-    this.props.doGetFundANeedItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            fundData: resp.data
-          })
-        }
-      }).catch(error => {
-      history.push('/404');
-    });
+    this.doGetEventData(this.props.params && this.props.params.params);
+    this.doGetSettings(this.props.params && this.props.params.params, 'fundaneed');
+    this.doGetItemByCode();
   };
-  componentRernder() {
-    this.clearFormData();
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
-    this.props.doGetFundANeedItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            fundData: resp.data
-          })
-        }
-      }).catch(error => {
-    });
+	componentWillUnmount(){
+		if(settingTimeout){
+			clearTimeout(settingTimeout);
+			settingTimeout = null;
+		}
+		if(DataTimeout){
+			clearTimeout(DataTimeout);
+			DataTimeout = null;
+		}
+		if(itemTimeout){
+			clearTimeout(itemTimeout);
+			itemTimeout = null;
+		}
+	}
+	doGetItemByCode = ()=>{
+		eventInst = this;
+		this.props.doGetFundANeedItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+			.then(resp => {
+				if (resp && resp.data) {
+					this.setState({
+						fundData: resp.data
+					}, ()=>{
+						itemTimeout = setTimeout(()=>{
+							eventInst.doGetItemByCode();
+            }, 30000);
+          });
+				}
+			}).catch(error => {
+			if(itemTimeout){
+				clearTimeout(itemTimeout);
+				itemTimeout = null;
+			}
+		});
   };
+	doGetEventData = ()=>{
+		eventInst = this;
+		this.props.doGetEventData(this.props.params && this.props.params.params);
+		DataTimeout = setTimeout(()=>{
+			eventInst.doGetEventData();
+		}, 30000);
+	};
+	doGetSettings = (eventUrl, tab)=>{
+		eventInst = this;
+		this.props.doGetSettings(eventUrl, tab).then(resp => {
+			if(!resp.data.moduleActivated){
+				this.setState({
+					errorMsgCard:"Please activate this module to start accepting pledges.",
+					popupHeader :'Failed',
+				})
+			}
+			this.setState({
+				settings: resp && resp.data
+			}, ()=>{
+				settingTimeout = setTimeout(()=>{
+					eventInst.doGetSettings(eventUrl, tab);
+				}, 30000);
+			});
+		}).catch(error => {
+			if(settingTimeout){
+				clearTimeout(settingTimeout);
+				settingTimeout = null;
+			}
+		});
+	};
   reRender = ()=>{
     // window.location.reload();
   };
@@ -639,16 +680,29 @@ class Fund extends React.Component {
   hidePopup = () => {
     this.setState({
       showMapPopup: false,
-    })
-    if(this.state.popupHeader == "Success" ){
+    });
+    if(this.state.popupHeader === "Success" ){
       this.componentRernder();
     }
-    if(this.state.popupHeader == "Confirm" ){
+    if(this.state.popupHeader === "Confirm" ){
      this.setState({
-       errorMsg:""
+       errorMsg: "Confirmation Failed." ,
+       popupHeader:"Failed",
+
      });
     }
   };
+  componentRernder() {
+    this.clearFormData();
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+  }
   hideLoginModal  = () => {
     this.setState({
       isShowLoginModal:false,
@@ -660,6 +714,12 @@ class Fund extends React.Component {
     })
   };
 
+  numberOnly(e) {
+    const re = /[/0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   render() {
     return (
       <div className="row">
@@ -710,16 +770,12 @@ class Fund extends React.Component {
                         </div>
                       </div>
                       <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-                            action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
-                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
-                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
                             onSubmit={this.onFormClick}>
                         <button type="submit" className="fv-hidden-submit"
                                 style={{display: 'none', width: 0, height: 0}}/>
                         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
                           className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
-                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName == null ) ?  <div
+                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.firstName === null ) ?  <div
                           className={cx("form-group", this.state.firstNameFeedBack && 'has-feedback', this.state.firstNameFeedBack && this.state.firstName && 'has-success', this.state.firstNameFeedBack && (!this.state.firstName) && 'has-error')}>
                           <label className="control-label">First Name</label>
                           <div className="input-group">
@@ -739,7 +795,7 @@ class Fund extends React.Component {
                           { this.state.firstNameFeedBack && !this.state.firstName &&
                           <small className="help-block" data-fv-result="NOT_VALIDATED">First Name is required.</small>}
                         </div> : ""}
-                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName == null ) ?  <div
+                        { !this.props.authenticated || ( this.props.authenticated && this.props.user.lastName === null ) ?  <div
                           className={cx("form-group", this.state.lastNameFeedBack && 'has-feedback', this.state.lastNameFeedBack && this.state.lastName && 'has-success', this.state.lastNameFeedBack && (!this.state.lastName) && 'has-error')}>
                           <label className="control-label">Last Name</label>
                           <div className="input-group">
@@ -877,10 +933,10 @@ class Fund extends React.Component {
                                     </div>
                                     <input type="number" className="form-control field-card_number" id="cardnumber"
                                            placeholder="8888-8888-8888-8888"  maxLength="16" data-stripe="number"
-                                           required="required" data-fv-field="cardnumber"
                                            ref={ref => {
                                              this.cardNumber = ref;
                                            }}
+                                           onKeyPress={(e) => this.numberOnly(e)}
                                            onKeyUp={this.cardNumberValidateHandler}/>
                                     { this.state.cardNumberFeedBack && this.state.cardNumber &&
                                     <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -966,6 +1022,7 @@ class Fund extends React.Component {
                                                ref={ref => {
                                                  this.cvv = ref;
                                                }}
+                                               onKeyPress={(e) => this.numberOnly(e)}
                                                onKeyUp={this.cvvValidateHandler}/>
                                         { this.state.cvvFeedBack && this.state.cvv &&
                                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -985,14 +1042,15 @@ class Fund extends React.Component {
                           className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
                           <div className="row">
                             <div className="col-md-6">
+                              {this.state.errorMsg  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                                { this.state.errorMsg }</div> }
                               <div className="input-group has-feedback">
                                 <div className="input-group-addon">{this.props.currencySymbol}</div>
                                 <input type="number" className="form-control" name="itembid" id="itembid"
-                                       placeholder="Pledge Amount" step required="required"
-                                       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
                                        ref={ref => {
                                          this.amount = ref;
                                        }}
+                                       onKeyPress={(e) => this.numberOnly(e)}
                                        onKeyUp={this.amountValidateHandler}/>
                                 { this.state.amountFeedBack && this.state.amount && <i
                                   className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1014,7 +1072,7 @@ class Fund extends React.Component {
                         </div> }
                         <div className="row btn-row mrg-b-lg" >
                           <div className="col-sm-5">
-                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={!this.state.isValidBidData }
+                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidBidData }
                                                              role="button" type="submit"
                                                              loading={this.state.loading} >
                             Submit Pledge

@@ -126,10 +126,16 @@ class RowItemList extends React.Component {
 	};
 	deleteItemList = () => {
 		this.setState({loading: true});
-		this.state.item && this.state.item.id &&
+		if(this.state.item && this.state.item.id) {
 		this.props.deleteItemList('fundANeed', this.state.item.id).then(resp => {
 			this.setState({loading: false})
-		})
+		});
+    }else{
+      this.setState({
+        loading: false,
+        showPopup: false,
+      });
+    }
 	};
 	deleteAction = () => {
 		this.setState({

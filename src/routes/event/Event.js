@@ -17,7 +17,10 @@ import EventTabCommonBox from './../../components/EventTabCommonBox/EventTabComm
 import EventDonation from './../../components/EventDonation/EventDonation';
 import PopupModel from './../../components/PopupModal';
 import GoogleMap from "../../components/GoogleMaps";
-
+let oldTab= '';
+let settingTimeout = undefined;
+let DataTimeout = undefined;
+let eventInst = undefined;
 import {
 	doGetEventData,
 	doGetEventTicketSetting,
@@ -97,6 +100,10 @@ class Event extends React.Component {
 		this.doOrderTicket = this.doOrderTicket.bind(this);
 		this.hideFormError = this.hideFormError.bind(this);
 		this.onEventEnd = this.onEventEnd.bind(this);
+		this.doGetEventData = this.doGetEventData.bind(this);
+		this.doGetSettings = this.doGetSettings.bind(this);
+
+		eventInst = this;
 
 	}
 
@@ -110,9 +117,9 @@ class Event extends React.Component {
 		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=> {
 			this.setState({
 				activeEventTickets: this.props.eventData && this.props.eventData.ticketingEnabled,
-				activeAuction: this.props.eventData && this.props.eventData.silentAuctionEnabled,
-				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
-				activeFund: this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeAuction: this.props.eventData && (this.props.eventData.silentAuctionEnabled && !this.props.eventData.silentAuctionModuleHidden),
+				activeRaffle: this.props.eventData && (this.props.eventData.raffleEnabled && !this.props.eventData.raffleModuleHidden),
+				activeFund: this.props.eventData && (this.props.eventData.causeAuctionEnabled && !this.props.eventData.causeAuctionModuleHidden),
 				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
 			});
 			if (this.state.activeEventTickets) {
@@ -139,7 +146,7 @@ class Event extends React.Component {
 			this.setActiveTabState(this.state.tab);
 			if(window.location.hash){
 				let query = window.location.hash.split('#');
-				if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+				if(query && query.length === 2 && (query[1] === 'The Event' || query[1] === 'Auction' || query[1] === 'Raffle' || query[1] === 'Fund a Need' || query[1] === 'Donate')){
 					this.setState({
 						tab: query[1]
 					},function changeAfter(){
@@ -149,17 +156,11 @@ class Event extends React.Component {
 			}
 		});
 		//this.props.doGetEventTicketSetting(this.props.params && this.props.params.params);
-		this.props.doGetSettings(this.props.params && this.props.params.params, 'ticketing').then(resp => {
-			this.setState({
-				settings: resp && resp.data
-			});
-		}).catch(error => {
-			history.push('/404');
-		});
+		this.doGetSettings(this.props.params && this.props.params.params, 'ticketing');
 		this.props.isVolunteer(this.props.params && this.props.params.params);
 		if(window.location.hash){
 			let query = window.location.hash.split('#');
-			if(query && query.length == 2 && (query[1] == 'The Event' || query[1] == 'Auction' || query[1] == 'Raffle' || query[1] == 'Fund a Need' || query[1] == 'Donate')){
+			if(query && query.length === 2 && (query[1] === 'The Event' || query[1] === 'Auction' || query[1] === 'Raffle' || query[1] === 'Fund a Need' || query[1] === 'Donate')){
 				this.setState({
 					tab: query[1]
 				},function changeAfter(){
@@ -174,7 +175,55 @@ class Event extends React.Component {
 			isLoaded: true
 		});
 		window.addEventListener('scroll', this.handleScroll);
+		this.doGetEventData();
 	}
+	componentWillUnmount(){
+		if(settingTimeout){
+			clearTimeout(settingTimeout);
+			settingTimeout = null;
+		}
+		if(DataTimeout){
+			clearTimeout(DataTimeout);
+			DataTimeout = null;
+		}
+	}
+
+	doGetEventData = ()=>{
+		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=> {
+			this.setState({
+				activeEventTickets: this.props.eventData && this.props.eventData.ticketingEnabled,
+				activeAuction: this.props.eventData && this.props.eventData.silentAuctionEnabled,
+				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
+				activeFund: this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
+			});
+		});
+		DataTimeout = setTimeout(()=>{
+			eventInst.doGetEventData();
+		}, 30000);
+	};
+
+	doGetSettings = (eventUrl, tab)=>{
+		eventInst = this;
+		this.props.doGetSettings(eventUrl, tab).then(resp => {
+			this.setState({
+				settings: resp && resp.data
+			}, ()=>{
+				if(oldTab !== tab && settingTimeout){
+					clearTimeout(settingTimeout);
+					settingTimeout = null;
+				}
+				else {
+					oldTab = tab;
+				}
+				settingTimeout = setTimeout(()=>{
+					eventInst.doGetSettings(eventUrl, tab);
+				}, 30000);
+			});
+		}).catch(error => {
+			// history.push('/404');
+		});
+	};
 
 	emailValidateHandler = (e) => {
 		this.setState({
@@ -183,7 +232,7 @@ class Event extends React.Component {
 		});
 		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-		if (this.email.value.trim() == '') {
+		if (this.email.value.trim() === '') {
 			this.setState({
 				email: false,
 				errorMsgEmail: "Email is required.",
@@ -731,26 +780,12 @@ class Event extends React.Component {
 		})
 	}
   successTask = ()=> {
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
+    this.doGetSettings(this.props.params && this.props.params.params, 'raffle');
   };
 
 	onEventEnd = ()=>{
 		if(this.state.tab && this.props.params && this.props.params.params){
-			this.props.doGetSettings(this.props.params && this.props.params.params, this.state.tab).then(resp => {
-				this.setState({
-					settings: resp && resp.data
-				});
-			})
-				.catch(error => {
-
-					// history.push('/404');
-				});
+			this.doGetSettings(this.props.params && this.props.params.params, this.state.tab);
 		}
 	};
 

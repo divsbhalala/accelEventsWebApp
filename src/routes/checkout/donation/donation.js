@@ -366,7 +366,12 @@ class Donation extends React.Component {
     }).catch((error) => {
     })
   };
-
+  numberOnly(e) {
+    const re = /[/0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   render() {
     return (
       <div className="container">
@@ -624,8 +629,8 @@ class Donation extends React.Component {
                                              data-stripe="cvc" id="cvv" placeholder="CVC/CVV" data-fv-field="cvv"
                                              ref={ref => {
                                                this.cvv = ref;
-                                             }}
-                                             onKeyUp={this.cvvValidateHandler}/>
+                                             }} onKeyPress={(e) => this.numberOnly(e)}
+                                               onKeyUp={this.cvvValidateHandler}/>
                                       { this.state.cvvFeedBack && this.state.cvv &&
                                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                                       { this.state.cvvFeedBack && !this.state.cvv &&

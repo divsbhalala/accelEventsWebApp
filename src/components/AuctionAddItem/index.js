@@ -181,6 +181,17 @@ class AuctionAddItem extends React.Component {
 						Item &nbsp; </button>
 				</div>
 				<div className="ajax-wrap">
+          { this.props.isLoading ?
+						<div className="ajax-msg-box text-center">
+							<span className="fa fa-spinner fa-pulse fa-fw"/>
+							<span className="resp-message">Please wait...</span>
+						</div> : ""
+          }
+          { this.props.isSuccess ?
+						<div className="ajax-msg-box text-center text-success">
+							<span className="resp-message">Item saved...</span>
+						</div> : ""
+          }
 					{this.state.message && <div
 						className={cx("alert", this.props.isItemAdded &&  this.props.isItemAdded.status === "success" ? "alert-success" : "alert-danger")}>{this.state.message}</div>}
 				</div>

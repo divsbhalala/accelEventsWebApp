@@ -38,7 +38,7 @@ import PopupModel from '../../../components/PopupModal'
   imageUpload =()=> {
     if(this.state.imageFiles && this.state.isUploaded){
     for (let file in this.state.imageFiles) {
-      this.setState({loading:true,isUploaded:false})
+      this.setState({loading:true,isUploaded:false});
       this.props.uploadImage(this.state.imageFiles[file]).then(resp => {
         this.setState({loading:false});
         if (resp && resp.data && resp.status===200) {

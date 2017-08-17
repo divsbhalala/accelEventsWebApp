@@ -9,7 +9,8 @@ import {doGetSettings,getGoalData} from './../action/index';
 import EventEndUntil from '../../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../../components/Widget/TotalProceeds';
 import Thermometer from '../../../components/Widget/Thermometer';
-
+let fundInst = undefined;
+let totalFundRaised=0;
 class FundGoal extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -22,20 +23,28 @@ class FundGoal extends React.Component {
       settings: null,
       goalData:null,
       goalPer:0,
-    }
+    };
+    this.getGoalData = this.getGoalData.bind(this);
   }
 
   componentWillMount() {
-    let totalFundRaised=0;
-    this.props.getGoalData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+    totalFundRaised=0;
+    this.getGoalData(this.props.params && this.props.params.params, 'fundaneed');
+  }
+  getGoalData = (eventUrl, slug)=>{
+    this.props.getGoalData(eventUrl, slug).then(resp => {
       totalFundRaised=resp.totalRised;
       this.setState({
         goalData: resp,
         goalPer:totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
         settings:resp
       });
-    })
-  }
+      // setTimeout(()=>{
+      //   fundInst.getGoalData(eventUrl, slug)
+      // },5000)
+
+    });
+  };
   render() {
     return (
       <div className="container goal-page">
@@ -79,8 +88,7 @@ class FundGoal extends React.Component {
 }
 
 const mapDispatchToProps = {
-  doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
-  getGoalData: (eventUrl,type) => getGoalData(eventUrl,type),
+   getGoalData: (eventUrl,type) => getGoalData(eventUrl,type),
 };
 const mapStateToProps = (state) => ({
 	currencySymbol: state.event && state.event.currencySymbol || "$",

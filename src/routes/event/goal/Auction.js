@@ -8,12 +8,12 @@ import s from './goal.css';
 import EventEndUntil from '../../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../../components/Widget/TotalProceeds';
 import Thermometer from '../../../components/Widget/Thermometer';
-
+let auctionInst = undefined;
+let totalFundRaised=0;
 class Auction extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
 	};
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -22,28 +22,26 @@ class Auction extends React.Component {
 			itemList: null,
 			goalData: null,
 			goalPer: 0,
-		}
+		};
+    this.getGoalData = this.getGoalData.bind(this);
 	}
-
-	componentWillMount() {
-		let totalFundRaised = 0;
-		// this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-		//   totalFundRaised=resp.data.totalFundRaised
-		//   this.setState({
-		//     settings: resp && resp.data
-		//   });
-		this.props.getGoalData(this.props.params && this.props.params.params, 'auction').then(resp => {
-			totalFundRaised = resp.totalRised;
-			this.setState({
-				goalData: resp,
-				goalPer: totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
-				settings: resp
-			});
-
-		})
-		// })
-	}
-
+  componentWillMount() {
+    totalFundRaised=0;
+    this.getGoalData(this.props.params && this.props.params.params, 'auction');
+  }
+  getGoalData = (eventUrl, slug)=>{
+    this.props.getGoalData(eventUrl, slug).then(resp => {
+      totalFundRaised=resp.totalRised;
+      this.setState({
+        goalData: resp,
+        goalPer:totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
+        settings:resp
+      });
+      // setTimeout(()=>{
+      //   auctionInst.getGoalData(eventUrl, slug)
+      // },5000)
+    });
+  };
 	render() {
 		return (
 			<div className="container goal-page">
@@ -69,25 +67,20 @@ class Auction extends React.Component {
 											{ this.state.settings && this.state.goalData && <Thermometer goalPer={this.state.goalPer} settings={this.state.settings} goalData={this.state.goalData} />}
 										</div>
 									</div>
-
 								</div>
 								<div className="col-md-3">
 									{this.state.settings && <EventEndUntil settings={this.state.settings} />}
 								</div>
 							</div>
-
 						</div>
 					</div>
 					: <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
 				</div>
-
 			</div>
 		);
 	}
 }
-
 const mapDispatchToProps = {
-	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	getGoalData: (eventUrl, type) => getGoalData(eventUrl, type),
 };
 const mapStateToProps = (state) => ({

@@ -12,8 +12,29 @@ class SilentAuctionAddItems extends React.Component {
     super(props);
     this.state = {
       item: {},
+      isLoading: false,
+      isSuccess: false
     };
+    this.showSuccessMessage = this.showSuccessMessage.bind(this);
   }
+  showSuccessMessage = ()=>{
+    this.setState({
+      isLoading: true,
+    },()=>{
+      setTimeout(()=>{
+        this.setState({
+          isLoading: false,
+          isSuccess: true
+        }, ()=>{
+          setTimeout(()=>{
+            this.setState({
+              isSuccess: false
+            })
+          }, 4000)
+        });
+      },3000)
+    });
+  };
   getItemSheetPdf = () => {
     this.props.getItemSheetPdf(this.props.eventName+"-auction-items.pdf").then((resp) => {
     });
@@ -46,7 +67,7 @@ class SilentAuctionAddItems extends React.Component {
                                 Add Silent Auction Items
                                 {/*<span className="item-count-wrap xpull-right"> (<span className="item-count">{this.state.items.length}</span>)</span>*/}
                             <div className="pull-right">
-                              <button className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
+                              <button  onClick={this.showSuccessMessage} className="btn btn-info btn-block save-item-btn" type="button"> &nbsp; &nbsp; Save Items &nbsp; &nbsp; </button>
                             </div>
                           </h1>
                         </div>
@@ -57,7 +78,7 @@ class SilentAuctionAddItems extends React.Component {
                     <div className="col-lg-12">
                       <div className="main-box no-header">
                         <div className="main-box-body clearfix">
-                          <AuctionAddItem />
+                          <AuctionAddItem isLoading={this.state.isLoading}  isSuccess={this.state.isSuccess}/>
                           <div className="form-group operations-row">
                             <div className="row">
                               <div className="col-md-3" role="group">

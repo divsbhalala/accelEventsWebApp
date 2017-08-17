@@ -100,6 +100,11 @@ class Account extends React.Component {
         cardHolder: false,
         errorMsgcardHolder: 'The card holder name must be more than 6 and less than 70 characters long ',
       });
+    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+      this.setState({
+        cardHolder: false,
+        errorMsgcardHolder: "The card holder name can not start or end with white space",
+      });
     } else {
       this.setState({
         cardHolder: true,
@@ -278,6 +283,12 @@ class Account extends React.Component {
       showPopup: false,
     });
   };
+  numberOnly(e) {
+    const re = /[/0-9A-F:]+/g;
+    if (!re.test(e.key)) {
+      e.preventDefault();
+    }
+  }
   render() {
     // http://allenfang.github.io/react-bootstrap-table/example.html
     const products = [{
@@ -305,6 +316,7 @@ class Account extends React.Component {
       code: 'ticketingpkg',
       price: 0,
     }];
+
 
     return (
       <div>
@@ -431,6 +443,7 @@ class Account extends React.Component {
                                               ref={(ref) => {
                                                 this.cardNumber = ref;
                                               }}
+                                              onKeyPress={(e) => this.numberOnly(e)}
                                               onKeyUp={this.cardNumberValidateHandler}
                                             />
                                             { this.state.cardNumberFeedBack && this.state.cardNumber &&
@@ -526,6 +539,7 @@ class Account extends React.Component {
                                                   ref={(ref) => {
                                                     this.cvv = ref;
                                                   }}
+                                                  onKeyPress={(e) => this.numberOnly(e)}
                                                   onKeyUp={this.cvvValidateHandler}
                                                 />
                                                 { this.state.cvvFeedBack && this.state.cvv &&

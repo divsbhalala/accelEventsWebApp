@@ -20,7 +20,8 @@ class EditEvent extends React.Component {
   render() {
     return (
       <div className="container">
-        <form id="editform" action="../edit" method="post" noValidate="novalidate" className="fv-form fv-form-bootstrap"><button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
+        <form id="editform"  noValidate="novalidate" className="fv-form fv-form-bootstrap">
+          <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
           <div className="form-group row has-feedback">
             <div className="col-md-4">
               <label>Message after payment</label>
@@ -142,10 +143,10 @@ class EditEvent extends React.Component {
           <input type="hidden" name defaultValue />
           <div className="form-group row">
             <div className="col-md-2 col-sm-12">
-              <button className="btn btn-info btn-block" type="submit" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
+              <button className="btn btn-info btn-block" type="button" data-loading-text="<i class='fa fa-spinner fa-spin'></i> Saving Settings">Save Settings</button>
             </div>
             <div className="col-md-2 col-sm-12">
-              <a className="btn btn-danger btn-block" href="/u/superadmin/auction">Cancel</a>
+              <a className="btn btn-danger btn-block" href="/u/superadmin/events">Cancel</a>
             </div>
             <div id="alertmessage" className="col-md-8 col-sm-12" />
           </div>

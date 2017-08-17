@@ -34,15 +34,12 @@ class Checkout extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
 	};
-
 	constructor(props) {
 		super(props);
 		this.state = {
 			settings : undefined,
 			isTimeOut: false
 		};
-
-
 	}
 	componentWillMount() {
 		eventUrl = this.props.params && this.props.params.params;
@@ -55,14 +52,11 @@ class Checkout extends React.Component {
 			//history.push('/404');
 		});
 	}
-
 	setOrderExpierd = (status)=>{
 		this.setState({
 			isTimeOut: status
 		})
 	};
-
-
 	render() {
 		let makeItem = function (i) {
 			let item = [];

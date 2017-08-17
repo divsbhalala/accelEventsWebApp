@@ -10,8 +10,7 @@ import EventEndUntil from '../../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../../components/Widget/TotalProceeds';
 import ItemList from '../../../components/Widget/FundANeed/ItemList';
 // import  history from './../../../history';
-
-import moment from 'moment';
+let fundInst = undefined;
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -22,17 +21,29 @@ class Fund extends React.Component {
     this.state = {
       isLogin: false,
       settings: null,
-    }
-
+    };
+    this.doGetSettings = this.doGetSettings.bind(this);
+    this.getScrollData = this.getScrollData.bind(this);
   }
 
   componentWillMount() {
-    this.props.getScrollData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+    fundInst = this;
+    this.doGetSettings(this.props.params && this.props.params.params, 'fundaneed');
+    this.getScrollData(this.props.params && this.props.params.params, 'fundaneed');
+  }
+  doGetSettings = (eventUrl, slug)=>{
+
+  };
+  getScrollData = (eventUrl, slug)=>{
+    this.props.getScrollData(eventUrl, slug).then(resp => {
       this.setState({
         settings: resp
       });
+      setTimeout(()=>{
+        fundInst.getScrollData(eventUrl, slug);
+      },5000)
     });
-  }
+  };
 
   render() {
     return (

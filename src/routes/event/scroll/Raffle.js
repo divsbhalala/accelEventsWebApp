@@ -11,8 +11,7 @@ import EventEndUntil from '../../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../../components/Widget/TotalProceeds';
 import ItemList from '../../../components/Widget/Raffle/ItemList';
 // import  history from './../../../history';
-
-
+let raffleInst = undefined;
 class Raffle extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -24,13 +23,26 @@ class Raffle extends React.Component {
       settings: null,
       itemList: null,
     };
+    this.doGetSettings = this.doGetSettings.bind(this);
+    this.getScrollData = this.getScrollData.bind(this);
   }
-  componentWillMount() {
-    this.props.getScrollData(this.props.params && this.props.params.params, 'raffle').then((resp) => {
+  doGetSettings = (eventUrl, slug)=>{
+
+  };
+  getScrollData = (eventUrl, slug)=>{
+    this.props.getScrollData(eventUrl, slug).then(resp => {
       this.setState({
-        settings: resp,
+        settings: resp
       });
+      setTimeout(()=>{
+        raffleInst.getScrollData(eventUrl, slug);
+      },5000)
     });
+  };
+  componentWillMount() {
+    raffleInst = this;
+    this.doGetSettings(this.props.params && this.props.params.params, 'raffle');
+    this.getScrollData(this.props.params && this.props.params.params, 'raffle');
   }
   render() {
     return (
