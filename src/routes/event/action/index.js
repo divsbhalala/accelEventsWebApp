@@ -18,7 +18,6 @@ export function doGetIpInfo() {
         return error;
       });
   }
-
 }
 export function doGetEventData(eventUrl) {
   return (dispatch) => {

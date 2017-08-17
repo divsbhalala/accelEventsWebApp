@@ -21,7 +21,8 @@ import {
 	doGetOrderById,
 	doGetSettings,
 	doSignUp,
-	couponCode
+	couponCode,
+  doValidateMobileNumber
 } from './../../routes/event/action/index';
 import {createCardToken, orderTicket} from './../../routes/checkout/action/index';
 let countDownInterval = null;
@@ -753,7 +754,7 @@ class TicketCheckout extends React.Component {
 				event.parentElement.classList.remove('has-success');
 			}
 			else {
-				object[key][itemKey][field.name]['error'] = false;
+				object[key][field.name]['error'] = false;
 			}
 		}
 		event.parentElement.classList.add('has-feedback');
@@ -772,6 +773,16 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.add('has-success');
 			event.parentElement.classList.remove('has-error');
 		}
+    this.props.doValidateMobileNumber(countryData).then(resp => {
+			if(resp)
+			 {object[key][field.name]['error'] = true
+         event.parentElement.classList.add('has-error');
+         event.parentElement.classList.remove('has-success');
+			 }else
+			 { event.parentElement.classList.remove('has-error');
+         event.parentElement.classList.add('has-success');
+			 }
+    })
 		attendee = object;
 		this.isValidFormData();
 	};
@@ -1301,9 +1312,9 @@ class TicketCheckout extends React.Component {
 																						onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
 																							this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
 																						}}
-																						onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
-																							this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
-																						}}
+																						// onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																						// 	this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																						// }}
 																					/>
 
 																					<i
@@ -2376,6 +2387,7 @@ const mapDispatchToProps = {
 	orderTicket: (eventurl, orderid, ticketBookingDto) => orderTicket(eventurl, orderid, ticketBookingDto),
 	couponCode: (eventurl, orderid, couponcode) => couponCode(eventurl, orderid, couponcode),
 	doSignUp: (eventurl, userData) => doSignUp(eventurl, userData),
+  doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
 };
 
 const mapStateToProps = (state) => ({
