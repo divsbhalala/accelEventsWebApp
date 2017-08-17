@@ -102,7 +102,7 @@ class OrderPenal extends React.Component { // eslint-disable-line
 			<div className="order-panel">
 				<div className="order-panel-header">
 					<div className="order-number">
-						Order #{this.props.order.id} - {this.props.currencySymbol}{this.props.order.totalAmount}<br />
+						Order #{this.props.order.id} - {this.props.currencySymbol}{this.props.order.totalAmount ? this.props.order.totalAmount.toFixed(2) : 0}<br />
 						<strong>{this.props.order.status}</strong>
 					</div>
 					{this.props.order.status && this.props.order.status.toLowerCase() !== "refunded" ?
