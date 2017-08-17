@@ -81,8 +81,9 @@ class Auction extends React.Component {
                       <th className="item-name">Item</th>
                       <th className="item-code">Item Code</th>
                       <th className="item-startingBid">{this.state.settings && this.state.settings.moduleEnded ? "WINNING BID" : "CURRENT BID"}</th>
-                      { this.state.auctionSettings && !this.state.auctionSettings.highestBidderHidden &&
-  										!this.state.settings.moduleEnded ?<th>Highest Bidder</th> : <th>WINNING BIDDER</th>}
+                      { this.state.eventSettings && !this.state.eventSettings.highestBidderHidden &&
+  										!this.state.settings.moduleEnded ? <th>Highest Bidder</th> : ""}
+                      { this.state.settings && !this.state.settings.moduleEnded ?"" : <th>WINNING BIDDER</th>}
                     </tr>
                   </thead>
                 </table>
@@ -92,7 +93,7 @@ class Auction extends React.Component {
                       <tbody>
                       {this.state.settings && this.state.settings.items &&
 											this.state.settings.items.map((item, index) =>
-                        <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded}/>
+                        <ItemList key={index} item={item} moduleEnded={this.state.settings && this.state.settings.moduleEnded} highestBidderHidden={this.state.eventSettings && this.state.eventSettings.highestBidderHidden}/>
                       )
                       }
                       </tbody>
