@@ -1202,18 +1202,20 @@ class Auction extends React.Component {
           </div>
         </div> : "" }
 
-      <div className="col-sm-3" style={{paddingLeft:0}}>
-        <Button  loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+
+        <div className="row btn-row mrg-b-lg" style={{paddingLeft:0}}>
+          <div className="col-sm-3" style={{    minWidth: "110px",maxWidth:"120px",paddingRight:"5px"}}>
+            <Button style={{width:"100%"}} loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
                  type="submit" >
           Submit bid
-        </Button>
-        &nbsp;&nbsp;
-      </div>
-      <div className="col-sm-5" style={{paddingLeft:0,marginLeft:-14,"width":"40%"}}>
-        <a onClick={this.goBack} className="btn btn-success btn-block" >
+        </Button></div>
+          <div className="col-sm-5" style={{paddingLeft:0,width:"180px"}}>
+          <a onClick={this.goBack} className="btn btn-success btn-block" >
           Go back to All Items
-        </a>
-      </div>
+        </a></div>
+        </div>
+
+
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
       className="current-bid">400</span></div>;
