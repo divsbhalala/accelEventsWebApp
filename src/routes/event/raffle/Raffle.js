@@ -18,7 +18,11 @@ import PopupModel from './../../../components/PopupModal';
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
 import LoginModal from '../../../components/LoginModal/index';
-import BuyRaffleTicketsModal from './../../../components/BuyRaffleTicketsModal'
+import BuyRaffleTicketsModal from './../../../components/BuyRaffleTicketsModal';
+let settingTimeout = undefined;
+let DataTimeout = undefined;
+let eventInst = undefined;
+let itemTimeout = undefined;
 class Raffle extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -97,7 +101,11 @@ class Raffle extends React.Component {
       countryPhone:null,
       phone:null,
       isError:false,
-  }
+  };
+		this.doGetEventData = this.doGetEventData.bind(this);
+		this.doGetSettings = this.doGetSettings.bind(this);
+		this.doGetItemByCode = this.doGetItemByCode.bind(this);
+		eventInst = this;
   }
   onFormClick = (e) => {
     e.preventDefault();
@@ -367,43 +375,77 @@ class Raffle extends React.Component {
 
   componentWillMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    this.props.doGetEventData(this.props.params && this.props.params.params);
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'raffle').then(resp => {
-      if(!resp.data.moduleActivated){
-        this.setState({
-          errorMsg:"Please activate this module to start accepting pledges.",
-          popupHeader :'Failed',
-          isError:true,
-        });
-      }
-      this.setState({
-        settings: resp && resp.data
-      });
-    }).catch(error => {
-      history.push('/404');
-    });
-    this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            raffleData: resp.data
-          })
-        }
-      }).catch(error => {
-      history.push('/404');
-    });
+    this.doGetEventData();
+    this.doGetSettings(this.props.params && this.props.params.params, 'raffle');
+    this.doGetItemByCode();
   };
   componentReRender() {
-    this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            raffleData: resp.data
-          })
-        }
-      }).catch(error => {
-    });
+    this.doGetItemByCode();
   };
+	componentWillUnmount(){
+		if(settingTimeout){
+			clearTimeout(settingTimeout);
+			settingTimeout = null;
+		}
+		if(DataTimeout){
+			clearTimeout(DataTimeout);
+			DataTimeout = null;
+		}
+		if(itemTimeout){
+			clearTimeout(itemTimeout);
+			itemTimeout = null;
+		}
+	}
+	doGetItemByCode = ()=>{
+		eventInst = this;
+		this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
+			.then(resp => {
+				if (resp && resp.data) {
+					this.setState({
+						raffleData: resp.data
+					}, ()=>{
+						itemTimeout = setTimeout(()=>{
+							eventInst.doGetItemByCode();
+						}, 30000);
+					});
+				}
+			}).catch(error => {
+			if(itemTimeout){
+				clearTimeout(itemTimeout);
+				itemTimeout = null;
+			}
+		});
+	};
+	doGetEventData = ()=>{
+		this.props.doGetEventData(this.props.params && this.props.params.params);
+		DataTimeout = setTimeout(()=>{
+			eventInst.doGetEventData();
+		}, 30000);
+	};
+
+	doGetSettings = (eventUrl, tab)=>{
+		eventInst = this;
+		this.props.doGetSettings(eventUrl, tab).then(resp => {
+			if(!resp.data.moduleActivated){
+				this.setState({
+					errorMsgCard:"Please activate this module to start accepting pledges.",
+					popupHeader :'Failed',
+				})
+			}
+			this.setState({
+				settings: resp && resp.data
+			}, ()=>{
+				settingTimeout = setTimeout(()=>{
+					eventInst.doGetSettings(eventUrl, tab);
+				}, 30000);
+			});
+		}).catch(error => {
+			if(settingTimeout){
+				clearTimeout(settingTimeout);
+				settingTimeout = null;
+			}
+		});
+	};
 
   buyRaffleTicket = (e) => {
     e.preventDefault();
@@ -481,7 +523,7 @@ class Raffle extends React.Component {
   };
   goBack = () =>{
     window.history.go(-1);
-  }
+  };
   checkIsValidBidData = () =>{
     let valid1=true;
     let valid2=true;
@@ -532,17 +574,7 @@ class Raffle extends React.Component {
     })
   };
   successTasks = ()=> {
-    this.props.doGetRaffleItemByCode(this.props.params && this.props.params.params, this.props.itemCode)
-      .then(resp => {
-        if (resp && resp.data) {
-          this.setState({
-            raffleData: resp.data
-          })
-        }
-      }).catch(error => {
-
-      history.push('/404');
-    });
+    this.doGetItemByCode();
   };
   numberOnly(e) {
     const re = /[/.0-9A-F:]+/g;

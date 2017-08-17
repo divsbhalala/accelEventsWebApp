@@ -1112,9 +1112,13 @@ class TicketCheckout extends React.Component {
 											onSubmit={this.ticketCheckout}>
 									<div className="row">
 										<div className={( this.props.isVoluneer ? "col-md-12" : "col-md-10 col-md-offset-1")}>
-											<h3
-												className="type-name">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData[0].ticketTypeName}</h3>
-												<div className="type-desc">{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData[0].ticketTypeDescription}</div>
+										{
+											this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData.map((ticket) =>
+											<div><h3 className="type-name">{ticket.ticketTypeName}</h3>
+											<div className="type-desc">{ticket.ticketTypeDescription}</div></div>
+										)
+									}
+
 											{this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData &&
 											<div className="project-box gray-box card">
 												<div className="project-box-header gray-bg">

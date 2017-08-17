@@ -8,7 +8,8 @@ import s from './goal.css';
 import EventEndUntil from '../../../components/Widget/EventEndUntil';
 import TotalProceeds from '../../../components/Widget/TotalProceeds';
 import Thermometer from '../../../components/Widget/Thermometer';
-
+let auctionInst = undefined;
+let totalFundRaised=0;
 class Auction extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
@@ -22,27 +23,27 @@ class Auction extends React.Component {
 			itemList: null,
 			goalData: null,
 			goalPer: 0,
-		}
+		};
+    this.getGoalData = this.getScrollData.bind(this);
 	}
+  componentWillMount() {
+    totalFundRaised=0;
+    this.getGoalData(this.props.params && this.props.params.params, 'auction');
+  }
+  getGoalData = (eventUrl, slug)=>{
+    this.props.getGoalData(eventUrl, slug).then(resp => {
+      totalFundRaised=resp.totalRised;
+      this.setState({
+        goalData: resp,
+        goalPer:totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
+        settings:resp
+      });
+      setTimeout(()=>{
+        auctionInst.getGoalData(eventUrl, slug)
+      },5000)
 
-	componentWillMount() {
-		let totalFundRaised = 0;
-		// this.props.doGetSettings(this.props.params && this.props.params.params, 'auction').then(resp => {
-		//   totalFundRaised=resp.data.totalFundRaised
-		//   this.setState({
-		//     settings: resp && resp.data
-		//   });
-		this.props.getGoalData(this.props.params && this.props.params.params, 'auction').then(resp => {
-			totalFundRaised = resp.totalRised;
-			this.setState({
-				goalData: resp,
-				goalPer: totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
-				settings: resp
-			});
-
-		})
-		// })
-	}
+    });
+  };
 
 	render() {
 		return (

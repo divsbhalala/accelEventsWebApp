@@ -8,6 +8,7 @@ import s from './table.css';
 import {getScrollData, doGetSettings} from './../action/index';
 import  EventAside from './../../../components/EventAside/EventAside';
 import ItemList from '../../../components/Widget/FundANeed/ItemList';
+let fundInst = undefined;
 // import  history from './../../../history';
 class Fund extends React.Component {
   static propTypes = {
@@ -21,22 +22,37 @@ class Fund extends React.Component {
       settings: null,
 			eventSettings: null,
       itemList: null,
-    }
-
+    };
+    this.doGetSettings = this.doGetSettings.bind(this);
+    this.getScrollData = this.getScrollData.bind(this);
   }
 
   componentWillMount() {
-    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
-      this.setState({
-				eventSettings: resp && resp.data
-      });
-    });
-		this.props.getScrollData(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
-			this.setState({
-				settings: resp,
-			});
-		});
+    fundInst = this;
+    this.doGetSettings(this.props.params && this.props.params.params, 'fundaneed');
+    this.getScrollData(this.props.params && this.props.params.params, 'fundaneed');
   }
+  doGetSettings = (eventUrl, slug)=>{
+    this.props.doGetSettings(eventUrl, slug).then(resp => {
+      this.setState({
+        eventSettings: resp && resp.data
+      });
+      setTimeout(()=>{
+        fundInst.doGetSettings(eventUrl, slug)
+      },5000)
+
+    });
+  };
+  getScrollData = (eventUrl, slug)=>{
+    this.props.getScrollData(eventUrl, slug).then(resp => {
+      this.setState({
+        settings: resp
+      });
+      setTimeout(()=>{
+        fundInst.getScrollData(eventUrl, slug);
+      },5000)
+    });
+  };
 
   render() {
     return (
