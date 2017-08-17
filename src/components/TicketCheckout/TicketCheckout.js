@@ -31,6 +31,7 @@ let Total = 0;
 let attendee = {};
 let questions = {};
 let buyerInformationFields = {};
+let buyerQuestions = {};
 let eventUrl;
 let orderId;
 let validData = true;
@@ -46,6 +47,7 @@ class TicketCheckout extends React.Component {
 			attendee: [],
 			questions: [],
 			buyerInformationFields: [],
+			buyerQuestions: [],
 			errorBuyer: [],
 			errorAttendee: [],
 			ticketPurchaseSuccessPopup: false,
@@ -416,6 +418,45 @@ class TicketCheckout extends React.Component {
 				errorBuyer: buyerInformationFields,
 			});
 		}
+		if (ticketAttribute.buyerQuestions) {
+			ticketAttribute.buyerQuestions.map((item, index) => {
+				if (!buyerQuestions[index]) {
+					buyerQuestions[index] = {};
+				}
+				if (!buyerQuestions[index][item.name]) {
+					buyerQuestions[index][item.name] = {};
+				}
+				if (item.mandatory && item.name && /address/i.test(item.name)) {
+					if (!buyerQuestions[index][item.name + " 1"]) {
+						buyerQuestions[index][item.name + " 1"] = {};
+					}
+					if (!buyerQuestions[index][item.name + " 2"]) {
+						buyerQuestions[index][item.name + " 2"] = {};
+					}
+					if (!buyerQuestions[index][item.name + " City"]) {
+						buyerQuestions[index][item.name + " City"] = {};
+					}
+					if (!buyerQuestions[index][item.name + " State"]) {
+						buyerQuestions[index][item.name + " State"] = {};
+					}
+					if (!buyerQuestions[index][item.name + " Zip Code"]) {
+						buyerQuestions[index][item.name + " Zip Code"] = {};
+					}
+					buyerQuestions[index][item.name + " 1"]['error'] = !buyerQuestions[index][item.name + " 1"].value;
+					buyerQuestions[index][item.name + " 2"]['error'] = !buyerQuestions[index][item.name + " 2"].value;
+					buyerQuestions[index][item.name + " City"]['error'] = !buyerQuestions[index][item.name + " City"].value;
+					buyerQuestions[index][item.name + " State"]['error'] = !buyerQuestions[index][item.name + " State"].value;
+					buyerQuestions[index][item.name + " Zip Code"]['error'] = !buyerQuestions[index][item.name + " Zip Code"].value;
+
+				}
+				else if (item.mandatory && !buyerQuestions[index][item.name].value) {
+					buyerQuestions[index][item.name]['error'] = true;
+				}
+			});
+			this.setState({
+				errorBuyerQuestions: buyerQuestions,
+			});
+		}
 		if (ticketAttribute && ticketAttribute.attendees) {
 			ticketAttribute.attendees.map((item, index) => {
 				if (!attendee[index]) {
@@ -589,8 +630,36 @@ class TicketCheckout extends React.Component {
 					];
 
 					if (ticketAttribute) {
-						if (ticketAttribute.buyerQuestions) {
+						/*if (ticketAttribute.buyerQuestions) {
 							request.purchaser.questions = [];
+						}*/
+						if (ticketAttribute.buyerQuestions) {
+							let index = _.find(ticketAttribute.buyerQuestions, function (item) {
+								return item.type === 'email';
+							});
+							request.purchaser.attributes = [];
+							if (index > -1) {
+								request.purchaser.attributes = request.purchaser.attributes.concat({
+									"Email": orderData && orderData.purchaserDetail && orderData.purchaserDetail.email
+								})
+							}
+							let  infoFields = request.purchaser.attributes;
+							let buyerQuestionsArray = Object.keys(buyerQuestions).map(function(k) { return buyerQuestions[k] });
+							if (buyerQuestionsArray) {
+								buyerQuestionsArray.map((item, itemKey) => {
+									let keys = _.keys(item);
+									keys.map(keyItem => {
+										if (item[keyItem].key) {
+											infoFields.push({
+												key: item[keyItem].key,
+												value: item[keyItem].value,
+											})
+										}
+									})
+								})
+							}
+							request.purchaser.questions = infoFields;
+
 						}
 						if (ticketAttribute.buyerInformationFields) {
 							let index = _.find(ticketAttribute.buyerInformationFields, function (item) {
@@ -735,7 +804,59 @@ class TicketCheckout extends React.Component {
 	};
 
 	buyerPhoneNumberValidateHandler(isValid, value, name, countryData, number, ext, field, key, event) {
-		let object = attendee || {};
+		let object = buyerInformationFields || {};
+		if (!object[key]) {
+			object[key] = [];
+		}
+		if (!object[key][field.name]) {
+			object[key][field.name] = {};
+		}
+		object[key][field.name] = {
+			"key": field.name,
+			"value": value
+		};
+		event = document.getElementById(field.name + key);
+		if (field.mandatory) {
+			if (!value) {
+				object[key][field.name]['error'] = true;
+				event.parentElement.classList.add('has-error');
+				event.parentElement.classList.remove('has-success');
+			}
+			else {
+				object[key][field.name]['error'] = false;
+			}
+		}
+		event.parentElement.classList.add('has-feedback');
+		if (value && field && field.type === 'email') {
+			object[key][field.name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.parentElement.classList.remove('has-error');
+				event.parentElement.classList.add('has-success');
+			}
+			else {
+				event.parentElement.classList.add('has-error');
+				event.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.parentElement) {
+			event.parentElement.classList.add('has-success');
+			event.parentElement.classList.remove('has-error');
+		}
+    this.props.doValidateMobileNumber(countryData).then(resp => {
+			if(resp)
+			 {object[key][field.name]['error'] = true
+         event.parentElement.classList.add('has-error');
+         event.parentElement.classList.remove('has-success');
+			 }else
+			 { event.parentElement.classList.remove('has-error');
+         event.parentElement.classList.add('has-success');
+			 }
+    });
+		buyerInformationFields = object;
+		this.isValidFormData();
+	};
+	buyerQuestionsPhoneNumberValidateHandler(isValid, value, name, countryData, number, ext, field, key, event) {
+		let object = buyerInformationFields || {};
 		if (!object[key]) {
 			object[key] = [];
 		}
@@ -783,7 +904,7 @@ class TicketCheckout extends React.Component {
          event.parentElement.classList.add('has-success');
 			 }
     })
-		attendee = object;
+		attendee = buyerQuestions;
 		this.isValidFormData();
 	};
 
@@ -973,6 +1094,48 @@ class TicketCheckout extends React.Component {
 		this.isValidFormData();
 
 	};
+	buyerQuestionsInformationFieldsHandler = (field, key, event) => {
+		let object = buyerQuestions || {};
+		if (!object[key]) {
+			object[key] = {}
+		}
+		if (!object[key][field.name]) {
+			object[key][field.name] = {};
+		}
+		let value = event.target.value;
+		object[key][field.name] = {
+			key: field.name,
+			value: value
+		};
+		object[key][field.name]['error'] = false;
+		if (field.mandatory) {
+			if (!value) {
+				object[key][field.name]['error'] = true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if (value && field.name && field.type === 'email') {
+			object[key][field.name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else {
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.target.parentElement) {
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+		}
+		buyerQuestions = object;
+		this.isValidFormData();
+
+	};
 	setBuyerAddressValue = (field, name, key, event) => {
 		//If the input fields were directly within this
 		//this component, we could use this.refs.[FIELD].value
@@ -1016,6 +1179,51 @@ class TicketCheckout extends React.Component {
 			event.target.parentElement.classList.remove('has-error');
 		}
 		buyerInformationFields = object;
+		this.isValidFormData();
+	};
+	setBuyerQuestionAddressValue = (field, name, key, event) => {
+		//If the input fields were directly within this
+		//this component, we could use this.refs.[FIELD].value
+		//Instead, we want to save the data for when the form is submitted
+		let object = buyerQuestions || {};
+		let value = event.target.value;
+		if (!object[key]) {
+			object[key] = [];
+		}
+		if (!object[key][name]) {
+			object[key][name] = {};
+		}
+		object[key][name] = {
+			"key": name,
+			"value": value
+		};
+		if (field.mandatory) {
+			if (!event.target.value) {
+				object[key][name]['error'] = true;
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+			else {
+				object[key][name]['error'] = false;
+			}
+		}
+		event.target.parentElement.classList.add('has-feedback');
+		if (value && field && field.type === 'email') {
+			object[key][name]['error'] = !this.validateEmail(value);
+			if (this.validateEmail(value)) {
+				event.target.parentElement.classList.remove('has-error');
+				event.target.parentElement.classList.add('has-success');
+			}
+			else {
+				event.target.parentElement.classList.add('has-error');
+				event.target.parentElement.classList.remove('has-success');
+			}
+		}
+		else if (value && event.target.parentElement) {
+			event.target.parentElement.classList.add('has-success');
+			event.target.parentElement.classList.remove('has-error');
+		}
+		buyerQuestions = object;
 		this.isValidFormData();
 	};
 	hideFormError = () => {
@@ -1124,8 +1332,8 @@ class TicketCheckout extends React.Component {
 									<div className="row">
 										<div className={( this.props.isVoluneer ? "col-md-12" : "col-md-10 col-md-offset-1")}>
 										{
-											this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData.map((ticket) =>
-											<div><h3 className="type-name">{ticket.ticketTypeName}</h3>
+											this.props.orderData && this.props.orderData.ticketAttribute && this.props.orderData.ticketAttribute.orderData && this.props.orderData.ticketAttribute.orderData.length && this.props.orderData.ticketAttribute.orderData.map((ticket, key) =>
+											<div key={key} ><h3 className="type-name">{ticket.ticketTypeName}</h3>
 											<div className="type-desc">{ticket.ticketTypeDescription}</div></div>
 										)
 									}
@@ -1541,8 +1749,293 @@ class TicketCheckout extends React.Component {
 														</div> }
 													</div> }
 
+													{ this.props.orderData && this.props.orderData.ticketAttribute &&
+													this.props.orderData.ticketAttribute.buyerQuestions && this.props.orderData.ticketAttribute.buyerQuestions.length &&
 													<div className="buyerQuestion">
-													</div>
+														{
+															this.props.orderData.ticketAttribute.buyerQuestions.map((item, key) =>
+																<div className="custom-attribute" key={item.name}>
+																	<div className={cx("form-group mrg-t-md")}>
+																		<div className="row">
+																			<div className="col-md-4 text-right">
+																				<label className="text-right">{item.name} { item.mandatory &&
+																				<span className="red">*</span>}</label>
+																			</div>
+																			{!/address/i.test(item.name) && !/phone/i.test(item.name) ? <div
+																				className={cx("col-md-6 text-left")}>
+																				<div className={cx("form-group ",
+																					this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name] && 'has-feedback',
+																					this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name] && this.state.errorBuyerQuestions[key][item.name].error && 'has-error',
+																					this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name] && this.state.errorBuyerQuestions[key][item.name].value && 'has-success'
+																				)}>
+																					{item.type !== 'dropdown' ?
+																						<input
+																							type={item.type}
+																							className="form-control"
+																							name={item.mandatory}
+																							placeholder={item.name}
+																							onChange={this.buyerQuestionsInformationFieldsHandler.bind(this, item, key)}
+																							required={item.mandatory}
+																							defaultValue={item.value ||
+																							(
+																								this.state.errorBuyerQuestions &&
+																								this.state.errorBuyerQuestions[key] &&
+																								this.state.errorBuyerQuestions[key][item.name] &&
+																								this.state.errorBuyerQuestions[key][item.name].value
+																							)
+																							}
+																						/> : ""
+
+																					}
+
+																					{
+																						item.type === 'dropdown' && item.value ?
+																							<select className="form-control"
+																											name={item.name}
+																											placeholder={item.name}
+																											onChange={this.buyerQuestionsInformationFieldsHandler.bind(this, item, key)}
+																											required={item.mandatory}>
+																								<option value="">Please Select</option>
+																								{
+																									this.getSelectOptions(item.value).map((oitem, okey) =>
+																										<option key={oitem[0]} value={oitem[0]}>{oitem[1]}
+																										</option>
+																									)
+																								}
+																							</select> : ""
+																					}
+																					<i
+																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																					<i
+																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																					<small
+																						className="help-block">{ "The " + item.name + " is invalid."}</small>
+																				</div>
+																			</div> : ""}
+																			{ /phone/i.test(item.name) ? <div className="col-md-6 text-left">
+																				<div className={cx("form-group",
+																					this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name] && 'has-feedback',
+																					this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name] && this.state.errorBuyerQuestions[key][item.name].error && 'has-error',
+																					this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name] && this.state.errorBuyerQuestions[key][item.name].value && 'has-success'
+																				)}>
+
+																					<IntlTelInput
+																						css={['intl-tel-input', 'form-control intl-tel']}
+																						utilsScript="./libphonenumber.js"
+																						fieldName={item.name}
+																						fieldId={item.name + key}
+																						separateDialCode
+																						defaultCountry={this.props.country || ""}
+																						placeholder={item.name}
+																						value={item.value ||
+																						(this.state.errorBuyerQuestions &&
+																							this.state.errorBuyerQuestions[key] &&
+																							this.state.errorBuyerQuestions[key][item.name] &&
+																							this.state.errorBuyerQuestions[key][item.name].value
+																						)
+																						}
+																						onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
+																							this.buyerQuestionsPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																						}}
+																						// onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																						// 	this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																						// }}
+																					/>
+
+																					<i
+																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																					<i
+																						className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																					<small
+																						className="help-block">{ "The " + item.name + " is invalid."}</small>
+																				</div>
+																			</div> : ""}
+																			{ /address/i.test(item.name) ? <div className="col-md-6 text-left">
+																				<div className={cx("address-field")}>
+																					<div className={cx("mrg-b-xs form-group",
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 1"] && 'has-feedback',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 1"] && this.state.errorBuyerQuestions[key][item.name + " 1"].error && 'has-error',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 1"] && this.state.errorBuyerQuestions[key][item.name + " 1"].value && 'has-success'
+																					)}>
+																						<input data-attribute-type="text"
+																									 type="text"
+																									 className="form-control"
+																									 placeholder="Address 1"
+																									 name={item.name + " 1"}
+																									 defaultValue={item.value ||
+																									 (
+																									 this.state.errorBuyerQuestions &&
+																									 this.state.errorBuyerQuestions[key] &&
+																									 this.state.errorBuyerQuestions[key][item.name] &&
+																									 this.state.errorBuyerQuestions[key][item.name].value
+																									 &&
+																									 this.state.buyerQuestions[key][item.name + " 1"]) || (this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 1"] && this.state.errorBuyerQuestions[key][item.name + " 1"].value
+																									 )
+																									 }
+																									 required={ item.mandatory}
+																									 onChange={this.setBuyerQuestionAddressValue.bind(this, item, item.name + " 1", key)}
+																						/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																						<small
+																							className="help-block">{ "The " + item.name + " 1 is invalid."}</small>
+																					</div>
+																					<div className={cx("mrg-b-xs form-group",
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 2"] && 'has-feedback',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 2"] && this.state.errorBuyerQuestions[key][item.name + " 2"].error && 'has-error',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " 2"] && this.state.errorBuyerQuestions[key][item.name + " 2"].value && 'has-success'
+																					)}>
+																						<input data-attribute-type="text"
+																									 type="text"
+																									 className="form-control"
+																									 placeholder="Address 2"
+																									 name={item.name + " 2"}
+																									 defaultValue={item.value ||
+																									 (this.state.errorBuyerQuestions &&
+																										 this.state.errorBuyerQuestions[key] &&
+																										 this.state.errorBuyerQuestions[key][item.name + " 2"] &&
+																										 this.state.errorBuyerQuestions[key][item.name + " 2"].value
+																									 )
+																									 }
+																									 onChange={this.setBuyerQuestionAddressValue.bind(this, item, item.name + " 2", key)}
+																						/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																						<small
+																							className="help-block">{ "The " + item.name + " 2 is invalid."}</small>
+																					</div>
+																					<div className={cx("mrg-b-xs form-group",
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " City"] && 'has-feedback',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " City"] && this.state.errorBuyerQuestions[key][item.name + " City"].error && 'has-error',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " City"] && this.state.errorBuyerQuestions[key][item.name + " City"].value && 'has-success'
+																					)}>
+																						<input data-attribute-type="text"
+																									 type="text"
+																									 className="form-control"
+																									 placeholder="City"
+																									 name={item.name + " City"}
+																									 defaultValue={item.value ||
+																									 (this.state.errorBuyerQuestions &&
+																										 this.state.errorBuyerQuestions[key] &&
+																										 this.state.errorBuyerQuestions[key][item.name + " City"] &&
+																										 this.state.errorBuyerQuestions[key][item.name + " City"].value
+																									 )
+																									 }
+																									 required={ item.mandatory}
+																									 onChange={this.setBuyerQuestionAddressValue.bind(this, item, item.name + " City", key)}
+																						/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																						<small
+																							className="help-block">{ "The " + item.name + " City is invalid."}</small>
+																					</div>
+																					<div className={cx("mrg-b-xs form-group",
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " State"] && 'has-feedback',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " State"] && this.state.errorBuyerQuestions[key][item.name + " State"].error && 'has-error',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " State"] && this.state.errorBuyerQuestions[key][item.name + " State"].value && 'has-success'
+																					)}>
+																						<select className="form-control" required={ item.mandatory}
+																										name={item.name + " State"}
+																										onChange={this.setBuyerAddressValue.bind(this, item, item.name + " State", key)}
+																						>
+																							<option value="">State</option>
+																							<option value="AL">ALABAMA</option>
+																							<option value="AK">ALASKA</option>
+																							<option value="AZ">ARIZONA</option>
+																							<option value="AR">ARKANSAS</option>
+																							<option value="CA">CALIFORNIA</option>
+																							<option value="CO">COLORADO</option>
+																							<option value="CT">CONNECTICUT</option>
+																							<option value="DE">DELAWARE</option>
+																							<option value="FL">FLORIDA</option>
+																							<option value="GA">GEORGIA</option>
+																							<option value="HI">HAWAII</option>
+																							<option value="ID">IDAHO</option>
+																							<option value="IL">ILLINOIS</option>
+																							<option value="IN">INDIANA</option>
+																							<option value="IA">IOWA</option>
+																							<option value="KS">KANSAS</option>
+																							<option value="KY">KENTUCKY</option>
+																							<option value="LA">LOUISIANA</option>
+																							<option value="ME">MAINE</option>
+																							<option value="MD">MARYLAND</option>
+																							<option value="MA">MASSACHUSETTS</option>
+																							<option value="MI">MICHIGAN</option>
+																							<option value="MN">MINNESOTA</option>
+																							<option value="MS">MISSISSIPPI</option>
+																							<option value="MO">MISSOURI</option>
+																							<option value="MT">MONTANA</option>
+																							<option value="NE">NEBRASKA</option>
+																							<option value="NV">NEVADA</option>
+																							<option value="NH">NEW HAMPSHIRE</option>
+																							<option value="NJ">NEW JERSEY</option>
+																							<option value="NM">NEW MEXICO</option>
+																							<option value="NY">NEW YORK</option>
+																							<option value="NC">NORTH CAROLINA</option>
+																							<option value="ND">NORTH DAKOTA</option>
+																							<option value="OH">OHIO</option>
+																							<option value="OK">OKLAHOMA</option>
+																							<option value="OR">OREGON</option>
+																							<option value="PA">PENNSYLVANIA</option>
+																							<option value="RI">RHODE ISLAND</option>
+																							<option value="SC">SOUTH CAROLINA</option>
+																							<option value="SD">SOUTH DAKOTA</option>
+																							<option value="TN">TENNESSEE</option>
+																							<option value="TX">TEXAS</option>
+																							<option value="UT">UTAH</option>
+																							<option value="VT">VERMONT</option>
+																							<option value="VA">VIRGINIA</option>
+																							<option value="WA">WASHINGTON</option>
+																							<option value="WV">WEST VIRGINIA</option>
+																							<option value="WI">WISCONSIN</option>
+																							<option value="WY">WYOMING</option>
+																						</select>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																						<small
+																							className="help-block">{ "The " + item.name + " State is invalid."}</small>
+																					</div>
+																					<div className={cx("mrg-b-xs form-group",
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " Zip Code"] && 'has-feedback',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " Zip Code"] && this.state.errorBuyerQuestions[key][item.name + " Zip Code"].error && 'has-error',
+																						this.state.errorBuyerQuestions && this.state.errorBuyerQuestions[key] && this.state.errorBuyerQuestions[key][item.name + " Zip Code"] && this.state.errorBuyerQuestions[key][item.name + " Zip Code"].value && 'has-success'
+																					)}>
+																						<input type="number"
+																									 className="form-control"
+																									 placeholder="Zip Code"
+																									 name={item.name + " Zip Code"}
+																									 defaultValue={item.value ||
+																									 (this.state.errorBuyerQuestions &&
+																										 this.state.errorBuyerQuestions[key] &&
+																										 this.state.errorBuyerQuestions[key][item.name + " Zip Code"] &&
+																										 this.state.errorBuyerQuestions[key][item.name + " Zip Code"].value
+																									 )
+																									 }
+																									 required={ item.mandatory}
+																									 onChange={this.setBuyerQuestionAddressValue.bind(this, item, item.name + " Zip Code", key)}
+																						/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>
+																						<i
+																							className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>
+																						<small
+																							className="help-block">{ "The " + item.name + " Zip Code is invalid."}</small>
+																					</div>
+																				</div>
+																			</div> : ""}
+																		</div>
+																	</div>
+																</div>)
+														}
+													</div> }
 													{ this.props.orderData && this.props.orderData.discountCoupon &&
 													<div className="form-group mrg-t-md">
 														<div className="row">
