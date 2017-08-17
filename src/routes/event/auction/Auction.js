@@ -124,7 +124,7 @@ class Auction extends React.Component {
       this.setState({
         showPopup: true,
         loading:false,
-        errorMsgCard: this.state.settings.moduleEnded ? "Bid are no longer being accepted for this auction" :"Pledges are no longer being accepted for this auction." ,
+        errorMsgCard: "Bid are no longer being accepted for this auction." ,
         popupHeader:"Failed",
       })
     }else {

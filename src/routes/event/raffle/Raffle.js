@@ -523,7 +523,7 @@ class Raffle extends React.Component {
   };
   goBack = () =>{
     window.history.go(-1);
-  }
+  };
   checkIsValidBidData = () =>{
     let valid1=true;
     let valid2=true;
