@@ -110,9 +110,9 @@ class Event extends React.Component {
 		this.props.doGetEventData(this.props.params && this.props.params.params).then(resp=> {
 			this.setState({
 				activeEventTickets: this.props.eventData && this.props.eventData.ticketingEnabled,
-				activeAuction: this.props.eventData && this.props.eventData.silentAuctionEnabled,
-				activeRaffle: this.props.eventData && this.props.eventData.raffleEnabled,
-				activeFund: this.props.eventData && this.props.eventData.causeAuctionEnabled,
+				activeAuction: this.props.eventData && (this.props.eventData.silentAuctionEnabled && !this.props.eventData.silentAuctionModuleHidden),
+				activeRaffle: this.props.eventData && (this.props.eventData.raffleEnabled && !this.props.eventData.raffleModuleHidden),
+				activeFund: this.props.eventData && (this.props.eventData.causeAuctionEnabled && !this.props.eventData.causeAuctionModuleHidden),
 				activeDonation: this.props.eventData && this.props.eventData.donationEnabled,
 			});
 			if (this.state.activeEventTickets) {
