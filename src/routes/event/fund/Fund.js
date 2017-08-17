@@ -42,6 +42,7 @@ class Fund extends React.Component {
       auctionData: null,
 
       isValidBidData: false,
+      isValidBidDataFeedBack: true,
 
       firstName: null,
       lastName: null,
@@ -104,26 +105,36 @@ class Fund extends React.Component {
 
   };
   onFormClick = (e) => {
+    this.setState({
+      amountFeedBack:true,
+      cardHolderFeedBack:true,
+      cardNumberFeedBack:true,
+      expMonthFeedBack:true,
+      cvvFeedBack:true,
+      isValidBidDataFeedBack: false,
+    });
     e.preventDefault();
-    if ( !this.state.settings.moduleActivated){
-      this.setState({
-        showMapPopup: true,
-        errorMsg: " Pledges are no longer being accepted for this Need." ,
-        popupHeader:"Failed",
-      })
-    }else{
-      if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
+    if(this.state.isValidBidData){
+      if ( !this.state.settings.moduleActivated){
         this.setState({
           showMapPopup: true,
-          errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
-          popupHeader:"Confirm",
+          errorMsg: " Pledges are no longer being accepted for this Need." ,
+          popupHeader:"Failed",
         })
       }else{
-        this.setState({
-          showMapPopup: true,
-          errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
-          popupHeader:"Confirm",
-        })
+        if(this.props.authenticated &&  this.props.user && this.props.eventData && !this.props.eventData.ccRequiredForBidConfirm && (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length > 0 ) ){
+          this.setState({
+            showMapPopup: true,
+            errorMsg: " Your card ending in " + this.props.user.linkedCard.stripeCards[0].last4  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+            popupHeader:"Confirm",
+          })
+        }else{
+          this.setState({
+            showMapPopup: true,
+            errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged " + this.props.currencySymbol +  this.state.amountValue  + " for  " +  this.state.fundData.name ,
+            popupHeader:"Confirm",
+          })
+        }
       }
     }
   };
@@ -691,7 +702,7 @@ class Fund extends React.Component {
   };
 
   numberOnly(e) {
-    const re = /[/.0-9A-F:]+/g;
+    const re = /[/0-9A-F:]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
     }
@@ -746,10 +757,6 @@ class Fund extends React.Component {
                         </div>
                       </div>
                       <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
-                            action="/AccelEventsWebApp/events/148/C/FAN/bid" data-has-cc-info="true"
-                            data-show-cc-confirm="true" data-confirm-message="getCauseStripeConfirmMessage"
-                            data-validate-function="validateCauseBidForm" data-onsuccess="handleCauseBidSubmit"
-                            data-validation-fields="getCauseBidValidationFields" noValidate="novalidate"
                             onSubmit={this.onFormClick}>
                         <button type="submit" className="fv-hidden-submit"
                                 style={{display: 'none', width: 0, height: 0}}/>
@@ -913,7 +920,6 @@ class Fund extends React.Component {
                                     </div>
                                     <input type="number" className="form-control field-card_number" id="cardnumber"
                                            placeholder="8888-8888-8888-8888"  maxLength="16" data-stripe="number"
-                                           required="required" data-fv-field="cardnumber"
                                            ref={ref => {
                                              this.cardNumber = ref;
                                            }}
@@ -1026,11 +1032,10 @@ class Fund extends React.Component {
                               <div className="input-group has-feedback">
                                 <div className="input-group-addon">{this.props.currencySymbol}</div>
                                 <input type="number" className="form-control" name="itembid" id="itembid"
-                                       placeholder="Pledge Amount" step required="required"
-                                       data-isprocessingfeestopurchaser="false" data-fv-field="itembid"
                                        ref={ref => {
                                          this.amount = ref;
                                        }}
+                                       onKeyPress={(e) => this.numberOnly(e)}
                                        onKeyUp={this.amountValidateHandler}/>
                                 { this.state.amountFeedBack && this.state.amount && <i
                                   className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1052,7 +1057,7 @@ class Fund extends React.Component {
                         </div> }
                         <div className="row btn-row mrg-b-lg" >
                           <div className="col-sm-5">
-                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={!this.state.isValidBidData }
+                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidBidData }
                                                              role="button" type="submit"
                                                              loading={this.state.loading} >
                             Submit Pledge

@@ -284,7 +284,7 @@ class Account extends React.Component {
     });
   };
   numberOnly(e) {
-    const re = /[/.0-9A-F:]+/g;
+    const re = /[/0-9A-F:]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
     }

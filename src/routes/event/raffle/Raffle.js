@@ -101,6 +101,7 @@ class Raffle extends React.Component {
       countryPhone:null,
       phone:null,
       isError:false,
+      isValidBidDataFeedBack:true
   };
 		this.doGetEventData = this.doGetEventData.bind(this);
 		this.doGetSettings = this.doGetSettings.bind(this);
@@ -452,36 +453,46 @@ class Raffle extends React.Component {
   };
   submiteBuyTicket = (e) => {
     e.preventDefault();
-    this.setState({
-      loading:true,
-    });
-      const user = {
-        itemCode: this.state.raffleData.code,
-        submittedTickets: this.state.raffleTicketValue,
-      };
-      this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
-        .then(resp => {
-         let updateraffleData = Object.assign({},this.state.raffleData,{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue});
-          if (!resp.errorMessage) {
-            this.setState({
-              //showAlertPopup: true,
-              errorMsg: resp.message,
-              isError: false,
-              popupHeader:"Success. ",
-              raffleData: updateraffleData,
-           })
-          }else{
-            this.setState({
-            //  showAlertPopup: true,
-              isError: true,
-              errorMsg: resp.errorMessage,
-              popupHeader:"Failed"
-            });
-          }
-          this.setState({
-            loading:false,
-          })
+    if(this.state.raffleData.availableTickets > 0){
+      this.setState({
+        isValidBidDataFeedBack:false,
+        firstNameFeedBack: true,
+        ticketsFeedBack: true,
+        lastNameFeedBack: true,
+      });
+      if(this.state.isValidData) {
+        this.setState({
+          loading:true
         });
+        const user = {
+          itemCode: this.state.raffleData.code,
+          submittedTickets: this.state.raffleTicketValue,
+        };
+        this.props.submitRaffleTickets(this.props.params && this.props.params.params, user)
+          .then(resp => {
+            let updateraffleData = Object.assign({}, this.state.raffleData, {availableTickets: this.state.raffleData.availableTickets - this.state.raffleTicketValue});
+            if (!resp.errorMessage) {
+              this.setState({
+                //showAlertPopup: true,
+                errorMsg: resp.message,
+                isError: false,
+                popupHeader: "Success. ",
+                raffleData: updateraffleData,
+              })
+            } else {
+              this.setState({
+                //  showAlertPopup: true,
+                isError: true,
+                errorMsg: resp.errorMessage,
+                popupHeader: "Failed"
+              });
+            }
+            this.setState({
+              loading: false,
+            })
+          });
+        }
+    }
   };
   showAlertPopup = () => {
     this.setState({
@@ -577,7 +588,7 @@ class Raffle extends React.Component {
     this.doGetItemByCode();
   };
   numberOnly(e) {
-    const re = /[/.0-9A-F:]+/g;
+    const re = /[/0-9A-F:]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
     }
@@ -634,20 +645,20 @@ class Raffle extends React.Component {
             <div
               className={cx("input-group", this.state.ticketsFeedBack && 'has-feedback', this.state.ticketsFeedBack && this.state.tickets && 'has-success', this.state.ticketsFeedBack && (!this.state.tickets) && 'has-error', this.state.raffleData && this.state.raffleData.availableTickets > 0 ? '' : 'disabled')}>
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
-              <input type="number"  name="itembid"  required="required"
+              <input type="number"  name="itembid"
                      className={cx("form-control")}
                      disabled={(this.state.raffleData && !this.state.raffleData.availableTickets <= 0) ? false : true}
-
                  ref={ref => {
-                 this.tickets = ref;
-              }}
-                   onKeyUp={this.ticketsValidateHandler}
+                  this.tickets = ref;
+                 }}
+               onKeyPress={(e) => this.numberOnly(e)}
+               onKeyUp={this.ticketsValidateHandler}
               />
               { this.state.ticketsFeedBack && this.state.tickets &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
               { this.state.ticketsFeedBack && !this.state.tickets &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
-               </div>
+           </div>
             <small style={{color: 'red'}}
               data-fv-result="NOT_VALIDATED">{this.state.errorMsgTickets}</small>
           </div>
@@ -655,7 +666,7 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled={!this.state.isValidData } role="button"
+          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidData } role="button"
                    type="submit"  loading={this.state.loading}> Submit Ticket </Button>
 
         </div>

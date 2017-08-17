@@ -120,7 +120,7 @@ class Auction extends React.Component {
       phoneNumberFeedBack: true,
     });
     e.preventDefault();
-    if (!this.state.settings.moduleActivated || this.state.settings.moduleEnded && this.state.amount){
+    if ((!this.state.settings.moduleActivated || this.state.settings.moduleEnded) && this.state.amount){
       this.setState({
         showPopup: true,
         loading:false,
@@ -682,7 +682,7 @@ class Auction extends React.Component {
     this.setState({isValidBidData: (valid1 && valid2)});
   };
   numberOnly(e) {
-    const re = /[/.0-9A-F:]+/g;
+    const re = /[/0-9A-F:]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
     }
@@ -835,7 +835,7 @@ class Auction extends React.Component {
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
         <div className="row">
-          <div className="col-md-6">
+          <div className="col-md-10">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>

@@ -783,7 +783,7 @@ class BuyRaffleTicketsModal extends React.Component {
     this.setState({showModal: true});
   };
   numberOnly(e) {
-    const re = /[/.0-9A-F:]+/g;
+    const re = /[/0-9A-F:]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
     }
