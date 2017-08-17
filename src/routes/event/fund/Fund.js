@@ -686,10 +686,23 @@ class Fund extends React.Component {
     }
     if(this.state.popupHeader === "Confirm" ){
      this.setState({
-       errorMsg:""
+       errorMsg: "Confirmation Failed." ,
+       popupHeader:"Failed",
+
      });
     }
   };
+  componentRernder() {
+    this.clearFormData();
+    this.props.doGetEventData(this.props.params && this.props.params.params);
+    this.props.doGetSettings(this.props.params && this.props.params.params, 'fundaneed').then(resp => {
+      this.setState({
+        settings: resp && resp.data
+      });
+    }).catch(error => {
+      history.push('/404');
+    });
+  }
   hideLoginModal  = () => {
     this.setState({
       isShowLoginModal:false,
@@ -1029,6 +1042,8 @@ class Fund extends React.Component {
                           className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
                           <div className="row">
                             <div className="col-md-6">
+                              {this.state.errorMsg  &&  <div  className={cx("ajax-msg-box text-center mrg-b-lg", this.state.popupHeader !== 'Failed'  ? 'text-success':'text-danger')} >
+                                { this.state.errorMsg }</div> }
                               <div className="input-group has-feedback">
                                 <div className="input-group-addon">{this.props.currencySymbol}</div>
                                 <input type="number" className="form-control" name="itembid" id="itembid"
