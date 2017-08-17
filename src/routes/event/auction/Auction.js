@@ -201,6 +201,15 @@ class Auction extends React.Component {
             errorMsgCard:resp.message,
             popupHeader:"Successful Bid",
           });
+
+          setTimeout(() => {
+              this.setState({
+                loading:false,
+                showPopup: false,
+                errorMsgCard:"",
+                popupHeader:"",
+              });
+          },3000)
           this.props.changeUserData(this.props.user,user)
         }else{
           this.setState({
@@ -209,6 +218,16 @@ class Auction extends React.Component {
             errorMsgCard: resp.errorMessage,
             popupHeader:"Failed"
           });
+
+          setTimeout(() => {
+              this.setState({
+                loading:false,
+                showPopup: false,
+                errorMsgCard:"",
+                popupHeader:"",
+              });
+          },3000)
+
         }
         this.setState({
           loading:false,
