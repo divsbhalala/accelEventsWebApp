@@ -6,6 +6,8 @@ import cx from 'classnames';
 import {BootstrapTable, TableHeaderColumn,ButtonGroup} from 'react-bootstrap-table';
 import {getPerformanceDonation,getPerformanceDonationCSV} from './action';
 import {connect} from 'react-redux';
+import moment from 'moment';
+
 let selfInst;
 class DonationPerformance extends React.Component {
   static propTypes = {
@@ -52,7 +54,9 @@ class DonationPerformance extends React.Component {
     };
     function dateFormatter(cell, row){
       // return new Date(cell).toISOString().split('T')[0];
-      return (new Date(cell).toISOString().split('T')[0]+ ' ' + new Date(cell).toISOString().split('T')[1].substring(0,5))
+      let d = new Date(cell);
+      return moment(d).format('YYYY-MM-DD h:mm a');
+      // return (new Date(cell).toISOString().split('T')[0]+ ' ' + new Date(cell).toISOString().split('T')[1].substring(0,5))
     }
     function priceFormat(cell, row){
       return  selfInst.props.currencySymbol + cell;//.toFixed(2);
