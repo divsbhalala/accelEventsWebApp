@@ -1091,7 +1091,7 @@ class Auction extends React.Component {
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
-              <input type="number" className="form-control" name="itembid" id="itembid" style={{"width":"45%"}} 
+              <input type="number" className="form-control" name="itembid" id="itembid" style={{"width":"45%"}}
                      placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
@@ -1325,7 +1325,7 @@ class Auction extends React.Component {
                             className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
                           <div className="curr-bid-text">BUY NOW PRICE</div>
                         </div>}
-                        {this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
+                        {this.state.settings && this.state.settings.marketValueEnabled && this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
                           <div className="curr-bid-number">{this.props.currencySymbol}<span
                             className="current-bid">{this.state.auctionData.marketValue}</span></div>
                           <div className="curr-bid-text">MARKET VALUE</div>
