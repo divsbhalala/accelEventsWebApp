@@ -165,8 +165,7 @@ export default {
         };
       }
     },
-    {
-      path: '/volunteer',
+    { path: '/volunteer',
       async action(props) {
         return {
           title: "Volunteer Page",

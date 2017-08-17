@@ -27,15 +27,7 @@ class Raffle extends React.Component {
     this.getScrollData = this.getScrollData.bind(this);
   }
   doGetSettings = (eventUrl, slug)=>{
-    this.props.doGetSettings(eventUrl, slug).then(resp => {
-      this.setState({
-        eventSettings: resp && resp.data
-      });
-      setTimeout(()=>{
-        raffleInst.doGetSettings(eventUrl, slug)
-      },5000)
 
-    });
   };
   getScrollData = (eventUrl, slug)=>{
     this.props.getScrollData(eventUrl, slug).then(resp => {

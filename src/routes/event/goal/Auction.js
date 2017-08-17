@@ -14,7 +14,6 @@ class Auction extends React.Component {
 	static propTypes = {
 		title: PropTypes.string
 	};
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -24,7 +23,7 @@ class Auction extends React.Component {
 			goalData: null,
 			goalPer: 0,
 		};
-    this.getGoalData = this.getScrollData.bind(this);
+    this.getGoalData = this.getGoalData.bind(this);
 	}
   componentWillMount() {
     totalFundRaised=0;
@@ -38,13 +37,11 @@ class Auction extends React.Component {
         goalPer:totalFundRaised ? totalFundRaised * 100 / resp.fundRaisingGoal : 0,
         settings:resp
       });
-      setTimeout(()=>{
-        auctionInst.getGoalData(eventUrl, slug)
-      },5000)
-
+      // setTimeout(()=>{
+      //   auctionInst.getGoalData(eventUrl, slug)
+      // },5000)
     });
   };
-
 	render() {
 		return (
 			<div className="container goal-page">
@@ -70,25 +67,20 @@ class Auction extends React.Component {
 											{ this.state.settings && this.state.goalData && <Thermometer goalPer={this.state.goalPer} settings={this.state.settings} goalData={this.state.goalData} />}
 										</div>
 									</div>
-
 								</div>
 								<div className="col-md-3">
 									{this.state.settings && <EventEndUntil settings={this.state.settings} />}
 								</div>
 							</div>
-
 						</div>
 					</div>
 					: <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div> }
 				</div>
-
 			</div>
 		);
 	}
 }
-
 const mapDispatchToProps = {
-	doGetSettings: (eventUrl, type) => doGetSettings(eventUrl, type),
 	getGoalData: (eventUrl, type) => getGoalData(eventUrl, type),
 };
 const mapStateToProps = (state) => ({

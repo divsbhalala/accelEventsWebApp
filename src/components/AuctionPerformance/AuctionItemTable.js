@@ -14,12 +14,10 @@ class AuctionItemTable extends React.Component {
 		this.state = {
 			event: null,
 		};
-	}
-
+}
 	isExpandableRow(row) {
 		return true;
 	}
-
 	expandComponent(row) {
 		return <SubItemList itemList={row.bidList}/>;
 	}
@@ -40,7 +38,6 @@ class AuctionItemTable extends React.Component {
 			<div> { content } </div>
 		);
 	}
-
 	addAsyncProduct(row) {
 		if (!row.bidList) {
 			this.props.getPerformanceAuctionItemByItemCode(row.itemCode).then((resp) => {
@@ -49,7 +46,6 @@ class AuctionItemTable extends React.Component {
 			});
 		}
 	}
-
 	render() {
 		const options = {
 			expandRowBgColor: 'rgb(221, 221, 221)',
@@ -59,7 +55,6 @@ class AuctionItemTable extends React.Component {
 			return (cell ? <i className="fa fa-check green" aria-hidden="true"/> :
 				<i className="fa fa-times red" aria-hidden="true"/>);
 		}
-
 		const selectRow = {
 			mode: 'checkbox',  // multi select
 			// bgColor: 'green',
@@ -85,7 +80,6 @@ class AuctionItemTable extends React.Component {
 						columnWidth: 50,
 					}} search
 				>
-
 					<TableHeaderColumn dataField="itemName" width="50%" dataSort={true}>Item Name</TableHeaderColumn>
 					<TableHeaderColumn dataField="itemCode" isKey dataSort={true}>Item Code</TableHeaderColumn>
 					<TableHeaderColumn dataField="bid" dataSort={true}>Highest Bidder</TableHeaderColumn>
@@ -97,7 +91,6 @@ class AuctionItemTable extends React.Component {
 		);
 	}
 }
-
 const mapDispatchToProps = {
 	getPerformanceAuctionItemByItemCode: ItemCode => getPerformanceAuctionItemByItemCode(ItemCode),
 };
