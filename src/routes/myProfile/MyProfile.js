@@ -92,7 +92,7 @@ class MyProfile extends React.Component {
                       <div className="tab-content">
                         <div>
                           <form id="newEventForm" method="POST" action="/AccelEventsWebApp/u/create/newevent">
-                            <button style={{ "backgroundColor": "orange"}} type="submit" className="btn btn-default btn-block">
+                            <button style={{ "backgroundColor": "orange","marginBottom": "10px"}} type="submit" className="btn btn-default btn-block">
                               Create New Event
                             </button>
                           </form>
