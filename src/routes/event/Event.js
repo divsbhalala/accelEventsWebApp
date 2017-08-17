@@ -30,6 +30,10 @@ import {
 	storeActiveTabData,
 	doOrderTicket,
 	isVolunteer,
+	setAuctionCache,
+	setRaffleCache,
+	setFundCache,
+	setOpenedTabCache
 } from './action/index';
 let ar = [1, 2, 3, 4, 5, 6, 7, 8];
 class Event extends React.Component {
@@ -405,6 +409,21 @@ class Event extends React.Component {
 	};
 
 	doGetAuctionItemByLimit(eventUrl) {
+		if(this.props.auction_cache_tab && this.props.auction_cache_tab.type == 'A'){
+			let height = this.props.auction_cache_tab.height;
+			this.props.setOpenedTabCache();
+			this.setState({
+				auctionPageLoading: false,
+				auctionPageItems:this.props.auction_cache.items,
+				auctionPageCount : this.props.auction_cache.count
+			},function changeAfter(){
+				setTimeout(() => {
+					document.body.scrollTop = height;
+				}, 800);
+			});
+			return;
+		}
+
 		this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
@@ -425,7 +444,9 @@ class Event extends React.Component {
 							return true;
 						}
 					});
-					this.setState({auctionPageItems:array,})
+					this.setState({auctionPageItems:array,},function changeAfter(){
+						this.props.setAuctionCache({items:this.state.auctionPageItems,count:this.state.auctionPageCount})
+					});
 					}
 				)}
 			else {
@@ -450,7 +471,9 @@ class Event extends React.Component {
 				}
 				this.setState({
 					auctionPageItems: resp.data && resp.data.items,
-				})
+				},function changeAfter(){
+					this.props.setAuctionCache(this.state.auctionPageItems)
+				});
 			}
 			else {
 				this.setState({
@@ -465,6 +488,22 @@ class Event extends React.Component {
 	}
 
 	doGetRaffleItemByLimit(eventUrl) {
+
+		if(this.props.auction_cache_tab && this.props.auction_cache_tab.type == 'R'){
+			let height = this.props.auction_cache_tab.height;
+			this.props.setOpenedTabCache();
+			this.setState({
+				rafflePageLoading: false,
+				rafflePageItems:this.props.raffle_cache.items,
+				rafflePageCount:this.props.raffle_cache.count
+			},function changeAfter(){
+				setTimeout(() => {
+					document.body.scrollTop = height;
+				}, 800);
+			});
+			return;
+		}
+
 		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
@@ -485,7 +524,9 @@ class Event extends React.Component {
               return true;
             }
           });
-          this.setState({rafflePageItems:array,})
+          this.setState({rafflePageItems:array,},function changeAfter(){
+				this.props.setRaffleCache({items:this.state.rafflePageItems,count:this.state.rafflePageCount})
+			});
         })
 			}
 			else {
@@ -520,7 +561,9 @@ class Event extends React.Component {
 		              return true;
 		            }
 		          });
-		          this.setState({rafflePageItems:array})
+		          this.setState({rafflePageItems:array},function changeAfter(){
+						this.props.setRaffleCache(this.state.rafflePageItems)
+					});
 		        })
 			}
 			else {
@@ -536,6 +579,23 @@ class Event extends React.Component {
 	}
 
 	doGetFundANeedItemByLimit(eventUrl) {
+
+		if(this.props.auction_cache_tab && this.props.auction_cache_tab.type == 'F'){
+			let height = this.props.auction_cache_tab.height;
+			this.props.setOpenedTabCache();
+			this.setState({
+				fundANeedPageLoading: false,
+				fundANeedPageItems:this.props.fund_cache.items,
+				fundANeedPageCount:this.props.fund_cache.count
+			},function changeAfter(){
+				setTimeout(() => {
+					document.body.scrollTop = height;
+				}, 800);
+			});
+			return;
+		}
+
+
 		this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
 			if (resp && resp.data && resp.data.items) {
 				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
@@ -556,7 +616,9 @@ class Event extends React.Component {
               return true;
             }
           });
-          this.setState({fundANeedPageItems:array,})
+          this.setState({fundANeedPageItems:array,},function changeAfter(){
+          	this.props.setFundCache({items:this.state.fundANeedPageItems,count:this.state.fundANeedPageCount})
+          })
         })
 			}
 			else {
@@ -581,7 +643,9 @@ class Event extends React.Component {
 				}
 				this.setState({
 					fundANeedPageItems: resp.data.items,
-				})
+				},function changeAfter(){
+		          	this.props.setFundCache({items:this.state.fundANeedPageItems})
+		          })
 			}
 			else {
 				this.setState({
@@ -1064,8 +1128,13 @@ const mapDispatchToProps = {
 	storeActiveTabData: (tab) => storeActiveTabData(tab),
 	doOrderTicket: (eventUrl, dto) => doOrderTicket(eventUrl, dto),
 	isVolunteer: (eventUrl) => isVolunteer(eventUrl),
+	setAuctionCache : (data) => setAuctionCache(data),
+	setRaffleCache : (data) => setRaffleCache(data),
+	setFundCache : (data) => setFundCache(data),
+	setOpenedTabCache : (data) => setOpenedTabCache(data)
 };
 const mapStateToProps = (state) => ({
+	auction_data : state.event.auction_data,
 	eventData: state.event && state.event.data,
 	currencySymbol: state.event && state.event.currencySymbol || "$",
 	eventTicketData: state.event && state.event.ticket_data,
@@ -1075,6 +1144,10 @@ const mapStateToProps = (state) => ({
 	user: state.session.user,
 	authenticated: state.session.authenticated,
 	active_tab_data: state.event && state.event.active_tab_data,
+	auction_cache: state.event && state.event.auction_cache,
+	raffle_cache: state.event && state.event.raffle_cache,
+	fund_cache: state.event && state.event.fund_cache,
+	auction_cache_tab : state.event && state.event.auction_cache_tab,
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Event));

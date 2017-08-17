@@ -5,7 +5,10 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './EventTabCommonBox.css';
 import Link from '../Link';
 import cx from 'classnames';
+import {connect} from 'react-redux';
+
 import  {Carousel} from 'react-responsive-carousel';
+import { setOpenedTabCache } from './../../routes/event/action/index';
 
 class ImageList extends React.Component {
   render() {
@@ -43,6 +46,16 @@ class EventTabCommonBox extends React.Component {
     marketValueLabel: PropTypes.string,
   };
 
+  setCache = () => {
+    let height = document.body.scrollTop;
+    if(this.props.type == 'A'){
+        this.props.setOpenedTabCache({type:'A',height:height});
+    }else if(this.props.type == 'R'){
+        this.props.setOpenedTabCache({type:'R',height:height});
+    }else{
+        this.props.setOpenedTabCache({type:'F',height:height});
+    }
+  }
   render() {
     return (
       <div className={cx("item-container col-md-6")} data-category="Uncategorized" data-order="0"
@@ -110,7 +123,7 @@ class EventTabCommonBox extends React.Component {
                 <div className={cx("flex-col")}><strong> ITEM CODE: </strong></div>
                 <div className={cx("flex-col")}>
                   <span className={cx("item-code")}>{this.props.itemCode}</span>
-                  <Link to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
+                  <Link onClick={this.setCache} to={location.pathname + '/' + this.props.type + '/' + this.props.itemCode}
                         className={cx("item-link btn btn-sm btn-info pull-right")}>More Info</Link>
                 </div>
               </div>
@@ -134,14 +147,14 @@ class EventTabCommonBox extends React.Component {
             <div
               className={cx("text-center", "action-btns")}>
               { this.props.actionTitle &&
-              <Link role="button" to={this.props.type + '/' + this.props.itemCode}
+              <Link onClick={this.setCache} role="button" to={this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.actionClassName)}
                     >{this.props.actionTitle}</Link>}
               { this.props.auctionBuyNowTitle && !this.props.auctionPurchaseFor &&
-              <Link role="button" to={this.props.type + '/' + this.props.itemCode}
+              <Link onClick={this.setCache} role="button" to={this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.auctionBuyNowTitle}</Link>}
               { this.props.buyItNowPrice && !this.props.auctionPurchaseFor &&
-              <Link role="button" to={this.props.type + '/' + this.props.itemCode}
+              <Link onClick={this.setCache} role="button" to={this.props.type + '/' + this.props.itemCode}
                     className={cx(this.props.auctionBuyNowClassName)}>{this.props.buyItNowPrice}</Link>}
               { this.props.auctionBuyNowTitle && this.props.auctionPurchaseFor && <div className={cx("purchased")}>
                 <div className={cx("alert alert-success mrg-b-0 alert-height")}> {this.props.auctionBuyNowTitle}</div>
@@ -154,4 +167,11 @@ class EventTabCommonBox extends React.Component {
   }
 }
 
-export default withStyles(s)(EventTabCommonBox);
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = {
+  setOpenedTabCache: (data) => setOpenedTabCache(data),
+};
+
+export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(EventTabCommonBox));

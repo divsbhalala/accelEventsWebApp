@@ -977,8 +977,11 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6" style={{paddingLeft:5}}>
-        <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
-           >
+        <a role="button" className="btn btn-success btn-block"
+           href={this.props.params && "/events/" + this.props.params.params + '#Auction'}>
+        {/** <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
+           > **/
+        }
           Go back to All Items</a></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1210,9 +1213,14 @@ class Auction extends React.Component {
           Submit bid
         </Button></div>
           <div className="col-sm-5" style={{paddingLeft:0,width:"180px"}}>
-          <a onClick={this.goBack} className="btn btn-success btn-block" >
-          Go back to All Items
-        </a></div>
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+          </Link>
+          { /**
+            <a onClick={this.goBack} className="btn btn-success btn-block" >
+            Go back to All Items
+          </a>
+            **/}
+        </div>
         </div>
 
 
