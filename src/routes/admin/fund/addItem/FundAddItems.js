@@ -18,7 +18,7 @@ class FundAddItems extends React.Component {
       isLoading: false,
       isSuccess: false
     };
-    this.showLoading = this.showLoading.bind(this);
+    //this.showLoading = this.showLoading.bind(this);
     this.showSuccessMessage = this.showSuccessMessage.bind(this);
   }
   showSuccessMessage = ()=>{
