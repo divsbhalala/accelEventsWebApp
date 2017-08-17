@@ -276,7 +276,7 @@ class LoginPopup extends React.Component {
                           </div>
                           <input type="hidden" name defaultValue/>
                           <div className="mrg-t-sm">
-                            {this.state.isValidData ? <Button loading={this.state.loading}  type="submit"  className="btn-green btn-square btn-block btn-lg">Log in</Button> :
+                            {this.state.isValidData ? <Button loading={this.state.loading}  type="submit" style={{"backgroundColor":"green"}} className="btn-green btn-square btn-block btn-lg">Log in</Button> :
                             <Button loading={this.state.loading}  type="submit" style={{"backgroundColor":"green"}} className="btn btn-green btn-square btn-block btn-lg" disabled>Log in</Button> }
                           </div>
 
