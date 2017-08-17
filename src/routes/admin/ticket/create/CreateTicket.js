@@ -312,16 +312,16 @@ class CreateTicket extends React.Component {
 		}
 	};
 	render() {
-		let start = this.state.eventData &&  this.state.eventData.eventStartDate ? moment(this.state.eventData.eventStartDate).format("YYYY-MM-DD HH:mm:ss") : this.state.startDate.format("YYYY-MM-DD HH:mm:ss");
-		let end = this.state.eventData &&  this.state.eventData.eventEndDate ? moment(this.state.eventData.eventEndDate).format("YYYY-MM-DD HH:mm:ss") : this.state.endDate.format("YYYY-MM-DD HH:mm:ss");
-		// let end = this.state.endDate.format("YYYY-MM-DD HH:mm:ss");
+		let start = this.state.eventData &&  this.state.eventData.eventStartDate ? moment(this.state.eventData.eventStartDate).format("MM/DD/YYYY hh:mm a") : this.state.startDate.format("MM/DD/YYYY hh:mm a");
+		let end = this.state.eventData &&  this.state.eventData.eventEndDate ? moment(this.state.eventData.eventEndDate).format("MM/DD/YYYY hh:mm a") : this.state.endDate.format("MM/DD/YYYY hh:mm a");
+		// let end = this.state.endDate.format("MM/DD/YYYY hh:mm a");
 		let label = start + " - " + end;
 		if (start === end) {
 			label = start;
 		}
 
 		let locale = {
-			format: "YYYY-MM-DD HH:mm:ss",
+			format: "MM/DD/YYYY hh:mm a",
 			separator: " - ",
 			applyLabel: "Apply",
 			cancelLabel: "Cancel",
