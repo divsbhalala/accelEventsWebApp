@@ -454,194 +454,203 @@ class Event extends React.Component {
 	};
 
 	doGetAuctionItemByLimit(eventUrl) {
-		this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
-			if (resp && resp.data && resp.data.items) {
-				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
-					this.setState({
-						auctionPageLoading: false
-					})
-				}
-				this.setState({
-					auctionPageItems:this.state.auctionPageItems.concat(resp.data && resp.data.items) ,
-					auctionPageCount: this.state.auctionPageCount + 1
-				},function changeAfter(){
-          let seenNames = {};
-					let	array = this.state.auctionPageItems.filter(function(currentObject) {
-						if (currentObject.id in seenNames) {
-							return false;
-						} else {
-							seenNames[currentObject.id] = true;
-							return true;
-						}
-					});
-					this.setState({auctionPageItems:array,})
+		if(this.props.eventData && this.props.eventData.silentAuctionEnabled && !this.props.eventData.silentAuctionModuleHidden) {
+			this.props.doGetAuctionItemByLimit(eventUrl, this.state.auctionPageCount, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
+				if (resp && resp.data && resp.data.items) {
+					if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
+						this.setState({
+							auctionPageLoading: false
+						})
 					}
-				)}
-			else {
-				this.setState({
-					auctionPageLoading: false
-				})
-			}
-		}).catch(error => {
-			this.setState({
-				auctionPageLoading: false
-			})
-		})
-	}
-
-	doGetAuctionItemBySearch(eventUrl) {
-		this.props.doGetAuctionItemByLimit(eventUrl, 0, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
-			if (resp && resp.data && resp.data.items && resp.data.items) {
-				if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
+					this.setState({
+						auctionPageItems:this.state.auctionPageItems.concat(resp.data && resp.data.items) ,
+						auctionPageCount: this.state.auctionPageCount + 1
+					},function changeAfter(){
+	          let seenNames = {};
+						let	array = this.state.auctionPageItems.filter(function(currentObject) {
+							if (currentObject.id in seenNames) {
+								return false;
+							} else {
+								seenNames[currentObject.id] = true;
+								return true;
+							}
+						});
+						this.setState({auctionPageItems:array,})
+						}
+					)}
+				else {
 					this.setState({
 						auctionPageLoading: false
 					})
 				}
-				this.setState({
-					auctionPageItems: resp.data && resp.data.items,
-				})
-			}
-			else {
+			}).catch(error => {
 				this.setState({
 					auctionPageLoading: false
 				})
-			}
-		}).catch(error => {
-			this.setState({
-				auctionPageLoading: false
 			})
-		})
+		}
+	}
+	doGetAuctionItemBySearch(eventUrl) {
+		if(this.props.eventData && this.props.eventData.silentAuctionEnabled && !this.props.eventData.silentAuctionModuleHidden) {
+			this.props.doGetAuctionItemByLimit(eventUrl, 0, this.state.auctionPageLimit, this.state.auctionPageCategory, this.state.auctionPageSearchString).then(resp => {
+				if (resp && resp.data && resp.data.items && resp.data.items) {
+					if (resp.data && resp.data.items.length < this.state.auctionPageLimit) {
+						this.setState({
+							auctionPageLoading: false
+						})
+					}
+					this.setState({
+						auctionPageItems: resp.data && resp.data.items,
+					})
+				}
+				else {
+					this.setState({
+						auctionPageLoading: false
+					})
+				}
+			}).catch(error => {
+				this.setState({
+					auctionPageLoading: false
+				})
+			})
+		}
 	}
 
 	doGetRaffleItemByLimit(eventUrl) {
-		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
-			if (resp && resp.data && resp.data.items) {
-				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
+		if(this.props.eventData && this.props.eventData.raffleEnabled && !this.props.eventData.raffleModuleHidden){
+			this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory).then(resp => {
+				if (resp && resp.data && resp.data.items) {
+					if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
+						this.setState({
+							rafflePageLoading: false
+						})
+					}
+					this.setState({
+						rafflePageItems: this.state.rafflePageItems.concat(resp.data.items),
+						rafflePageCount: this.state.rafflePageCount + 1
+					},function changeAfter(){
+	          let seenNames = {};
+	          let	array = this.state.rafflePageItems.filter(function(currentObject) {
+	            if (currentObject.id in seenNames) {
+	              return false;
+	            } else {
+	              seenNames[currentObject.id] = true;
+	              return true;
+	            }
+	          });
+	          this.setState({rafflePageItems:array,})
+	        })
+				}
+				else {
 					this.setState({
 						rafflePageLoading: false
 					})
 				}
-				this.setState({
-					rafflePageItems: this.state.rafflePageItems.concat(resp.data.items),
-					rafflePageCount: this.state.rafflePageCount + 1
-				},function changeAfter(){
-          let seenNames = {};
-          let	array = this.state.rafflePageItems.filter(function(currentObject) {
-            if (currentObject.id in seenNames) {
-              return false;
-            } else {
-              seenNames[currentObject.id] = true;
-              return true;
-            }
-          });
-          this.setState({rafflePageItems:array,})
-        })
-			}
-			else {
+			}).catch(error => {
 				this.setState({
 					rafflePageLoading: false
 				})
-			}
-		}).catch(error => {
-			this.setState({
-				rafflePageLoading: false
 			})
-		})
+		}
 	}
-
 	doGetRaffleItemBySearch(eventUrl) {
-		this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory, this.state.rafflePageSearchString).then(resp => {
-			if (resp && resp.data && resp.data.items) {
-				if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
+		if(this.props.eventData && this.props.eventData.raffleEnabled && !this.props.eventData.raffleModuleHidden){
+			this.props.doGetRaffleItemByLimit(eventUrl, 0, this.state.rafflePageLimit, this.state.rafflePageCategory, this.state.rafflePageSearchString).then(resp => {
+				if (resp && resp.data && resp.data.items) {
+					if (resp.data && resp.data.items.length < this.state.rafflePageLimit) {
+						this.setState({
+							rafflePageLoading: false
+						})
+					}
+					this.setState({
+						rafflePageItems: resp.data.items,
+					},function changeAfter(){
+			          let seenNames = {};
+			          let array = this.state.rafflePageItems.filter(function(currentObject) {
+			            if (currentObject.id in seenNames) {
+			              return false;
+			            } else {
+			              seenNames[currentObject.id] = true;
+			              return true;
+			            }
+			          });
+			          this.setState({rafflePageItems:array})
+			        })
+				}
+				else {
 					this.setState({
 						rafflePageLoading: false
 					})
 				}
-				this.setState({
-					rafflePageItems: resp.data.items,
-				},function changeAfter(){
-		          let seenNames = {};
-		          let array = this.state.rafflePageItems.filter(function(currentObject) {
-		            if (currentObject.id in seenNames) {
-		              return false;
-		            } else {
-		              seenNames[currentObject.id] = true;
-		              return true;
-		            }
-		          });
-		          this.setState({rafflePageItems:array})
-		        })
-			}
-			else {
+			}).catch(error => {
 				this.setState({
 					rafflePageLoading: false
 				})
-			}
-		}).catch(error => {
-			this.setState({
-				rafflePageLoading: false
 			})
-		})
+		}
 	}
-
 	doGetFundANeedItemByLimit(eventUrl) {
-		this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
-			if (resp && resp.data && resp.data.items) {
-				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
+		if(this.props.eventData && this.props.eventData.causeAuctionEnabled && !this.props.eventData.causeAuctionModuleHidden){
+			this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory).then(resp => {
+				if (resp && resp.data && resp.data.items) {
+					if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
+						this.setState({
+							fundANeedPageLoading: false
+						})
+					}
+					this.setState({
+						fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data.items),
+						fundANeedPageCount: this.state.fundANeedPageCount + 1
+					},function changeAfter(){
+	          let seenNames = {};
+	          let	array = this.state.fundANeedPageItems.filter(function(currentObject) {
+	            if (currentObject.id in seenNames) {
+	              return false;
+	            } else {
+	              seenNames[currentObject.id] = true;
+	              return true;
+	            }
+	          });
+	          this.setState({fundANeedPageItems:array,})
+	        })
+				}
+				else {
 					this.setState({
 						fundANeedPageLoading: false
 					})
 				}
-				this.setState({
-					fundANeedPageItems: this.state.fundANeedPageItems.concat(resp.data.items),
-					fundANeedPageCount: this.state.fundANeedPageCount + 1
-				},function changeAfter(){
-          let seenNames = {};
-          let	array = this.state.fundANeedPageItems.filter(function(currentObject) {
-            if (currentObject.id in seenNames) {
-              return false;
-            } else {
-              seenNames[currentObject.id] = true;
-              return true;
-            }
-          });
-          this.setState({fundANeedPageItems:array,})
-        })
-			}
-			else {
+			}).catch(error => {
 				this.setState({
 					fundANeedPageLoading: false
 				})
-			}
-		}).catch(error => {
-			this.setState({
-				fundANeedPageLoading: false
 			})
-		})
+		}
 	}
 
 	doGetFundANeedItemBySearch(eventUrl) {
-		this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory, this.state.fundANeedPageSearchString).then(resp => {
-			if (resp && resp.data && resp.data.items) {
-				if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
+		if(this.props.eventData && this.props.eventData.causeAuctionEnabled && !this.props.eventData.causeAuctionModuleHidden){
+			this.props.doGetFundANeedItemByLimit(eventUrl, 0, this.state.fundANeedPageLimit, this.state.fundANeedPageCategory, this.state.fundANeedPageSearchString).then(resp => {
+				if (resp && resp.data && resp.data.items) {
+					if (resp.data && resp.data.items.length < this.state.fundANeedPageLimit) {
+						this.setState({
+							fundANeedPageLoading: false
+						})
+					}
+					this.setState({
+						fundANeedPageItems: resp.data.items,
+					})
+				}
+				else {
 					this.setState({
 						fundANeedPageLoading: false
 					})
 				}
-				this.setState({
-					fundANeedPageItems: resp.data.items,
-				})
-			}
-			else {
+			}).catch(error => {
 				this.setState({
 					fundANeedPageLoading: false
 				})
-			}
-		}).catch(error => {
-			this.setState({
-				fundANeedPageLoading: false
 			})
-		})
+		}
 	}
 	selectHandle(e) {
 		let totalTickets = this.state.totalTickets;
@@ -733,15 +742,6 @@ class Event extends React.Component {
 		}
 	};
 	handleScroll(event) {
-		/*if(this.props.title && this.props.title=='Event Page'){
-		 let body  = document.querySelector('body');
-		 this.setState({
-		 lastScrollPos:body.scrollTop,
-		 });
-		 console.log('this.props.active_tab_data && this.props.active_tab_data.tab',this.props.active_tab_data, this.props.active_tab_data && this.props.active_tab_data.tab)
-		 this.props.storeActiveTabData({tab:this.props.active_tab_data && this.props.active_tab_data.tab,lastScrollPos:body.scrollTop});
-		 }*/
-
 	}
 	doOrderTicket() {
 		let Data = {};
@@ -1019,21 +1019,6 @@ class Event extends React.Component {
 									</div>
 								)
 							}
-							{/*<div className="sale-card">
-							 <div className="flex-row">
-							 <div className="flex-col">
-							 <div className="type-name">
-							 <strong>First ticket type</strong>
-							 (<span className="type-cost txt-sm gray"> $100.00 </span>)
-							 <div className="pull-right">
-							 <div className="col-md-7">No. Of Tickets</div>
-							 <div className="col-md-5"> SOLD OUT </div>
-							 </div>
-							 </div>
-							 <div className="sale-text txt-sm text-uppercase">Sale Ended on Apr 12, 2017</div>
-							 </div>
-							 </div>
-							 </div>*/}
 							<div className="status-bar clearfix mrg-t-lg">
 								<div className="pull-left">
 									<span> QTY:<span className="qty">{this.state.totalTicketQty}</span> </span>
@@ -1113,7 +1098,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(Event));
-//export default (withStyles(s)(Event));
 
 let directionsDisplay = null;
 let directionsService = null;
