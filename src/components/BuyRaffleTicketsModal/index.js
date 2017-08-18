@@ -329,34 +329,48 @@ class BuyRaffleTicketsModal extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
+     expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
     if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
-        errorMsgExpMonth: "Expire Month is Require",
+        errorMsgExpMonth: 'Expire Month is Require',
       });
     } else {
-      this.setState({
-        expMonth: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue: this.expYear.value && this.expYear.value.trim(),
+     expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
-        errorMsgexpYear: "Expire Year is Require",
+        errorMsgexpYear: 'Expire Year is Require',
       });
     } else {
-      this.setState({
-        expYear: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expYear: true,
+        });
+      } else {
+        this.setState({
+          expYear: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };

@@ -153,8 +153,8 @@ class Volunteer extends React.Component {
     phoneNumberFeedBack: true,
     loading: false,
     stripeToken: null,
-      expYearFeedBack: true,
-      expMonthFeedBack: true,
+    expYearFeedBack: true,
+    expMonthFeedBack: true,
       //expMonthValue:this.expMonth.value,
      // expYearValue:this.expYear.value,
   });
@@ -694,7 +694,6 @@ class Volunteer extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expYearFeedBack: true,
       expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
     if (this.expMonth.value && this.expMonth.value.trim() === '') {
@@ -721,7 +720,6 @@ class Volunteer extends React.Component {
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expMonthFeedBack: true,
       expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
