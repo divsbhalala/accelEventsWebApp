@@ -101,6 +101,8 @@ class TicketCheckout extends React.Component {
 			validData: true,
 			popupAlertHeader: null,
 			errorMsg: null,
+			buyer_email:{},
+			buyer_name:{}
 		};
 		this.ticketCheckout = this.ticketCheckout.bind(this);
 		this.ticketTimeOut = this.ticketTimeOut.bind(this);
@@ -113,6 +115,9 @@ class TicketCheckout extends React.Component {
 		this.setAttendeesAddressValue = this.setAttendeesAddressValue.bind(this);
 		this.isValidFormData = this.isValidFormData.bind(this);
     ticketInst = this;
+		this.nameChanged = this.nameChanged.bind(this);
+		this.emailChanged = this.emailChanged.bind(this);
+		// this.setBuyerAddressValue = this.setBuyerAddressValue.bind(this);
 	}
 
 	componentWillMount() {
@@ -164,6 +169,55 @@ class TicketCheckout extends React.Component {
       ticketInst.isValidFormData();
 		}, 1000);
 	};
+
+	emailChanged = (e) =>{
+		let b_email = this.state.buyer_email;
+		b_email.feedback = true;
+		if (this.email.value.trim() === ' ') {
+			this.email.value = '';
+		}
+
+		let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+	    if (this.email.value.trim() == '' || !re.test(this.email.value)) {
+	    	b_email.value = false;
+	    	b_email.error = true;
+	      this.setState({
+	        buyer_email: b_email
+	      });
+	    }
+	    else {
+	      b_email.value = this.email.value.trim();
+	      b_email.error = false;
+	      this.setState({
+	        buyer_email: b_email
+	      });
+	    }
+	}
+
+	nameChanged = (e) =>{
+		let b_name = this.state.buyer_name;
+		b_name.feedback = true;
+		if (this.name.value.trim() === ' ') {
+			this.name.value = '';
+		}
+
+		if (!this.name.value) {
+			b_name.value = false;
+			b_name.error = true;
+			this.setState({
+				buyer_name: b_name
+			});
+		}
+		else {
+			b_name.value = this.name.value;
+			b_name.error = false;
+			this.setState({
+				buyer_name: b_name
+			});
+		}
+
+	}
 
 	emailValidateHandler = (e) => {
 
@@ -537,7 +591,7 @@ class TicketCheckout extends React.Component {
 			});
 			// validData = document.getElementsByClassName("has-error").length === 0;
 			this.isValidFormData();
-			if (validData) {
+			if (validData && this.state.buyer_email.value && this.state.buyer_name.value) {
 				if (!this.props.authenticated) {
 					let requestData;
 					if (emailIndex > -1 && buyerInformationFields[emailIndex] && buyerInformationFields[emailIndex]['Email'] && buyerInformationFields[emailIndex]['Email'].error === false) {
@@ -682,7 +736,8 @@ class TicketCheckout extends React.Component {
 							request.purchaser.attributes = [];
 							if (index > -1) {
 								request.purchaser.attributes = request.purchaser.attributes.concat({
-									"Email": orderData && orderData.purchaserDetail && orderData.purchaserDetail.email
+									// "Email": orderData && orderData.purchaserDetail && orderData.purchaserDetail.email
+									"Email" : this.state.buyer_email && this.state.buyer_email.value
 								})
 							}
 							let  infoFields = request.purchaser.attributes;
@@ -1437,24 +1492,66 @@ class TicketCheckout extends React.Component {
 													<div className="red pull-right">* Required information</div>
 													<h4 className="text-left"><strong>Ticket Buyer</strong></h4>
 													{ this.props.orderData && this.props.orderData.purchaserDetail &&
+
+
 													<div className="buyerInformation">
-														<div className="form-group mrg-t-md">
-															<div className="row">
-																<div className="col-md-4 text-right">
-																	<strong className="text-right"><strong>Name: </strong></strong>
-																</div>
-																<div className="col-md-6 text-left">
-																	{this.props.orderData.purchaserDetail.firstName} {this.props.orderData.purchaserDetail.lastName}
+														<div className="custom-attribute" key="full_name">
+															<div className={cx("form-group mrg-t-md")}>
+																<div className="row">
+																	<div className="col-md-4 text-right">
+																		<label className="text-right">Full Name
+																		<span className="red">*</span></label>
+																	</div>
+
+																	<div className={cx("form-group col-md-6 ",
+																		this.state.buyer_name && 'has-feedback',
+																		this.state.buyer_name && this.state.buyer_name.error && 'has-error',
+																		this.state.buyer_name && this.state.buyer_name.value && 'has-success'
+																	)}>
+																		<input
+																			type="text"
+																			className="form-control"
+																			name="full_name"
+																			placeholder="Full Name"
+																			ref={ref => {
+																				 this.name = ref;
+																			 }}
+																			onChange={this.nameChanged.bind(this)}
+																			required="true"
+																			defaultValue={this.state.buyer_name.value}
+																		/> 
+																	</div>
+
 																</div>
 															</div>
 														</div>
-														<div className="form-group">
-															<div className="row">
-																<div className="col-md-4 text-right">
-																	<strong className="text-right"><strong>Email: </strong></strong>
-																</div>
-																<div className="col-md-6 text-left">
-																	{this.props.orderData.purchaserDetail.email}
+
+
+														<div className="custom-attribute" key="email">
+															<div className={cx("form-group mrg-t-md")}>
+																<div className="row">
+																	<div className="col-md-4 text-right">
+																		<label className="text-right">Email
+																		<span className="red">*</span></label>
+																	</div>
+																	<div className={cx("form-group col-md-6",
+																			this.state.buyer_email && 'has-feedback',
+																			this.state.buyer_email && this.state.buyer_email.error && 'has-error',
+																			this.state.buyer_email && this.state.buyer_email.value && 'has-success'
+																		)}>
+																			<input
+																				type="email"
+																				className="form-control"
+																				name="email"
+																				ref={ref => {
+																					 this.email = ref;
+																				 }}
+																				placeholder="Email"
+																				onChange={this.emailChanged.bind(this)}
+																				required="true"
+																				defaultValue={this.state.buyer_email.value}
+																			/> 
+																	</div>
 																</div>
 															</div>
 														</div>
