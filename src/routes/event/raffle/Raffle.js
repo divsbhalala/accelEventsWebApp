@@ -791,13 +791,10 @@ class ImageList extends React.Component {
       <div>
         <div className={cx("item-image-inner")}
              style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
-
       </div>
-
     );
   }
 }
-
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   doGetRaffleItemByCode: (eventUrl, itemCode) => doGetRaffleItemByCode(eventUrl, itemCode),
