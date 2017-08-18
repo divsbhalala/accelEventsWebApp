@@ -385,6 +385,36 @@ export function storeIsVolunteer(data) {
     data,
   }
 }
+
+export function storeSetAuctionCache(data) {
+  return {
+    type: 'STORE_AUCTION_CACHE',
+    data,
+  }
+}
+
+export function storeSetRaffleCache(data) {
+  return {
+    type: 'STORE_RAFFLE_CACHE',
+    data,
+  }
+}
+
+export function storeSetFundCache(data) {
+  return {
+    type: 'STORE_FUND_CACHE',
+    data,
+  }
+}
+
+
+export function storeSetOpenedTabCache(data) {
+  return {
+    type: 'STORE_AUCTION_CACHE_OPENED',
+    data,
+  }
+}
+
 export function storeLocation(data) {
   return {
     type: 'LOCATION',
@@ -832,6 +862,32 @@ export function isVolunteer(eventUrl) {
     });
   }
 }
+
+export function setAuctionCache(data) {
+  return (dispatch) => {
+      dispatch(storeSetAuctionCache(data));
+  }
+}
+
+export function setRaffleCache(data) {
+  return (dispatch) => {
+      dispatch(storeSetRaffleCache(data));
+  }
+}
+
+export function setFundCache(data) {
+  return (dispatch) => {
+      dispatch(storeSetFundCache(data));
+  }
+}
+
+
+export function setOpenedTabCache(data) {
+  return (dispatch) => {
+      dispatch(storeSetOpenedTabCache(data));
+  }
+}
+
 
 export function doContactSupport(eventUrl, contact) {
   return (dispatch) => {

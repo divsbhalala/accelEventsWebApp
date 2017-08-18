@@ -389,8 +389,9 @@ class TicketSetting extends React.Component {
 			activeScreen: row.eventTicketTypeId ? 2 : 3,
 			couponAmount: row.amount,
 			couponCode: row.code,
-			couponEndDate: moment(row.endDate).format("DD/MM/YYYY HH:mm:ss"),
-			couponStartDate: moment(row.startDate).format("DD/MM/YYYY HH:mm:ss"),
+			couponEndDate: row.endDate && row.endDate._isAMomentObject ? row.endDate.format("MM/DD/YYYY hh:mm a")  : moment(row.endDate).format("MM/DD/YYYY hh:mm a"),
+      couponStartDate: row.startDate && row.startDate._isAMomentObject ? row.startDate.format("MM/DD/YYYY hh:mm a")  : moment(row.startDate).format("MM/DD/YYYY hh:mm a"),
+			// couponStartDate: moment(row.startDate).format("MM/DD/YYYY hh:mm a"),
 			couponUses: row.maximumUseOfCoupon,
 			discountType: row.discountType,
 			couponEventTicketTypeId: row.eventTicketTypeId || "",
@@ -423,16 +424,16 @@ class TicketSetting extends React.Component {
 		});
 	};
 	render() {
-		let start = this.state.couponStartDate && this.state.couponStartDate._isAMomentObject ? this.state.couponStartDate.format("DD/MM/YYYY HH:mm:ss") : moment(this.state.couponStartDate).format("DD/MM/YYYY HH:mm:ss");
-		let end =this.state.couponEndDate && this.state.couponEndDate._isAMomentObject ? this.state.couponEndDate.format("DD/MM/YYYY HH:mm:ss") : moment(this.state.couponEndDate).format("DD/MM/YYYY HH:mm:ss");
-		// let end = this.state.endDate.format("DD/MM/YYYY HH:mm:sss");
+		let start = this.state.couponStartDate && this.state.couponStartDate._isAMomentObject ? this.state.couponStartDate.format("MM/DD/YYYY hh:mm a") : moment(this.state.couponStartDate).format("MM/DD/YYYY hh:mm a");
+		let end =this.state.couponEndDate && this.state.couponEndDate._isAMomentObject ? this.state.couponEndDate.format("MM/DD/YYYY hh:mm a") : moment(this.state.couponEndDate).format("MM/DD/YYYY hh:mm a");
+		// let end = this.state.endDate.format("MM/DD/YYYY hh:mm as");
 		let label = start + " - " + end;
 		if (start === end) {
 			label = start;
 		}
 
 		let locale = {
-			format: "DD/MM/YYYY HH:mm:ss",
+			format: "MM/DD/YYYY hh:mm a",
 			separator: " - ",
 			applyLabel: "Apply",
 			cancelLabel: "Cancel",

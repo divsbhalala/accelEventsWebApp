@@ -8,7 +8,9 @@ import Feedback from '../Feedback';
 import Footer from '../Footer';
 import AdminSidebar from '../../components/Sidebar/AdminSidebar';
 import $ from 'jquery'
-
+import {connect} from 'react-redux';
+import {sessionService, loadSession} from 'redux-react-session';
+import  {storeLoginData, storeToken} from './../../routes/login/action/index';
 class AdminLayout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
@@ -77,9 +79,27 @@ class AdminLayout extends React.Component {
     });*/
   }
   componentDidMount() {
-    // this._handleDropdowns();
-    //this._handleSmallNav();
-    //this._handleScrollbar();
+    let pathName = location.pathName;
+    if (!_.isEmpty(localStorage.getItem('user')) && !_.isEmpty(localStorage.getItem('token'))) {
+      this.props.storeLoginData(JSON.parse(localStorage.getItem('user')));
+      this.props.storeToken(localStorage.getItem('token'));
+      sessionService.saveSession(localStorage.getItem('token'));
+      sessionService.saveUser(JSON.parse(localStorage.getItem('user')));
+      this.setState({
+        user: {
+          data: JSON.parse(localStorage.getItem('user')),
+          token:localStorage.getItem('token')
+        }
+      });
+      if (pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0) {
+
+      }
+    } else {
+
+      if (pathName && pathName.indexOf('login') > 0 && pathName.indexOf('signup') > 0) {
+
+      }
+    }
   }
   render() {
     return (
@@ -94,4 +114,14 @@ class AdminLayout extends React.Component {
   }
 }
 
-export default AdminLayout;
+const mapStateToProps = (state) => {
+  return {
+    USER_DATA: state.user
+  }
+};
+const mapDispatchToProps = {
+  storeLoginData: (data) => storeLoginData(data),
+  storeToken: (data) => storeToken(data)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLayout)

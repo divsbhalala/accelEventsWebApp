@@ -8,7 +8,11 @@ import {
   STORE_ACTIVE_TAB,
   STORE_ORDER_DATA,
   IS_VOLUNTEER,
+  STORE_AUCTION_CACHE,
+  STORE_RAFFLE_CACHE,
+  STORE_FUND_CACHE,
 	STORE_EVENT_CURRENCY,
+  STORE_AUCTION_CACHE_OPENED
 } from '../constants';
 export default function event(state = {}, action) {
   switch (action.type) {
@@ -30,6 +34,14 @@ export default function event(state = {}, action) {
       return {...state, order_data: action.data};
     case IS_VOLUNTEER:
       return {...state, is_volunteer: action.data};
+    case STORE_AUCTION_CACHE:
+      return {...state, auction_cache: action.data};
+    case STORE_RAFFLE_CACHE:
+      return {...state, raffle_cache: action.data};
+    case STORE_FUND_CACHE:
+      return {...state, fund_cache: action.data};
+    case STORE_AUCTION_CACHE_OPENED:
+      return {...state, auction_cache_tab: action.data};
     case STORE_EVENT_CURRENCY:
       return {...state, currencySymbol: action.data};
     default:

@@ -670,9 +670,14 @@ class Raffle extends React.Component {
 
         </div>
         <div className="col-md-6 col-lg-5">
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } role="button" className="btn btn-success btn-block" >
+          </Link>
+          { /**
           <a onClick={this.goBack}  role="button" className="btn btn-success btn-block" >
               Go back to All Items
           </a>
+
+            **/ }
         </div>
       </div>
       <div className="row mrg-t-md">
@@ -686,8 +691,14 @@ class Raffle extends React.Component {
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
       <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
-      <a role="button" className="btn btn-success btn-block"
+      <Link role="button" className="btn btn-success btn-block"
+         to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } >Go back to All Items</Link>
+      { 
+
+        /**<a role="button" className="btn btn-success btn-block"
          onClick={this.goBack}  >Go back to All Items</a>
+       **/
+     }
     </div>;
     return (
       <div className="row">

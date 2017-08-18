@@ -1028,8 +1028,11 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6" style={{paddingLeft:5}}>
-        <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
-           >
+        <a role="button" className="btn btn-success btn-block"
+           href={this.props.params && "/events/" + this.props.params.params + '#Auction'}>
+        {/** <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
+           > **/
+        }
           Go back to All Items</a></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1091,7 +1094,7 @@ class Auction extends React.Component {
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
-              <input type="number" className="form-control" name="itembid" id="itembid" style={{"width":"45%"}} 
+              <input type="number" className="form-control" name="itembid" id="itembid" style={{"width":"45%"}}
                      placeholder="Amount"
                      ref={ref => {
                        this.amount = ref;
@@ -1262,9 +1265,14 @@ class Auction extends React.Component {
           Submit bid
         </Button></div>
           <div className="col-sm-5" style={{paddingLeft:0,width:"180px"}}>
-          <a onClick={this.goBack} className="btn btn-success btn-block" >
-          Go back to All Items
-        </a></div>
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+          </Link>
+          { /**
+            <a onClick={this.goBack} className="btn btn-success btn-block" >
+            Go back to All Items
+          </a>
+            **/}
+        </div>
         </div>
 
 
@@ -1325,7 +1333,7 @@ class Auction extends React.Component {
                             className="current-bid">{this.state.auctionData.buyItNowPrice}</span></div>
                           <div className="curr-bid-text">BUY NOW PRICE</div>
                         </div>}
-                        {this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
+                        {this.state.settings && this.state.settings.marketValueEnabled && this.state.auctionData && this.state.auctionData.marketValue > 0 && <div className="col-sm-4">
                           <div className="curr-bid-number">{this.props.currencySymbol}<span
                             className="current-bid">{this.state.auctionData.marketValue}</span></div>
                           <div className="curr-bid-text">MARKET VALUE</div>
