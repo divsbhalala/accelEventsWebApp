@@ -1,20 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './Design.css';
-import {connect} from 'react-redux';
-
-import ToggleSwitch from '../../../components/Widget/ToggleSwitch';
-
-import {getDesignSetting, updateDesignSetting, updateEventUrlDesingSetting} from './action';
-import Button from 'react-bootstrap-button-loader';
-import cx from 'classnames';
-import CKEditor from 'react-ckeditor-wrapper';
-import {EditableTextField} from 'react-bootstrap-xeditable';
-import UploadImageModel from '../../../components/Widget/UploadFile/UploadImageModel';
-import {uploadImage} from '../../../components/Widget/UploadFile/action';
-import {getStoreDesingData} from './../../../routes/admin/action/index';
-import {serverUrl} from './../../../clientConfig';
+import React from "react";
+import PropTypes from "prop-types";
+import withStyles from "isomorphic-style-loader/lib/withStyles";
+import s from "./Design.css";
+import {connect} from "react-redux";
+import ToggleSwitch from "../../../components/Widget/ToggleSwitch";
+import {getDesignSetting, updateDesignSetting, updateEventUrlDesingSetting} from "./action";
+import Button from "react-bootstrap-button-loader";
+import cx from "classnames";
+import CKEditor from "react-ckeditor-wrapper";
+import {EditableTextField} from "react-bootstrap-xeditable";
+import UploadImageModel from "../../../components/Widget/UploadFile/UploadImageModel";
+import {uploadImage} from "../../../components/Widget/UploadFile/action";
+import {getStoreDesingData} from "./../../../routes/admin/action/index";
+import {serverUrl} from "./../../../clientConfig";
 class Design extends React.Component {
 	static propTypes = {
 		title: PropTypes.string,
@@ -135,7 +133,7 @@ class Design extends React.Component {
 												Design Event
 												<div className="pull-right">
 													<Button className="btn btn-info btn-block" type="submit" loading={this.state.loading}
-																	onClick={this.submitSettings}>Save Settings</Button>
+													        onClick={this.submitSettings}>Save Settings</Button>
 												</div>
 											</h1>
 
@@ -149,19 +147,30 @@ class Design extends React.Component {
 												Design your display page. View your changes on your
 												page here:
 												<a href={serverUrl + "/events/" + this.state.settings.eventUrl} title="Display page"
-													 target="_blank">{serverUrl}/events/{this.state.settings.eventUrl}</a>.
+												   target="_blank">{serverUrl}/events/{this.state.settings.eventUrl}</a>.
 											</p>
-											{ this.state.message && <div
-												className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')}>
-												{ this.state.message }</div>}
-											{ this.state.loading ?
+											<div className="ajax-wrap">
 												<div className="ajax-msg-box text-center">
-													<span className="fa fa-spinner fa-pulse fa-fw"/>
-													<span className="resp-message">Please wait...</span>
-												</div> : ""
-											}
+													{ this.state.loading ?
+														<div className="ajax-msg-box text-center">
+															<span className="fa fa-spinner fa-pulse fa-fw"/>
+															<span className="resp-message">Please wait...</span>
+														</div> : ""
+													}
+													{ !this.state.isError && this.state.message ?
+														<div className="ajax-msg-box text-center text-success">
+															<span className="resp-message">{this.state.message}</span>
+														</div> : ""
+													}
+													{ this.state.isError && this.state.message ?
+														<div className="ajax-msg-box text-center text-danger">
+															<span className="resp-message">{this.state.message}</span>
+														</div> : ""
+													}
+												</div>
+											</div>
 											<form id="form" className="form ajax-form" data-validate-function="validateValues" action="design"
-														method="post">
+											      method="post">
 												<div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}><span
 													className="fa fa-spinner fa-pulse fa-fw"/> <span className="resp-message"/></div>
 												<div className="row form-group mrg-t-lg">
@@ -173,7 +182,7 @@ class Design extends React.Component {
 														<input type="text" ref={ref => {
 															this.eventName = ref;
 														}} onKeyUp={this.eventNameChangeHandler} className="form-control"
-																	 defaultValue={this.state.settings.eventName} maxLength={50}/>
+														       defaultValue={this.state.settings.eventName} maxLength={50}/>
 													</div>
 												</div>
 												<div className="form-group row">
@@ -185,8 +194,8 @@ class Design extends React.Component {
 														<div className=" event-url">
 															<span className="text">{serverUrl}/events/</span>
 															<span className="new-tab-link"> <EditableTextField onUpdate={this.updateEventUrl}
-																																								 value={this.state.settings.eventUrl }
-																																								 name='EventUrl'/></span>
+															                                                   value={this.state.settings.eventUrl }
+															                                                   name='EventUrl'/></span>
 														</div>
 														<div id="urlAlert"/>
 
@@ -210,8 +219,8 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-3">
 														<ToggleSwitch name="requireBidderAddress" id="logoEnabled"
-																					defaultValue={ (this.state.settings && this.state.settings.logoEnabled) || false}
-																					className="success enabledisable-switch" onChange={() => {
+														              defaultValue={ (this.state.settings && this.state.settings.logoEnabled) || false}
+														              className="success enabledisable-switch" onChange={() => {
 															this.state.settings.logoEnabled = !this.state.settings.logoEnabled
 														}}/>
 													</div>
@@ -236,8 +245,8 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-3">
 														<ToggleSwitch name="requireBidderAddress" id="bannerImageEnabled"
-																					defaultValue={ (this.state.settings && this.state.settings.bannerImageEnabled ) || false}
-																					className="success enabledisable-switch" onChange={() => {
+														              defaultValue={ (this.state.settings && this.state.settings.bannerImageEnabled ) || false}
+														              className="success enabledisable-switch" onChange={() => {
 															this.state.settings.bannerImageEnabled = !this.state.settings.bannerImageEnabled
 														}}/>
 													</div>
@@ -250,7 +259,7 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-9">
 														<CKEditor value={this.state.settings.desc}
-																			onChange={this.updateContent.bind(this)}
+														          onChange={this.updateContent.bind(this)}
 															// config={
 															// {
 															//   filebrowserBrowseUrl : '/browser/browse.php',
@@ -266,8 +275,8 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-3">
 														<ToggleSwitch name="requireBidderAddress" id="txtMsgBidInstShown"
-																					defaultValue={ (this.state.settings && this.state.settings.txtMsgBidInstShown) || false}
-																					className="success" onChange={() => {
+														              defaultValue={ (this.state.settings && this.state.settings.txtMsgBidInstShown) || false}
+														              className="success" onChange={() => {
 															this.state.settings.txtMsgBidInstShown = !this.state.settings.txtMsgBidInstShown
 														}}/>
 													</div>
@@ -279,8 +288,8 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-3">
 														<ToggleSwitch name="requireBidderAddress" id="totalFundRaisedHidden"
-																					defaultValue={ (this.state.settings && this.state.settings.totalFundRaisedHidden) || false}
-																					className="success" onChange={() => {
+														              defaultValue={ (this.state.settings && this.state.settings.totalFundRaisedHidden) || false}
+														              className="success" onChange={() => {
 															this.state.settings.totalFundRaisedHidden = !this.state.settings.totalFundRaisedHidden
 														}}/>
 													</div>
@@ -292,8 +301,8 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-3">
 														<ToggleSwitch name="requireBidderAddress" id="countDownTimeHidden"
-																					defaultValue={ (this.state.settings && this.state.settings.countDownTimeHidden) || false}
-																					className="success" onChange={() => {
+														              defaultValue={ (this.state.settings && this.state.settings.countDownTimeHidden) || false}
+														              className="success" onChange={() => {
 															this.state.settings.countDownTimeHidden = !this.state.settings.countDownTimeHidden
 														}}/>
 													</div>
@@ -305,8 +314,8 @@ class Design extends React.Component {
 													</div>
 													<div className="col-md-3">
 														<ToggleSwitch name="requireBidderAddress" id="socialSharingEnabled"
-																					defaultValue={ (this.state.settings && this.state.settings.socialSharingEnabled) || false}
-																					className="success" onChange={() => {
+														              defaultValue={ (this.state.settings && this.state.settings.socialSharingEnabled) || false}
+														              className="success" onChange={() => {
 															this.state.settings.socialSharingEnabled = !this.state.settings.socialSharingEnabled
 														}}/>
 													</div>
@@ -317,7 +326,7 @@ class Design extends React.Component {
 											<div className="row">
 												<div className="col-md-offset-4 col-md-3 mrg-t-lg">
 													<Button className="btn btn-info btn-block" type="submit" loading={this.state.loading}
-																	onClick={this.submitSettings}>Save Settings</Button>
+													        onClick={this.submitSettings}>Save Settings</Button>
 												</div>
 											</div>
 										</div>
@@ -329,9 +338,9 @@ class Design extends React.Component {
 
 				</div> : <div className="text-center"><span className="fa fa-spinner fa-3x mrg-t-lg fa-pulse fa-fw"/></div>}
 				<UploadImageModel showPopup={this.state.showPopup} popupHeader="Upload Event Logo"
-													imageUploaded={ this.imageUploaded } hidePopup={this.hidePopup}/>
+				                  imageUploaded={ this.imageUploaded } hidePopup={this.hidePopup}/>
 				<UploadImageModel showPopup={this.state.showBannerPopup} popupHeader="Upload Event Banner"
-													imageUploaded={ this.bannerUploaded } hidePopup={this.hideBannerPopup}/>
+				                  imageUploaded={ this.bannerUploaded } hidePopup={this.hideBannerPopup}/>
 			</div>
 		);
 	}

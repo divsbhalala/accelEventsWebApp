@@ -103,7 +103,7 @@ class AuctionPerformance extends React.Component {
   }
 }
 
-
+ 
 const mapDispatchToProps = {
   getPerformanceAuctionItem: () => getPerformanceAuctionItem(),
   getPerformanceAuctionItemByItemCode: ItemCode => getPerformanceAuctionItemByItemCode(ItemCode),

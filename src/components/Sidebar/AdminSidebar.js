@@ -86,9 +86,9 @@ class AdminSidebar extends React.Component {
 		});
 	}
 	componentWillUnmount(){
-		if(generalSetingsTimeout){
+		if(designDataTimeout){
 			clearTimeout(designDataTimeout);
-			dataTimeout = null;
+			designDataTimeout = null;
 		}
 		if(generalSetingsTimeout){
 			clearTimeout(generalSetingsTimeout);
@@ -113,6 +113,7 @@ class AdminSidebar extends React.Component {
 	render() {
 		return (
 			<div className="sidebar-wrap" >
+				<style dangerouslySetInnerHTML={{__html: ".ajax-msg-box{padding:10px;font-size:1.3em}.ajax-msg-box.text-success{background:#b7f2b8}.ajax-msg-box.text-danger{background:#f2b7b8}"}}/>
 				<div id="nav-col">
 					<section id="col-left" className="col-left-nano">
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>
