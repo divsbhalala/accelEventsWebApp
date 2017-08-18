@@ -80,7 +80,7 @@ class AdminSidebar extends React.Component {
 			else {
 				if(generalSetingsTimeout){
 					clearTimeout(generalSetingsTimeout);
-					dataTimeout = null;
+					generalSetingsTimeout = null;
 				}
 			}
 		});
@@ -92,7 +92,7 @@ class AdminSidebar extends React.Component {
 		}
 		if(generalSetingsTimeout){
 			clearTimeout(generalSetingsTimeout);
-			dataTimeout = null;
+			generalSetingsTimeout = null;
 		}
 	}
 	getStoreDesingData = () => {
@@ -103,9 +103,9 @@ class AdminSidebar extends React.Component {
 				}, 10000);
 			}
 			else {
-				if(generalSetingsTimeout){
+				if(designDataTimeout){
 					clearTimeout(designDataTimeout);
-					dataTimeout = null;
+					designDataTimeout = null;
 				}
 			}
 		});
