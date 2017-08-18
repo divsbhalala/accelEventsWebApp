@@ -213,6 +213,20 @@ class CreditCard extends React.Component {
 															/>
 														</div>
 													</div>
+
+													<div className="form-group row">
+                              <div className="col-md-4">
+                                  <label>Pass Credit Card Transaction Fees to Buyer</label>
+                              </div>
+                              <div className="col-md-4">
+                                  <ToggleSwitch name="processingFeesToPurchaser" id="processingFeesToPurchaser"
+                                                              defaultValue={this.state.settings && this.state.settings.processingFeesToPurchaser || false}
+                                                              className="success" onChange={() => {
+                                      this.state.settings.processingFeesToPurchaser = !this.state.settings.processingFeesToPurchaser
+                                  }}/>
+                              </div>
+                          </div>
+													
 													<div className="form-group row">
 														<div className="col-md-4">
 															<label>Require Credit Card for Bid Confirmation</label>
