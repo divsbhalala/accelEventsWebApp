@@ -75,7 +75,7 @@ class AdminSidebar extends React.Component {
 			if(!resp.error){
 				generalSetingsTimeout = setTimeout(()=>{
 					adminSidebarInst.getDashboard();
-				}, 1000);
+				}, 10000);
 			}
 			else {
 				if(generalSetingsTimeout){
@@ -100,7 +100,7 @@ class AdminSidebar extends React.Component {
 			if(!resp.error){
 				designDataTimeout = setTimeout(()=>{
 					adminSidebarInst.getStoreDesingData();
-				}, 1000);
+				}, 10000);
 			}
 			else {
 				if(generalSetingsTimeout){
