@@ -8,6 +8,8 @@ import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-
 import { getPerformancefundANeedItem, getPerformancefundANeedItemCSV } from './action';
 import { connect } from 'react-redux';
 import FundItemTable from '../../../../components/FundPerformance/FundItemTable';
+let fundPerformanceInst = undefined;
+let fundPerformanceTimeout = undefined;
 class FundPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -20,18 +22,37 @@ class FundPerformance extends React.Component {
       loading: false,
       message: null,
     };
+    this.getPerformancefundANeedItem = this.getPerformancefundANeedItem.bind(this);
+    fundPerformanceInst = this;
   }
   getPerformancefundANeedItemCSV = () => {
     this.props.getPerformancefundANeedItemCSV('All Donor Data.csv').then((resp) => {
     });
   }
   componentWillMount() {
+    this.getPerformancefundANeedItem();
+  }
+  getPerformancefundANeedItem = ()=>{
     this.props.getPerformancefundANeedItem().then((resp) => {
       this.setState({
         items: resp,
+      }, ()=>{
+        fundPerformanceTimeout = setTimeout(()=>{
+          fundPerformanceInst.getPerformancefundANeedItem();
+        }, 10000)
       });
     }).catch((error) => {
+      if(fundPerformanceTimeout){
+        clearTimeout(fundPerformanceTimeout);
+        fundPerformanceTimeout = null;
+      }
     });
+  }
+  componentWillUnmount(){
+    if(fundPerformanceTimeout){
+      clearTimeout(fundPerformanceTimeout);
+      fundPerformanceTimeout = null;
+    }
   }
   render() {
     return (
