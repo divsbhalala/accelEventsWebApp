@@ -8,7 +8,8 @@ import { BootstrapTable, TableHeaderColumn, ButtonGroup } from 'react-bootstrap-
 import { getPerformanceAuctionItem, getPerformanceAuctionItemByItemCode, getPerformanceAuctionWinnerCSV, getPerformanceAuctionBidderCSV } from './action';
 import { connect } from 'react-redux';
 import AuctionItemTable from '../../../../components/AuctionPerformance/AuctionItemTable';
-
+let auctionPerformanceInst = undefined;
+let auctionPerformanceTimeout = undefined;
 class AuctionPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -21,6 +22,7 @@ class AuctionPerformance extends React.Component {
       loading: false,
       message: null,
     };
+    auctionPerformanceInst = this;
   }
   getPerformanceAuctionWinnerCSV = () => {
     this.props.getPerformanceAuctionWinnerCSV('Auction Winner Data.csv').then((resp) => {

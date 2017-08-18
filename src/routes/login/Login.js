@@ -35,6 +35,7 @@ class Login extends React.Component {
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
+      loading: false,
     };
   }
   onFormClick = (e) => {
@@ -52,12 +53,13 @@ class Login extends React.Component {
       });
     }
     if(this.state.isValidData) {
+			this.setState({loading:true});
       this.props.doLogin(this.email.value.trim(), this.password.value.trim()).then((resp) => {
+				this.setState({loading:false});
         if (resp.data) {
-          this.setState({error: "Log In SuccessFully...",loading:false});
+          this.setState({message: "login successfully"});
           setTimeout(()=>{
             // history.push(resp.data.redirectUrl) /u/superadmin/events
-            console.log(this.props.loginType);
             if(this.props.loginType === "whiteLabel") {
               window.location.replace('/u/wl/'+this.props.params.params+'/home');
             }else{
@@ -135,11 +137,20 @@ class Login extends React.Component {
         <div className="login-signup-container login  has-cell-number ">
           <div className="login-form" id="LoginAttempt">
             <h1 className="text-center">Log in</h1>
-            { this.props.loginType == "whiteLabel" ?  <h4 className="text-center"> {this.props.params && this.props.params.params }</h4> :
+            { this.props.loginType === "whiteLabel" ?  <h4 className="text-center"> {this.props.params && this.props.params.params }</h4> :
             <h4 className="text-center">
               Or &nbsp;&nbsp;<Link className={s.link} to="/u/signup">Signup</Link>
             </h4> }
-            {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
+            {this.state.error && this.state.error !== "Invalid Email or password" && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
+            {this.state.error && this.state.error === "Invalid Email or password" && <div id="alertmessage" className="js-notification notification-login mrg-t-md">Looks like you don't have an account yet. Let's change that! <Link className="small" to="/u/signup">Sign up for free</Link></div>}
+						{ this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
+							{ this.state.message }</div> }
+						{ this.state.loading ?
+              <div className="ajax-msg-box text-center mrg-b-lg">
+                <span className="fa fa-spinner fa-pulse fa-fw"/>
+                <span className="resp-message">Please wait...</span>
+              </div> : ""
+						}
             <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick} autoComplete="off">
               <div
                 className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>

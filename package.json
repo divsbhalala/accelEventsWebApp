@@ -81,6 +81,7 @@
     "react-save-refs": "^1.0.2",
     "react-sidenav": "^2.1.1",
     "react-sortable-hoc": "^0.6.5",
+    "react-style-proptype": "^3.0.0",
     "react-summernote": "^2.0.0",
     "react-telephone-input": "^4.0.1",
     "react-transform-hmr": "^1.0.4",
@@ -96,6 +97,7 @@
     "stripe": "^4.22.0",
     "styled-components": "^1.4.6",
     "superagent": "^3.5.2",
+    "underscore.deferred": "^0.4.0",
     "universal-router": "^3.1.0"
   },
   "devDependencies": {

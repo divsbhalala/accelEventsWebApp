@@ -336,6 +336,12 @@ class Account extends React.Component {
                           <div className="form">
                             { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
                               { this.state.message }</div> }
+														{ this.state.loading ?
+                              <div className="ajax-msg-box text-center">
+                                <span className="fa fa-spinner fa-pulse fa-fw"/>
+                                <span className="resp-message">Please wait...</span>
+                              </div> : ""
+														}
                             <form
                               id="payment-form" method="post"
                               className="ajax-form validated fv-form fv-form-bootstrap"

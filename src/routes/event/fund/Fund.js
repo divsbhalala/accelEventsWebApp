@@ -21,6 +21,8 @@ let settingTimeout = undefined;
 let DataTimeout = undefined;
 let itemTimeout = undefined;
 let eventInst = undefined;
+let dataTimeout = undefined;
+let validData = true;
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -97,12 +99,24 @@ class Fund extends React.Component {
       phone:null,
       errorMsgPassword: null,
       showForgatePassword:false,
+      validData:true
     };
 		this.doGetEventData = this.doGetEventData.bind(this);
 		this.doGetSettings = this.doGetSettings.bind(this);
 		this.doGetItemByCode = this.doGetItemByCode.bind(this);
+    this.isValidFormData = this.isValidFormData.bind(this);
 		eventInst = this;
 
+  };
+  isValidFormData = ()=>{
+    eventInst = this;
+    validData = document.getElementsByClassName("has-error").length === 0;
+    this.setState({
+      validData: validData
+    });
+    dataTimeout = setTimeout(()=>{
+      eventInst.isValidFormData();
+    }, 1000);
   };
   onFormClick = (e) => {
     this.setState({
@@ -604,6 +618,7 @@ class Fund extends React.Component {
     this.doGetEventData(this.props.params && this.props.params.params);
     this.doGetSettings(this.props.params && this.props.params.params, 'fundaneed');
     this.doGetItemByCode();
+    this.isValidFormData();
   };
 	componentWillUnmount(){
 		if(settingTimeout){
@@ -618,6 +633,10 @@ class Fund extends React.Component {
 			clearTimeout(itemTimeout);
 			itemTimeout = null;
 		}
+    if(dataTimeout){
+      clearTimeout(dataTimeout);
+      dataTimeout = null;
+    }
 	}
 	doGetItemByCode = ()=>{
 		eventInst = this;
@@ -1072,13 +1091,21 @@ class Fund extends React.Component {
                         </div> }
                         <div className="row btn-row mrg-b-lg" >
                           <div className="col-sm-5">
-                            <Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidBidData }
+                            { !this.state.validData ?<Button bsStyle="primary" className={cx("btn-block text-uppercase")}  disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidBidData }
                                                              role="button" type="submit"
                                                              loading={this.state.loading} >
                             Submit Pledge
-                          </Button></div>
+                          </Button> :
+                              <Button bsStyle="primary" className={cx("btn-block text-uppercase")}
+                                      role="button" type="submit"
+                                      loading={this.state.loading} >
+                                Submit Pledge
+                              </Button>
+                            }
+                          </div>
                           <div className="col-sm-5">
                             <Link to={this.props.params && "/events/" + this.props.params.params + '#Fund a Need'} className="btn btn-success">
+                              Go back to All Items
                             </Link>
                           
                           { /**<a onClick={this.goBack} className="btn btn-success">

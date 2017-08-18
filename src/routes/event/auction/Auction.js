@@ -23,7 +23,8 @@ import PopupModel from './../../../components/PopupModal';
 import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from './../../../components/IntTelInput';
+import IntlTelInput from './../../../components/IntTelInput/index';
+
 let settingTimeout = undefined;
 let DataTimeout = undefined;
 let eventInst = undefined;
@@ -102,6 +103,7 @@ class Auction extends React.Component {
       phone:null,
       countryPhone:null,
       loading:false,
+      telPhone:'',
     };
 		this.doGetEventData = this.doGetEventData.bind(this);
 		this.doGetSettings = this.doGetSettings.bind(this);
@@ -646,6 +648,11 @@ class Auction extends React.Component {
 			}, ()=>{
 				settingTimeout = setTimeout(()=>{
 					eventInst.doGetSettings(eventUrl, tab);
+          // if(resp.data.settings && resp.data.moduleEnded){
+          //   this.setState({
+          //     errorMsgCard:"Please activate this module to start accepting pledges.",
+          //   })
+          // }
 				}, 30000);
 			});
 		}).catch(error => {
@@ -790,13 +797,19 @@ class Auction extends React.Component {
           {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
         </div>
-        <Button className={cx("btn btn-primary text-uppercase")}
-                // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
-                disabled={!( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
-                loading={this.state.loading} type="submit"
-                data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
-          SUBMIT
-        </Button>
+        <div className="col-sm-3"  >
+          <Button className={cx("btn btn-primary text-uppercase")}
+                  // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                  disabled={ this.state.settings && this.state.settings.moduleEnded || !( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
+                  loading={this.state.loading} type="submit" >
+            SUBMIT
+          </Button>
+        </div>
+        <div className="col-sm-6" >
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+            Go back to All Items
+          </Link>
+        </div>
       </form>
     </div>;
     let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1028,12 +1041,9 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6" style={{paddingLeft:5}}>
-        <a role="button" className="btn btn-success btn-block"
-           href={this.props.params && "/events/" + this.props.params.params + '#Auction'}>
-        {/** <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
-           > **/
-        }
-          Go back to All Items</a></div>
+        <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+          Go back to All Items
+        </Link></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
                               onSubmit={this.onBidFormClick}>
@@ -1259,13 +1269,14 @@ class Auction extends React.Component {
         </div> : "" }
 
         <div className="row btn-row mrg-b-lg" style={{paddingLeft:0}}>
-          <div className="col-sm-3" style={{    minWidth: "110px",maxWidth:"120px",paddingRight:"5px"}}>
-            <Button style={{width:"100%"}} loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+          <div className="col-sm-3" style={{    minWidth: "150px",maxWidth:"150px",paddingRight:"5px"}}>
+            <Button style={{width:"100%"}} loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={ this.state.settings && this.state.settings.moduleEnded || !this.state.isValidBidData} role="button"
                  type="submit" >
-          Submit bid
+              {this.state.settings && this.state.settings.moduleEnded ? 'bidding closes' : 'Submit bid' }
         </Button></div>
           <div className="col-sm-5" style={{paddingLeft:0,width:"180px"}}>
           <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+            Go back to All Items
           </Link>
           { /**
             <a onClick={this.goBack} className="btn btn-success btn-block" >
@@ -1278,7 +1289,7 @@ class Auction extends React.Component {
 
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
-      className="current-bid">400</span></div>;
+      className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
     return (
       <div className="row">
@@ -1375,7 +1386,6 @@ class Auction extends React.Component {
 }
 class ImageList extends React.Component {
   render() {
-    let img = '';
     return (
       <div>
         <div className={cx("item-image-inner")}

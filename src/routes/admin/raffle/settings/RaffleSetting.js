@@ -184,7 +184,7 @@ class RaffleSetting extends React.Component {
                           Raffle Settings
                           <div className="pull-right">
 
-                            <button className={cx("btn btn-info btn-block save-settings", (this.state.settings.userTime || this.state.settings.compTicketCode) && 'disabled')}
+                            <button className={cx("btn btn-info btn-block save-settings", (this.state.settings.userTime || this.state.settings.compTicketCode) )}
                               role="button" onClick={this.onSaveSetting}>
                               {this.state.loading ? <div><i className='fa fa-spinner fa-spin'></i> Saving Settings..</div> : 'Save Settings' }
                             </button>
