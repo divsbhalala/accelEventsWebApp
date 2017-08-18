@@ -671,6 +671,7 @@ class Raffle extends React.Component {
         </div>
         <div className="col-md-6 col-lg-5">
           <Link to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } role="button" className="btn btn-success btn-block" >
+            Go back to All Items
           </Link>
           { /**
           <a onClick={this.goBack}  role="button" className="btn btn-success btn-block" >

@@ -1079,6 +1079,7 @@ class Fund extends React.Component {
                           </Button></div>
                           <div className="col-sm-5">
                             <Link to={this.props.params && "/events/" + this.props.params.params + '#Fund a Need'} className="btn btn-success">
+                              Go back to All Items
                             </Link>
                           
                           { /**<a onClick={this.goBack} className="btn btn-success">
