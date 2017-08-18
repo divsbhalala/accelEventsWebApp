@@ -23,6 +23,8 @@ let settingTimeout = undefined;
 let DataTimeout = undefined;
 let eventInst = undefined;
 let itemTimeout = undefined;
+let dataTimeout = undefined;
+let validData = false;
 class Raffle extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -101,13 +103,26 @@ class Raffle extends React.Component {
       countryPhone:null,
       phone:null,
       isError:false,
-      isValidBidDataFeedBack:true
+      isValidBidDataFeedBack:true,
+			validData:true
   };
 		this.doGetEventData = this.doGetEventData.bind(this);
 		this.doGetSettings = this.doGetSettings.bind(this);
 		this.doGetItemByCode = this.doGetItemByCode.bind(this);
+		this.isValidFormData = this.isValidFormData.bind(this);
 		eventInst = this;
   }
+
+	isValidFormData = ()=>{
+		eventInst = this;
+		validData = document.getElementsByClassName("has-error").length === 0;
+		this.setState({
+			validData: validData
+		});
+		dataTimeout = setTimeout(()=>{
+			eventInst.isValidFormData();
+		}, 1000);
+	};
   onFormClick = (e) => {
     e.preventDefault();
     if (this.state.isValidData) {
@@ -378,6 +393,7 @@ class Raffle extends React.Component {
     this.doGetEventData();
     this.doGetSettings(this.props.params && this.props.params.params, 'raffle');
     this.doGetItemByCode();
+    this.isValidFormData();
   };
   componentReRender() {
     this.doGetItemByCode();
@@ -394,6 +410,10 @@ class Raffle extends React.Component {
 		if(itemTimeout){
 			clearTimeout(itemTimeout);
 			itemTimeout = null;
+		}
+		if(dataTimeout){
+			clearTimeout(dataTimeout);
+			dataTimeout = null;
 		}
 	}
 	doGetItemByCode = ()=>{
@@ -526,6 +546,7 @@ class Raffle extends React.Component {
       ticketsFeedBack: false,
       lastNameFeedBack: false,
       errorMsgCard : false,
+      isValidForm : false,
     })
   };
   reRender = ()=>{
@@ -646,7 +667,7 @@ class Raffle extends React.Component {
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
               <input type="number"  name="itembid"
                      className={cx("form-control")}
-                     disabled={(this.state.raffleData && !this.state.raffleData.availableTickets <= 0) ? false : true}
+                     disabled={(!(this.state.raffleData && !this.state.raffleData.availableTickets <= 0))}
                  ref={ref => {
                   this.tickets = ref;
                  }}
@@ -665,8 +686,13 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidData } role="button"
+          { !this.state.validData || (!this.state.isValidBidDataFeedBack && !this.state.isValidData) ?
+            <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled role="button"
                    type="submit"  loading={this.state.loading}> Submit Ticket </Button>
+            :
+            <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}}  role="button"
+                   type="submit"  loading={this.state.loading}> Submit Ticket </Button>
+          }
 
         </div>
         <div className="col-md-6 col-lg-5">
@@ -791,7 +817,7 @@ class ImageList extends React.Component {
     return (
       <div>
         <div className={cx("item-image-inner")}
-             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
+	style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}/>
 
       </div>
 
