@@ -1445,16 +1445,16 @@ class TicketCheckout extends React.Component {
 																		{item.ticketTypeName}
 																	</td>
 																	<td className="text-left ticket-amount">
-																		${parseFloat(item.price).toFixed(2)}
+																		{this.props.currencySymbol}{parseFloat(item.price).toFixed(2)}
 																	</td>
 																	<td className="text-left ticket-amount-fee">
-																		${  parseFloat(parseFloat(item.priceWithFee).toFixed(2) - parseFloat(item.price).toFixed(2)).toFixed(2)}
+																		{this.props.currencySymbol}{  parseFloat(parseFloat(item.priceWithFee).toFixed(2) - parseFloat(item.price).toFixed(2)).toFixed(2)}
 																	</td>
 																	<td className="text-center">
 																		<span className="qty">{item.numberofticket}</span>
 																	</td>
 																	<td width={1}>
-																		${parseFloat(item.priceWithFee * item.numberofticket).toFixed(2)}
+																		{this.props.currencySymbol}{parseFloat(item.priceWithFee * item.numberofticket).toFixed(2)}
 																	</td>
 																</tr>
 															)
@@ -1464,7 +1464,7 @@ class TicketCheckout extends React.Component {
 																	<strong>Discount:</strong>
 																</td>
 																<td colSpan={1}>
-																	$<span
+																	{this.props.currencySymbol}<span
 																	className="total-price">{parseFloat(this.state.discount).toFixed(2)}</span>
 																</td>
 															</tr>}
@@ -1473,7 +1473,7 @@ class TicketCheckout extends React.Component {
 																	<strong>Order Total:</strong>
 																</td>
 																<td colSpan={1}>
-																	$<span
+																	{this.props.currencySymbol}<span
 																	className="total-price">{ this.state.totalPrice ? this.state.totalPrice : parseFloat(this.props.orderData.ticketAttribute.totalPrice).toFixed(2)}</span>
 																</td>
 															</tr>
@@ -3014,6 +3014,6 @@ const mapStateToProps = (state) => ({
 	authenticated: state.session.authenticated,
 	orderData: state.event && state.event.order_data,
 	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
-	currencySymbol: (state.event && state.event.currencySymbol) || "$"
+	currencySymbol: (state.event && state.event.currencySymbol) || "cell"
 });
 export default connect(mapStateToProps, mapDispatchToProps)(TicketCheckout);

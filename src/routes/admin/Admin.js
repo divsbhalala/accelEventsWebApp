@@ -12,7 +12,7 @@ import {Modal, Popover, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
 import cx from 'classnames';
 import {serverUrl } from './../../clientConfig';
 
-
+let adminInst = undefined;
 class Admin extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -29,7 +29,8 @@ class Admin extends React.Component {
       ticketingActivated: false,
       errorMessage:"",
       isAnySelected:true,
-    }
+    };
+    adminInst = this;
   }
 
   componentDidMount(){

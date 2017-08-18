@@ -22,6 +22,7 @@ let DataTimeout = undefined;
 let itemTimeout = undefined;
 let eventInst = undefined;
 let dataTimeout = undefined;
+let validData = true;
 class Fund extends React.Component {
   static propTypes = {
     title: PropTypes.string

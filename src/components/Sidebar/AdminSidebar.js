@@ -6,7 +6,9 @@ import {connect} from 'react-redux';
 import $ from 'jquery'
 import { getDashboard, getStoreDesingData,updateLogo } from './../../routes/admin/action/index';
 import UploadImageModel from './../Widget/UploadFile/UploadImageModel';
-
+let adminSidebarInst = undefined;
+let generalSetingsTimeout = undefined;
+let designDataTimeout = undefined;
 class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -21,6 +23,9 @@ class AdminSidebar extends React.Component {
 		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
 		this.toggleUl = this.toggleUl.bind(this);
 		this.setNav = this.setNav.bind(this);
+		this.getDashboard = this.getDashboard.bind(this);
+		this.getStoreDesingData = this.getStoreDesingData.bind(this);
+		adminSidebarInst = this;
 	//	this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 	}
   imageUploaded = (imageUrl) =>{
@@ -62,8 +67,48 @@ class AdminSidebar extends React.Component {
 	};
 
 	componentWillMount(){
-		this.props.getDashboard();
-		this.props.getStoreDesingData();
+		this.getDashboard();
+		this.getStoreDesingData();
+	}
+	getDashboard = () => {
+		this.props.getDashboard().then((resp)=>{
+			if(!resp.error){
+				generalSetingsTimeout = setTimeout(()=>{
+					adminSidebarInst.getDashboard();
+				}, 1000);
+			}
+			else {
+				if(generalSetingsTimeout){
+					clearTimeout(generalSetingsTimeout);
+					dataTimeout = null;
+				}
+			}
+		});
+	}
+	componentWillUnmount(){
+		if(generalSetingsTimeout){
+			clearTimeout(designDataTimeout);
+			dataTimeout = null;
+		}
+		if(generalSetingsTimeout){
+			clearTimeout(generalSetingsTimeout);
+			dataTimeout = null;
+		}
+	}
+	getStoreDesingData = () => {
+		this.props.getStoreDesingData().then((resp)=>{
+			if(!resp.error){
+				designDataTimeout = setTimeout(()=>{
+					adminSidebarInst.getStoreDesingData();
+				}, 1000);
+			}
+			else {
+				if(generalSetingsTimeout){
+					clearTimeout(designDataTimeout);
+					dataTimeout = null;
+				}
+			}
+		});
 	}
 	render() {
 		return (

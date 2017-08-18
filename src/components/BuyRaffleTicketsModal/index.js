@@ -117,7 +117,7 @@ class BuyRaffleTicketsModal extends React.Component {
     this.setState({
       loading: false,
       countryPhone: null,
-      phone: null,
+      // phone: null,
       //isError: false,
     })
   };
@@ -739,7 +739,7 @@ class BuyRaffleTicketsModal extends React.Component {
       raffleTicketValue: null,
       loading: false,
       countryPhone: null,
-      phone: null,
+      // phone: null,
       isError: false,
     })
   };
@@ -822,7 +822,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                ref={ref => {
                                  this.firstName = ref;
                                }}
-                               onKeyUp={this.firstNameValidateHandler}/>
+                               onChange={this.firstNameValidateHandler}/>
                         { this.state.firstNameFeedBack && this.state.firstName &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                         { this.state.firstNameFeedBack && !this.state.firstName &&
@@ -842,7 +842,7 @@ class BuyRaffleTicketsModal extends React.Component {
                              ref={ref => {
                                this.lastName = ref;
                              }}
-                             onKeyUp={this.lastNameValidateHandler}/>
+                             onChange={this.lastNameValidateHandler}/>
                       { this.state.lastNameFeedBack && this.state.lastName &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                       { this.state.lastNameFeedBack && !this.state.lastName &&
@@ -864,7 +864,7 @@ class BuyRaffleTicketsModal extends React.Component {
                              ref={ref => {
                                this.email = ref;
                              }}
-                             onKeyUp={this.emailValidateHandler}
+                             onChange={this.emailValidateHandler}
                              onBlur={this.emailValidateHandler}
                       />
                       { this.state.emailFeedBack && this.state.email &&
@@ -883,6 +883,7 @@ class BuyRaffleTicketsModal extends React.Component {
                       <div className="input-group-addon">
                         <i className="fa fa-phone" aria-hidden="true"/>
                       </div>
+                      {console.log(this.state.phoneNumber, this.state.phone)}
                       <IntlTelInput
                         css={['intl-tel-input', 'form-control intl-tel']}
                         utilsScript="./libphonenumber.js"
@@ -916,7 +917,7 @@ class BuyRaffleTicketsModal extends React.Component {
                              ref={ref => {
                                this.password = ref;
                              }}
-                             onKeyUp={this.passwordValidateHandler}
+                             onChange={this.passwordValidateHandler}
                       />
                       { this.state.passwordFeedBack && this.state.password &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -960,7 +961,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                      ref={ref => {
                                        this.cardHolder = ref;
                                      }}
-                                     onKeyUp={this.cardHolderValidateHandler}/>
+                                     onChange={this.cardHolderValidateHandler}/>
                               { this.state.cardHolderFeedBack && this.state.cardHolder &&
                               <i
                                 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -987,7 +988,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                      }}
                                      onKeyPress={(e) => this.numberOnly(e)}
                                      onKeyDown={this.cardNumberDownValidateHandler}
-                                     onKeyUp={this.cardNumberValidateHandler}/>
+                                     onChange={this.cardNumberValidateHandler}/>
                               { this.state.cardNumberFeedBack && this.state.cardNumber &&
                               <i
                                 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1077,7 +1078,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                          }}
                                          onKeyPress={(e) => this.numberOnly(e)}
                                          onKeyDown={this.cvvDownValidateHandler}
-                                         onKeyUp={this.cvvValidateHandler}/>
+                                         onChange={this.cvvValidateHandler}/>
                                   { this.state.cvvFeedBack && this.state.cvv &&
                                   <i
                                     className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
