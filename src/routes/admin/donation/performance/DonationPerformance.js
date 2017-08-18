@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 
 let selfInst;
+let donationPerformanceTimeout = undefined;
 class DonationPerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -20,22 +21,39 @@ class DonationPerformance extends React.Component {
       showPopup: false,
       loading:false,
       message:null,
-    }
+    };
+    this.getPerformanceDonation = this.getPerformanceDonation.bind(this);
+    selfInst = this;
   }
   getPerformanceDonationCSV = () => {
     this.props.getPerformanceDonationCSV('All Donation Performance Data.csv').then((resp) => {
     });
   };
   componentWillMount() {
-		selfInst = this;
+    this.getPerformanceDonation();
+  }
+  getPerformanceDonation = ()=>{
     this.props.getPerformanceDonation().then(resp => {
       console.log("resp", resp);
       this.setState({
         donation: resp,
-      })
+      }, ()=>{
+        donationPerformanceTimeout = setTimeout(()=>{
+          selfInst.getPerformanceDonation();
+        }, 10000)
+      });
     }).catch(error => {
-      console.log('error', error)
-    })
+      if(donationPerformanceTimeout){
+        clearTimeout(donationPerformanceTimeout);
+        donationPerformanceTimeout = null;
+      }
+    });
+  }
+  componentWillUnmount(){
+    if(donationPerformanceTimeout){
+      clearTimeout(donationPerformanceTimeout);
+      donationPerformanceTimeout = null;
+    }
   }
   render() {
     const options = {
