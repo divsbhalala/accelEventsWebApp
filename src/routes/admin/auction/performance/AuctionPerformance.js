@@ -22,6 +22,7 @@ class AuctionPerformance extends React.Component {
       loading: false,
       message: null,
     };
+    this.getPerformanceAuctionItem = this.getPerformanceAuctionItem.bind(this);
     auctionPerformanceInst = this;
   }
   getPerformanceAuctionWinnerCSV = () => {
@@ -38,12 +39,29 @@ class AuctionPerformance extends React.Component {
     });
   };
   componentWillMount() {
+    this.getPerformanceAuctionItem();
+  }
+  getPerformanceAuctionItem = ()=>{
     this.props.getPerformanceAuctionItem().then((resp) => {
       this.setState({
         items: resp,
+      }, ()=>{
+        auctionPerformanceTimeout = setTimeout(()=>{
+          auctionPerformanceInst.getPerformanceAuctionItem();
+        }, 10000)
       });
     }).catch((error) => {
+      if(auctionPerformanceTimeout){
+        clearTimeout(auctionPerformanceTimeout);
+        auctionPerformanceTimeout = null;
+      }
     });
+  }
+  componentWillUnmount(){
+    if(auctionPerformanceTimeout){
+      clearTimeout(auctionPerformanceTimeout);
+      auctionPerformanceTimeout = null;
+    }
   }
   render() {
     return (
@@ -85,7 +103,7 @@ class AuctionPerformance extends React.Component {
   }
 }
 
-
+ 
 const mapDispatchToProps = {
   getPerformanceAuctionItem: () => getPerformanceAuctionItem(),
   getPerformanceAuctionItemByItemCode: ItemCode => getPerformanceAuctionItemByItemCode(ItemCode),

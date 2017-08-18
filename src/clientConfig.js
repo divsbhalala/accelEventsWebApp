@@ -1,1 +1,1 @@
-module.exports = {	apiUrl: "http://api.stagingaccel.com:8080/AccelEventsWebApp/rest/",serverUrl: "undefined"};
+module.exports = {	apiUrl: "http://api.stagingaccel.com:8080/AccelEventsWebApp/rest/",serverUrl: "http://34.197.174.186"};

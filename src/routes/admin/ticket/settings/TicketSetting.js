@@ -107,6 +107,7 @@ class TicketSetting extends React.Component {
 			isSuccess: true,
 			successMessage: text
 		}, ()=>{
+			debugger;
 			setTimeout(()=>{
 				this.setState({
 					isSuccess: false,

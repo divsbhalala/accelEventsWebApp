@@ -11,7 +11,8 @@ import {getPerformanceRaffleItem,
   getPerformanceRaffleWinnerCSV} from './action';
 import {connect} from 'react-redux';
 import RaffleItemTable from '../../../../components/RafflePerformance/RaffleItemTable';
-
+let rafflePerformanceInst = undefined;
+let rafflePerformanceTimeout = undefined;
 class RafflePerformance extends React.Component {
   static propTypes = {
     title: PropTypes.string,
@@ -24,6 +25,8 @@ class RafflePerformance extends React.Component {
       loading:false,
       message:null,
     }
+    this.getPerformanceRaffleItem = this.getPerformanceRaffleItem.bind(this);
+    rafflePerformanceInst = this;
   }
   getPerformanceRafflePurchasedTicketCSV = () => {
     this.props.getPerformanceRafflePurchasedTicketCSV('Purchased Raffle data.csv').then((resp) => {
@@ -43,12 +46,29 @@ class RafflePerformance extends React.Component {
     });
   };
   componentWillMount() {
-    this.props.getPerformanceRaffleItem().then(resp => {
+    this.getPerformanceRaffleItem();
+  }
+  getPerformanceRaffleItem = ()=>{
+    this.props.getPerformanceRaffleItem().then((resp) => {
       this.setState({
         items: resp,
-      })
-    }).catch(error => {
-    })
+      }, ()=>{
+        rafflePerformanceTimeout = setTimeout(()=>{
+          rafflePerformanceInst.getPerformanceRaffleItem();
+        }, 10000)
+      });
+    }).catch((error) => {
+      if(rafflePerformanceTimeout){
+        clearTimeout(rafflePerformanceTimeout);
+        rafflePerformanceTimeout = null;
+      }
+    });
+  }
+  componentWillUnmount(){
+    if(rafflePerformanceTimeout){
+      clearTimeout(rafflePerformanceTimeout);
+      rafflePerformanceTimeout = null;
+    }
   }
   render() {
     return (
@@ -105,3 +125,4 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({});
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(RafflePerformance));
+ 
