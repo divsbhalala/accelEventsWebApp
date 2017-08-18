@@ -156,6 +156,12 @@ class Setting extends React.Component {
 													<form id="form">
                             { this.state.message && <div  className={cx("ajax-msg-box text-center mrg-b-lg", !this.state.isError ? 'text-success':'text-danger')} >
                               { this.state.message }</div> }
+														{ this.state.loading ?
+                              <div className="ajax-msg-box text-center">
+                                <span className="fa fa-spinner fa-pulse fa-fw"/>
+                                <span className="resp-message">Please wait...</span>
+                              </div> : ""
+														}
 														<div className="form-group row">
 															<div className="col-md-4">
 																<label>Select Currency</label>
