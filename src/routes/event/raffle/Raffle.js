@@ -684,13 +684,13 @@ class Raffle extends React.Component {
       <div className="row mrg-t-md">
         <div className="col-md-5 col-lg-10">
           <button role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}>Get Tickets</button>
+                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={ ( this.state.settings && this.state.settings.moduleEnded)}>Get Tickets</button>
         </div>
       </div>
     </form>;
     let form_normal = <div >
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
-      <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
+      <button  role="button" className="btn btn-primary btn-block"    disabled={ ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
          to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } >Go back to All Items</Link>
