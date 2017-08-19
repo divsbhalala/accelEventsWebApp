@@ -203,6 +203,8 @@ class CreditCard extends React.Component {
 																</div>
 															}
 																<div className="col-sm-8">
+																{this.state.settings && this.state.settings.stripeAccountEmail  &&
+																  <p>Stripe account connected with username : {this.state.settings.stripeAccountEmail} </p>}
 																	<a className="add-info"
 																		 href="http://support.accelevents.com/event-setup/credit-card-processing-with-stripe"
 																		 title="Additional Instructions" target="_blank">Additional Instructions</a>.
@@ -227,18 +229,18 @@ class CreditCard extends React.Component {
 														</div>
 													</div>
 
-													<div className="form-group row">
+													{!this.state.settings.connectButtonEnabled && <div className="form-group row">
                               <div className="col-md-4">
                                   <label>Pass Credit Card Transaction Fees to Buyer</label>
                               </div>
                               <div className="col-md-4">
                                   <ToggleSwitch name="processingFeesToPurchaser" id="processingFeesToPurchaser"
-                                                              defaultValue={this.state.settings && this.state.settings.processingFeesToPurchaser || false}
+                                                              defaultValue={this.state.settings && this.state.settings.processingFeesToPurchaser}
                                                               className="success" onChange={() => {
                                       this.state.settings.processingFeesToPurchaser = !this.state.settings.processingFeesToPurchaser
                                   }}/>
                               </div>
-                          </div>
+                          </div> }
 
 													<div className="form-group row">
 														<div className="col-md-4">
