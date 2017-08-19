@@ -84,6 +84,11 @@ class CreditCard extends React.Component {
 	   if (window.focus && newwindow) { newwindow.focus(); }
 	}
 
+	pendingStripe = () => {
+    	let newwindow = window.open('https://dashboard.stripe.com/login', 'Connect With Stripe', 'height=600, width=1000');
+    	if (window.focus && newwindow) { newwindow.focus(); }
+  }
+
 	toggleItemTransactionsPopup = () => {
 		if (!this.state.showItemTransactions) {
 			this.props.doGetHostSettings("transactions").then(resp => {
@@ -176,19 +181,27 @@ class CreditCard extends React.Component {
 														</div>
 														<div className="col-md-8">
 															<div className="row stripe-button-group">
-																{!this.state.settings.stripeConnected &&
+																{this.state.settings.connectButtonEnabled &&
 																	<div className="col-sm-4">
 																	<button type="button" className="btn btn-danger btn-sm" onClick={this.connectStripe}>
 																		Connect with Stripe
 																	</button>
 																</div>}
-																{this.state.settings.stripeConnected &&
+																{!this.state.settings.connectButtonEnabled && this.state.settings.stripeConnected &&
 																	<div className="col-sm-4">
 																			<button type="button" className="btn btn-green connectedstripeaccount btn-sm">
     	                                  <span>Stripe Account Connected</span>
     	                                </button>
 																		<a className="mrg-t-sm disconnectedstripeaccount" onClick={this.disconnectStripe}>Disconnect Stripe Account</a>
-																</div> }
+																</div>}
+																{!this.state.settings.connectButtonEnabled && !this.state.settings.stripeConnected &&
+																<div className="col-sm-4">
+																		<button type="button" className="btn btn-danger btn-sm" onClick={this.pendingStripe}>
+																			<span>Stripe Account Pending</span>
+																		</button>
+																		<a className="mrg-t-sm disconnectedstripeaccount" onClick={this.disconnectStripe}>Disconnect Stripe Account</a>
+																</div>
+															}
 																<div className="col-sm-8">
 																	<a className="add-info"
 																		 href="http://support.accelevents.com/event-setup/credit-card-processing-with-stripe"
@@ -226,7 +239,7 @@ class CreditCard extends React.Component {
                                   }}/>
                               </div>
                           </div>
-													
+
 													<div className="form-group row">
 														<div className="col-md-4">
 															<label>Require Credit Card for Bid Confirmation</label>
