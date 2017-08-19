@@ -159,6 +159,12 @@ class CreditCard extends React.Component {
                     <div className="main-box no-header">
                       { this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
                         { this.state.message }</div> }
+											{ this.state.loading ?
+												<div className="ajax-msg-box text-center mrg-b-lg">
+													<span className="fa fa-spinner fa-pulse fa-fw"/>
+													<span className="resp-message">Please wait...</span>
+												</div> : ""
+											}
                       <div className="main-box-body clearfix">
                         <p>If you would like to accept credit cards through Accelevents please set up a Stripe account.
 													There is a link below with a step-by-step guide on how to quickly (5-10 minutes) create your
@@ -207,6 +213,20 @@ class CreditCard extends React.Component {
 															/>
 														</div>
 													</div>
+
+													<div className="form-group row">
+                              <div className="col-md-4">
+                                  <label>Pass Credit Card Transaction Fees to Buyer</label>
+                              </div>
+                              <div className="col-md-4">
+                                  <ToggleSwitch name="processingFeesToPurchaser" id="processingFeesToPurchaser"
+                                                              defaultValue={this.state.settings && this.state.settings.processingFeesToPurchaser || false}
+                                                              className="success" onChange={() => {
+                                      this.state.settings.processingFeesToPurchaser = !this.state.settings.processingFeesToPurchaser
+                                  }}/>
+                              </div>
+                          </div>
+													
 													<div className="form-group row">
 														<div className="col-md-4">
 															<label>Require Credit Card for Bid Confirmation</label>

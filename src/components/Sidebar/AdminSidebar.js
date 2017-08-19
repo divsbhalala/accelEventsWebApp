@@ -6,7 +6,9 @@ import {connect} from 'react-redux';
 import $ from 'jquery'
 import { getDashboard, getStoreDesingData,updateLogo } from './../../routes/admin/action/index';
 import UploadImageModel from './../Widget/UploadFile/UploadImageModel';
-
+let adminSidebarInst = undefined;
+let generalSetingsTimeout = undefined;
+let designDataTimeout = undefined;
 class AdminSidebar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -21,6 +23,9 @@ class AdminSidebar extends React.Component {
 		this.showBuyRaffleTicketPopup = this.showBuyRaffleTicketPopup.bind(this);
 		this.toggleUl = this.toggleUl.bind(this);
 		this.setNav = this.setNav.bind(this);
+		this.getDashboard = this.getDashboard.bind(this);
+		this.getStoreDesingData = this.getStoreDesingData.bind(this);
+		adminSidebarInst = this;
 	//	this.hideBuyRaffleTicketPopup = this.hideBuyRaffleTicketPopup.bind(this);
 	}
   imageUploaded = (imageUrl) =>{
@@ -62,12 +67,53 @@ class AdminSidebar extends React.Component {
 	};
 
 	componentWillMount(){
-		this.props.getDashboard();
-		this.props.getStoreDesingData();
+		this.getDashboard();
+		this.getStoreDesingData();
+	}
+	getDashboard = () => {
+		this.props.getDashboard().then((resp)=>{
+			if(!resp.error){
+				generalSetingsTimeout = setTimeout(()=>{
+					adminSidebarInst.getDashboard();
+				}, 10000);
+			}
+			else {
+				if(generalSetingsTimeout){
+					clearTimeout(generalSetingsTimeout);
+					generalSetingsTimeout = null;
+				}
+			}
+		});
+	}
+	componentWillUnmount(){
+		if(designDataTimeout){
+			clearTimeout(designDataTimeout);
+			designDataTimeout = null;
+		}
+		if(generalSetingsTimeout){
+			clearTimeout(generalSetingsTimeout);
+			generalSetingsTimeout = null;
+		}
+	}
+	getStoreDesingData = () => {
+		this.props.getStoreDesingData().then((resp)=>{
+			if(!resp.error){
+				designDataTimeout = setTimeout(()=>{
+					adminSidebarInst.getStoreDesingData();
+				}, 10000);
+			}
+			else {
+				if(designDataTimeout){
+					clearTimeout(designDataTimeout);
+					designDataTimeout = null;
+				}
+			}
+		});
 	}
 	render() {
 		return (
 			<div className="sidebar-wrap" >
+				<style dangerouslySetInnerHTML={{__html: ".ajax-msg-box{padding:10px;font-size:1.3em}.ajax-msg-box.text-success{background:#b7f2b8}.ajax-msg-box.text-danger{background:#f2b7b8}"}}/>
 				<div id="nav-col">
 					<section id="col-left" className="col-left-nano">
 						<div id="col-left-inner" className="col-left-nano-content" tabIndex={0} style={{right: '-15px'}}>

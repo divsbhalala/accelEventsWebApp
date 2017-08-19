@@ -23,6 +23,8 @@ let settingTimeout = undefined;
 let DataTimeout = undefined;
 let eventInst = undefined;
 let itemTimeout = undefined;
+let dataTimeout = undefined;
+let validData = false;
 class Raffle extends React.Component {
   static propTypes = {
     title: PropTypes.string
@@ -101,13 +103,26 @@ class Raffle extends React.Component {
       countryPhone:null,
       phone:null,
       isError:false,
-      isValidBidDataFeedBack:true
+      isValidBidDataFeedBack:true,
+			validData:true
   };
 		this.doGetEventData = this.doGetEventData.bind(this);
 		this.doGetSettings = this.doGetSettings.bind(this);
 		this.doGetItemByCode = this.doGetItemByCode.bind(this);
+		this.isValidFormData = this.isValidFormData.bind(this);
 		eventInst = this;
   }
+
+	isValidFormData = ()=>{
+		eventInst = this;
+		validData = document.getElementsByClassName("has-error").length === 0;
+		this.setState({
+			validData: validData
+		});
+		dataTimeout = setTimeout(()=>{
+			eventInst.isValidFormData();
+		}, 1000);
+	};
   onFormClick = (e) => {
     e.preventDefault();
     if (this.state.isValidData) {
@@ -304,34 +319,50 @@ class Raffle extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue:this.expMonth.value.trim(),
+      expYearFeedBack: true,
+      expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
     if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
-        errorMsgExpMonth: "Expire Month is Require",
+        errorMsgExpMonth: 'Expire Month is Require',
       });
-    }  else {
-      this.setState({
-        expMonth: true
-      });
+    } else {
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue:this.expYear.value.trim(),
+      expMonthFeedBack: true,
+      expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
-        errorMsgexpYear: "Expire Year is Require",
+        errorMsgexpYear: 'Expire Year is Require',
       });
-    }  else {
-      this.setState({
-        expYear: true
-      });
+    } else {
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expYear: true,
+        });
+      } else {
+        this.setState({
+          expYear: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
@@ -378,6 +409,7 @@ class Raffle extends React.Component {
     this.doGetEventData();
     this.doGetSettings(this.props.params && this.props.params.params, 'raffle');
     this.doGetItemByCode();
+    this.isValidFormData();
   };
   componentReRender() {
     this.doGetItemByCode();
@@ -394,6 +426,10 @@ class Raffle extends React.Component {
 		if(itemTimeout){
 			clearTimeout(itemTimeout);
 			itemTimeout = null;
+		}
+		if(dataTimeout){
+			clearTimeout(dataTimeout);
+			dataTimeout = null;
 		}
 	}
 	doGetItemByCode = ()=>{
@@ -526,6 +562,7 @@ class Raffle extends React.Component {
       ticketsFeedBack: false,
       lastNameFeedBack: false,
       errorMsgCard : false,
+      isValidForm : false,
     })
   };
   reRender = ()=>{
@@ -646,7 +683,7 @@ class Raffle extends React.Component {
               <div className="input-group-addon"><i className="fa fa-ticket" aria-hidden="true"/></div>
               <input type="number"  name="itembid"
                      className={cx("form-control")}
-                     disabled={(this.state.raffleData && !this.state.raffleData.availableTickets <= 0) ? false : true}
+                     disabled={(!(this.state.raffleData && !this.state.raffleData.availableTickets <= 0))}
                  ref={ref => {
                   this.tickets = ref;
                  }}
@@ -665,12 +702,18 @@ class Raffle extends React.Component {
       </div>
       <div className="row btn-row">
         <div className="col-md-5 col-lg-5">
-          <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled={ !this.state.isValidBidDataFeedBack && !this.state.isValidData } role="button"
+          { !this.state.validData || (!this.state.isValidBidDataFeedBack && !this.state.isValidData) ?
+            <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}} disabled role="button"
                    type="submit"  loading={this.state.loading}> Submit Ticket </Button>
+            :
+            <Button bsStyle="primary" className={cx("btn-block text-uppercase")} style={{width:"100%"}}  role="button"
+                   type="submit"  loading={this.state.loading}> Submit Ticket </Button>
+          }
 
         </div>
         <div className="col-md-6 col-lg-5">
           <Link to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } role="button" className="btn btn-success btn-block" >
+            Go back to All Items
           </Link>
           { /**
           <a onClick={this.goBack}  role="button" className="btn btn-success btn-block" >
@@ -683,13 +726,13 @@ class Raffle extends React.Component {
       <div className="row mrg-t-md">
         <div className="col-md-5 col-lg-10">
           <button role="button" className="btn btn-primary btn-block" data-toggle="modal" href="#info-modal"
-                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}>Get Tickets</button>
+                  type="button" onClick={this.showBuyRaffleTicketsModal} disabled={ ( this.state.settings && this.state.settings.moduleEnded)}>Get Tickets</button>
         </div>
       </div>
     </form>;
     let form_normal = <div >
       <a role="button" className="btn btn-success btn-block" onClick={this.showLoginModal}  data-toggle="modal" data-form="login">Login</a>
-      <button  role="button" className="btn btn-primary btn-block"    disabled={(this.state.settings && !this.state.settings.moduleActivated) || ( this.state.settings && this.state.settings.moduleEnded)}
+      <button  role="button" className="btn btn-primary btn-block"    disabled={ ( this.state.settings && this.state.settings.moduleEnded)}
          onClick={this.showBuyRaffleTicketsModal} >Get Tickets</button>
       <Link role="button" className="btn btn-success btn-block"
          to={this.props.params && "/events/" + this.props.params.params + '#Raffle' } >Go back to All Items</Link>
@@ -790,14 +833,11 @@ class ImageList extends React.Component {
     return (
       <div>
         <div className={cx("item-image-inner")}
-             style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}></div>
-
+	style={{"backgroundImage": "url(" + this.props.imageUrl + ")"}}/>
       </div>
-
     );
   }
 }
-
 const mapDispatchToProps = {
   doGetEventData: (eventUrl) => doGetEventData(eventUrl),
   doGetRaffleItemByCode: (eventUrl, itemCode) => doGetRaffleItemByCode(eventUrl, itemCode),

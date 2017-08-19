@@ -100,6 +100,7 @@ class TicketSetting extends React.Component {
 												<div className="main-box no-header">
 													{  this.state.orderData.length < 1 ? "You have not sold any tickets yet" :
 														<InfiniteScroll
+															style={{"overflow":"hidden"}}
 															next={this.getOrderDetails}
 															hasMore={this.state.auctionPageLoading}
 															loader={<div className="text-center"><span

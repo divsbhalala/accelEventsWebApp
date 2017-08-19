@@ -117,7 +117,7 @@ class BuyRaffleTicketsModal extends React.Component {
     this.setState({
       loading: false,
       countryPhone: null,
-      phone: null,
+      // phone: null,
       //isError: false,
     })
   };
@@ -329,34 +329,48 @@ class BuyRaffleTicketsModal extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
+     expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
     if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
-        errorMsgExpMonth: "Expire Month is Require",
+        errorMsgExpMonth: 'Expire Month is Require',
       });
     } else {
-      this.setState({
-        expMonth: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue: this.expYear.value && this.expYear.value.trim(),
+     expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
-        errorMsgexpYear: "Expire Year is Require",
+        errorMsgexpYear: 'Expire Year is Require',
       });
     } else {
-      this.setState({
-        expYear: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expYear: true,
+        });
+      } else {
+        this.setState({
+          expYear: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
@@ -739,7 +753,7 @@ class BuyRaffleTicketsModal extends React.Component {
       raffleTicketValue: null,
       loading: false,
       countryPhone: null,
-      phone: null,
+      // phone: null,
       isError: false,
     })
   };
@@ -822,7 +836,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                ref={ref => {
                                  this.firstName = ref;
                                }}
-                               onKeyUp={this.firstNameValidateHandler}/>
+                               onChange={this.firstNameValidateHandler}/>
                         { this.state.firstNameFeedBack && this.state.firstName &&
                         <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                         { this.state.firstNameFeedBack && !this.state.firstName &&
@@ -842,7 +856,7 @@ class BuyRaffleTicketsModal extends React.Component {
                              ref={ref => {
                                this.lastName = ref;
                              }}
-                             onKeyUp={this.lastNameValidateHandler}/>
+                             onChange={this.lastNameValidateHandler}/>
                       { this.state.lastNameFeedBack && this.state.lastName &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
                       { this.state.lastNameFeedBack && !this.state.lastName &&
@@ -864,7 +878,7 @@ class BuyRaffleTicketsModal extends React.Component {
                              ref={ref => {
                                this.email = ref;
                              }}
-                             onKeyUp={this.emailValidateHandler}
+                             onChange={this.emailValidateHandler}
                              onBlur={this.emailValidateHandler}
                       />
                       { this.state.emailFeedBack && this.state.email &&
@@ -883,6 +897,7 @@ class BuyRaffleTicketsModal extends React.Component {
                       <div className="input-group-addon">
                         <i className="fa fa-phone" aria-hidden="true"/>
                       </div>
+                      {console.log(this.state.phoneNumber, this.state.phone)}
                       <IntlTelInput
                         css={['intl-tel-input', 'form-control intl-tel']}
                         utilsScript="./libphonenumber.js"
@@ -916,7 +931,7 @@ class BuyRaffleTicketsModal extends React.Component {
                              ref={ref => {
                                this.password = ref;
                              }}
-                             onKeyUp={this.passwordValidateHandler}
+                             onChange={this.passwordValidateHandler}
                       />
                       { this.state.passwordFeedBack && this.state.password &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -960,7 +975,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                      ref={ref => {
                                        this.cardHolder = ref;
                                      }}
-                                     onKeyUp={this.cardHolderValidateHandler}/>
+                                     onChange={this.cardHolderValidateHandler}/>
                               { this.state.cardHolderFeedBack && this.state.cardHolder &&
                               <i
                                 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -987,7 +1002,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                      }}
                                      onKeyPress={(e) => this.numberOnly(e)}
                                      onKeyDown={this.cardNumberDownValidateHandler}
-                                     onKeyUp={this.cardNumberValidateHandler}/>
+                                     onChange={this.cardNumberValidateHandler}/>
                               { this.state.cardNumberFeedBack && this.state.cardNumber &&
                               <i
                                 className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1077,7 +1092,7 @@ class BuyRaffleTicketsModal extends React.Component {
                                          }}
                                          onKeyPress={(e) => this.numberOnly(e)}
                                          onKeyDown={this.cvvDownValidateHandler}
-                                         onKeyUp={this.cvvValidateHandler}/>
+                                         onChange={this.cvvValidateHandler}/>
                                   { this.state.cvvFeedBack && this.state.cvv &&
                                   <i
                                     className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}

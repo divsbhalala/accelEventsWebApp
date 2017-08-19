@@ -23,7 +23,8 @@ import PopupModel from './../../../components/PopupModal';
 import {parse, isValidNumber} from 'libphonenumber-js'
 import Button from 'react-bootstrap-button-loader';
 import Link from '../../../components/Link';
-import IntlTelInput from './../../../components/IntTelInput';
+import IntlTelInput from './../../../components/IntTelInput/index';
+
 let settingTimeout = undefined;
 let DataTimeout = undefined;
 let eventInst = undefined;
@@ -102,6 +103,7 @@ class Auction extends React.Component {
       phone:null,
       countryPhone:null,
       loading:false,
+      telPhone:'',
     };
 		this.doGetEventData = this.doGetEventData.bind(this);
 		this.doGetSettings = this.doGetSettings.bind(this);
@@ -537,7 +539,9 @@ class Auction extends React.Component {
     });
   };
   expMonthValidateHandler = (e) => {
+    console.log("Get chhhnfgngf..................");
     this.setState({
+      expYearFeedBack: true,
       expMonthFeedBack: true,
       expMonthValue:this.expMonth.value,
     },function afterStateChange () {
@@ -551,15 +555,23 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }  else {
-      this.setState({
-        expMonth: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     } this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   expYearValidateHandler = (e) => {
     this.setState({
-      expYearFeedBack: true,
+          expMonthFeedBack: true,
+         expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
@@ -568,8 +580,16 @@ class Auction extends React.Component {
         errorMsgexpYear: "Expire Year is Require",
       });
     }  else {
-      this.setState({
-        expYear: true});
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
@@ -646,6 +666,11 @@ class Auction extends React.Component {
 			}, ()=>{
 				settingTimeout = setTimeout(()=>{
 					eventInst.doGetSettings(eventUrl, tab);
+          // if(resp.data.settings && resp.data.moduleEnded){
+          //   this.setState({
+          //     errorMsgCard:"Please activate this module to start accepting pledges.",
+          //   })
+          // }
 				}, 30000);
 			});
 		}).catch(error => {
@@ -790,13 +815,19 @@ class Auction extends React.Component {
           {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
 
         </div>
-        <Button className={cx("btn btn-primary text-uppercase")}
-                // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
-                disabled={!( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
-                loading={this.state.loading} type="submit"
-                data-loading-text="<i class='fa fa-spinner fa-spin'></i> Getting Started..">
-          SUBMIT
-        </Button>
+        <div className="col-sm-3"  >
+          <Button className={cx("btn btn-primary text-uppercase")}
+                  // disabled={!(this.state.emailValue && this.state.passwordValue && this.state.phone)} role="button"
+                  disabled={ this.state.settings && this.state.settings.moduleEnded || !( !(this.state.emailFeedBack && this.state.passwordFeedBack && this.state.phoneNumberFeedBack) || (this.state.email   && this.state.password   && this.state.phoneNumber ))} role="button"
+                  loading={this.state.loading} type="submit" >
+            SUBMIT
+          </Button>
+        </div>
+        <div className="col-sm-6" >
+          <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+            Go back to All Items
+          </Link>
+        </div>
       </form>
     </div>;
     let form_bid = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
@@ -1028,12 +1059,9 @@ class Auction extends React.Component {
         &nbsp;&nbsp;
       </div>
       <div className="col-sm-6" style={{paddingLeft:5}}>
-        <a role="button" className="btn btn-success btn-block"
-           href={this.props.params && "/events/" + this.props.params.params + '#Auction'}>
-        {/** <a role="button" className="btn btn-success btn-block" onClick={this.goBack}
-           > **/
-        }
-          Go back to All Items</a></div>
+        <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+          Go back to All Items
+        </Link></div>
     </form>;
     let form_bid_only = <form className="ajax-form validated fv-form fv-form-bootstrap" method="post"
                               onSubmit={this.onBidFormClick}>
@@ -1162,14 +1190,20 @@ class Auction extends React.Component {
               </div>
               <div className="row">
                 <div className="col-md-8">
-                  <div className="form-group expiration-date has-feedback">
+                  <div
+                    className={cx('form-group', this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}
+                  >
                     <label className="control-label">Expiration Date</label>
                     <div className="input-group">
-                      <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-                                                                            aria-hidden="true"/></div>
-                      <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                      <div className="input-group-addon field-exp_month"><i
+                        className="fa fa-calendar"
+                        aria-hidden="true"
+                      /></div>
+                      <select
+                        className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={(ref) => {
                         this.expMonth = ref;
-                      }} onChange={this.expMonthValidateHandler}>
+                      }} onChange={this.expMonthValidateHandler}
+                      >
                         <option defaultValue value="01">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
@@ -1183,10 +1217,12 @@ class Auction extends React.Component {
                         <option value="11">Nov (11)</option>
                         <option value="12">Dec (12)</option>
                       </select>
-                      <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
-                              ref={ref => {
-                                this.expYear = ref;
-                              }} onChange={this.expYearValidateHandler}>
+                      <select
+                        className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                        ref={(ref) => {
+                          this.expYear = ref;
+                        }} onChange={this.expYearValidateHandler}
+                      >
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                         <option value="2019">2019</option>
@@ -1259,13 +1295,14 @@ class Auction extends React.Component {
         </div> : "" }
 
         <div className="row btn-row mrg-b-lg" style={{paddingLeft:0}}>
-          <div className="col-sm-3" style={{    minWidth: "110px",maxWidth:"120px",paddingRight:"5px"}}>
-            <Button style={{width:"100%"}} loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={!this.state.isValidBidData} role="button"
+          <div className="col-sm-3" style={{    minWidth: "150px",maxWidth:"150px",paddingRight:"5px"}}>
+            <Button style={{width:"100%"}} loading={this.state.loading} className={cx("btn btn-primary text-uppercase")} disabled={ this.state.settings && this.state.settings.moduleEnded || !this.state.isValidBidData} role="button"
                  type="submit" >
-          Submit bid
+              {this.state.settings && this.state.settings.moduleEnded ? 'bidding closes' : 'Submit bid' }
         </Button></div>
           <div className="col-sm-5" style={{paddingLeft:0,width:"180px"}}>
           <Link to={this.props.params && "/events/" + this.props.params.params + '#Auction' } className="btn btn-success btn-block" >
+            Go back to All Items
           </Link>
           { /**
             <a onClick={this.goBack} className="btn btn-success btn-block" >
@@ -1278,7 +1315,7 @@ class Auction extends React.Component {
 
     </form>;
     let div_bid_close = <div className="alert alert-success text-center">Item Has Been Purchased for {this.props.currencySymbol}<span
-      className="current-bid">400</span></div>;
+      className="current-bid">{this.state.auctionData && this.state.auctionData.currentBid}</span></div>;
     let bid_active = this.state.auctionData && this.state.auctionData.purchased;
     return (
       <div className="row">
@@ -1375,7 +1412,6 @@ class Auction extends React.Component {
 }
 class ImageList extends React.Component {
   render() {
-    let img = '';
     return (
       <div>
         <div className={cx("item-image-inner")}

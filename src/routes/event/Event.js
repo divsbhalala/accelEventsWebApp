@@ -303,8 +303,6 @@ class Event extends React.Component {
 				cardHolder: true
 			});
 		}
-
-
 	};
 	cardNumberValidateHandler = (e) => {
     this.cardNumber.value=this.cardNumber.value.substr(0,16);
