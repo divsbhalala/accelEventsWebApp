@@ -53,7 +53,7 @@ class LoginPopup extends React.Component {
       emailValue: null,
       countryPhone:null,
       loading:false,
-    })
+    });
   }
   onFormClick = (e) => {
     e.preventDefault();
@@ -209,7 +209,7 @@ class LoginPopup extends React.Component {
             <Modal id="login-user" show={!!this.props.showModal} onHide={this.props.onCloseFunc} dialogClassName="" >
               <Modal.Body>
                 <div className="login-signup-wrap">
-                  { this.state.toggle ?
+                  { ((this.props.showType && this.props.showType == 'login') || !this.props.showType) && this.state.toggle ?
                     <div className="login-signup-container login  has-cell-number ">
                       <div className="login-form" id="LoginAttempt">
                         <h1 className="text-center">Log in</h1>
