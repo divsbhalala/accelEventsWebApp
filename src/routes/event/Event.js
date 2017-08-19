@@ -303,8 +303,6 @@ class Event extends React.Component {
 				cardHolder: true
 			});
 		}
-
-
 	};
 	cardNumberValidateHandler = (e) => {
     this.cardNumber.value=this.cardNumber.value.substr(0,16);
@@ -1244,7 +1242,6 @@ class GMap extends React.Component {
 			map: this.map
 		})
 	}
-
 	createInfoWindow() {
 		let html = '<div class="directions-container">' +
 			'  <form action="javascript:getDirections()">' +

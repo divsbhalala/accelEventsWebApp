@@ -179,8 +179,6 @@ class ByRaffleTickets extends React.Component {
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
-      this.checkIsValidBidData()
     });
     if (value == '') {
       this.setState({
@@ -200,6 +198,7 @@ class ByRaffleTickets extends React.Component {
     });
   };
   expMonthValidateHandler = (e) => {
+    console.log('onthe change gok...');
     this.setState({
       expMonthFeedBack: true,
       expMonthValue:this.expMonth.value.trim(),
@@ -210,13 +209,22 @@ class ByRaffleTickets extends React.Component {
         errorMsgExpMonth: "Expire Month is Require",
       });
     }  else {
-      this.setState({
-        expMonth: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   expYearValidateHandler = (e) => {
+    console.log('Year change gok...');
     this.setState({
       expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
@@ -227,9 +235,15 @@ class ByRaffleTickets extends React.Component {
         errorMsgexpYear: "Expire Year is Require",
       });
     }  else {
-      this.setState({
-        expYear: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expYear: true,
+        });
+      } else {
+        this.setState({
+          expYear: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
@@ -366,8 +380,6 @@ class ByRaffleTickets extends React.Component {
       e.preventDefault();
     }
   }
-
-
   render() {
     return (
       <div className="container">

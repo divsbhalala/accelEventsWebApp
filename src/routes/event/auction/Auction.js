@@ -545,7 +545,9 @@ class Auction extends React.Component {
     });
   };
   expMonthValidateHandler = (e) => {
+    console.log("Get chhhnfgngf..................");
     this.setState({
+      expYearFeedBack: true,
       expMonthFeedBack: true,
       expMonthValue:this.expMonth.value,
     },function afterStateChange () {
@@ -559,15 +561,23 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }  else {
-      this.setState({
-        expMonth: true
-      });
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     } this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
   };
   expYearValidateHandler = (e) => {
     this.setState({
-      expYearFeedBack: true,
+          expMonthFeedBack: true,
+         expYearFeedBack: true,
       expYearValue:this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
@@ -576,8 +586,16 @@ class Auction extends React.Component {
         errorMsgexpYear: "Expire Year is Require",
       });
     }  else {
-      this.setState({
-        expYear: true});
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     this.checkIsValidBidData();
     // this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
@@ -1188,14 +1206,20 @@ class Auction extends React.Component {
               </div>
               <div className="row">
                 <div className="col-md-8">
-                  <div className="form-group expiration-date has-feedback">
+                  <div
+                    className={cx('form-group', this.state.expMonthFeedBack && 'has-feedback', this.state.expMonthFeedBack && this.state.expMonth && 'has-success', this.state.expMonthFeedBack && (!this.state.expMonth) && 'has-error')}
+                  >
                     <label className="control-label">Expiration Date</label>
                     <div className="input-group">
-                      <div className="input-group-addon field-exp_month"><i className="fa fa-calendar"
-                                                                            aria-hidden="true"/></div>
-                      <select className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={ref => {
+                      <div className="input-group-addon field-exp_month"><i
+                        className="fa fa-calendar"
+                        aria-hidden="true"
+                      /></div>
+                      <select
+                        className data-stripe="exp_month" id="exp-month" data-fv-field="expMonth" ref={(ref) => {
                         this.expMonth = ref;
-                      }} onChange={this.expMonthValidateHandler}>
+                      }} onChange={this.expMonthValidateHandler}
+                      >
                         <option defaultValue value="01">Jan (01)</option>
                         <option value="02">Feb (02)</option>
                         <option value="03">Mar (03)</option>
@@ -1209,10 +1233,12 @@ class Auction extends React.Component {
                         <option value="11">Nov (11)</option>
                         <option value="12">Dec (12)</option>
                       </select>
-                      <select className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
-                              ref={ref => {
-                                this.expYear = ref;
-                              }} onChange={this.expYearValidateHandler}>
+                      <select
+                        className data-stripe="exp_year field-exp_year" id="exp-year" data-fv-field="expYear"
+                        ref={(ref) => {
+                          this.expYear = ref;
+                        }} onChange={this.expYearValidateHandler}
+                      >
                         <option value="2017">2017</option>
                         <option value="2018">2018</option>
                         <option value="2019">2019</option>

@@ -279,7 +279,7 @@ class ConfirmBid extends React.Component {
       showPopup: false,
     })
     if(this.state.popupHeader == "Success"){
-      window.location = "/event";
+      window.location = "/";
     }
   };
 
@@ -299,11 +299,12 @@ class ConfirmBid extends React.Component {
         popupHeader:"Failed",
       })
     }else {
-      if(  !this.state.settings.creditCardRequired ) {
+      if( !this.state.settings.creditCardRequired ) {
+        console.log('strip.....',this.state.settings);
         this.setState({
           loading:false,
           showPopup: true,
-          errorMsg: " Your card ending in " + this.state.settings.linkedCard.stripeCards[0].last4   + " will be charged $ "+  this.state.total   ,
+          errorMsg: " Your card ending in " +this.state.settings && this.state.settings.stripeCards && this.state.settings.linkedCard.stripeCards[0].last4   + " will be charged $ "+  this.state.total   ,
           popupHeader:"Confirm",
         })
       } else {
@@ -387,7 +388,6 @@ class ConfirmBid extends React.Component {
       e.preventDefault();
     }
   }
-
   render() {
     return (
       <div className="container">
@@ -676,7 +676,6 @@ class ConfirmBid extends React.Component {
                           <style dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }} />
                           <div className="stripe-form">
                           </div>
-
                           <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Confirm Bid</Button>
                         </form>
                       </div>

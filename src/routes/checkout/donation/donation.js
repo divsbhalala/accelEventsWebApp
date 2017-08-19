@@ -88,7 +88,6 @@ class Donation extends React.Component {
       emailValue:this.email.value.trim(),
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     if (this.email.value.trim() == '') {
       this.setState({
         email: false,
@@ -186,8 +185,6 @@ class Donation extends React.Component {
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
-      this.checkIsValidBidData()
     });
     if (value == '') {
       this.setState({
@@ -209,34 +206,50 @@ class Donation extends React.Component {
   expMonthValidateHandler = (e) => {
     this.setState({
       expMonthFeedBack: true,
-      expMonthValue:this.expMonth.value.trim(),
+      expYearFeedBack: true,
+      expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
-    if (this.expMonth.value.trim() == '') {
+    if (this.expMonth.value && this.expMonth.value.trim() === '') {
       this.setState({
         expMonth: false,
-        errorMsgExpMonth: "Expire Month is Require",
+        errorMsgExpMonth: 'Expire Month is Require',
       });
-    }  else {
-      this.setState({
-        expMonth: true
-      });
+    } else {
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expMonth: true,
+
+        });
+      }else
+      {
+        this.setState({
+          expMonth: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
-      expYearValue:this.expYear.value.trim(),
+      expMonthFeedBack: true,
+      expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
-    if (this.expYear.value.trim() == '') {
+    if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
         expYear: false,
-        errorMsgexpYear: "Expire Year is Require",
+        errorMsgexpYear: 'Expire Year is Require',
       });
-    }  else {
-      this.setState({
-        expYear: true
-      });
+    } else {
+      if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
+        this.setState({
+          expYear: true,
+        });
+      } else {
+        this.setState({
+          expYear: false,
+        });
+      }
     }
     // this.setState({isValidBidData: !!(this.firstName.value && this.lastName.value && this.cardNumber.value && this.cardHolder.value && this.amount.value && this.cvv.value)});
   };
