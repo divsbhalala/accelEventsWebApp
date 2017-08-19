@@ -460,16 +460,22 @@ class Auction extends React.Component {
     } else {
       amount = true;
     }
+    if(this.amount.value.trim() !== ''){
+      this.setState({
+        fee:(Math.round(((parseFloat(this.amount.value.trim())+0.03)/(1 - 0.029) ) - parseFloat(this.amount.value.trim()))),
+      });
+    }
     this.setState({
       //isValidBidData: ( this.amount.value.trim() && amount),
       amount: amount,
       amountFeedBack: true,
       errorMsgAmount: errorMsgAmount,
-      amountValue: this.amount.value.trim()
+      amountValue: this.amount.value.trim(),
     }, function afterStateChange() {
       this.checkIsValidBidData()
     });
     //this.checkIsValidBidData();
+
   };
   cvvValidateHandler = (e) => {
     this.cvv.value=this.cvv.value.substr(0,4);
@@ -884,6 +890,11 @@ class Auction extends React.Component {
             </div>
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
+            { this.props.eventData && this.props.eventData.processingFeesToPurchaser && this.state.auctionData && this.state.auctionData.buyItNowPrice > 0  && this.state.auctionData.buyItNowPrice <= this.amount.value ?
+              <small> Your bid qualifies for this item's Buy it Now price. You will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+              : this.props.eventData && this.props.eventData.processingFeesToPurchaser &&  this.state.fee  &&
+              <small className="" >  If you win, you will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+            }
           </div>
         </div>
       </div>
@@ -1100,7 +1111,7 @@ class Auction extends React.Component {
       <div
         className={cx("form-group", this.state.amountFeedBack && 'has-feedback', this.state.amountFeedBack && this.state.amount && 'has-success', this.state.amountFeedBack && (!this.state.amount) && 'has-error')}>
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-md-10">
             <label className="control-label">Bid Amount</label>
             <div className="input-group">
               <div className="input-group-addon">{this.props.currencySymbol}</div>
@@ -1110,15 +1121,20 @@ class Auction extends React.Component {
                        this.amount = ref;
                      }}
                      onKeyUp={this.amountValidateHandler}/>
-              { this.state.amountFeedBack && this.state.amount &&
+            { this.state.amountFeedBack && this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
-            { this.state.auctionData && this.state.amountValue && this.state.auctionData.buyItNowPrice > 0 && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            { false && this.state.auctionData && this.state.amountValue && this.state.auctionData.buyItNowPrice > 0 && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
             <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
+            { this.props.eventData && this.props.eventData.processingFeesToPurchaser && this.state.auctionData && this.state.auctionData.buyItNowPrice > 0  && this.state.auctionData.buyItNowPrice <= this.amount.value ?
+            <small> Your bid qualifies for this item's Buy it Now price. You will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+            : this.props.eventData && this.props.eventData.processingFeesToPurchaser &&  this.state.fee  &&
+              <small className="" >  If you win, you will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+            }
           </div>
         </div>
       </div>

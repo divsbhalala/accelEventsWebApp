@@ -22,6 +22,7 @@ class Admin extends React.Component {
     this.state = {
       data: null,
       settings: null,
+      itemSelected: [],
 
       slientAuctionActivated: false,
       causeAuctionActivated: false,
@@ -34,7 +35,11 @@ class Admin extends React.Component {
   }
 
   componentDidMount(){
-    this.getDashboard()
+    this.getDashboard();
+    this.setState({
+      settings:this.props.eventDetails,
+    });
+console.log("--->",this.props.eventDetails);
   }
   getDashboard = () => {
     /*this.props.getDashboard().then((resp) => {
@@ -68,7 +73,24 @@ class Admin extends React.Component {
           ticketingActivated: !this.state.ticketingActivated
         });
       }
+      const index = _.findIndex(this.state.itemSelected, { type });
+      if (index >= 0) {
+        const itemSelected = this.state.itemSelected;
+        delete itemSelected[index];
+        this.setState({
+          itemSelected,
+        });
+      }			else {
+        const itemSelected = this.state.itemSelected;
+        itemSelected.push({
+          type,
+        });
+        this.setState({
+          itemSelected,
+        });
+      }
     }
+    console.log("enable",item.target.getAttribute('data-type'),this.state.slientAuctionActivated , this.state.causeAuctionActivated , this.state.raffleActivated , this.state.ticketingActivated)
   };
   enableModule =(e)=>{
     e.preventDefault();
@@ -232,7 +254,7 @@ class Admin extends React.Component {
           </div> : "" }
         </div>
         <div id="select-modules" >
-        <Modal show={ this.state.data &&  this.state.data.noModuleActivate } dialogClassName="model-transparent" >
+        <Modal show={ this.props.eventDetails &&  this.props.eventDetails.noModuleActivate} dialogClassName="model-transparent" >
           <Modal.Body  >
             <form id="selectModules" >
               <label className="text-center center-block">Please select the tools that you would like to setup for your event.</label>
@@ -241,7 +263,7 @@ class Admin extends React.Component {
               { products.map(item => <div className="col-md-6 mrg-b-md" data-toggle="buttons" key={item.id}>
                 <label
                   disabled={this.state.settings && this.state.settings[item.type]}
-                  className={cx('btn btn-lg btn-block', this.state.settings && this.state.settings[item.type] ? 'btn-success' : 'btn-danger', _.findIndex(this.state.itemSelected, { type: item.type }) >= 0 && 'active')}>
+                  className={cx('btn btn-lg btn-block text-uppercase',  _.findIndex(this.state.itemSelected, { type: item.type }) >= 0 && 'active')}>
                   <input
                     type="checkbox" autoComplete="off" name={item.code}
                     id={item.code} data-cost={item.price} data-type={item.type} onChange={this.addPackage} disabled={this.state.settings && this.state.settings[item.type]}

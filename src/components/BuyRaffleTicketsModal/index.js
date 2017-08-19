@@ -530,7 +530,7 @@ class BuyRaffleTicketsModal extends React.Component {
       this.props.purchaseTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
           // let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          if (resp && !resp.errorMessage) {
+          if (resp && !resp.message)  {
             this.setState({
               showPopup: true,
               isShowAlertPopup: false,
@@ -549,7 +549,7 @@ class BuyRaffleTicketsModal extends React.Component {
               showPopup: true,
               errorMsg: resp.errorMessage,
               loading: false,
-              popupHeader: 'Failed',
+              popupHeader: 'Failed' || "Something went to Wrong",
               popupTicketHeader: "Close",
               isError: true,
             });
@@ -568,7 +568,7 @@ class BuyRaffleTicketsModal extends React.Component {
           if (response.error) {
             this.setState({
               showPopup: true,
-              errorMsg: response.error.message,
+              errorMsg: response.error.message || "Something went to Wrong",
               popupHeader: "Failed",
               loading: false,
             });
@@ -596,7 +596,7 @@ class BuyRaffleTicketsModal extends React.Component {
     };
     this.props.purchaseTickets(this.props.params && this.props.params.params, user)
       .then(resp => {
-        if (!resp.errorMessage) {
+        if (resp.message) {
           this.setState({
             showPopup: true,
             errorMsg: resp.message,
@@ -608,7 +608,7 @@ class BuyRaffleTicketsModal extends React.Component {
         } else {
           this.setState({
             showPopup: true,
-            errorMsg: resp.errorMessage,
+            errorMsg: resp.errorMessage || "Something went to Wrong",
             popupHeader: "Failed",
             loading: false,
           });
@@ -616,11 +616,12 @@ class BuyRaffleTicketsModal extends React.Component {
       });
   };
   showAlertPopup = () => {
-    this.setState({
-      //	showPopup: true,
-      isShowAlertPopup: true,
-
-    })
+    if(this.state.popupAlertHeader !== "Confirm"){
+      this.setState({
+        //	showPopup: true,
+        isShowAlertPopup: true,
+      })
+    }
   };
   hideAlertPopup = () => {
     if( this.state.popupHeader !== 'Failed' ){
@@ -891,6 +892,7 @@ class BuyRaffleTicketsModal extends React.Component {
                         defaultCountry={this.props.country || ""}
                         value={ this.state.phone || "" }
                         onPhoneNumberChange={this.changePhone}
+                        defaultValue={this.state.phone}
                       />
                       { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -1115,7 +1117,7 @@ class BuyRaffleTicketsModal extends React.Component {
           id="alertPopup"
           showModal={this.state.isShowAlertPopup}
           headerText={<p>{this.state.popupHeader}</p>}
-          //onCloseFunc={this.hideAlertPopup}
+          onCloseFunc={this.hideAlertPopup}
         >
           <div className="ticket-type-container"><input type="hidden" value="44" name="tickettypeid"/>
             { this.state.errorMsg }
