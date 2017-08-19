@@ -51,7 +51,7 @@ class HeaderNew extends React.Component {
 			errorMsgNumber: null,
 			phoneNumber: false,
 			toggle: true,
-
+			showType:'',
 			emailValue: null,
 			nameValue: null,
 			messageValue: null,
@@ -279,14 +279,15 @@ class HeaderNew extends React.Component {
 			showFormMessagePopup: false
 		})
 	};
-	showLoginPopup = () => {
+	showLoginPopup = (type) => {
 		this.setState({
-			showLoginPopup: true
+			showLoginPopup: true,
+			showType:type
 		})
 	};
 	hideLoginPopup = () => {
 		this.setState({
-			showLoginPopup: false
+			showLoginPopup: false,
 		})
 	};
 	showLogin = () => {
@@ -482,15 +483,13 @@ class HeaderNew extends React.Component {
 
 						</NavDropdown>}
 
-						{ !this.props.authenticated && <MenuItem eventKey="8" onClick={this.showLoginPopup}>
+						{ !this.props.authenticated && <MenuItem eventKey="8" onClick={this.showLoginPopup.bind(this,"login")}>
 							<i className="fa fa-user fa-fw"/> <span className="hidden-xs"> Login</span>
 						</MenuItem>}
 
 						{ !this.props.authenticated && <MenuItem eventKey="9"
 							// onClick={this.showLoginPopup}
-																										 onClick={(event) => {
-																											 history.push('/u/signup');
-																										 }}
+																										 onClick={this.showLoginPopup.bind(this,"signup")}
 						>
 							<i className="fa fa-sign-in fa-fw"/> <span className="hidden-xs"> Sign up</span>
 						</MenuItem>}
@@ -653,6 +652,7 @@ class HeaderNew extends React.Component {
 				</PopupModel> }
 				<LoginModal
 					showModal={this.state.showLoginPopup}
+					showType={this.state.showType}
 					headerText={<p/>}
 					onCloseFunc={this.hideLoginPopup}
 					params={this.props.params }
