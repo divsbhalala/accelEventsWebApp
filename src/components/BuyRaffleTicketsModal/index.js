@@ -107,7 +107,7 @@ class BuyRaffleTicketsModal extends React.Component {
     //});
   }
   componentWillReceiveProps() {
-    this.setState({settings:this.props.ticketPackages})
+    this.setState({settings:this.props.ticketPackages});
     setTimeout(()=>{
       if (this.props.showModal && !this.state.isShowAlertPopup){
         this.reRender();
@@ -546,11 +546,11 @@ class BuyRaffleTicketsModal extends React.Component {
       this.props.purchaseTickets(this.props.params && this.props.params.params, user)
         .then(resp => {
           // let updateraffleData = Object.assign({},{availableTickets : this.state.raffleData.availableTickets - this.state.raffleTicketValue})
-          if (resp && !resp.message)  {
+          if (resp && resp.message)  {
             this.setState({
               showPopup: true,
               isShowAlertPopup: false,
-              errorMsg: resp.message,
+              errorMsg: resp.message || "Success",
               popupHeader: "Success",
               loading: false,
               popupTicketHeader: "Close",
@@ -563,7 +563,7 @@ class BuyRaffleTicketsModal extends React.Component {
           } else {
             this.setState({
               showPopup: true,
-              errorMsg: resp.errorMessage,
+              errorMsg: resp.errorMessage || "Something went to Wrong",
               loading: false,
               popupHeader: 'Failed' || "Something went to Wrong",
               popupTicketHeader: "Close",

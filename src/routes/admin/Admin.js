@@ -278,7 +278,6 @@ console.log("--->",this.props.eventDetails);
               </button>
             </form>
           </Modal.Body>
-
         </Modal>
         </div>
       </div>
