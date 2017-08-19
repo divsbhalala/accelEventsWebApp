@@ -328,6 +328,7 @@ class BuyRaffleTicketsModal extends React.Component {
   };
   expMonthValidateHandler = (e) => {
     this.setState({
+      expYearFeedBack: true,
       expMonthFeedBack: true,
      expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
@@ -354,21 +355,22 @@ class BuyRaffleTicketsModal extends React.Component {
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
+      expMonthFeedBack: true,
      expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
       this.setState({
-        expYear: false,
+        expMonth: false,
         errorMsgexpYear: 'Expire Year is Require',
       });
     } else {
       if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
         this.setState({
-          expYear: true,
+          expMonth: true,
         });
       } else {
         this.setState({
-          expYear: false,
+          expMonth: false,
         });
       }
     }

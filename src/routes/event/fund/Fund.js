@@ -127,7 +127,6 @@ class Fund extends React.Component {
       cvvFeedBack:true,
       isValidBidDataFeedBack: false,
       expYearFeedBack: true,
-      expMonthFeedBack: true,
     });
     e.preventDefault();
     if(this.state.isValidBidData){
@@ -315,7 +314,6 @@ class Fund extends React.Component {
       });
     }
     this.setState({isValidData: !!(this.email.value.trim() && this.password.value.trim())});
-
   };
   passwordValidateHandler = (e) => {
 
@@ -431,7 +429,6 @@ class Fund extends React.Component {
       });
     }
     //  this.setState({isValidBidData: !!(this.firstName.value.trim() && this.lastName.value.trim() && this.cardNumber.value.trim() && this.cardHolder.value.trim() && this.amount.value.trim() && this.cvv.value.trim())});
-
   };
   cardNumberValidateHandler = (e) => {
     this.cardNumber.value=this.cardNumber.value.substr(0,16);
@@ -441,8 +438,6 @@ class Fund extends React.Component {
     },function afterTitleChange () {
       this.checkIsValidBidData()
     });
-
-
     if (this.cardNumber.value.trim() === '') {
 
       this.setState({
@@ -555,6 +550,7 @@ class Fund extends React.Component {
 
   expMonthValidateHandler = (e) => {
     this.setState({
+      expYearFeedBack: true,
       expMonthFeedBack: true,
       expMonthValue: this.expMonth.value && this.expMonth.value.trim(),
     });
@@ -581,6 +577,7 @@ class Fund extends React.Component {
   expYearValidateHandler = (e) => {
     this.setState({
       expYearFeedBack: true,
+      expMonthFeedBack: true,
         expYearValue: this.expYear.value && this.expYear.value.trim(),
     });
     if (this.expYear.value && this.expYear.value.trim() === '') {
@@ -591,11 +588,11 @@ class Fund extends React.Component {
     } else {
       if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
         this.setState({
-          expYear: true,
+          expMonth: true,
         });
       } else {
         this.setState({
-          expYear: false,
+          expMonth: false,
         });
       }
     }

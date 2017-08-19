@@ -356,11 +356,11 @@ class Raffle extends React.Component {
     } else {
       if ((this.expMonth.value && this.expYear.value && (parseInt(this.expYear.value.toString() + (this.expMonth.value.toString().length === 1 ? ('0' + this.expMonth.value.toString()) : this.expMonth.value.toString())) >= parseInt((new Date()).getUTCFullYear().toString() + (((new Date()).getMonth().toString().length === 1 ? '0' + (new Date()).getMonth().toString() : (new Date()).getMonth().toString())))))) {
         this.setState({
-          expYear: true,
+          expMonth: true,
         });
       } else {
         this.setState({
-          expYear: false,
+          expMonth: false,
         });
       }
     }

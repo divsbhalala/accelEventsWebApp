@@ -1242,7 +1242,6 @@ class GMap extends React.Component {
 			map: this.map
 		})
 	}
-
 	createInfoWindow() {
 		let html = '<div class="directions-container">' +
 			'  <form action="javascript:getDirections()">' +
