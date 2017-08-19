@@ -1,0 +1,82 @@
+#select-modules .modal-dialog {
+    top: 50px;
+}
+form#selectModules {
+    width: 550px;
+    margin: auto;
+    background-color: #1E1E4E;
+    border-radius: 40px;
+    overflow: hidden;
+    padding: 30px 40px;
+    box-shadow: 0 0 10px #494c5d;
+}
+
+form#selectModules {}
+form#selectModules > label {text-align: center;margin-bottom: 30px;}
+
+form#selectModules label.btn {
+    background: rgb(171, 171, 171);
+    width: 210px;
+    margin-bottom: 40px;
+    border-width: 3px;
+    border-color: #FFF;
+    border-style: solid;
+    border-radius: 10px;
+    line-height: 3.0;
+}
+form#selectModules label.btn:hover,
+form#selectModules label.btn.active {
+    background: rgb(156, 156, 156);
+    color: inherit;
+}
+form#selectModules label.btn .glyphicon {
+    visibility: hidden;
+    display: none;
+}
+form#selectModules label.btn input[type="checkbox"]:checked + .glyphicon {
+    visibility: visible;
+    display: initial;
+}
+form#selectModules label.btn input {
+    display: none;
+}
+form#selectModules label.btn:nth-child(2n+1) {
+    margin-right: 40px
+}
+form#selectModules .js-error.module-check {
+    border: 1px solid;
+    color: #d26464;
+    margin-bottom: 20px;
+}
+form#selectModules button {
+    background: #585858;
+    border: 5px solid #FFF;
+    color: #FFF;
+    transition: 0.2s all ease-in;
+}
+#select-modules .modal-content {
+    background: transparent;
+    box-shadow: none;
+    border: 0;
+    color: #FFF;
+}
+
+form#selectModules button:hover, form#selectModules button:focus {
+    color: #FFF;
+    background: #8e8e8e;
+}
+@media (max-width: 620px) {
+    form#selectModules {
+        width: 300px;
+    }
+}
+.white{
+    color: white !important;
+}
+.model-transparent > .modal-content {
+    background-color: transparent;
+}
+.model-transparent {
+    width: 100%;
+    color: #fff;
+}

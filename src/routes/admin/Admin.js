@@ -269,8 +269,7 @@ console.log("--->",this.props.eventDetails);
                     id={item.code} data-cost={item.price} data-type={item.type} onChange={this.addPackage} disabled={this.state.settings && this.state.settings[item.type]}
                     defaultValue={this.state.settings && this.state.settings[item.type]}
                   />
-                  <span className="glyphicon glyphicon-ok" />
-                  { (this.state.settings && this.state.settings[item.type]) ? `${item.name} Activated` : `${item.name}`}
+                  { _.findIndex(this.state.itemSelected, { type: item.type }) >= 0 ? <span className="glyphicon glyphicon-ok" />:'' } {item.name}
                 </label>
               </div>) }
               <div className="small text-center">You can add or remove tools from the Settings page at any time</div>
