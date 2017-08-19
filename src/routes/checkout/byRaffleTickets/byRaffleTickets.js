@@ -179,8 +179,6 @@ class ByRaffleTickets extends React.Component {
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
-      this.checkIsValidBidData()
     });
     if (value == '') {
       this.setState({
@@ -382,8 +380,6 @@ class ByRaffleTickets extends React.Component {
       e.preventDefault();
     }
   }
-
-
   render() {
     return (
       <div className="container">

@@ -88,7 +88,6 @@ class Donation extends React.Component {
       emailValue:this.email.value.trim(),
     });
     let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
     if (this.email.value.trim() == '') {
       this.setState({
         email: false,
@@ -186,8 +185,6 @@ class Donation extends React.Component {
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
-    },function afterTitleChange () {
-      this.checkIsValidBidData()
     });
     if (value == '') {
       this.setState({
