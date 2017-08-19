@@ -342,7 +342,7 @@ class Donation extends React.Component {
   confirmDonationCheckout = () =>{
     this.setState({loading:true });
     let confirmBidDto ={
-      "amount": this.props.params.amount,
+      "amount": this.amount.value,
       "firstname": this.state.firstNameValue,
       "lastname": this.state.lastNameValue,
       "stripeToken": this.state.stripeToken
@@ -484,8 +484,8 @@ class Donation extends React.Component {
                                        ref={ref => {
                                          this.amount = ref;
                                        }}
-                                       value={this.props.params.amount}
-                                       disabled={true}
+                                       defaultValue={this.props.params.amount}
+                                       disabled={this.props.params.amount ? true :false}
                                        onKeyUp={this.amountValidateHandler}/>
                                 { this.state.amountFeedBack && this.state.amount &&
                                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
