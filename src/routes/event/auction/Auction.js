@@ -462,7 +462,7 @@ class Auction extends React.Component {
     }
     if(this.amount.value.trim() !== ''){
       this.setState({
-        fee:(((((parseFloat(this.amount.value.trim())+0.03)/(1 - 0.029) ) - parseFloat(this.amount.value.trim())).toFixed(2))),
+        fee:(((((parseFloat(this.amount.value.trim())+0.30)/(1 - 0.029) ) - parseFloat(this.amount.value.trim())).toFixed(2))),
       });
     }
     this.setState({
@@ -909,7 +909,7 @@ class Auction extends React.Component {
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" data-fv-result="NOT_VALIDATED">{this.state.errorMsgAmount}</small>}
             { this.props.eventData && this.props.eventData.processingFeesToPurchaser && this.state.auctionData && this.state.auctionData.buyItNowPrice > 0  && this.state.auctionData.buyItNowPrice <= this.amount.value ?
-              <small> Your bid qualifies for this item's Buy it Now price. You will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+              <small> {"Your bid qualifies for this item's Buy it Now price. You will be charged the bid amount plus"} {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
               : this.props.eventData && this.props.eventData.processingFeesToPurchaser &&  this.state.fee > 0 &&
               <small className="" >  If you win, you will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
             }
@@ -1145,14 +1145,14 @@ class Auction extends React.Component {
               { this.state.amountFeedBack && !this.state.amount &&
               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-remove"/>}
             </div>
-            { false && this.state.auctionData && this.state.amountValue && this.state.auctionData.buyItNowPrice > 0 && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
+            { this.props.eventData && !this.props.eventData.processingFeesToPurchaser && this.state.auctionData && this.state.amountValue && this.state.auctionData.buyItNowPrice > 0 && this.state.amountValue >= this.state.auctionData.buyItNowPrice &&
             <small className="text-success" >Your bid qualifies for this item's Buy it Now price</small>}
             { this.state.amountFeedBack && !this.state.amount &&
             <small className="help-block" >{this.state.errorMsgAmount}</small>}
             { this.props.eventData && this.props.eventData.processingFeesToPurchaser && this.state.auctionData && this.state.auctionData.buyItNowPrice > 0  && this.state.auctionData.buyItNowPrice <= this.amount.value ?
-            <small> Your bid qualifies for this item's Buy it Now price. You will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+            <small> {"Your bid qualifies for this item's Buy it Now price. You will be charged the bid amount plus"} {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
             : this.props.eventData && this.props.eventData.processingFeesToPurchaser &&  this.state.fee  > 0 &&
-              <small className="" >  If you win, you will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
+              <small className="" >  {this.state.auctionData.buyItNowPrice > this.amount.value ? "If you win, you" : "You" } will be charged the bid amount plus {this.props.currencySymbol} {this.state.fee} in credit card transaction fees.</small>
             }
           </div>
         </div>
