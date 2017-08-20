@@ -59,7 +59,6 @@ class ResetPassword extends React.Component {
   }
 
   emailValidateHandler = (e) => {
-
     this.setState({
       emailFeedBack: true
     });
@@ -109,6 +108,7 @@ class ResetPassword extends React.Component {
                            this.email = ref;
                          }}
                          onKeyUp={this.emailValidateHandler}
+                         onBlur={this.emailValidateHandler}
                   />
                 </div>
                 { this.state.emailFeedBack && !this.state.email && <Alert bsStyle="danger">Invalid Email address</Alert>}
