@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -651,7 +650,6 @@ class Donation extends React.Component {
                                     </div>
                                     { this.state.cvvFeedBack && !this.state.cvv &&
                                     <small className="help-block" data-fv-result="NOT_VALIDATED">{ this.state.errorMsgcvv  }</small>}
-
                                   </div>
                                 </div>
                               </div>

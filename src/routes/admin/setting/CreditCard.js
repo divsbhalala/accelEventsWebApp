@@ -60,7 +60,14 @@ class CreditCard extends React.Component {
 		e.preventDefault();
     this.setState({loading:true})
 		this.props.disconnectStripeAccount().then(resp =>{
-      this.setState({loading:false,message:resp.data.message,isError:false})
+      this.setState({loading:false,message:resp.data.message,isError:false});
+			this.props.doGetHostSettings("creditCard").then(resp => {
+				this.setState({
+					settings: resp && resp.data
+				})
+			}).catch(error => {
+				console.log('error', error)
+			})
 		}).catch(error=>{
       this.setState({loading:false,message:"Something wrong",isError:true})
 		});
