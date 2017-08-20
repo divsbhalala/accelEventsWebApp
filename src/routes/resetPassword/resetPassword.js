@@ -107,7 +107,6 @@ class ResetPassword extends React.Component {
                          ref={ref => {
                            this.email = ref;
                          }}
-                         onKeyUp={this.emailValidateHandler}
                          onBlur={this.emailValidateHandler}
                   />
                 </div>
