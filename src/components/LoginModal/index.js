@@ -30,9 +30,11 @@ class LoginPopup extends React.Component {
       emailValue: null,
       countryPhone:null,
       loading:false,
+      myProps:false
     };
    }
   componentWillMount() {
+    console.log('willl moint')
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
   }
   componentWillReceiveProps(){
@@ -53,6 +55,7 @@ class LoginPopup extends React.Component {
       emailValue: null,
       countryPhone:null,
       loading:false,
+      myProps:false
     });
   }
   onFormClick = (e) => {
@@ -180,12 +183,14 @@ class LoginPopup extends React.Component {
   };
   showLogin = () => {
     this.setState({
-      toggle: true
+      toggle: true,
+      myProps:true
     })
   };
   showRegister = () => {
     this.setState({
-      toggle: false
+      toggle: false,
+      myProps:true
     })
   };
   hideRegisterPopup = () => {
@@ -202,6 +207,7 @@ class LoginPopup extends React.Component {
   }
   render() {
     let event = this.props.params && this.props.params.params;
+    let showMyLogin = ((this.props.showType && this.props.showType == 'login') || !this.props.showType ) || this.state.myProps;
     return (
       <div >
         <div className="static-modal" id={this.props.id + '-containter'}>
@@ -209,7 +215,7 @@ class LoginPopup extends React.Component {
             <Modal id="login-user" show={!!this.props.showModal} onHide={this.props.onCloseFunc} dialogClassName="" >
               <Modal.Body>
                 <div className="login-signup-wrap">
-                  { ((this.props.showType && this.props.showType == 'login') || !this.props.showType) && this.state.toggle ?
+                  { showMyLogin && this.state.toggle ?
                     <div className="login-signup-container login  has-cell-number ">
                       <div className="login-form" id="LoginAttempt">
                         <h1 className="text-center">Log in</h1>
