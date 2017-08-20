@@ -202,14 +202,14 @@ render() {
           <div className="input-group">
             <span className="input-group-addon">{this.props.currencySymbol}</span>
             <input type="number" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.startingBid}  onFocus={this.showPanel}
-                   ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData}/>
+                   ref={ref=> {this.startingBid=ref;}} onKeyUp={this.startingBidHandlerChange} onBlur={this.autoAddData} />
           </div>
           { this.state.startingBidFeedBack && !this.state.startingBid && <small className="error red"> Starting Bid is Required.</small>}
         </div>
         <div className="flex-col item-starting-bid-column">
           <div className="input-group">
             <span className="input-group-addon">{this.props.currencySymbol}</span>
-            <input type="number" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.buyItNowPrice}  onFocus={this.showPanel}
+            <input type="number" placeholder="or leave blank" className="form-control item-bid" name="startingBid" defaultValue={this.props.item.buyItNowPrice}  onFocus={this.showPanel}
                    ref={ref=> {this.buyItNowPrice=ref;}} onKeyUp={this.buyItNowPriceHandlerChange} onBlur={this.autoAddData}/>
           </div>
           { this.state.buyItNowPriceFeedBack && !this.state.buyItNowPrice && <small className="error red"> Buy it now price must be greater than Starting Bid</small>}
