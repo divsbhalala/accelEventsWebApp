@@ -514,8 +514,7 @@ class Auction extends React.Component {
     window.history.go(-1);
   };
   phoneNumberValidateHandler(name, isValid, value, countryData, number, ext) {
-
-    this.setState({
+     this.setState({
       phone: value,
       countryPhone:countryData.iso2,
       phoneNumberFeedBack: true,

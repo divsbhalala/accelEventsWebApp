@@ -921,7 +921,7 @@ class TicketCheckout extends React.Component {
 			event.parentElement.classList.add('has-success');
 			event.parentElement.classList.remove('has-error');
 		}
-    this.props.doValidateMobileNumber(name.dialCode+''+value).then(resp => {
+       this.props.doValidateMobileNumber(countryData).then(resp => {
 			if(resp)
 			 {object[key][field.name]['error'] = true;
          event.parentElement.classList.add('has-error');
@@ -1645,9 +1645,9 @@ class TicketCheckout extends React.Component {
 																						onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
 																							this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
 																						}}
-																						// onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
-																						// 	this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
-																						// }}
+																						 onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																						 	this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																						}}
 																					/>
 
 																					<i
@@ -1958,9 +1958,9 @@ class TicketCheckout extends React.Component {
 																						onPhoneNumberChange={(name, isValid, value, countryData, number, ext) => {
 																							this.buyerQuestionsPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
 																						}}
-																						// onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
-																						// 	this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
-																						// }}
+																						onPhoneNumberBlur={(name, isValid, value, countryData, number, ext) => {
+																							this.buyerPhoneNumberValidateHandler(name, isValid, value, countryData, number, ext, item, key, this)
+																						 }}
 																					/>
 
 																					<i
@@ -2316,8 +2316,7 @@ class TicketCheckout extends React.Component {
 																									ref={ref => {
 																										this.cardExpYear = ref;
 																									}}
-																									onChange={this.cardExpYearValidateHandler}
-																					>
+																									onChange={this.cardExpYearValidateHandler}SSS																					>
 																						<option value={2016}>2016</option>
 																						<option value={2017}>2017</option>
 																						<option value={2018}>2018</option>
@@ -2353,7 +2352,6 @@ class TicketCheckout extends React.Component {
 																						<option value={2048}>2048</option>
 																						<option value={2049}>2049</option>
 																						<option value={2050}>2050</option>
-
 																					</select>
 																				</div>
 																				<i
