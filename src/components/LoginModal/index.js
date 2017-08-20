@@ -208,6 +208,7 @@ class LoginPopup extends React.Component {
   render() {
     let event = this.props.params && this.props.params.params;
     let showMyLogin = ((this.props.showType && this.props.showType == 'login') || !this.props.showType ) || this.state.myProps;
+    console.log(showMyLogin,this.state.toggle,'loginn')
     return (
       <div >
         <div className="static-modal" id={this.props.id + '-containter'}>
