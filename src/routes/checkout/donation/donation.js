@@ -19,6 +19,7 @@ class Donation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      backUrl:null,
       isValidUser:true,
       isVisibleConfirmBid : false,
       isValidData: false,
@@ -282,7 +283,7 @@ class Donation extends React.Component {
   hidePopup = () => {
     this.setState({
       showPopup: false,
-    })
+    });
     if(this.state.popupHeader == "Success"){
       window.location = "/event";
     }
@@ -299,11 +300,11 @@ class Donation extends React.Component {
         popupHeader:"Failed",
       })
     }else {
-      if( 0 && !this.state.settings.creditCardRequired ) {
+      if(  !this.state.settings.creditCardRequired ) {
         this.setState({
           loading:false,
           showPopup: true,
-          errorMsg: " Your card ending in " + this.state.settings.linkedCard.stripeCards[0].last4   + " will be charged  $ "+  this.props.params.amount  ,
+          errorMsg: " Your card ending in " + this.state.settings.linkedCards[0].last4   + " will be charged  $ "+  this.amount.value  ,
           popupHeader:"Confirm",
         })
       } else {
@@ -326,7 +327,7 @@ class Donation extends React.Component {
               this.setState({
                 loading:false,
                 showPopup: true,
-                errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+  this.props.params.amount  ,
+                errorMsg: " Your card ending in " + this.state.cardNumberValue.slice( - 4)  + " will be charged $ "+   this.amount.value  ,
                 popupHeader:"Confirm",
                 stripeToken: response.id,})
             }
@@ -346,7 +347,7 @@ class Donation extends React.Component {
       "firstname": this.state.firstNameValue,
       "lastname": this.state.lastNameValue,
       "stripeToken": this.state.stripeToken
-    }
+    };
     this.props.confirmDonationCheckout(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
       if (resp.errorMessage) {
         this.setState({
@@ -376,6 +377,7 @@ class Donation extends React.Component {
         firstNameValue:resp.data.userInfo.firstName,
         lastNameValue:resp.data.userInfo.lastName,
         isValidUser:true,
+        backUrl:"/events/"+this.props.params &&  this.props.params.params
       })
     }).catch((error) => {
       this.setState({
@@ -490,7 +492,7 @@ class Donation extends React.Component {
                                          this.amount = ref;
                                        }}
                                        defaultValue={this.props.params.amount}
-                                       disabled={this.props.params.amount ? true :false}
+                                       disabled={!!this.props.params.amount}
                                        onKeyUp={this.amountValidateHandler}/>
                                 { this.state.amountFeedBack && this.state.amount &&
                                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -665,7 +667,8 @@ class Donation extends React.Component {
                         <style dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }} />
                         <div className="stripe-form">
                         </div>
-                        <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Confirm Bid</Button>
+                        <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Pay Now</Button>
+                        <Button className="btn btn-default" > <Link to={this.state.backUrl || '/'} >Go back </Link> </Button>
                       </form>
                     </div>
                   </div>
