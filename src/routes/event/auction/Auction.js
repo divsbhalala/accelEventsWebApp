@@ -218,7 +218,7 @@ class Auction extends React.Component {
                 errorMsgCard:"",
                 popupHeader:"",
               });
-          },3000)
+          },3000);
           this.props.changeUserData(this.props.user,user)
         }else{
           this.setState({
@@ -235,7 +235,7 @@ class Auction extends React.Component {
                 errorMsgCard:"",
                 popupHeader:"",
               });
-          },3000)
+          },3000);
 
         }
         this.setState({
@@ -451,11 +451,12 @@ class Auction extends React.Component {
   amountValidateHandler = (e) => {
     let amount = true;
     let errorMsgAmount = "";
+    let bidIncrement =( this.state.auctionData.bidIncrement === 0 ? 10 : this.state.auctionData.bidIncrement) ;
     if (this.amount.value && this.amount.value.trim() === '') {
       errorMsgAmount = "Bid Amount can't be empty";
       amount = false;
-    } else if ((this.state.auctionData.currentBid + this.state.auctionData.bidIncrement) > this.amount.value.trim()) {
-      errorMsgAmount = "Bids for this item must be placed in increments of at least "+ this.props.currencySymbol + this.state.auctionData.bidIncrement + ". Please enter a value of at least " + this.props.currencySymbol+ (this.state.auctionData.currentBid + this.state.auctionData.bidIncrement);
+    } else if ((this.state.auctionData.currentBid + bidIncrement) > this.amount.value.trim()) {
+      errorMsgAmount = "Bids for this item must be placed in increments of at least "+ this.props.currencySymbol + bidIncrement + ". Please enter a value of at least " + this.props.currencySymbol+ (this.state.auctionData.currentBid + bidIncrement);
       amount = false;
     } else {
       amount = true;

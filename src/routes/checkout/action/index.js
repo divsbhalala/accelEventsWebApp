@@ -110,6 +110,24 @@ export function getBidConfirmation(eventurl, userId, itemId) {
 		})
 	}
 }
+export function submiteBuyNow(eventurl, userId, itemId) {
+	return (dispatch) => {
+		return axios({
+			method: 'get',
+			url: API_URL + 'u/checkout/' + eventurl + '/auction/confirmBid/user/' + userId + '/item/' + itemId,
+
+		})
+	}
+}
+export function geBuyNow(eventurl, userId, itemId) {
+	return (dispatch) => {
+		return axios({
+			method: 'get',
+			url: API_URL + 'u/checkout/' + eventurl + '/auction/buynow/user/' + userId + '/item/' + itemId,
+
+		})
+	}
+}
 export function confirmRaffleCheckout(eventurl, raffleCheckoutDto) {
 	return (dispatch) => {
 		return axios({

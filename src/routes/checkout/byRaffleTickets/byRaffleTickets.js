@@ -21,6 +21,7 @@ class ByRaffleTickets extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isValidUser:false,
       isVisibleConfirmBid : false,
       isValidData: false,
       email: null,
@@ -368,10 +369,14 @@ class ByRaffleTickets extends React.Component {
         phone:resp.data.userInfo.phonenumber,
         countryPhone: resp.data.userInfo.countryCode,
         emailValue:resp.data.userInfo.email,
-      })
+        isValidUser:true,
+      });
       console.log("resp",resp)
     }).catch((error) => {
       console.log("resp",error)
+      this.setState({
+        isValidUser:false,
+      });
     })
   };
   numberOnly(e) {
@@ -383,7 +388,8 @@ class ByRaffleTickets extends React.Component {
   render() {
     return (
       <div className="container">
-        {this.state.settings &&  <div className="row">
+        {this.state.settings && this.state.isValidUser ?
+        <div className="row">
           <div className="col-lg-8 col-md-10 col-lg-offset-2 col-md-offset-1 mrg-t-lg">
             <div className="row">
               <div className="col-lg-12">
@@ -614,7 +620,8 @@ class ByRaffleTickets extends React.Component {
               </div>
             </div>
           </div>
-        </div> }
+        </div>
+          : <h3>User not found</h3>}
         <PopupModel
           id="mapPopup"
           showModal={this.state.showPopup}

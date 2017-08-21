@@ -2,10 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './ConfirmBid.css';
+import s from './buyNow.css';
 import cx from 'classnames';
 import {connect} from 'react-redux';
-import {confirmAuctionBid,createCardToken, orderTicket, getBidConfirmation} from './../action/index';
+import {submiteBuyNow,createCardToken, orderTicket, geBuyNow} from './../action/index';
 import { doValidateMobileNumber} from './../../event/action/index';
 
 import Button from 'react-bootstrap-button-loader';
@@ -14,7 +14,7 @@ import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
 
-class ConfirmBid extends React.Component {
+class BuyNow extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
   };
@@ -349,8 +349,8 @@ class ConfirmBid extends React.Component {
       "itemIds": this.state.itemIds,
       "phoneNumber": this.state.phone,
       "stripeToken": this.state.stripeToken
-    }
-    this.props.confirmAuctionBid(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
+    };
+    this.props.submiteBuyNow(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
       if (resp.errorMessage) {
         this.setState({
           loading:false,
@@ -370,20 +370,25 @@ class ConfirmBid extends React.Component {
   };
   componentDidMount(){
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    this.props.getBidConfirmation(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId,this.props.params &&  this.props.params.ItemCode).then(resp => {
+    this.props.geBuyNow(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId,this.props.params &&  this.props.params.ItemCode).then(resp => {
       let itemIds=[];
-      itemIds = resp.data.items.map((value)=>{ return value.id })
+      itemIds = resp.data.items.map((value)=>{ return value.id });
       this.setState({
         settings:resp.data,
         phone:resp.data.userInfo.phonenumber,
         countryPhone: resp.data.userInfo.countryCode,
         emailValue:resp.data.userInfo.email,
         itemIds: itemIds,
-        total:resp.data.items[0].currentBid
+        total:resp.data.items[0].currentBid,
+        isValidUser:true,
       })
     }).catch((error) => {
+      this.setState({
+        isValidUser:false,
+      })
     })
-  };numberOnly(e) {
+  };
+  numberOnly(e) {
     const re = /[/0-9A-F:]+/g;
     if (!re.test(e.key)) {
       e.preventDefault();
@@ -393,7 +398,7 @@ class ConfirmBid extends React.Component {
     return (
       <div className="container">
         {this.state.settings && this.state.isValidUser ?
-        <div className="row">
+          <div className="row">
           <div className="col-lg-8 col-md-10 col-lg-offset-2 col-md-offset-1 mrg-t-lg">
             <div className="row">
               <div className="col-lg-12">
@@ -710,8 +715,8 @@ class ConfirmBid extends React.Component {
 }
 
 const mapDispatchToProps = {
-  confirmAuctionBid : (eventurl, confirmBidDto)  => confirmAuctionBid(eventurl,confirmBidDto),
-  getBidConfirmation : (eventurl, userId, itemIds)  => getBidConfirmation(eventurl, userId, itemIds),
+  submiteBuyNow : (eventurl, confirmBidDto)  => submiteBuyNow(eventurl,confirmBidDto),
+  geBuyNow : (eventurl, userId, itemIds)  => geBuyNow(eventurl, userId, itemIds),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
   getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),
 };
@@ -719,5 +724,5 @@ const mapStateToProps = (state) => ({
 	country: state.location && state.location.data && state.location.data.country && state.location.data.country.toLowerCase(),
 });
 
-export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(ConfirmBid));
+export default  connect(mapStateToProps, mapDispatchToProps)(withStyles(s)(BuyNow));
 
