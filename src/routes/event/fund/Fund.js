@@ -924,7 +924,7 @@ class Fund extends React.Component {
                           </div>
                           { this.state.passwordFeedBack && !this.state.password &&
                           <small className="help-block">{this.state.errorMsgPassword}</small>}
-                          {this.state.showForgotPassword &&  <div style={{"textAlign":"right"}}><Link to="/u/password-reset" >Forget Password?</Link></div> }
+                          {this.state.showForgotPassword &&  <div style={{"textAlign":"right"}}><Link to="/u/password-reset" >Forgot password?</Link></div> }
                         
                         </div> }
                         { !this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) ) ?

@@ -817,7 +817,7 @@ class Auction extends React.Component {
           </div>
           { this.state.passwordFeedBack && !this.state.password &&
           <small className="help-block">{this.state.errorMsgPassword}</small>}
-          {this.state.showForgotPassword &&  <div style={{"textAlign":"right"}}><Link to="/u/password-reset" >Forget Password?</Link></div> }
+          {this.state.showForgotPassword &&  <div style={{"textAlign":"right"}}><Link to="/u/password-reset" >Forgot password?</Link></div> }
 
         </div>
         <div className="col-sm-3"  >
