@@ -110,12 +110,12 @@ export function getBidConfirmation(eventurl, userId, itemId) {
 		})
 	}
 }
-export function submiteBuyNow(eventurl, userId, itemId) {
+export function submiteBuyNow(eventurl, purchasedTickets) {
 	return (dispatch) => {
 		return axios({
 			method: 'get',
-			url: API_URL + 'u/checkout/' + eventurl + '/auction/confirmBid/user/' + userId + '/item/' + itemId,
-
+			url: API_URL + 'u/checkout/' + eventurl + '/auction/payment',
+			data:purchasedTickets,
 		})
 	}
 }

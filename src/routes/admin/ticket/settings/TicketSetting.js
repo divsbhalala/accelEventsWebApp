@@ -104,13 +104,13 @@ class TicketSetting extends React.Component {
 	showErrorMessage = (text)=>{
 		this.setState({
 			isLoading: false,
-			isSuccess: true,
+			isError: true,
 			successMessage: text
 		}, ()=>{
 			debugger;
 			setTimeout(()=>{
 				this.setState({
-					isSuccess: false,
+          isError: false,
 					successMessage: ""
 				})
 			}, 4000)

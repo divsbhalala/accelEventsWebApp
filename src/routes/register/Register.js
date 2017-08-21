@@ -34,12 +34,49 @@ class Register extends React.Component {
       error: null,
       emailFeedBack: false,
       passwordFeedBack: false,
+      isSuccess: false,
+      successMessage: "",
     };
 
     this.emailValidateHandler = this.emailValidateHandler.bind(this);
     this.passwordValidateHandler = this.passwordValidateHandler.bind(this);
+    this.showLoading = this.showLoading.bind(this);
+    this.showSuccessMessage = this.showSuccessMessage.bind(this);
+    this.showErrorMessage = this.showErrorMessage.bind(this);
   }
-
+  showLoading = ()=>{
+    this.setState({
+      loading: true
+    });
+  };
+  showSuccessMessage = (text)=>{
+    this.setState({
+      loading: false,
+      isSuccess: true,
+      successMessage: text
+    }, ()=>{
+      setTimeout((text)=>{
+        this.setState({
+          isSuccess: false,
+          successMessage: ''
+        })
+      }, 4000)
+    });
+  };
+  showErrorMessage = (text)=>{
+    this.setState({
+      loading: false,
+      error: true,
+      successMessage: text
+    }, ()=>{
+      /*setTimeout(()=>{
+        this.setState({
+          error: false,
+          successMessage: ""
+        })
+      }, 4000)*/
+    });
+  };
   onFormClick = (e) => {
     e.preventDefault();
 
@@ -118,7 +155,8 @@ class Register extends React.Component {
           alt="" className="logo-img img-responsive center-block"/>
         <h1 className="text-center mrg-t-md">Get started with a free account</h1>
         <div className="onboardpage center-block">
-					{ this.state.error ? <Alert bsStyle="danger">{this.state.error}</Alert> : ""}
+          {this.state.error && !this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md">{ this.state.error}</div> : ""}
+          {this.state.error && this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md"> You are already registered.  <a className={s.link} onClick={this.showLogin}> Log in</a></div> : ""}
           <form id="signupform" onSubmit={this.onFormClick} className="createpwdform fv-form fv-form-bootstrap"
                 noValidate="novalidate" autoComplete="off">
             <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>

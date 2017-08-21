@@ -36,8 +36,46 @@ class Login extends React.Component {
       emailFeedBack: false,
       passwordFeedBack: false,
       loading: false,
+      isSuccess: false,
+      successMessage: "",
     };
+    this.showLoading = this.showLoading.bind(this);
+    this.showSuccessMessage = this.showSuccessMessage.bind(this);
+    this.showErrorMessage = this.showErrorMessage.bind(this);
   }
+  showLoading = ()=>{
+    this.setState({
+      loading: true
+    });
+  };
+  showSuccessMessage = (text)=>{
+    this.setState({
+      loading: false,
+      isSuccess: true,
+      successMessage: text
+    }, ()=>{
+      setTimeout((text)=>{
+        this.setState({
+          isSuccess: false,
+          successMessage: ''
+        })
+      }, 4000)
+    });
+  };
+  showErrorMessage = (text)=>{
+    this.setState({
+      loading: false,
+      error: true,
+      successMessage: text
+    }, ()=>{
+      /*setTimeout(()=>{
+        this.setState({
+          error: false,
+          successMessage: ""
+        })
+      }, 4000)*/
+    });
+  };
   onFormClick = (e) => {
     e.preventDefault();
 
@@ -69,7 +107,7 @@ class Login extends React.Component {
           },2000)
         }
         else {
-          this.setState({error: "Invalid Email or password"});
+          this.setState({hasError: true, loading:false, isExisting: resp.errorCode === '4040100'});
         }
 
       });
@@ -141,8 +179,8 @@ class Login extends React.Component {
             <h4 className="text-center">
               Or &nbsp;&nbsp;<Link className={s.link} to="/u/signup">Signup</Link>
             </h4> }
-            {this.state.error && this.state.error !== "Invalid Email or password" && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
-            {this.state.error && this.state.error === "Invalid Email or password" && <div id="alertmessage" className="js-notification notification-login mrg-t-md">Looks like you don't have an account yet. Let's change that! <Link className="small" to="/u/signup">Sign up for free</Link></div>}
+            {this.state.hasError && !this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md">Your password is incorrect, please try again</div> : ""}
+            {this.state.hasError && this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md"> Looks like you don't have an account yet. Let's change that! <a className={s.link} onClick={this.showRegister}>Sign up for free</a></div> : ""}
 						{ this.state.message && <div className={cx('ajax-msg-box text-center mrg-b-lg', !this.state.isError ? 'text-success' : 'text-danger')} >
 							{ this.state.message }</div> }
 						{ this.state.loading ?

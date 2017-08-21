@@ -404,7 +404,7 @@ class BuyNow extends React.Component {
               <div className="col-lg-12">
                 <div className="main-box clearfix">
                   <header className="main-box-header clearfix">
-                    <h1>Confirm Bid</h1>
+                    <h1>Checkout Won Items</h1>
                   </header>
                   <div className="main-box-body clearfix">
                     <div className={cx("collapse ", !this.state.isVisibleConfirmBid && 'in' )}>
@@ -430,7 +430,7 @@ class BuyNow extends React.Component {
                           )}
                           <tr>
                             <td colSpan={4} className="text-right">
-                              <button className="btn btn-info checkout" onClick={this.showConfirmBid}> Confirm Bid </button>
+                              <button className="btn btn-info checkout" onClick={this.showConfirmBid}> Checkout </button>
                             </td>
                           </tr>
                           </tbody>
@@ -458,7 +458,7 @@ class BuyNow extends React.Component {
                                        this.firstName = ref;
                                      }}
                                      value={this.state.settings.userInfo && this.state.settings.userInfo.firstName}
-                                     disabled={this.state.settings.userInfo && this.state.settings.userInfo.firstName ? true :false}
+                                     disabled={!!(this.state.settings.userInfo && this.state.settings.userInfo.firstName)}
                                      onKeyUp={this.firstNameValidateHandler}/>
                               { this.state.firstNameFeedBack && this.state.email &&
                               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -480,7 +480,7 @@ class BuyNow extends React.Component {
                                        this.lastName = ref;
                                      }}
                                      value={this.state.settings.userInfo && this.state.settings.userInfo.lastName}
-                                     disabled={this.state.settings.userInfo && this.state.settings.userInfo.lastName ? true :false}
+                                     disabled={!!(this.state.settings.userInfo && this.state.settings.userInfo.lastName)}
                                      onKeyUp={this.lastNameValidateHandler}/>
                               { this.state.lastNameFeedBack && this.state.lastName &&
                               <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -504,7 +504,7 @@ class BuyNow extends React.Component {
                                          this.email = ref;
                                        }}
                                        value={this.state.settings.userInfo && this.state.settings.userInfo.email}
-                                       disabled={this.state.settings.userInfo && this.state.settings.userInfo.email ? true :false}
+                                       disabled={!!(this.state.settings.userInfo && this.state.settings.userInfo.email)}
                                        onKeyUp={this.emailValidateHandler} />
                                 { this.state.emailFeedBack && this.state.email &&
                                 <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
@@ -715,7 +715,7 @@ class BuyNow extends React.Component {
 }
 
 const mapDispatchToProps = {
-  submiteBuyNow : (eventurl, confirmBidDto)  => submiteBuyNow(eventurl,confirmBidDto),
+  submiteBuyNow : (eventurl, purchasedTickets)  => submiteBuyNow(eventurl,purchasedTickets),
   geBuyNow : (eventurl, userId, itemIds)  => geBuyNow(eventurl, userId, itemIds),
   doValidateMobileNumber: (mobileNumber) => doValidateMobileNumber(mobileNumber),
   getCardToken: (stripeKey, cardNumber, expMonth, expYear, cvc) => getCardToken(stripeKey, cardNumber, expMonth, expYear, cvc),

@@ -30,13 +30,50 @@ class LoginPopup extends React.Component {
       emailValue: null,
       countryPhone:null,
       loading:false,
-      myProps:false
+      myProps:false,
+      isSuccess: false,
+      successMessage: "",
     };
+    this.showLoading = this.showLoading.bind(this);
+    this.showSuccessMessage = this.showSuccessMessage.bind(this);
+    this.showErrorMessage = this.showErrorMessage.bind(this);
    }
   componentWillMount() {
-    console.log('willl moint')
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
   }
+  showLoading = ()=>{
+    this.setState({
+      loading: true
+    });
+  };
+  showSuccessMessage = (text)=>{
+    this.setState({
+      loading: false,
+      isSuccess: true,
+      successMessage: text
+    }, ()=>{
+      setTimeout((text)=>{
+        this.setState({
+          isSuccess: false,
+          successMessage: ''
+        })
+      }, 4000)
+    });
+  };
+  showErrorMessage = (text)=>{
+    this.setState({
+      loading: false,
+      error: true,
+      successMessage: text
+    }, ()=>{
+      /*setTimeout(()=>{
+        this.setState({
+          error: false,
+          successMessage: ""
+        })
+      }, 4000)*/
+    });
+  };
   componentWillReceiveProps(){
     this.setState({
       showContactPopup: false,
@@ -78,7 +115,7 @@ class LoginPopup extends React.Component {
           this.props.onCloseFunc();
         }
         else {
-          this.setState({error: resp.errorMessage,loading:false});
+          this.setState({error: resp.errorMessage,loading:false, isExisting: resp.errorCode === '4090103'});
         }
       });
     }
@@ -92,13 +129,15 @@ class LoginPopup extends React.Component {
       this.setState({loading:true});
       this.props.doLogin(this.email.value, this.password.value).then((resp) => {
         if (!resp.errorMessage) {
-          this.setState({error: "Log In SuccessFully",loading:false});
+          this.showSuccessMessage('Log In SuccessFully');
+          //this.setState({error: "Log In SuccessFully",loading:false});
           setTimeout(()=>{window.location.reload();},3000);
          // window.location.reload();
           this.props.onCloseFunc();
         }
         else {
-          this.setState({error: "Invalid Email or password",loading:false});
+            this.setState({hasError: true, loading:false, isExisting: resp.errorCode === '4040100'});
+          //this.setState({isExisting: resp.errorCode === '4040100'});
         }
 
       });
@@ -207,7 +246,7 @@ class LoginPopup extends React.Component {
   }
   render() {
     let event = this.props.params && this.props.params.params;
-    let showMyLogin = ((this.props.showType && this.props.showType == 'login') || !this.props.showType ) || this.state.myProps;
+    let showMyLogin = ((this.props.showType && this.props.showType === 'login') || !this.props.showType ) || this.state.myProps;
     return (
       <div >
         <div className="static-modal" id={this.props.id + '-containter'}>
@@ -222,16 +261,33 @@ class LoginPopup extends React.Component {
                         <h4 className="text-center">
                           Or, <a className={s.link} onClick={this.showRegister}>sign up.</a>
                         </h4>
-                        {this.state.error && <div id="alertmessage" className="js-notification notification-login mrg-t-md">{this.state.error}</div>}
+                        {this.state.hasError && !this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md">Your password is incorrect, please try again</div> : ""}
+                        {this.state.hasError && this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md"> Looks like you don't have an account yet. Let's change that! <a className={s.link} onClick={this.showRegister}>Sign up for free</a></div> : ""}
                         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClickLogin} autoComplete="off">
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
-                          <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
-                            <span className="fa fa-spinner fa-pulse fa-fw"/>
-                            <span className="resp-message"/>
+                          <div className="ajax-wrap">
+                            <div className="ajax-msg-box text-center">
+                              { this.state.loading ?
+                                <div className="ajax-msg-box text-center">
+                                  <span className="fa fa-spinner fa-pulse fa-fw"/>
+                                  <span className="resp-message">Please wait...</span>
+                                </div> : ""
+                              }
+                              { this.state.isSuccess ?
+                                <div className="ajax-msg-box text-center text-success">
+                                  <span className="resp-message">{this.state.successMessage}</span>
+                                </div> : ""
+                              }
+                              { this.state.error ?
+                                <div className="ajax-msg-box text-center text-danger">
+                                  <span className="resp-message">{this.state.successMessage}</span>
+                                </div> : ""
+                              }
+                            </div>
                           </div>
                           <div className="js-notification notification-register mrg-t-md" style={{display: 'none'}}>
                             Looks like you don't have an account yet. Let's change that!
-                            <a href="/AccelEventsWebApp/u/signup">Sign up for free.</a>
+                            <a href="/u/signup">Sign up for free.</a>
                           </div>
                           <div
                             className={cx("mrg-t-sm form-group", this.state.emailFeedBack && 'has-feedback', this.state.emailFeedBack && this.state.email && 'has-success', this.state.emailFeedBack && (!this.state.email) && 'has-error')}>
@@ -302,7 +358,8 @@ class LoginPopup extends React.Component {
                         <h4 className="text-center">
                           Or Already have an account? &nbsp;&nbsp;<a className={s.link} onClick={this.showLogin}> Log in</a>
                         </h4>
-                        {this.state.error && <div id="alertmessage" className="js-notification notification-signup mrg-t-md">{this.state.error}</div>}
+                        {this.state.error && !this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md">{ this.state.error}</div> : ""}
+                        {this.state.error && this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md"> You are already registered.  <a className={s.link} onClick={this.showLogin}> Log in</a></div> : ""}
                         <form className="ajax-form  validated fv-form fv-form-bootstrap" onSubmit={this.onFormClick} autoComplete="off">
                           <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>
                           <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
@@ -311,7 +368,7 @@ class LoginPopup extends React.Component {
                           </div>
                           <div className="js-notification notification-register mrg-t-md" style={{display: 'none'}}>
                             Looks like you don't have an account yet. Let's change that!
-                            <a href="/AccelEventsWebApp/u/signup">Sign up for free.</a>
+                            <a href="/u/signup">Sign up for free.</a>
                           </div>
                           <input type="text" style={{display:'none'}}/>
                           <input type="password" style={{display:'none'}}/>
@@ -389,9 +446,9 @@ class LoginPopup extends React.Component {
                             <Button loading={this.state.loading}  type="submit" bsStyle="link" className="btn-green btn-square btn-block btn-lg"> SIGN UP </Button>
                           </div>
                           <p className="mrg-t-md small text-center">
-                            By signing up, I agree to Accelevent&#39;s <a href="/AccelEventsWebApp/tos" target="_blank">terms of
-                            service</a>, <a href="/AccelEventsWebApp/privacypolicy" target="_blank">privacy policy</a>, and <a
-                            href="/AccelEventsWebApp/cookies" target="_blank">cookie policy</a>.
+                            By signing up, I agree to Accelevent&#39;s <a href="/tos" target="_blank">terms of
+                            service</a>, <a href="/privacypolicy" target="_blank">privacy policy</a>, and <a
+                            href="/cookies" target="_blank">cookie policy</a>.
                           </p>
                         </form>
                       </div>
