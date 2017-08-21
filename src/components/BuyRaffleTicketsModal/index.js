@@ -900,7 +900,6 @@ class BuyRaffleTicketsModal extends React.Component {
                       <div className="input-group-addon">
                         <i className="fa fa-phone" aria-hidden="true"/>
                       </div>
-                      {console.log(this.state.phoneNumber, this.state.phone)}
                       <IntlTelInput
                         css={['intl-tel-input', 'form-control intl-tel']}
                         utilsScript="./libphonenumber.js"

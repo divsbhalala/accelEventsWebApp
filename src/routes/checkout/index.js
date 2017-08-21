@@ -43,17 +43,6 @@ export default {
       }
     },
     {
-      path: '/D/:userId',
-      async action(props) {
-        return {
-          title: "Submit Donation",
-          component: <Layout params={props.params} class="display submit-donation"><Donation params={props.params}
-                                                            userId={props.params && props.params.userId}
-                                                            title="ConfirmBid"/></Layout>,
-        };
-      }
-    },
-    {
       path: '/D/:userId/:amount',
       async action(props) {
         return {
