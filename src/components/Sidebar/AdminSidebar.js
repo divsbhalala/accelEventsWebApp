@@ -128,6 +128,7 @@ class AdminSidebar extends React.Component {
 							</div>
 							<div className="collapse navbar-collapse navbar-ex1-collapse" id="sidebar-nav">
 								<ul className="nav nav-pills nav-stacked">
+									<li className="nav-header nav-header-first hidden-sm hidden-xs">Navigation</li>
 									<li className={cx(this.state.nav === "dashboard" && "active")} >
 										<Link to="/host/dashboard/home" className="dropdown-toggle" onClick={()=>{ this.setNav("dashboard", "")}}>
 											<i className="vt vt-dashboard" />
