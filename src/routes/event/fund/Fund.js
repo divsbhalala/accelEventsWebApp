@@ -98,7 +98,7 @@ class Fund extends React.Component {
       countryPhone:null,
       phone:null,
       errorMsgPassword: null,
-      showForgatePassword:false,
+      showForgotPassword:false,
       validData:true
     };
 		this.doGetEventData = this.doGetEventData.bind(this);
@@ -197,7 +197,7 @@ class Fund extends React.Component {
             this.setState({
               password:false,
               errorMsgPassword:'',
-              showForgatePassword:true,
+              showForgotPassword:true,
               loading:false,
               showMapPopup: true,
               errorMsg: resp.errorMessage ,
@@ -924,7 +924,7 @@ class Fund extends React.Component {
                           </div>
                           { this.state.passwordFeedBack && !this.state.password &&
                           <small className="help-block">{this.state.errorMsgPassword}</small>}
-                          {this.state.showForgatePassword &&  <div style={{"textAlign":"right"}}><Link to="/u/password-reset" >Forget Password?</Link></div> }
+                          {this.state.showForgotPassword &&  <div style={{"textAlign":"right"}}><Link to="/u/password-reset" >Forget Password?</Link></div> }
                         
                         </div> }
                         { !this.props.authenticated || ( this.props.authenticated && (  this.props.eventData && this.props.eventData.ccRequiredForBidConfirm || (this.props.user && this.props.user.linkedCard && this.props.user.linkedCard.stripeCards.length <= 0  ) ) ) ?

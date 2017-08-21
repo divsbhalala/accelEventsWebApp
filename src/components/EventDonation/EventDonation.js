@@ -95,7 +95,7 @@ class EventDonation extends React.Component {
       countryPhone: null,
       phone: '',
       errorMsgPassword: null,
-      showForgatePassword:false,
+      showForgotPassword:false,
     };
     this.showDonationPopup = this.showDonationPopup.bind(this);
     this.hideDonationPopup = this.hideDonationPopup.bind(this);
@@ -444,7 +444,7 @@ class EventDonation extends React.Component {
               this.setState({
                 password:false,
                 errorMsgPassword:'',
-                showForgatePassword:true,
+                showForgotPassword:true,
                 isError:true,
                 errorMsg:resp.errorMessage,
               });
@@ -727,7 +727,7 @@ class EventDonation extends React.Component {
                   </div>
                   { this.state.passwordFeedBack && !this.state.password &&
                   <small className="help-block">{this.state.errorMsgPassword}</small>}
-                  {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
+                  {this.state.showForgotPassword &&  <Link to="/u/password-reset" >Forgot Password</Link> }
 
                 </div> }
 

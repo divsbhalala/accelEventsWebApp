@@ -95,7 +95,7 @@ class BuyRaffleTicketsModal extends React.Component {
       settings:null,
       hideTicketsPopup:true,
       errorMsgPassword: null,
-      showForgatePassword:false,
+      showForgotPassword:false,
     };
     //  this.purchaseTicket=this.purchaseTicket.bind(this);
   }
@@ -496,7 +496,7 @@ class BuyRaffleTicketsModal extends React.Component {
             this.setState({
               password:false,
               errorMsgPassword:'',
-              showForgatePassword:true,
+              showForgotPassword:true,
             });
           }
         }
@@ -944,7 +944,7 @@ class BuyRaffleTicketsModal extends React.Component {
                     </div>
                     { this.state.passwordFeedBack && !this.state.password &&
                     <small className="help-block">{this.state.errorMsgPassword}</small>}
-                    {this.state.showForgatePassword &&  <Link to="/u/password-reset" >Forgate Password</Link> }
+                    {this.state.showForgotPassword &&  <Link to="/u/password-reset" >Forgot Password</Link> }
 
                   </div>}
                   <div className="form-group has-feedback">
