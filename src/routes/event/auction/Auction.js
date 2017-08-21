@@ -531,7 +531,7 @@ class Auction extends React.Component {
         this.checkIsValidBidData()
       });
     }else{
-      this.props.doValidateMobileNumber(number).then(resp => {
+      this.props.doValidateMobileNumber('+' + countryData.dialCode + value).then(resp => {
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",

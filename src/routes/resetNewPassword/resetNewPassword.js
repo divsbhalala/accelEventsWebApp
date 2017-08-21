@@ -25,9 +25,47 @@ class ResetNewPassword extends React.Component {
 			passwordMatch: false,
 			emailSend: false,
 			emailResponseError: "",
+			isSuccess: false,
+      successMessage: "",
 		};
+    this.showLoading = this.showLoading.bind(this);
+    this.showSuccessMessage = this.showSuccessMessage.bind(this);
+    this.showErrorMessage = this.showErrorMessage.bind(this);
 
 	}
+  showLoading = (status)=>{
+    this.setState({
+      loading: status
+    });
+  };
+  showSuccessMessage = (text)=>{
+    this.setState({
+      loading: false,
+      isSuccess: true,
+      successMessage: text
+    }, ()=>{
+      setTimeout((text)=>{
+        this.setState({
+          isSuccess: false,
+          successMessage: ''
+        })
+      }, 4000)
+    });
+  };
+  showErrorMessage = (text)=>{
+    this.setState({
+      loading: false,
+      error: true,
+      successMessage: text
+    }, ()=>{
+      /*setTimeout(()=>{
+        this.setState({
+          error: false,
+          successMessage: ""
+        })
+      }, 4000)*/
+    });
+  };
 
 	onFormClick = (e) => {
 		e.preventDefault();
@@ -41,16 +79,27 @@ class ResetNewPassword extends React.Component {
 				newPassword: this.newPassword && this.newPassword.value,
 				confirmPassword: this.confirmPassword && this.confirmPassword.value,
 			};
+			this.showLoading(true);
 			this.props.doResetNewPassword(data, this.props.token).then((resp) => {
 				let data = resp && resp.data;
-				if(resp.message){
-					history.push(resp.message);
+        this.showLoading(false);
+        this.showSuccessMessage("Password set successfully");
+        this.setState({
+          isSuccess: true
+				});
+				if(data.message){
+					setTimeout(()=>{
+            history.push(data.message);
+          });
 				}
-				else if(resp.redirectUrl){
-					history.push(resp.redirectUrl);
+				else if(data.redirectUrl){
+          setTimeout(()=>{
+            history.push(data.redirectUrl);
+          });
 				}
 
 			}).catch(error => {
+        this.showLoading(false);
 				this.setState({
 					passwordResponseError: (error && error.response && error.response.data && error.response.data.errorMessage) || "Error while processing your request"
 				});
@@ -106,6 +155,21 @@ class ResetNewPassword extends React.Component {
 					<div className="col-md-4 col-md-offset-4">
 						<h2 className="text-center"><strong>Password Reset</strong></h2>
 						<div className="form">
+							<div className="ajax-wrap">
+								<div className="ajax-msg-box text-center">
+                  { this.state.loading ?
+										<div className="ajax-msg-box text-center">
+											<span className="fa fa-spinner fa-pulse fa-fw"/>
+											<span className="resp-message">Please wait...</span>
+										</div> : ""
+                  }
+                  { this.state.isSuccess ?
+										<div className="ajax-msg-box text-center text-success">
+											<span className="resp-message">{this.state.successMessage}</span>
+										</div> : ""
+                  }
+								</div>
+							</div>
 							<form noValidate id="new-password" name="new-password" className="login-form" onSubmit={this.onFormClick}>
 								<div
 									className={cx("mrg-t-sm form-group")}>

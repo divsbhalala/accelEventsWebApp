@@ -157,6 +157,16 @@ class Register extends React.Component {
         <div className="onboardpage center-block">
           {this.state.error && !this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md">{ this.state.error}</div> : ""}
           {this.state.error && this.state.isExisting ? <div id="alertmessage" className="js-notification notification-signup mrg-t-md"> You are already registered.  <a className={s.link} onClick={this.showLogin}> Log in</a></div> : ""}
+          <div className="ajax-wrap">
+            <div className="ajax-msg-box text-center">
+              { this.state.loading ?
+                <div className="ajax-msg-box text-center">
+                  <span className="fa fa-spinner fa-pulse fa-fw"/>
+                  <span className="resp-message">Please wait...</span>
+                </div> : ""
+              }
+            </div>
+          </div>
           <form id="signupform" onSubmit={this.onFormClick} className="createpwdform fv-form fv-form-bootstrap"
                 noValidate="novalidate" autoComplete="off">
             <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}}/>

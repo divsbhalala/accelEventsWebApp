@@ -187,13 +187,13 @@ class Donation extends React.Component {
       phoneNumberFeedBack: true,
       errorMsgPhoneNumber :"",
     });
-    if (value == '') {
+    if (value === '') {
       this.setState({
         phoneNumber: false,
         errorMsgPhoneNumber: "phoneNumber is Require",
       });
     }else{
-      this.props.doValidateMobileNumber(number).then(resp => {
+      this.props.doValidateMobileNumber('+' + countryData.dialCode + value).then(resp => {
         this.setState({
           phoneNumber: !resp,
           errorMsgPhoneNumber: "Invalid phone number",
