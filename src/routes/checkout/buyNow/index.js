@@ -21,7 +21,7 @@ class BuyNow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isValidUser:false,
+      isValidUser:true,
       isVisibleConfirmBid : false,
       isValidData: false,
       email: null,
@@ -528,8 +528,8 @@ class BuyNow extends React.Component {
                                 utilsScript="./libphonenumber.js"
                                 separateDialCode={true}
                                 value={ this.state.phone || "" }
-                                maxLength={16} data-stripe="number"
-                                defaultCountry={this.props.country || ""}
+                                data-stripe="number"
+                                defaultCountry={this.props.country || "US"}
                                 onPhoneNumberChange={this.changePhone}
                                 disabled={this.state.settings.userInfo && this.state.settings.userInfo.phonenumber ? true :false}
                               />

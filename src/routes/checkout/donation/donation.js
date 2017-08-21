@@ -19,7 +19,7 @@ class Donation extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isValidUser:false,
+      isValidUser:true,
       isVisibleConfirmBid : false,
       isValidData: false,
       email: null,
@@ -375,8 +375,12 @@ class Donation extends React.Component {
         emailValue:resp.data.userInfo.email,
         firstNameValue:resp.data.userInfo.firstName,
         lastNameValue:resp.data.userInfo.lastName,
+        isValidUser:true,
       })
     }).catch((error) => {
+      this.setState({
+        isValidUser:false
+      });
     })
   };
   numberOnly(e) {
@@ -388,7 +392,7 @@ class Donation extends React.Component {
   render() {
     return (
       <div className="container">
-        {this.state.settings && this.state.isValidUser ?
+        { this.state.settings && this.state.isValidUser ?
         <div className="row">
           <div className="col-lg-8 col-md-10 col-lg-offset-2 col-md-offset-1 mrg-t-lg">
             <div className="row">

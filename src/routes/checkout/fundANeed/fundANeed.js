@@ -21,7 +21,7 @@ class FundANeed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isValidUser:false,
+      isValidUser:true,
       isVisibleConfirmBid : false,
       isValidData: false,
       email: null,
