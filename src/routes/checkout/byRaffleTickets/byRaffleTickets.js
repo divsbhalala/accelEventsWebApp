@@ -272,7 +272,7 @@ class ByRaffleTickets extends React.Component {
   hidePopup = () => {
     this.setState({
       showPopup: false,
-    })
+    });
     if(this.state.popupHeader == "Success"){
       window.location = "/event";
     }
@@ -294,11 +294,12 @@ class ByRaffleTickets extends React.Component {
         popupHeader:"Failed",
       })
     }else {
-      if( 0 && !this.state.settings.creditCardRequired ) {
+      if(!this.state.settings.creditCardRequired ) {
+        let ticket= this.state.settings.ticktes && this.state.settings.ticktes.filter((value,index) => value.id==this.raffleTicket.value);
         this.setState({
           loading:false,
           showPopup: true,
-          errorMsg: " Your card ending in " + this.state.settings.linkedCard.stripeCards[0].last4   + " will be charged",// $ "+  this.state.total   ,
+          errorMsg: " Your card ending in " + this.state.settings.linkedCards[0].last4   + " will be charged $ "+ticket[0].price +" for the purchase of "+ticket[0].numberOfTickets+" raffle tickets."   ,
           popupHeader:"Confirm",
         })
       } else {
@@ -341,7 +342,7 @@ class ByRaffleTickets extends React.Component {
       "phoneNumber": this.state.phone,
       "raffleTicketId": this.state.raffleTicketValue,
       "stripeToken": this.state.stripeToken
-    }
+    };
     this.props.confirmRaffleCheckout(this.props.params &&  this.props.params.params ,raffleCheckoutDto).then(resp => {
       console.log("resp",resp);
       if (resp.errorMessage) {
@@ -612,7 +613,7 @@ class ByRaffleTickets extends React.Component {
                         <style dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }} />
                         <div className="stripe-form">
                         </div>
-                        <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Confirm Bid</Button>
+                        <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Pay Now</Button>
                       </form>
                     </div>
                   </div>
