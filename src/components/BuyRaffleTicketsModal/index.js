@@ -207,22 +207,21 @@ class BuyRaffleTicketsModal extends React.Component {
 
   };
   cardHolderValidateHandler = (e) => {
-
     this.setState({
       cardHolderFeedBack: true,
       cardHolderValue: this.cardHolder.value,
     });
-    if (this.cardHolder.value.trim() === '') {
+    if (this.cardHolder.value && this.cardHolder.value.trim() === '') {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name is required and can't be empty",
       });
-    } else if (!( this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
+    } else if (!(this.cardHolder.value && this.cardHolder.value.trim().length >= 6 && this.cardHolder.value.trim().length <= 70 )) {
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name must be more than 6 and less than 70 characters long ",
       });
-    } else if(this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' '){
+    } else if(this.cardHolder.value && ( this.cardHolder.value.charAt(0) === ' ' || this.cardHolder.value.charAt(this.cardHolder.value.length-1) === ' ')){
       this.setState({
         cardHolder: false,
         errorMsgcardHolder: "The card holder name can not start or end with white space",
@@ -256,7 +255,7 @@ class BuyRaffleTicketsModal extends React.Component {
         cardNumber: false,
         errorMsgcardNumber: "Enter Card Number ",
       });
-    } else if (this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
+    } else if (this.cardNumber.value && this.cardNumber.value.trim().length !== 16 && this.cardNumber.value.trim().length !== 15) {
       this.setState({
         cardNumber: false,
         errorMsgcardNumber: " Please enter a Valid Card Number ",
@@ -290,7 +289,7 @@ class BuyRaffleTicketsModal extends React.Component {
         cvv: false,
         errorMsgcvv: "The CVV is required and can't be empty",
       });
-    } else if (!( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
+    } else if (this.cvv.value && !( 3 <= this.cvv.value.trim().length && 4 >= this.cvv.value.trim().length )) {
       this.setState({
         cvv: false,
         errorMsgcvv: "The CVV must not be more than 4 and less than 3 characters long",
@@ -909,7 +908,7 @@ class BuyRaffleTicketsModal extends React.Component {
                         defaultCountry={this.props.country || ""}
                         value={ this.state.phone || "" }
                         onPhoneNumberChange={this.changePhone}
-                        defaultValue={this.state.phone}
+                        defaultValue={this.state.phone || ""}
                       />
                       { this.state.phoneNumberFeedBack && this.state.phoneNumber &&
                       <i className="form-control-feedback fv-bootstrap-icon-input-group glyphicon glyphicon-ok"/>}
