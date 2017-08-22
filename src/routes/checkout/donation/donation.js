@@ -12,6 +12,8 @@ import Link from '../../../components/Link';
 import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
+import history from './../../../history';
+
 class Donation extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -284,8 +286,9 @@ class Donation extends React.Component {
     this.setState({
       showPopup: false,
     });
+    let event =this.props.params &&  this.props.params.params;
     if(this.state.popupHeader == "Success"){
-      window.location = "/events/"+this.props.params &&  this.props.params.params;
+      window.location = "/events/"+event;
     }
   };
 
@@ -416,8 +419,6 @@ class Donation extends React.Component {
                   </header>
                   <div className="main-box-body clearfix">
                     <div className={cx(" payment-area collapse",'in')}  >
-                      <form className="ajax-form validated fv-form fv-form-bootstrap" data-onsuccess="handleBidConfirmSuccess" noValidate="novalidate">
-                        <button type="submit" className="fv-hidden-submit" style={{display: 'none', width: 0, height: 0}} />
                         <div className="ajax-msg-box text-center mrg-b-lg" style={{display: 'none'}}>
                           <span className="fa fa-spinner fa-pulse fa-fw" /> <span className="resp-message" />
                         </div>
@@ -680,7 +681,7 @@ class Donation extends React.Component {
                         </div>
                         <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Pay Now</Button>
                         <Button className="btn btn-default" > <Link to={this.state.backUrl || '/'} >Go back </Link> </Button>
-                      </form>
+
                     </div>
                   </div>
                 </div>

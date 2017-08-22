@@ -74,7 +74,7 @@ class EventAside extends React.Component {
 		})
 	};
   successTask = ()=> {
-    this.props.successTask();
+   this.props.successTask();
   };
   toggleMobileViewCat = ()=>{
   	this.setState({
@@ -151,7 +151,8 @@ class EventAside extends React.Component {
           showModal={this.state.isHowBuyRaffleTicketsModal}
           headerText=""
           onCloseFunc={this.hideBuyRaffleTicketsModal}
-          successTask={this.successTask}params={this.props.params}
+          successTask={this.successTask}
+					params={this.props.params}
           ccRequiredForBidConfirm={this.props.eventData && this.props.eventData.ccRequiredForBidConfirm} />
 				<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;key=AIzaSyCTdjRtF5L54QIJdEQ8DyXlf2umq6MpvEw"></script>
 				<div className={cx("main-box", "clearfix")}>

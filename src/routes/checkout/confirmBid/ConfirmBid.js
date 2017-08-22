@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -13,6 +12,7 @@ import Link from '../../../components/Link';
 import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
+import history from './../../../history';
 
 class ConfirmBid extends React.Component {
   static propTypes = {
@@ -279,8 +279,9 @@ class ConfirmBid extends React.Component {
     this.setState({
       showPopup: false,
     })
+    let event =this.props.params &&  this.props.params.params;
     if(this.state.popupHeader == "Success"){
-      window.location = "/events/"+this.props.params &&  this.props.params.params;
+      window.location = "/events/"+event;
     }
   };
 

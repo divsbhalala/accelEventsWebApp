@@ -100,19 +100,25 @@ class BuyRaffleTicketsModal extends React.Component {
     //  this.purchaseTicket=this.purchaseTicket.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
-    //this.props.getRaffleTickets().then(resp=>{
+    if(this.props.ticketPackages){
       this.setState({settings:this.props.ticketPackages})
-    //});
+    }else {
+      this.props.getRaffleTickets().then(resp => {
+        this.setState({settings: this.props.ticketPackages})
+      });
+    }
   }
   componentWillReceiveProps() {
-    this.setState({settings:this.props.ticketPackages});
+    if(this.props.ticketPackages){
+      this.setState({settings:this.props.ticketPackages});
+    }
     setTimeout(()=>{
       if (this.props.showModal && !this.state.isShowAlertPopup){
         this.reRender();
       }
-    },100);
+    },1000);
 
     this.setState({
       loading: false,
@@ -443,9 +449,6 @@ class BuyRaffleTicketsModal extends React.Component {
     e.preventDefault();
   };
 
-  componentReRender() {
-  };
-
   onFormClick = (e) => {
     e.preventDefault();
   };
@@ -671,7 +674,6 @@ class BuyRaffleTicketsModal extends React.Component {
       showTicketsPopup: false,
       popupTicketHeader: "Pay Now",
     });
-    this.componentReRender();
   };
   showTicketsPopup = () => {
     this.setState({

@@ -1,3 +1,4 @@
+/****** desboard popup *********/
 #select-modules .modal-dialog {
     top: 50px;
 }
@@ -79,4 +80,15 @@ form#selectModules button:hover, form#selectModules button:focus {
 .model-transparent {
     width: 100%;
     color: #fff;
+}
+
+/*** sms checkout image ***/
+.item-image-checkout {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    border: 1px solid #efefef;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
 }

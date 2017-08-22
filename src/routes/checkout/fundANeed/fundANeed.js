@@ -13,6 +13,7 @@ import Link from '../../../components/Link';
 import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
+import history from './../../../history';
 
 class FundANeed extends React.Component {
   static propTypes = {
@@ -265,8 +266,9 @@ class FundANeed extends React.Component {
     this.setState({
       showPopup: false,
     });
-    if(this.state.popupHeader === "Success"){
-      window.location = "/events/"+this.props.params &&  this.props.params.params;
+    let event =this.props.params &&  this.props.params.params;
+    if(this.state.popupHeader == "Success"){
+      window.location = "/events/"+event;
     }
    };
 
@@ -277,10 +279,8 @@ class FundANeed extends React.Component {
   };
   onFormClick = (e) => {
     this.setState({ loading:true,
-
       expYearFeedBack: true,
       expMonthFeedBack: true,
-
     });
     e.preventDefault();
     if (0){
@@ -425,7 +425,7 @@ class FundANeed extends React.Component {
                           { this.state.settings.pledges && this.state.settings.pledges.map((value,index)=>
                             <tr key={index}>
                               <td style={{width: 1}}>
-                                <div className="item-image-checkout" style={{backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-180x180/eee2f81b-92c8-4826-92b6-68a64fb696b7A_600x600.jpg")'}} />
+                                <div className="item-image-checkout" style={{backgroundImage: 'url("http://v2-dev-images-public.s3-website-us-east-1.amazonaws.com/1-180x180/' + value.images[0].imageUrl +'")'}} />
                               </td>
                               <td>{value.name}</td>
                               <td className="text-right"><nobr>$<span className="item-price" data-isprocessingfeestopurchaser="false">{value.amount}</span></nobr>
@@ -646,7 +646,7 @@ class FundANeed extends React.Component {
                           <style dangerouslySetInnerHTML={{__html: "\n  .expiration-date .form-control-feedback {\n    xdisplay: inline !important;\n  }\n  .expiration-date .form-control-feedback[data-bv-field=\"expMonth\"] {\n    xdisplay: none !important;\n  }\n" }} />
                           <div className="stripe-form">
                           </div>
-                          <div className="amount-to-pay">Your Bid: $ <span className="total-amount">{this.state.total}</span></div>
+                          <div className="amount-to-pay">Amount to Pay: $ <span className="total-amount">{this.state.total}</span></div>
                           <input type="hidden" name="amount" defaultValue={0} className="total-amount-hidden" />
                           <Button  loading={this.state.loading} type="submit" className="btn btn-success paynow" onClick={this.onFormClick}>Confirm Bid</Button>
                         </form>
