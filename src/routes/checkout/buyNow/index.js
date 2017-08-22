@@ -13,6 +13,7 @@ import Link from '../../../components/Link';
 import IntlTelInput from './../../../components/IntTelInput';
 import PopupModel from './../../../components/PopupModal/index';
 import {getCardToken} from './../../checkout/action/index';
+import history from './../../../history';
 
 class BuyNow extends React.Component {
   static propTypes = {
@@ -280,7 +281,7 @@ class BuyNow extends React.Component {
       showPopup: false,
     })
     if(this.state.popupHeader == "Success"){
-      window.location = "/";
+      window.location = "/events/"+this.props.params &&  this.props.params.params;
     }
   };
 

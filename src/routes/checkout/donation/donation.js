@@ -285,7 +285,7 @@ class Donation extends React.Component {
       showPopup: false,
     });
     if(this.state.popupHeader == "Success"){
-      window.location = "/event";
+      window.location = "/events/"+this.props.params &&  this.props.params.params;
     }
   };
 
@@ -342,12 +342,22 @@ class Donation extends React.Component {
   };
   confirmDonationCheckout = () =>{
     this.setState({loading:true });
-    let confirmBidDto ={
-      "amount": this.amount.value,
-      "firstname": this.state.firstNameValue,
-      "lastname": this.state.lastNameValue,
-      "stripeToken": this.state.stripeToken
-    };
+    let confirmBidDto={}
+    if(this.state.stripeToken){
+       confirmBidDto ={
+        "amount": this.amount.value,
+        "firstname": this.state.firstNameValue,
+        "lastname": this.state.lastNameValue,
+        "stripeToken": this.state.stripeToken
+      };
+    }else{
+       confirmBidDto ={
+        "amount": this.amount.value,
+        "firstname": this.state.firstNameValue,
+        "lastname": this.state.lastNameValue,
+      };
+    }
+
     this.props.confirmDonationCheckout(this.props.params &&  this.props.params.params ,confirmBidDto).then(resp => {
       if (resp.errorMessage) {
         this.setState({
@@ -366,9 +376,10 @@ class Donation extends React.Component {
       }
     })
   };
-  componentDidMount(){
+  componentWillMount(){
     this.changePhone = this.phoneNumberValidateHandler.bind(this, 'phone');
     this.props.getdDonationCheckout(this.props.params &&  this.props.params.params , this.props.params &&  this.props.params.userId).then(resp => {
+      console.log(resp.data);
       this.setState({
         settings:resp.data,
         phone:resp.data.userInfo.phonenumber,
@@ -377,11 +388,10 @@ class Donation extends React.Component {
         firstNameValue:resp.data.userInfo.firstName,
         lastNameValue:resp.data.userInfo.lastName,
         isValidUser:true,
-        backUrl:"/events/"+this.props.params &&  this.props.params.params
       })
     }).catch((error) => {
       this.setState({
-        isValidUser:false
+       // isValidUser:false
       });
     })
   };
@@ -394,6 +404,7 @@ class Donation extends React.Component {
   render() {
     return (
       <div className="container">
+        {console.log(this.state.settings , this.state.isValidUser)}
         { this.state.settings && this.state.isValidUser ?
         <div className="row">
           <div className="col-lg-8 col-md-10 col-lg-offset-2 col-md-offset-1 mrg-t-lg">

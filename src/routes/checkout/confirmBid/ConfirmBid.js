@@ -280,7 +280,7 @@ class ConfirmBid extends React.Component {
       showPopup: false,
     })
     if(this.state.popupHeader == "Success"){
-      window.location = "/";
+      window.location = "/events/"+this.props.params &&  this.props.params.params;
     }
   };
 

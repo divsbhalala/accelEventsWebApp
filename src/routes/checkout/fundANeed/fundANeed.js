@@ -266,7 +266,7 @@ class FundANeed extends React.Component {
       showPopup: false,
     });
     if(this.state.popupHeader === "Success"){
-      window.location = "/event";
+      window.location = "/events/"+this.props.params &&  this.props.params.params;
     }
    };
 
@@ -333,13 +333,24 @@ class FundANeed extends React.Component {
   };
   confirmfundANeedCheckout = () =>{
     this.setState({ loading:true});
-    let donationPurchaseDto ={
-      "countryCode": this.state.countryPhone,
-      "email": this.state.emailValue,
-      "phoneNumber": this.state.phone,
-      "pldegeIds": this.state.pldegeIds,
-      "stripeToken": this.state.stripeToken
-    };
+    let donationPurchaseDto ={};
+      if(this.state.stripeToken){
+       donationPurchaseDto ={
+          "countryCode": this.state.countryPhone,
+          "email": this.state.emailValue,
+          "phoneNumber": this.state.phone,
+          "pldegeIds": this.state.pldegeIds,
+          "stripeToken": this.state.stripeToken
+        };
+    }else {
+         donationPurchaseDto ={
+          "countryCode": this.state.countryPhone,
+          "email": this.state.emailValue,
+          "phoneNumber": this.state.phone,
+          "pldegeIds": this.state.pldegeIds,
+        };
+      }
+
     this.props.confirmfundANeedCheckout(this.props.params &&  this.props.params.params ,donationPurchaseDto).then(resp => {
       if (resp.errorMessage) {
         this.setState({
